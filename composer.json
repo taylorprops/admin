@@ -21,7 +21,7 @@
         "setasign/fpdi-fpdf": "^2.2",
         "socrata/soda-php": "dev-develop",
         "spipu/html2pdf": "^5.2",
-        "symfony/http-foundation": "5.0",
+        "symfony/http-foundation": "5.0.7",
         "troydavisson/phrets": "2.*",
         "unisharp/laravel-filemanager": "~1.8"
     },
