@@ -119,6 +119,7 @@ class Upload extends Model
         $listing_expired = false;
         $contract_submitted = false;
         $release_submitted = false;
+        $our_listing = false;
 
         $listing_agreement_form_tags = ResourceItems::GetResourceID('listing_agreement', 'form_tags');
         $withdraw_form_tags = ResourceItems::GetResourceID('withdraw', 'form_tags');
@@ -143,6 +144,7 @@ class Upload extends Model
                                 $listing = Listings::find($Listing_ID);
                                 if($listing -> ExpirationDate <= date('Y-m-d')) {
                                     $listing_expired = true;
+                                    $our_listing = true;
                                 }
                             }
                         }
@@ -181,7 +183,7 @@ class Upload extends Model
 
         }
 
-        return compact('listing_submitted', 'listing_accepted', 'listing_withdraw_submitted', 'listing_expired', 'contract_submitted', 'release_submitted');
+        return compact('listing_submitted', 'listing_accepted', 'listing_withdraw_submitted', 'listing_expired', 'contract_submitted', 'release_submitted', 'our_listing');
 
     }
 

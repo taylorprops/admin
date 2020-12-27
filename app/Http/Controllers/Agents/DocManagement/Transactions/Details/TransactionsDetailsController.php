@@ -3807,7 +3807,8 @@ class TransactionsDetailsController extends Controller {
             'listing_expired' => $docs_submitted['listing_expired'],
             'listing_withdraw_submitted' => $docs_submitted['listing_withdraw_submitted'],
             'contract_submitted' => $docs_submitted['contract_submitted'],
-            'release_submitted' => $docs_submitted['release_submitted']
+            'release_submitted' => $docs_submitted['release_submitted'],
+            'our_listing' => $docs_submitted['our_listing']
         ]);
     }
 

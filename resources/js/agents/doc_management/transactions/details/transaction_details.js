@@ -364,6 +364,10 @@ if (document.URL.match(/transaction_details/)) {
                 }
             }
 
+            if(response.data.our_listing == false) {
+                $('.has-listing').removeClass('d-flex').hide();
+            }
+
             if(hide_modal == false) {
                 $('#save_cancel_contract_button').off('click').on('click', function() {
                     cancel_contract(for_sale);
