@@ -159,9 +159,9 @@
 
                                     </div>
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-12 text-center">
                                             @if($disabled == '')
-                                            <a href="javascript: void(0)" class="btn btn-lg btn-success save-member-button"><i class="fad fa-save mr-2"></i> Save Details</a>
+                                            <a href="javascript: void(0)" class="btn btn-lg btn-success save-member-button font-11 p-3 mt-3"><i class="fad fa-save mr-2"></i> Save Details</a>
                                             @endif
                                         </div>
                                     </div>

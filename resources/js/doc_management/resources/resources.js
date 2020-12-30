@@ -208,6 +208,13 @@ function added_item_html(resource_id, resource_type, resource_name, resource_sta
                     </div> \
         ';
     }
+    if (resource_account_number != '') {
+        resource_html += ' \
+                    <div class="col px-1"> \
+                        <input type="text" class="form-input" value="' + resource_account_number + '" data-default-value="' + resource_account_number + '" data-label="Account #"> \
+                    </div> \
+        ';
+    }
     resource_html += ' \
                     <div class="col-1 pl-2"> \
                         <a href="javascript: void(0)" class="save-edit-resource-button" data-resource-id="' + resource_id + '" data-resource-type="' + resource_type + '"><i class="fad fa-save text-primary fa-2x mt-3"></i></a> \
@@ -246,6 +253,8 @@ function show_add_resource(ele) {
     let resource_form_group_type = '';
     let resource_county_abbr_input = '';
     let resource_county_abbr = '';
+    let resource_account_number_input = '';
+    let resource_account_number = '';
 
     if (add_resource_div.find('.add-resource-state').length > 0) {
         resource_state_select = add_resource_div.find('.add-resource-state');
@@ -265,6 +274,9 @@ function show_add_resource(ele) {
     if (add_resource_div.find('.add-resource-county-abbr').length > 0) {
         resource_county_abbr_input = add_resource_div.find('.add-resource-county-abbr');
     }
+    if (add_resource_div.find('.add-resource-account-number').length > 0) {
+        resource_account_number_input = add_resource_div.find('.add-resource-account-number');
+    }
 
     reset_add_resource_div(add_resource_div, add_button, resource_input, resource_state_select, cancel_button);
 
@@ -274,24 +286,27 @@ function show_add_resource(ele) {
     cancel_button.show().on('click', function () {
         add_resource_div.slideUp('fast');
         add_button.show();
-        resource_input.val('')/* .trigger('change') */;
+        resource_input.val('');
         if (resource_state_select) {
-            resource_state_select.val('')/* .trigger('change') */;
+            resource_state_select.val('');
         }
         if (resource_input_color) {
-            resource_input_color.val(resource_input_color.data('default-value'))/* .trigger('change') */;
+            resource_input_color.val(resource_input_color.data('default-value'));
         }
         if (resource_association_select) {
-            resource_association_select.val('')/* .trigger('change') */;
+            resource_association_select.val('');
         }
         if (resource_addendums_select) {
-            resource_addendums_select.val('')/* .trigger('change') */;
+            resource_addendums_select.val('');
         }
         if (resource_form_group_type_select) {
-            resource_form_group_type_select.val('')/* .trigger('change') */;
+            resource_form_group_type_select.val('');
         }
         if (resource_county_abbr_input) {
-            resource_county_abbr_input.val('')/* .trigger('change') */;
+            resource_county_abbr_input.val('');
+        }
+        if (resource_account_number_input) {
+            resource_account_number_input.val('');
         }
         cancel_button.hide();
         reset_add_resource_div(add_resource_div, add_button, resource_input, resource_state_select, cancel_button);
@@ -332,6 +347,9 @@ function show_add_resource(ele) {
             if (resource_county_abbr_input) {
                 resource_county_abbr = resource_county_abbr_input.val();
             }
+            if (resource_account_number_input) {
+                resource_account_number = resource_account_number_input.val();
+            }
 
             formData.append('resource_type', resource_type);
             formData.append('resource_name', resource_name);
@@ -341,15 +359,17 @@ function show_add_resource(ele) {
             formData.append('resource_addendums', resource_addendums);
             formData.append('resource_form_group_type', resource_form_group_type);
             formData.append('resource_county_abbr', resource_county_abbr);
+            formData.append('resource_account_number', resource_account_number);
 
             axios.post('/doc_management/resources/add', formData, axios_options)
                 .then(function (response) {
                     cancel_button.trigger('click');
                     toastr['success']('Resource Added Successfully');
                     let resource_id = response.data;
-                    let new_resource_html = added_item_html(resource_id, resource_type, resource_name, resource_state, resource_color, resource_association, resource_addendums, resource_form_group_type, resource_county_abbr);
+                    let new_resource_html = added_item_html(resource_id, resource_type, resource_name, resource_state, resource_color, resource_association, resource_addendums, resource_form_group_type, resource_county_abbr, resource_account_number);
                     $(new_resource_html).appendTo(appendTo);
-                    options();
+                    //options();
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -363,14 +383,15 @@ function show_add_resource(ele) {
 function reset_add_resource_div(add_resource_div, add_button, resource_input, resource_state_select, cancel_button) {
     add_resource_div.slideUp('fast');
     add_button.show();
-    resource_input.val('')/* .trigger('change') */;
+    resource_input.val('');
     if (resource_state_select) {
-        resource_state_select.val('')/* .trigger('change') */;
+        resource_state_select.val('');
     }
     cancel_button.hide();
     add_resource_div.find('input, select').each(function () {
-        $(this).val($(this).data('default-value'))/* .trigger('change') */;
+        $(this).val($(this).data('default-value'));
     });
+    select_refresh();
 }
 
 function show_edit_resource(ele) {
@@ -404,6 +425,10 @@ function show_edit_resource(ele) {
     if (resource_div.find('.edit-resource-county-abbr').length > 0) {
         resource_county_abbr_input = resource_div.find('.edit-resource-county-abbr');
     }
+    let resource_account_number_input = '';
+    if (resource_div.find('.edit-resource-account-number').length > 0) {
+        resource_account_number_input = resource_div.find('.edit-resource-account-number');
+    }
 
 
     let save = resource_div.find('.save-edit-resource-button');
@@ -414,13 +439,14 @@ function show_edit_resource(ele) {
 
     save.off('click').on('click', function () {
 
-        save_edit_resource($(this), resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, list_group_item, resource_div, resource_type);
+        save_edit_resource($(this), resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, resource_account_number_input, list_group_item, resource_div, resource_type);
+        //select_refresh();
 
     });
 
     close.on('click', function () {
 
-        reset_edit_resource_div(list_group_item, resource_div, resource_input, resource_state_select, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_input_color, resource_county_abbr_input);
+        reset_edit_resource_div(list_group_item, resource_div, resource_input, resource_state_select, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_input_color, resource_county_abbr_input, resource_account_number_input);
 
     });
 
@@ -431,21 +457,21 @@ function reset_edit_resource_div(list_group_item, resource_div, resource_input, 
     resource_div.hide();
     resource_input.val(resource_input.data('default-value'));
     if (resource_state_select) {
-        resource_state_select.val(resource_state_select.data('default-value'))/* .trigger('change') */;
+        resource_state_select.val(resource_state_select.data('default-value'));
     }
     if (resource_input_color) {
-        resource_input_color.val(resource_input_color.data('default-value'))/* .trigger('change') */;
+        resource_input_color.val(resource_input_color.data('default-value'));
     }
     if (resource_association_select) {
-        resource_association_select.val(resource_association_select.data('default-value'))/* .trigger('change') */;
+        resource_association_select.val(resource_association_select.data('default-value'));
     }
     if (resource_addendums_select) {
-        resource_addendums_select.val(resource_addendums_select.data('default-value'))/* .trigger('change') */;
+        resource_addendums_select.val(resource_addendums_select.data('default-value'));
     }
     select_refresh();
 }
 
-function save_edit_resource(ele, resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, list_group_item, resource_div, resource_type) {
+function save_edit_resource(ele, resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, resource_account_number_input, list_group_item, resource_div, resource_type) {
 
     let resource_id = ele.data('resource-id');
     let resource_title = list_group_item.find('.edit-resource-title');
@@ -476,6 +502,10 @@ function save_edit_resource(ele, resource_input, resource_state_select, resource
     if (resource_county_abbr_input) {
         resource_county_abbr = resource_county_abbr_input.val();
     }
+    let resource_account_number = '';
+    if (resource_account_number_input) {
+        resource_account_number = resource_account_number_input.val();
+    }
 
     let resource_title_html = '';
 
@@ -492,6 +522,7 @@ function save_edit_resource(ele, resource_input, resource_state_select, resource
         formData.append('resource_addendums', resource_addendums);
         formData.append('resource_form_group_type', resource_form_group_type);
         formData.append('resource_county_abbr', resource_county_abbr);
+        formData.append('resource_account_number', resource_account_number);
 
         axios.post('/doc_management/resources/edit', formData, axios_options)
             .then(function (response) {

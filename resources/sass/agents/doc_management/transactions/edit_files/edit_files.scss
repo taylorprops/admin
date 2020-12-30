@@ -102,6 +102,10 @@
         }
     }
 
+    #in_process_div {
+        display: none;
+    }
+
 
     // user fields
     .textline-html {
@@ -212,7 +216,7 @@
             font-size: .8rem;
             z-index: 0;
 
-            &:not(.data-div-radio-check) {
+            &:not(.data-div-radio-check):not(.inline-editor) {
                 padding-left: 2px;
                 text-align: center;
             }

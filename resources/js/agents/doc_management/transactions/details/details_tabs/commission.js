@@ -392,8 +392,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         })
         .then(function (response) {
             $('.checks-in-div').html(response.data);
-            $('#checks_in_total_display').text(global_format_number_with_decimals($('#checks_in_total_amount').val().toString()));
-            $('#checks_in_total').val($('#checks_in_total_amount').val().toString());
+            let checks_in_total = $('#checks_in_total_amount').val() ?? '0.00';
+            $('#checks_in_total_display').text(global_format_number_with_decimals(checks_in_total.toString()));
+            $('#checks_in_total').val(checks_in_total.toString());
             $('#checks_in_count').text($('#checks_in_total_count').val());
             $('.delete-check-in-button').off('click').on('click', show_delete_check_in);
             $('.edit-check-in-button').on('click', show_edit_check_in);

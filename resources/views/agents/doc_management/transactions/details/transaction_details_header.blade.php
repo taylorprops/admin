@@ -175,178 +175,184 @@ $status = $resource_items -> GetResourceName($property -> Status);
 <div class="row mt-1 mb-2 listing-header-details">
 
     <div class="col-12">
-        <div class="d-block d-sm-flex justify-content-start flex-wrap">
 
-            <div class="bg-primary d-flex justify-content-start flex-wrap text-white m-1 p-2">
-                <div class="text-white d-none d-sm-inline-block mr-2">
-                    <i class="fad fa-users fa-2x"></i>
-                </div>
+        <div class="row">
 
-                @if($resource_items -> GetResourceId('For Sale By Owner', 'checklist_property_sub_types') != $property -> PropertySubType)
-                <div class="ml-2 pr-2 agent-section border-right header-section">
-                    <span class="font-weight-bold text-yellow">List Agent</span>
-                    <br>
-                    <div>
-                        {{ $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName }}
-                        <br>
-                        {{ $property -> ListOfficeName }}
-                        <br>
-                        @php
-                        $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> ListAgentPreferredPhone).'\'>'.format_phone($property -> ListAgentPreferredPhone).'</a><br>
-                        <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> ListAgentEmail.'\'>'.$property -> ListAgentEmail.'</a>';
-                        @endphp
-                        <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
-                    </div>
-                </div>
-                @endif
+            <div class="col-12 col-sm-6 col-xl-4">
 
-                @if($sellers)
-                <div class="ml-2 header-section">
-                    <span class="font-weight-bold text-yellow">{{ $for_sale ? 'Sellers' : 'Owners' }}</span>
-                    <br>
-                    <div>
-                        @foreach($sellers as $seller)
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                {{ $seller }}
+                <div class="bg-blue-light text-gray rounded p-2 border">
+
+                    <div class="row">
+
+                        @if($resource_items -> GetResourceId('For Sale By Owner', 'checklist_property_sub_types') != $property -> PropertySubType)
+
+                            @php
+                            $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> ListAgentPreferredPhone).'\'>'.format_phone($property -> ListAgentPreferredPhone).'</a><br>
+                            <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> ListAgentEmail.'\'>'.$property -> ListAgentEmail.'</a>';
+                            @endphp
+
+                            <div class="col-6 border-right">
+
+                                <div class="agent-section header-section">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="font-weight-bold">List Agent</span>
+                                        </div>
+                                        <div>
+                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {{ $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName }}
+                                        <br>
+                                        {{ $property -> ListOfficeName }}
+                                    </div>
+                                </div>
+
                             </div>
-                            {{-- <div class="ml-2">
-                                @php
-                                $contact_details = '';
-                                if($seller -> cell_phone != '') {
-                                    $contact_details .= '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($seller -> cell_phone).'\'>'.format_phone($seller -> cell_phone).'</a><br>';
-                                }
-                                if($seller -> email != '') {
-                                    $contact_details .= '<i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$seller -> email.'\'>'.$seller -> email.'</a>';
-                                }
-                                @endphp
-                                @if($seller -> cell_phone != '' || $seller -> email != '')
-                                <a href="javascript: void(0)" class="btn btn-sm btn-primary" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
+
+                        @endif
+
+                        <div class="col-6">
+
+                            <div class="header-section">
+                                <span class="font-weight-bold">{{ $for_sale ? 'Sellers' : 'Owners' }}</span>
+                                <br>
+                                @if($sellers)
+                                    @foreach($sellers as $seller)
+                                        <div>
+                                            {{ $seller }}
+                                        </div>
+                                    @endforeach
                                 @endif
-                            </div> --}}
+                            </div>
+
                         </div>
-                        @endforeach
+
+
                     </div>
+
                 </div>
+
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-4">
+
+                @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
+
+                    @php
+                    $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
+                    <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
+                    @endphp
+
+                    <div class="bg-blue-light text-gray rounded p-2 border">
+
+                        <div class="row">
+
+                            <div class="col-6 border-right">
+                                <div class="agent-section header-section">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="font-weight-bold">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</span>
+                                        </div>
+                                        <div>
+                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
+                                        <br>
+                                        {{ $property -> BuyerOfficeName }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="header-section">
+                                    <span class="font-weight-bold">{{ $for_sale ? 'Buyers' : 'Renters' }}</span>
+                                    <br>
+                                    @if(count($buyers) > 0)
+                                        @foreach($buyers as $buyer)
+                                            <div>
+                                                {{ $buyer }}
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 @endif
             </div>
 
-            @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
-            <div class="bg-primary d-flex justify-content-start flex-wrap text-white m-1 p-2">
-                <div class="text-white d-none d-sm-inline-block mr-2">
-                    <i class="fad fa-users fa-2x"></i>
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="bg-blue-light text-gray rounded h-100 border">
+
+                    @if($for_sale || $transaction_type == 'listing')
+
+                        <div class="container pt-2 pr-5">
+                            <div class="row">
+                                <div class="col-6 text-right pr-0">
+                                    <span class="text-primary text-nowrap">Status</span>
+                                </div>
+                                <div class="col-6 text-left text-nowrap">
+                                    {{ $status }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-right pr-0">
+                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') List Date @else Offer Date @endif</span>
+                                </div>
+                                <div class="col-6 text-left">
+                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> MLSListDate)) }} @else {{ date('n/j/Y', strtotime($property -> ContractDate)) }} @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-right pr-0">
+                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') Expires Date @else Settle Date @endif</span>
+                                </div>
+                                <div class="col-6 text-left">
+                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> ExpirationDate)) }} @else {{ date('n/j/Y', strtotime($property -> CloseDate)) }} @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
+                                    <span class="text-primary">@if($transaction_type == 'listing') {{ $for_sale ? 'List Price' : 'Lease Amount' }} @else Sale Price @endif</span>
+                                </div>
+                                <div class="col-6 text-left text-nowrap">
+                                    @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> ContractPrice) }} @endif
+                                </div>
+                            </div>
+                        </div>
+
+                    @else
+
+                        <div class="container pr-5">
+                            <div class="row">
+                                <div class="col-6 text-right pr-0">
+                                    <span class="font-weight-bold text-nowrap">Lease Date</span>
+                                </div>
+                                <div class="col-6 text-left">
+                                    {{ date('n/j/Y', strtotime($property -> CloseDate)) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
+                                    <span class="font-weight-bold">Lease Price</span>
+                                </div>
+                                <div class="col-6 text-left text-nowrap">
+                                    @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> LeaseAmount) }}  @endif
+                                </div>
+                            </div>
+                        </div>
+
+                    @endif
+
                 </div>
-                <div class="ml-2 pr-2 agent-section border-right header-section">
-                    <span class="font-weight-bold text-yellow">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</span>
-                    <br>
-                    <div>
-                        {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
-                        <br>
-                        {{ $property -> BuyerOfficeName }}
-                        <br>
-                        @php
-                        $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
-                        <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
-                        @endphp
-                        <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
-                    </div>
-                </div>
-                @if(count($buyers) > 0)
-                <div class="ml-2 header-section">
-                    <span class="font-weight-bold text-yellow">{{ $for_sale ? 'Buyers' : 'Renters' }}</span>
-                    <br>
-                    <div>
-                        @foreach($buyers as $buyer)
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                {{ $buyer }}
-                            </div>
-                            {{-- <div class="ml-2">
-                                @php
-                                $contact_details = '';
-                                if($buyer -> cell_phone != '') {
-                                    $contact_details .= '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($buyer -> cell_phone).'\'>'.format_phone($buyer -> cell_phone).'</a><br>';
-                                }
-                                if($buyer -> email != '') {
-                                    $contact_details .= '<i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$buyer -> email.'\'>'.$buyer -> email.'</a>';
-                                }
-                                @endphp
-                                @if($buyer -> cell_phone != '' || $buyer -> email != '')
-                                <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
-                                @endif
-                            </div> --}}
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-            </div>
-            @endif
-
-            <div class="bg-primary d-flex justify-content-start text-white p-2 m-1">
-                <div class="text-white d-none d-sm-inline-block mr-2">
-                    <i class="fad fa-home-alt fa-2x"></i>
-                </div>
-
-                @if($for_sale || $transaction_type == 'listing')
-
-                    <div class="container pr-5">
-                        <div class="row">
-                            <div class="col-6 text-right pr-0">
-                                <span class="font-weight-bold text-yellow text-nowrap">Status</span>
-                            </div>
-                            <div class="col-6 text-left text-nowrap">
-                                {{ $status }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-right pr-0">
-                                <span class="font-weight-bold text-yellow text-nowrap">@if($transaction_type == 'listing') List Date @else Offer Date @endif</span>
-                            </div>
-                            <div class="col-6 text-left">
-                                @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> MLSListDate)) }} @else {{ date('n/j/Y', strtotime($property -> ContractDate)) }} @endif
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-right pr-0">
-                                <span class="font-weight-bold text-yellow text-nowrap">@if($transaction_type == 'listing') Expires Date @else Settle Date @endif</span>
-                            </div>
-                            <div class="col-6 text-left">
-                                @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> ExpirationDate)) }} @else {{ date('n/j/Y', strtotime($property -> CloseDate)) }} @endif
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
-                                <span class="font-weight-bold text-yellow">@if($transaction_type == 'listing') {{ $for_sale ? 'List Price' : 'Lease Amount' }} @else Sale Price @endif</span>
-                            </div>
-                            <div class="col-6 text-left text-nowrap">
-                                @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> ContractPrice) }} @endif
-                            </div>
-                        </div>
-                    </div>
-
-                @else
-
-                    <div class="container pr-5">
-                        <div class="row">
-                            <div class="col-6 text-right pr-0">
-                                <span class="font-weight-bold text-yellow text-nowrap">Lease Date</span>
-                            </div>
-                            <div class="col-6 text-left">
-                                {{ date('n/j/Y', strtotime($property -> CloseDate)) }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
-                                <span class="font-weight-bold text-yellow">Lease Price</span>
-                            </div>
-                            <div class="col-6 text-left text-nowrap">
-                                @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> LeaseAmount) }}  @endif
-                            </div>
-                        </div>
-                    </div>
-
-                @endif
 
             </div>
 

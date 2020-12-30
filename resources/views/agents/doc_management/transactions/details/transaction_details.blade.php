@@ -1535,6 +1535,171 @@
     </div>
 </div>
 
+
+{{-- earnest --}}
+
+<div class="modal fade draggable" id="add_earnest_check_modal" tabindex="-1" role="dialog" aria-labelledby="add_earnest_check_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary draggable-handle">
+                <h4 class="modal-title" id="add_earnest_check_modal_title">Add Check</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <form id="add_earnest_check_form" enctype="multipart/form-data">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="h5 text-orange">Upload</div>
+                                </div>
+                                <div class="col-12">
+                                    <div><input type="file" accept="application/pdf" class="custom-form-element form-input-file required" name="add_earnest_check_upload" id="add_earnest_check_upload" data-label="Click to search or Drag and Drop files here"></div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="add-earnest-check-preview-div"></div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="h5 text-orange">Check Details</div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                    <input type="text" class="custom-form-element form-input required" name="add_earnest_check_name" id="add_earnest_check_name" data-label="Name On Check">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                    <input type="text" class="custom-form-element form-input required" name="add_earnest_check_payable_to" id="add_earnest_check_payable_to" data-label="Payable To">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input datepicker required" name="add_earnest_check_date" id="add_earnest_check_date" data-label="Date On Check">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input numbers-only required" name="add_earnest_check_number" id="add_earnest_check_number" data-label="Check Number">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="add_earnest_check_amount" id="add_earnest_check_amount" data-label="Check Amount">
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_deposited" id="add_earnest_check_date_deposited" data-label="Date Deposited">
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_sent" id="add_earnest_check_date_sent" data-label="Date Sent">
+                                </div>
+
+                                <div class="col-12 col-lg-9 check-out">
+                                    <input type="text" class="custom-form-element form-input name="add_earnest_check_mailing_address" id="add_earnest_check_mailing_address" data-label="Mail To Address">
+                                </div>
+
+                            </div>
+
+                            <input type="hidden" id="add_earnest_check_type" name="add_earnest_check_type">
+
+                        </form>
+
+                        <div class="d-flex justify-content-around">
+                            <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                            <button type="button" class="btn btn-success" id="save_add_earnest_check_button"><i class="fad fa-check mr-2"></i> Save</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable" id="edit_earnest_check_modal" tabindex="-1" role="dialog" aria-labelledby="edit_earnest_check_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary draggable-handle">
+                <h4 class="modal-title" id="edit_earnest_check_modal_title">Add Check</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <form id="edit_earnest_check_form" enctype="multipart/form-data">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="h5 text-orange">Upload</div>
+                                </div>
+                                <div class="col-12">
+                                    <div><input type="file" accept="application/pdf" class="custom-form-element form-input-file required" name="edit_earnest_check_upload" id="edit_earnest_check_upload" data-label="Click to search or Drag and Drop files here"></div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="edit-earnest-check-preview-div"></div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="h5 text-orange">Check Details</div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                    <input type="text" class="custom-form-element form-input required" name="edit_earnest_check_name" id="edit_earnest_check_name" data-label="Name On Check">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                    <input type="text" class="custom-form-element form-input required" name="edit_earnest_check_payable_to" id="edit_earnest_check_payable_to" data-label="Payable To">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input datepicker required" name="edit_earnest_check_date" id="edit_earnest_check_date" data-label="Date On Check">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input numbers-only required" name="edit_earnest_check_number" id="edit_earnest_check_number" data-label="Check Number">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="edit_earnest_check_amount" id="edit_earnest_check_amount" data-label="Check Amount">
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_check_date_deposited" id="edit_earnest_check_date_deposited" data-label="Date Deposited">
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_check_date_sent" id="edit_earnest_check_date_sent" data-label="Date Sent">
+                                </div>
+
+                                <div class="col-12 col-lg-9 check-out">
+                                    <input type="text" class="custom-form-element form-input name="edit_earnest_check_mailing_address" id="edit_earnest_check_mailing_address" data-label="Mail To Address">
+                                </div>
+
+                            </div>
+
+                            <input type="hidden" id="edit_earnest_check_type" name="edit_earnest_check_type">
+
+                        </form>
+
+                        <div class="d-flex justify-content-around">
+                            <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                            <button type="button" class="btn btn-success" id="save_edit_earnest_check_button"><i class="fad fa-check mr-2"></i> Save</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
 {{-- accept/cancel/release listings and contracts --}}
 <div class="modal fade draggable" id="accept_contract_modal" tabindex="-1" role="dialog" aria-labelledby="accept_contract_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

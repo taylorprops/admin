@@ -347,7 +347,7 @@ if (document.URL.match(/edit_files/)) {
 
         function save_edit_file() {
 
-            $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>');
+            $('#save_file_button').prop('disabled', true).html('<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>');
 
             // save system field input values
             let inputs = [];
@@ -735,8 +735,9 @@ if (document.URL.match(/edit_files/)) {
 
         function to_pdf() {
 
-            global_loading_on('', '<div class="h3 text-white">Merging Fields, Creating and Saving PDF.</div> <div class="h3 mt-5 text-yellow">Please be patient, this process can take <br>5 - 10 seconds for each page.</div>');
+            //global_loading_on('', '<div class="h3 text-white">Merging Fields, Creating and Saving PDF.</div> <div class="h3 mt-5 text-yellow">Please be patient, this process can take <br>5 - 10 seconds for each page.</div>');
 
+            toastr['success']('Changes Successfully Saved');
 
             let els = '.data-div, .file-image-bg, .field-div, .data-div-radio-check';
             let styles;
@@ -750,16 +751,16 @@ if (document.URL.match(/edit_files/)) {
 
             // set inline styles for PDF
             // system fields
-            $('.data-div').not('.data-div-radio-check, .highlight, .strikeout').css({ 'font-size': '.9rem', 'color': 'black', 'padding-top': '4px', 'font-family': '\'Roboto\', sans-serif' });
+            $('.data-div').not('.data-div-radio-check, .highlight-html, .strikeout-html').css({ 'font-size': '.9rem', 'color': 'black', 'padding-top': '4px', 'font-family': '\'Roboto\', sans-serif' });
             $('.data-div').not('.inline-editor').css({ 'text-align': 'center' });
             $('.data-div-checkbox').css({ 'margin-left': '3px', 'margin-top': '2px', 'color': '#000', 'font-size': '1.5em', 'line-height': '35%', 'font-weight': 'bold', 'font-family': '\'Roboto\', sans-serif' });
             $('.data-div-radio').css({ 'margin-left': '2px', 'color': '#000', 'font-size': '1.5em', 'line-height': '40%', 'font-weight': 'bold', 'font-family': '\'Roboto\', sans-serif' });
             // remove background
-            $('.file-image-bg').css({ opacity: '0.0' });
+            //$('.file-image-bg').css({ opacity: '0.0' });
 
             // user fields
-            $('.data-div.highlight').css({ background: 'yellow', opacity: '0.5', width: '100%', height: '100%' });
-            $('.data-div.strikeout').css({ width: '100%', height: '4px', background: 'black', display: 'block', position: 'relative', 'margin-top': '8px' });
+            $('.data-div.highlight-html').css({ background: 'yellow', opacity: '0.5', width: '100%', height: '100%' });
+            $('.data-div.strikeout-html').css({ width: '100%', height: '4px', background: 'black', display: 'block', position: 'relative', 'margin-top': '8px' });
 
 
             let file_id = $('#file_id').val();
@@ -771,7 +772,7 @@ if (document.URL.match(/edit_files/)) {
             let transaction_type = $('#transaction_type').val();
 
             // remove datepicker html, datepicker input, background img, modals, left over input fields
-            let elements_remove = '.file-image-bg, .field-div, .qs-datepicker-container, .field-datepicker, .inputs-container';
+            let elements_remove = '.file-image-bg, .field-div, .field-options-holder, .field-handle, .qs-datepicker-container, .field-datepicker, .inputs-container';
 
             let formData = new FormData();
 
@@ -784,6 +785,7 @@ if (document.URL.match(/edit_files/)) {
 
                 page_html.find(elements_remove).remove();
                 page_html = page_html.wrap('<div>').parent().html();
+                console.log(page_html);
 
                 formData.append('page_' + c, page_html);
             });
@@ -806,19 +808,48 @@ if (document.URL.match(/edit_files/)) {
                     });
                 });
 
-            }, 300);
+            }, 1000);
+
+            in_process([file_id]);
+            $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
 
             axios_options['header'] = { 'content-type': 'multipart/form-data' };
             axios.post('/agents/doc_management/transactions/edit_files/convert_to_pdf', formData, axios_options)
                 .then(function (response) {
 
-                    global_loading_off();
-                    toastr['success']('Changes Successfully Saved');
-                    $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
+                    //global_loading_off();
+                    /* toastr['success']('Changes Successfully Saved');
+                    $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save'); */
                 })
                 .catch(function (error) {
                     //console.log(error);
                     });
+
+        }
+
+        function in_process(document_ids) {
+
+            let formData = new FormData();
+            formData.append('document_ids', document_ids);
+
+            check_in_process = setInterval(function () {
+
+                axios.post('/agents/doc_management/transactions/in_process', formData, axios_options)
+                .then(function (response) {
+                    if(response.data.in_process.length > 0) {
+                        $('#in_process_div').show();
+                    } else {
+                        clearInterval(check_in_process);
+                        $('#save_file_button').prop('disabled', false);
+                        $('#in_process_div').hide();
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            }, 1000);
+
 
 
 

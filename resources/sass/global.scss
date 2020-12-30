@@ -171,6 +171,9 @@ ul {
 .wp-125 {
     width: 125px;
 }
+.wp-150 {
+    width: 150px;
+}
 
 .w-5 {
     width: 5%;
@@ -242,8 +245,11 @@ ul {
     animation: fadeIn 0.5s;
 }
 
-
-
+// calendar
+.qs-current {
+    background: $primary;
+    color: $white;
+}
 @keyframes fadeIn {
     from {
         opacity: 0.25;

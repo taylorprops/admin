@@ -90,6 +90,13 @@ $(function() {
         handle: '.draggable-handle'
     });
 
+    $(document).on('change', 'input[type="file"]', function() {
+        let file_name = Array.from(this.files).map(x => x.name).join(', ')
+        $(this).siblings('.custom-file-label').addClass("selected").html(file_name);
+        /* let file_name = $(this).val();
+        $(this).siblings('.custom-file-label').html(file_name); */
+    });
+
 
     let format_phone = setInterval(function() {
         $('.phone').not('.formatted').each(function() {

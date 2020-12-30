@@ -693,7 +693,15 @@ if (document.URL.match(/transaction_details/)) {
 
                 } else if (tab == 'documents') {
 
+                    let document_ids = [];
+
                     setTimeout(function () {
+
+                        $('.document-div').each(function() {
+                            document_ids.push($(this).data('document-id'));
+                        });
+                        in_process(document_ids);
+
                         $('.check-all').next('label').css({ transform: 'scale(1.2)' });
                         select_form_group();
                         $('#add_documents_div').on('show.bs.collapse', function () {
@@ -723,7 +731,12 @@ if (document.URL.match(/transaction_details/)) {
 
                         get_emailed_documents();
 
+
                     }, 100);
+
+                    setInterval(function() {
+                        in_process(document_ids);
+                    }, 3000);
 
                 } else if (tab == 'checklist') {
 
@@ -883,8 +896,18 @@ if (document.URL.match(/transaction_details/)) {
 
 
 
-                }
+                } else if(tab == 'earnest') {
 
+                    $('#save_earnest_button').off('click').on('click', save_earnest);
+                    $('.add-check-button').off('click').on('click', function() {
+                        add_earnest_check($(this).data('type'));
+                    });
+                    $('#save_add_earnest_check_button').off('click').on('click', save_add_earnest_check);
+                    get_earnest_check_info();
+                    get_earnest_checks('in');
+                    get_earnest_checks('out');
+
+                }
 
 
                 $('.nav-link[data-tab]').on('click', function() {

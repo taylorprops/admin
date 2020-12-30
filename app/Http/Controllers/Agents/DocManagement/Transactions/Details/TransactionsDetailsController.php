@@ -31,6 +31,7 @@ use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNo
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use App\Models\DocManagement\Transactions\Documents\InProcess;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
@@ -52,6 +53,10 @@ use App\Models\Commission\CommissionChecksOut;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Commission\CommissionIncomeDeductions;
 use App\Models\Commission\CommissionCommissionDeductions;
+
+use App\Models\DocManagement\Earnest\Earnest;
+use App\Models\DocManagement\Earnest\EarnestChecks;
+use App\Models\DocManagement\Earnest\EarnestNotes;
 
 use App\Models\Employees\Agents;
 use App\Models\Employees\AgentsTeams;
@@ -995,6 +1000,33 @@ class TransactionsDetailsController extends Controller {
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
         return view('/agents/doc_management/transactions/details/data/get_documents', compact('transaction_type', 'property', 'Agent_ID', 'Listing_ID', 'Contract_ID', 'checklist_id', 'documents', 'folders', 'available_files', 'property_email', 'for_sale'));
+    }
+
+    public function in_process(Request $request) {
+
+        $document_ids = explode(',', $request -> document_ids);
+
+        $in_process = [];
+        $not_in_process =[];
+
+        if(count($document_ids) > 0) {
+
+            foreach($document_ids as $document_id) {
+                $in_process_check = InProcess::where('document_id', $document_id) -> get();
+                if(count($in_process_check) > 0) {
+                    $in_process[] = $document_id;
+                } else {
+                    $not_in_process[] = $document_id;
+                }
+            }
+
+        }
+
+        return response() -> json([
+            'in_process' => $in_process,
+            'not_in_process' => $not_in_process
+            ]);
+
     }
 
     public function add_folder(Request $request) {
@@ -3015,7 +3047,7 @@ class TransactionsDetailsController extends Controller {
 
     public function get_check_details(Request $request) {
 
-        $check = $request -> file('check_in_upload') ?? $request -> file('check_out_upload');
+        $check = $request -> file('check_in_upload') ?? $request -> file('check_out_upload') ?? $request -> file('add_earnest_check_upload');
 
         $new_file_name = str_replace('.pdf', '', $check -> getClientOriginalName());
         $new_file_name = date('YmdHis').'_'.sanitize($new_file_name).'.png';
@@ -3477,9 +3509,114 @@ class TransactionsDetailsController extends Controller {
 
     public function get_earnest(Request $request) {
 
-        $earnest = '';
-        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest'));
+        $Contract_ID = $request -> Contract_ID;
+
+        $earnest = Earnest::where('Contract_ID', $Contract_ID) -> with('checks') -> with('notes') -> first();
+        $property = Contracts::find($Contract_ID);
+        $agent = Agents::find($property -> Agent_ID);
+
+        $earnest_held_by = $earnest -> held_by != '' ? $earnest -> held_by : $property ->  EarnestHeldBy;
+
+        // earnest accounts
+        $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> orderBy('resource_order') -> get();
+
+        $suggested_earnest_account = $earnest -> earnest_account;
+        if($suggested_earnest_account == '') {
+
+            $state = $property -> StateOrProvince;
+            $company = $agent -> company;
+
+            if($state == 'MD') {
+                $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> where('resource_name', $company) -> first() -> resource_id;
+            } else {
+                $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> first() -> resource_id;
+            }
+
+        }
+
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account'));
     }
+
+    public function get_earnest_checks_in(Request $request) {
+
+    }
+
+    public function get_earnest_checks_out(Request $request) {
+
+    }
+
+    public function save_earnest(Request $request) {
+
+        // update earnest
+        $earnest = Earnest::find($request -> Earnest_ID);
+        $earnest -> update(['held_by' => $request -> earnest_held_by, 'earnest_account' => $request -> earnest_account]);
+
+        // update property
+        $property = Contracts::find($earnest -> Contract_ID) -> update(['EarnestHeldBy' => $request -> earnest_held_by]);
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function save_add_earnest_check(Request $request) {
+
+        $Earnest_ID = $request -> Earnest_ID;
+        $check_type = $request -> add_earnest_check_type;
+        $check_name = $request -> add_earnest_check_name;
+        $payable_to = $request -> add_earnest_check_payable_to;
+        $check_date = $request -> add_earnest_check_date;
+        $check_number = $request -> add_earnest_check_number;
+        $check_amount = preg_replace('/[\$,]+/', '', $request -> add_earnest_check_amount);
+        $date_deposited = $request -> add_earnest_check_date_deposited;
+        $mail_to_address = $request -> add_earnest_check_mail_to_address;
+        $date_sent = $request -> add_earnest_check_date_sent;
+
+        $file = $request -> file('add_earnest_check_upload');
+        $ext = $file -> getClientOriginalExtension();
+        $file_name = $file -> getClientOriginalName();
+        $file_name_no_ext = str_replace('.' . $ext, '', $file_name);
+        $clean_file_name = sanitize($file_name_no_ext);
+        $new_file_name = $clean_file_name . '.' . $ext;
+
+        // create upload folder storage/earnest/checks_in/earnest_id/ or queue
+        $path = 'earnest/checks_in/'.$Earnest_ID;
+        if(!Storage::disk('public') -> exists($path)) {
+            Storage::disk('public') -> makeDirectory($path);
+        }
+        // move file to folder
+        if(!Storage::disk('public') -> put($path.'/'.$new_file_name, file_get_contents($file))) {
+            $fail = json_encode(['fail' => 'File Not Uploaded']);
+            return ($fail);
+        }
+        $file_location = '/storage/'.$path.'/'.$new_file_name;
+
+        $new_image_name = str_replace('.pdf', '.png', $new_file_name);
+        $image_location = '/storage/'.$path.'/'.$new_image_name;
+
+        // convert to image
+        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path($path.'/'.$new_image_name));
+
+        $add_earnest = new EarnestChecks();
+        $add_earnest -> Earnest_ID = $Earnest_ID;
+        $add_earnest ->  check_type = $check_type;
+        $add_earnest -> check_name = $check_name;
+        $add_earnest -> payable_to = $payable_to;
+        $add_earnest -> check_date = $check_date;
+        $add_earnest -> check_number = $check_number;
+        $add_earnest -> check_amount = $check_amount;
+        $add_earnest -> date_deposited = $date_deposited;
+        $add_earnest -> mail_to_address = $mail_to_address;
+        $add_earnest -> date_sent = $date_sent;
+        $add_earnest -> file_location = $file_location;
+        $add_earnest -> image_location = $image_location;
+        $add_earnest -> save();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+
 
     // End Earnest Tab
 
@@ -3590,6 +3727,12 @@ class TransactionsDetailsController extends Controller {
         $commission -> Agent_ID = $Agent_ID;
         $commission -> save();
         $Commission_ID = $commission -> id;
+
+        // add to earnest
+        $add_earnest = new Earnest();
+        $add_earnest -> Contract_ID = $Contract_ID;
+        $add_earnest -> Agent_ID = $Agent_ID;
+        $add_earnest -> save();
 
         $new_transaction -> PropertyEmail = $email;
         $new_transaction -> Commission_ID = $Commission_ID;

@@ -19,11 +19,12 @@ $pink: #f66d9b;
 $red: #b64341;
 $red-light: #f8d9d9;
 $orange: #df7935;
+$orange-hover: #e06e23;
 $orange-light: #f8e5e3;
 $orange-dark: #943d31;
 $yellow: #ffed4a;
 $yellow-light: #f7efae;
-$green: #30a730;
+$green: #2d8d2d;
 $green-light: #bef1be;
 $green-dark: #1b631b;
 $teal: #4dc0b5;
@@ -73,7 +74,7 @@ $text-gray-dark: #5d5a5a;
     color: $text-gray-dark;
 }
 a.text-orange:hover {
-    color: $orange-dark;
+    color: $orange-hover;
 }
 .text-green {
     color: $green;
@@ -157,7 +158,7 @@ a.text-green:hover {
 
 $badge_blue: #4594d4;
 $badge_blue_light: #e9ecf0;
-$badge_green: #33ad33;
+$badge_green: #329732;
 $badge_orange: #d47433;
 $badge_red: #a33a38;
 $badge_default: #6a839e;

@@ -71,7 +71,7 @@
 
     <div class="row">
 
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xl-8">
 
             <div id="emailed_documents_container" class="p-4 mb-3 border rounded animate__animated animate__fadeIn">
 
@@ -106,14 +106,29 @@
                     </select>
                 </div>
 
-                <div class="d-flex justify-content-around">
-                    <a href="javascript: void(0)" class="btn btn-success" id="add_emailed_documents_button"><i class="fal fa-plus mr-2"></i> Add Documents</a>
+                <div class="d-flex justify-content-around mt-3">
+                    <a href="javascript: void(0)" class="btn btn-success" id="add_emailed_documents_button"><i class="fal fa-download mr-2"></i> Import Documents</a>
                 </div>
 
             </div>
 
         </div>
 
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning" id="in_process_div">
+                <div class="d-flex justify-content-start align-items-center">
+                    <div class="mr-4">
+                        <i class="fad fa-cog fa-spin fa-lg"></i>
+                    </div>
+                    <div>
+                        You have documents still being processed. They should be available soon.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -235,6 +250,9 @@
                                         </div>
                                         <div class="mx-2 mr-md-4">
                                             <input type="checkbox" class="custom-form-element form-checkbox check-document  {{ $assigned }}" data-document-id="{{ $document -> id }}">
+                                        </div>
+                                        <div class="mr-2 in-process-icon">
+                                            <i class="fad fa-cog fa-spin fa-lg text-orange"></i>
                                         </div>
                                         <div class="text-gray document-title py-1 py-sm-2">
                                             <a href="{{ $document -> file_location_converted }}" target="_blank">{{ $document -> file_name_display }}</a>

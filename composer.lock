@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e052685fc414880c47cac4514aba0c69",
+    "content-hash": "79251f4b2412440b916eec1b1def03d0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2618,163 +2618,6 @@
             "time": "2020-08-18T17:17:46+00:00"
         },
         {
-            "name": "setasign/fpdf",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Setasign/FPDF.git",
-                "reference": "d77904018090c17dc9f3ab6e944679a7a47e710a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/d77904018090c17dc9f3ab6e944679a7a47e710a",
-                "reference": "d77904018090c17dc9f3ab6e944679a7a47e710a",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "fpdf.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Olivier Plathey",
-                    "email": "oliver@fpdf.org",
-                    "homepage": "http://fpdf.org/"
-                }
-            ],
-            "description": "FPDF is a PHP class which allows to generate PDF files with pure PHP. F from FPDF stands for Free: you may use it for any kind of usage and modify it to suit your needs.",
-            "homepage": "http://www.fpdf.org",
-            "keywords": [
-                "fpdf",
-                "pdf"
-            ],
-            "support": {
-                "source": "https://github.com/Setasign/FPDF/tree/1.8.2"
-            },
-            "time": "2019-12-08T10:32:10+00:00"
-        },
-        {
-            "name": "setasign/fpdi",
-            "version": "v2.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Setasign/FPDI.git",
-                "reference": "f2246c8669bd25834f5c264425eb0e250d7a9312"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/f2246c8669bd25834f5c264425eb0e250d7a9312",
-                "reference": "f2246c8669bd25834f5c264425eb0e250d7a9312",
-                "shasum": ""
-            },
-            "require": {
-                "ext-zlib": "*",
-                "php": "^5.6 || ^7.0 || ^8.0"
-            },
-            "conflict": {
-                "setasign/tfpdf": "<1.31"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~5.7",
-                "setasign/fpdf": "~1.8",
-                "setasign/tfpdf": "1.31",
-                "squizlabs/php_codesniffer": "^3.5",
-                "tecnickcom/tcpdf": "~6.2"
-            },
-            "suggest": {
-                "setasign/fpdf": "FPDI will extend this class but as it is also possible to use TCPDF or tFPDF as an alternative. There's no fixed dependency configured."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "setasign\\Fpdi\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jan Slabon",
-                    "email": "jan.slabon@setasign.com",
-                    "homepage": "https://www.setasign.com"
-                },
-                {
-                    "name": "Maximilian Kresse",
-                    "email": "maximilian.kresse@setasign.com",
-                    "homepage": "https://www.setasign.com"
-                }
-            ],
-            "description": "FPDI is a collection of PHP classes facilitating developers to read pages from existing PDF documents and use them as templates in FPDF. Because it is also possible to use FPDI with TCPDF, there are no fixed dependencies defined. Please see suggestions for packages which evaluates the dependencies automatically.",
-            "homepage": "https://www.setasign.com/fpdi",
-            "keywords": [
-                "fpdf",
-                "fpdi",
-                "pdf"
-            ],
-            "support": {
-                "issues": "https://github.com/Setasign/FPDI/issues",
-                "source": "https://github.com/Setasign/FPDI/tree/v2.3.5"
-            },
-            "funding": [
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/setasign/fpdi",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-12-03T13:40:03+00:00"
-        },
-        {
-            "name": "setasign/fpdi-fpdf",
-            "version": "v2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Setasign/FPDI-FPDF.git",
-                "reference": "f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDI-FPDF/zipball/f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357",
-                "reference": "f2fdc44e4d5247a3bb55ed2c2c1396ef05c02357",
-                "shasum": ""
-            },
-            "require": {
-                "setasign/fpdf": "^1.8.2",
-                "setasign/fpdi": "^2.3"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jan Slabon",
-                    "email": "jan.slabon@setasign.com",
-                    "homepage": "https://www.setasign.com"
-                }
-            ],
-            "description": "Kind of metadata package for dependencies of the latest versions of FPDI and FPDF.",
-            "homepage": "https://www.setasign.com/fpdi",
-            "keywords": [
-                "fpdf",
-                "fpdi",
-                "pdf"
-            ],
-            "support": {
-                "source": "https://github.com/Setasign/FPDI-FPDF/tree/v2.3.0"
-            },
-            "abandoned": true,
-            "time": "2020-02-19T12:21:53+00:00"
-        },
-        {
             "name": "socrata/soda-php",
             "version": "dev-develop",
             "source": {
@@ -2819,64 +2662,6 @@
                 "source": "https://github.com/socrata/soda-php/tree/develop"
             },
             "time": "2017-10-10T23:44:13+00:00"
-        },
-        {
-            "name": "spipu/html2pdf",
-            "version": "v5.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spipu/html2pdf.git",
-                "reference": "e6d8ca22347b6691bb8c2652212b1be2c89b3eff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spipu/html2pdf/zipball/e6d8ca22347b6691bb8c2652212b1be2c89b3eff",
-                "reference": "e6d8ca22347b6691bb8c2652212b1be2c89b3eff",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "ext-mbstring": "*",
-                "php": "^5.6 || ^7.0",
-                "tecnickcom/tcpdf": "^6.2"
-            },
-            "require-dev": {
-                "phake/phake": "^2.0",
-                "phpunit/phpunit": "^5.0"
-            },
-            "suggest": {
-                "ext-gd": "Allows to embed images into the PDF",
-                "fagundes/zff-html2pdf": "if you need to integrate Html2Pdf with Zend Framework 2 (zf2)"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spipu\\Html2Pdf\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Spipu",
-                    "homepage": "https://github.com/spipu",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Html2Pdf is a HTML to PDF converter written in PHP5 (it uses TCPDF). OFFICIAL PACKAGE",
-            "homepage": "http://html2pdf.fr/",
-            "keywords": [
-                "html",
-                "html2pdf",
-                "pdf"
-            ],
-            "support": {
-                "issues": "https://github.com/spipu/html2pdf/issues",
-                "source": "https://github.com/spipu/html2pdf/tree/v5.2.2"
-            },
-            "time": "2020-03-22T16:23:26+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5047,72 +4832,6 @@
             "time": "2020-12-16T17:02:19+00:00"
         },
         {
-            "name": "tecnickcom/tcpdf",
-            "version": "6.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/19a535eaa7fb1c1cac499109deeb1a7a201b4549",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "config",
-                    "include",
-                    "tcpdf.php",
-                    "tcpdf_parser.php",
-                    "tcpdf_import.php",
-                    "tcpdf_barcodes_1d.php",
-                    "tcpdf_barcodes_2d.php",
-                    "include/tcpdf_colors.php",
-                    "include/tcpdf_filters.php",
-                    "include/tcpdf_font_data.php",
-                    "include/tcpdf_fonts.php",
-                    "include/tcpdf_images.php",
-                    "include/tcpdf_static.php",
-                    "include/barcodes/datamatrix.php",
-                    "include/barcodes/pdf417.php",
-                    "include/barcodes/qrcode.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "Nicola Asuni",
-                    "email": "info@tecnick.com",
-                    "role": "lead"
-                }
-            ],
-            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
-            "homepage": "http://www.tcpdf.org/",
-            "keywords": [
-                "PDFD32000-2008",
-                "TCPDF",
-                "barcodes",
-                "datamatrix",
-                "pdf",
-                "pdf417",
-                "qrcode"
-            ],
-            "support": {
-                "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
-            },
-            "time": "2020-02-14T14:20:12+00:00"
-        },
-        {
             "name": "thiagoalessio/tesseract_ocr",
             "version": "2.9.5",
             "source": {
@@ -6216,61 +5935,6 @@
                 "source": "https://github.com/filp/whoops/tree/2.9.1"
             },
             "time": "2020-11-01T12:00:00+00:00"
-        },
-        {
-            "name": "fzaninotto/faker",
-            "version": "v1.9.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
-                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0"
-            },
-            "require-dev": {
-                "ext-intl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7",
-                "squizlabs/php_codesniffer": "^2.9.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Faker\\": "src/Faker/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Zaninotto"
-                }
-            ],
-            "description": "Faker is a PHP library that generates fake data for you.",
-            "keywords": [
-                "data",
-                "faker",
-                "fixtures"
-            ],
-            "support": {
-                "issues": "https://github.com/fzaninotto/Faker/issues",
-                "source": "https://github.com/fzaninotto/Faker/tree/v1.9.2"
-            },
-            "abandoned": true,
-            "time": "2020-12-11T09:56:16+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -8413,9 +8077,7 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": {
-        "php": "^7.4.13"
-    },
+    "platform": [],
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }

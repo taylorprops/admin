@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import Sortable from 'sortablejs';
 
 if (document.URL.match(/transaction_details/)) {
@@ -75,6 +76,48 @@ if (document.URL.match(/transaction_details/)) {
 
     });
 
+    window.in_process = function(document_ids) {
+
+        let formData = new FormData();
+        formData.append('document_ids', document_ids);
+        axios.post('/agents/doc_management/transactions/in_process', formData, axios_options)
+        .then(function (response) {
+            show_in_process(response.data.in_process);
+            clear_in_process(response.data.not_in_process);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    function show_in_process(document_ids) {
+        if(document_ids.length > 0) {
+            document_ids.forEach(function (document_id) {
+                let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
+                doc_div.addClass('in-process').find('.check-document').prop('disabled', true);
+                doc_div.find('.in-process-icon').show();
+                doc_div.find('.btn').prop('disabled', true);
+                $('#in_process_div').show();
+            });
+        }
+    }
+
+    function clear_in_process(document_ids) {
+        if($('.in-process').length > 0) {
+            if(document_ids.length > 0) {
+                document_ids.forEach(function (document_id) {
+                    let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
+                    doc_div.removeClass('in-process').find('.check-document').prop('disabled', false);
+                    doc_div.find('.in-process-icon').hide();
+                    doc_div.find('.btn').prop('disabled', false);
+                });
+            }
+        } else {
+            $('#in_process_div').hide();
+        }
+    }
+
     window.remove_emailed_document = function(ele) {
 
         let document_id = ele.data('document-id');
@@ -128,8 +171,8 @@ if (document.URL.match(/transaction_details/)) {
 
                     response.data.forEach(function (doc) {
                         let doc_div = ' \
-                        <div class="list-group-item list-group-item-action py-1 d-flex flex-wrap justify-content-between align-items-center emailed-document" data-document-id="'+doc.id+'" data-file-size="'+doc.file_size+'" data-file-name-display="'+doc.file_name_display+'"> \
-                            <div class="d-flex  flex-wrap justify-content-start align-items-center"> \
+                        <div class="list-group-item list-group-item-action py-1 d-flex justify-content-between align-items-center emailed-document" data-document-id="'+doc.id+'" data-file-size="'+doc.file_size+'" data-file-name-display="'+doc.file_name_display+'"> \
+                            <div class="d-flex justify-content-start align-items-center"> \
                                 <div class="mr-4"> \
                                     <a href="javascript: void(0)" class="remove-emailed-document" data-document-id="'+doc.id+'"><i class="fal fa-times text-danger"></i></a> \
                                 </div> \
@@ -1039,7 +1082,7 @@ if (document.URL.match(/transaction_details/)) {
     window.save_add_template_documents = function(type) {
 
         //$('[data-dismiss="modal"]').trigger('click');
-        $('#add_individual_template_modal').modal('hide');
+        $('#add_individual_template_modal, #add_checklist_template_modal').modal('hide');
 
         let Agent_ID = $('#Agent_ID').val();
         let Listing_ID = $('#Listing_ID').val();
@@ -1419,7 +1462,7 @@ if (document.URL.match(/transaction_details/)) {
             ele.closest('.folder-header').next('.collapse').collapse('show');
         }
         if (ele.is(':checked')) {
-            ele.closest('.folder-div').find('.document-div').find('input').prop('checked', true)/* .trigger('change') */;
+            ele.closest('.folder-div').find('.document-div').find('input').not('input:disabled').prop('checked', true)/* .trigger('change') */;
         } else {
             ele.closest('.folder-div').find('.document-div').find('input').prop('checked', false)/* .trigger('change') */;
         }

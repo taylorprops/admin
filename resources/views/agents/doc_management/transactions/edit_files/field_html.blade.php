@@ -14,7 +14,7 @@ $field_type = $user_field -> field_type;
 $field_category = $user_field -> field_category;
 $field_inputs = $user_field -> field_inputs;
 $field_created_by = $user_field -> field_created_by;
-$inline_editor_class = $field_inputs == 'yes' ? '' : 'inline-editor';
+$inline_editor_class = $field_inputs == 'yes' || $field_type == 'date' ? '' : 'inline-editor';
 if($field_category == 'number' || $field_category == 'checkbox' || $field_category == 'radio' || $field_category == 'strikeout' || $field_category == 'highlight') {
     $inline_editor_class = '';
 }
@@ -44,12 +44,13 @@ if($field_created_by == 'user') {
     } else if($field_category == 'strikeout') {
 
         $field_div_class = 'user-field-div strikeout-div standard';
+        $data_div_classes .= '-html w-100';
         //$field_html = '<div class="data-div strikeout-html"></div>';
 
     } else if($field_category == 'highlight') {
 
         $field_div_class = 'user-field-div highlight-div standard';
-        $data_div_classes .= ' w-100 h-100';
+        $data_div_classes .= '-html w-100 h-100';
         $handles = '
             <div class="field-handle ui-resizable-handle ui-resizable-nw"></div>
             <div class="field-handle ui-resizable-handle ui-resizable-ne"></div>

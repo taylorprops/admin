@@ -82,6 +82,12 @@
                                     </div>
                                     @endif
 
+                                    @if($resource -> resource_account_number != '')
+                                    <div class="col px-1">
+                                        <input type="text" class="custom-form-element form-input add-resource-account-number" value="" data-default-value="" data-label="Account Number">
+                                    </div>
+                                    @endif
+
                                     <div class="col px-1">
                                         <a href="javascript:void(0)" class="btn btn-success add-resource-save-button mt-3"><i class="fad fa-save mr-2"></i> Save</a>
                                     </div>
@@ -100,7 +106,7 @@
 
                                     @if($resources_item -> resource_color)<div class="resource-color-square mr-2 float-left list-item-handle" style="background-color: {{ $resources_item -> resource_color }}"></div> @endif
 
-                                    <span class="edit-resource-title list-item-handle float-left">@if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif</span>
+                                    <span class="edit-resource-title list-item-handle float-left">@if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif  @if($resources_item -> resource_account_number) | {{ $resources_item -> resource_account_number }}@endif</span>
 
                                     {{-- <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fad fa-ban fa-lg"></i></a> --}}
 
@@ -165,6 +171,12 @@
                                             @if($resources_item -> resource_county_abbr != '')
                                             <div class="col px-1">
                                                 <input type="text" class="custom-form-element form-input edit-resource-county-abbr" value="{{ $resources_item -> resource_county_abbr }}" data-default-value="{{ $resources_item -> resource_county_abbr }}" data-label="County Abbr">
+                                            </div>
+                                            @endif
+
+                                            @if($resources_item -> resource_account_number != '')
+                                            <div class="col px-1">
+                                                <input type="text" class="custom-form-element form-input edit-resource-account-number" value="{{ $resources_item -> resource_account_number }}" data-default-value="{{ $resources_item -> resource_account_number }}" data-label="County Abbr">
                                             </div>
                                             @endif
 

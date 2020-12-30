@@ -46,6 +46,7 @@
     Route::post('/doc_management/delete_note', 'DocManagement\Review\DocumentReviewController@delete_note');
     Route::get('/agents/doc_management/transactions/get_documents', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_documents');
     Route::get('/agents/doc_management/transactions/get_contracts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_contracts');
+    Route::post('/agents/doc_management/transactions/in_process', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@in_process');
 
     // get mls details
     Route::get('/agents/doc_management/transactions/mls_search', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@mls_search');
@@ -180,8 +181,17 @@
     Route::get('/agents/doc_management/transactions/details/data/get_agent_details', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_agent_details');
 
 
+    /////// Earnest ////////////////
     // get earnest
     Route::get('/agents/doc_management/transactions/get_earnest', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest');
+    // get checks_in
+    Route::get('/agents/doc_management/transactions/get_earnest_checks_in', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks_in');
+    // get checks_out
+    Route::get('/agents/doc_management/transactions/get_earnest_checks_out', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks_out');
+    // save earnest
+    Route::post('/agents/doc_management/transactions/save_earnest', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_earnest');
+    // save add earnest check
+    Route::post('/agents/doc_management/transactions/save_add_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_add_earnest_check');
 
 
 

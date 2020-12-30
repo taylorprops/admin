@@ -17,7 +17,11 @@ use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
 use App\Models\DocManagement\Transactions\Members\Members;
+
 use App\Models\Commission\Commission;
+
+use App\Models\DocManagement\Earnest\Earnest;
+
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
 use App\Models\Employees\Agents;
@@ -516,6 +520,12 @@ class TransactionsAddController extends Controller {
             $commission -> Agent_ID = $request -> Agent_ID;
             $commission -> save();
             $Commission_ID = $commission -> id;
+
+            // add to earnest
+            $add_earnest = new Earnest();
+            $add_earnest -> Contract_ID = $new_transaction -> Contract_ID;
+            $add_earnest -> Agent_ID = $request -> Agent_ID;
+            $add_earnest -> save();
         }
 
         // add email address

@@ -8,9 +8,9 @@
 
         <div class="row border-bottom">
 
-            <div class="col-12">
+            <div class="col-12 pl-0">
 
-                <div class="form-options-container w-100 d-flex justify-content-around">
+                <div class="form-options-container w-100 d-flex justify-content-between">
 
                     <div class="d-flex justify-content-start align-items-center">
 
@@ -38,9 +38,20 @@
                         </div>
 
                         <div class="form-options-div ml-5">
-                            <a class="btn btn-success fill-form-option" href="javascript: void(0)" id="save_file_button"><i class="fad fa-save fa-lg"></i><br>Save</a>
+                            <button class="btn btn-success fill-form-option" id="save_file_button"><i class="fad fa-save fa-lg"></i><br>Save</button>
                         </div>
 
+                    </div>
+
+                    <div class="alert alert-warning ml-4 mb-0" id="in_process_div">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="mr-4">
+                                <i class="fad fa-cog fa-spin fa-lg"></i>
+                            </div>
+                            <div>
+                                Saving disabled unitl the current save process completes in the background. You can continue to edit the fields or close the page. This process takes about 5 seconds per page.
+                            </div>
+                        </div>
                     </div>
 
                 </div>

@@ -414,8 +414,8 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12 mb-4 mt-3 text-center text-xl-left">
-                        <a href="javascript: void(0)" class="btn btn-lg btn-success save-details-button"><span class="h4"><i class="fad fa-save mr-2"></i> Save Details</span></a>
+                    <div class="col-12 mb-4 mt-3 text-center">
+                        <a href="javascript: void(0)" class="btn btn-lg btn-success save-details-button p-4"><span class="font-12"><i class="fad fa-save mr-2"></i> Save Details</span></a>
                     </div>
                 </div>
 
