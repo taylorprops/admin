@@ -3,7 +3,7 @@
     min-height: 90VH;
 
     .btn-block {
-        text-align: left !important;
+        //text-align: left;
     }
 
     .listing-header-details .btn {
@@ -670,6 +670,37 @@
     height: 200px;
     overflow: auto;
 }
+
+.earnest-check-image-div {
+    height: 130px;
+    overflow: auto;
+}
+
+.earnest-check-details li {
+    font-size: .7rem;
+    padding: 4px;
+
+    .form-ele {
+        position: relative;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+}
+
+.earnest-check-details .checkbox-li .pretty{
+    font-size: .9rem;
+}
+
+.earnest-check-div {
+
+    &.cleared {
+        background: rgba($green-lighter, .1);
+    }
+    &.bounced {
+        background: rgba($red-lighter, .1);
+    }
+}
+
 .page-commission-breakdowns {
     .check-preview {
         height: 300px;

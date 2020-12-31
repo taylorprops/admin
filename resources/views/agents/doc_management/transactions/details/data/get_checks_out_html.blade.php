@@ -56,9 +56,9 @@ $deleted = 0;
             @if($check -> active == 'yes')
                 <div class="col-2">
                     <div class="pr-2">
-                        <a href="{{ $check -> file_location }}" target="_blank" class="btn btn-block btn-sm btn-primary"><i class="fad fa-eye mr-1"></i> View</a>
+                        <a href="{{ $check -> file_location }}" target="_blank" class="btn btn-block btn-primary"><i class="fad fa-eye mr-1"></i> View</a>
                         <a href="javascript: void(0)"
-                        class="btn btn-block btn-sm btn-default edit-check-out-button"
+                        class="btn btn-block btn-default edit-check-out-button"
                         data-check-id="{{ $check -> id }}"
                         data-check-date="{{ $check -> check_date }}"
                         data-check-number="{{ $check -> check_number }}"
@@ -73,7 +73,7 @@ $deleted = 0;
                         data-mail-to-state="{{ $check -> check_mail_to_state }}"
                         data-mail-to-zip="{{ $check -> check_mail_to_zip }}"
                         ><i class="fad fa-edit mr-1"></i> Edit</a>
-                        <a href="javascript: void(0)" class="btn btn-block btn-sm btn-danger delete-check-out-button" data-check-id="{{ $check -> id }}"><i class="fad fa-trash mr-1"></i> Delete</a>
+                        <a href="javascript: void(0)" class="btn btn-block btn-danger delete-check-out-button" data-check-id="{{ $check -> id }}"><i class="fad fa-trash mr-1"></i> Delete</a>
                     </div>
                 </div>
             @else

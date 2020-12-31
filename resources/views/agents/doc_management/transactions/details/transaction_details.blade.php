@@ -49,7 +49,7 @@
                 @endif
             </ul>
 
-            <div id="details_tabs" class="tab-content details-main-tabs">
+            <div id="details_tabs" class="tab-content details-main-tabs pt-5">
                 <div id="details_tab" class="tab-pane fade active show">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.vars.loader') !!}
@@ -1594,7 +1594,7 @@
                                 </div>
 
                                 <div class="col-12 col-lg-9 check-out">
-                                    <input type="text" class="custom-form-element form-input name="add_earnest_check_mailing_address" id="add_earnest_check_mailing_address" data-label="Mail To Address">
+                                    <textarea class="custom-form-element form-textarea" name="add_earnest_check_mail_to_address" id="add_earnest_check_mail_to_address" data-label="Mail To Address"></textarea>
                                 </div>
 
                             </div>

@@ -3511,7 +3511,7 @@ class TransactionsDetailsController extends Controller {
 
         $Contract_ID = $request -> Contract_ID;
 
-        $earnest = Earnest::where('Contract_ID', $Contract_ID) -> with('checks') -> with('notes') -> first();
+        $earnest = Earnest::where('Contract_ID', $Contract_ID) -> first();
         $property = Contracts::find($Contract_ID);
         $agent = Agents::find($property -> Agent_ID);
 
@@ -3538,11 +3538,14 @@ class TransactionsDetailsController extends Controller {
         return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account'));
     }
 
-    public function get_earnest_checks_in(Request $request) {
+    public function get_earnest_checks(Request $request) {
 
-    }
+        $check_type = $request -> check_type;
+        $Earnest_ID = $request -> Earnest_ID;
 
-    public function get_earnest_checks_out(Request $request) {
+        $checks = EarnestChecks::where('Earnest_ID', $Earnest_ID) -> where('check_type', $check_type) -> get();
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type'));
 
     }
 
@@ -3616,7 +3619,37 @@ class TransactionsDetailsController extends Controller {
 
     }
 
+    public function clear_bounce_earnest_check(Request $request) {
 
+        $check_id = $request -> check_id;
+        $status = $request -> status;
+
+        $date_cleared = '';
+        if($status == '') {
+            $status = 'pending';
+        } else if($status == 'cleared') {
+            $date_cleared = date('Y-m-d');
+        }
+
+        $update_check = EarnestChecks::find($check_id) -> update(['check_status' => $status, 'date_cleared' => $date_cleared]);
+
+    }
+
+    public function delete_earnest_check(Request $request) {
+
+        $delete_check = EarnestChecks::find($request -> check_id) -> update(['active' => 'no']);
+
+        return response() -> json(['response' => 'success']);
+
+    }
+
+    public function undo_delete_earnest_check(Request $request) {
+
+        $undo_delete_check = EarnestChecks::find($request -> check_id) -> update(['active' => 'yes']);
+
+        return response() -> json(['response' => 'success']);
+
+    }
 
     // End Earnest Tab
 

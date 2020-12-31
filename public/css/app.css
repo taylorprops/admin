@@ -1659,9 +1659,19 @@ a.text-green:hover {
   background-color: rgba(45, 141, 45, 0.1) !important;
 }
 
+.bg-green-lighter {
+  background: #d2f1d2 !important;
+  background-color: #d2f1d2 !important;
+}
+
 .bg-red-light {
   background: #f8d9d9 !important;
   background-color: #f8d9d9 !important;
+}
+
+.bg-red-lighter {
+  background: #f5e0e0 !important;
+  background-color: #f5e0e0 !important;
 }
 
 .btn-primary {
@@ -13146,6 +13156,14 @@ ul {
   width: 150px;
 }
 
+.wp-200 {
+  width: 200px;
+}
+
+.wp-250 {
+  width: 250px;
+}
+
 .w-5 {
   width: 5%;
 }
@@ -16373,10 +16391,6 @@ header .main-search-input::placeholder {
   } */
 }
 
-.page-transaction-details .btn-block {
-  text-align: left !important;
-}
-
 .page-transaction-details .listing-header-details .btn {
   padding: 0.1rem 0.2rem;
 }
@@ -16997,6 +17011,34 @@ header .main-search-input::placeholder {
 .check-preview {
   height: 200px;
   overflow: auto;
+}
+
+.earnest-check-image-div {
+  height: 130px;
+  overflow: auto;
+}
+
+.earnest-check-details li {
+  font-size: 0.7rem;
+  padding: 4px;
+}
+
+.earnest-check-details li .form-ele {
+  position: relative;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.earnest-check-details .checkbox-li .pretty {
+  font-size: 0.9rem;
+}
+
+.earnest-check-div.cleared {
+  background: rgba(210, 241, 210, 0.1);
+}
+
+.earnest-check-div.bounced {
+  background: rgba(245, 224, 224, 0.1);
 }
 
 .page-commission-breakdowns .check-preview {

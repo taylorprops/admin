@@ -44,9 +44,9 @@ $deleted = 0;
             @if($check -> active == 'yes')
                 <div class="col-2 pl-0">
                     <div class="pr-2">
-                        <a href="{{ $check -> file_location }}" target="_blank" class="btn btn-block btn-sm btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
+                        <a href="{{ $check -> file_location }}" target="_blank" class="btn btn-block btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
                         <a href="javascript: void(0)"
-                        class="btn btn-block btn-sm btn-default edit-check-in-button"
+                        class="btn btn-block btn-default edit-check-in-button"
                         data-check-id="{{ $check -> id }}"
                         data-date-received="{{ $check -> date_received }}"
                         data-date-deposited="{{ $check -> date_deposited }}"
@@ -56,7 +56,7 @@ $deleted = 0;
                         data-image-location="{{ $check -> image_location }}">
                             <i class="fad fa-edit mr-2"></i> Edit
                         </a>
-                        <a href="javascript: void(0)" class="btn btn-block btn-sm btn-danger delete-check-in-button" data-check-id="{{ $check -> id }}" data-type="other"><i class="fad fa-trash mr-2"></i> Delete</a>
+                        <a href="javascript: void(0)" class="btn btn-block btn-danger delete-check-in-button" data-check-id="{{ $check -> id }}" data-type="other"><i class="fad fa-trash mr-2"></i> Delete</a>
 
                         @if($check -> queue_id > 0)
                             <a href="javascript: void(0)" class="btn btn-block btn-sm btn-danger re-queue-check-button" data-check-id="{{ $check -> id }}"><i class="fad fa-recycle mr-2"></i> Re Queue</a>

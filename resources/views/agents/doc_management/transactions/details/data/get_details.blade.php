@@ -5,8 +5,8 @@
 
                 <div class="row">
 
-                    <div class="col-12 col-md-6 my-2">
-                        <div class="transaction-details-div shadow h-100">
+                    <div class="col-12 col-md-6 my-3">
+                        <div class="transaction-details-div h-100">
                             <div class="h5 m-2 mb-4 text-default">
                                 <i class="fad fa-file-signature mr-3"></i> {{ ucwords($details_type) }} Details
                             </div>
@@ -116,8 +116,8 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 my-2">
-                        <div class="transaction-details-div shadow h-100">
+                    <div class="col-12 col-md-6 my-3">
+                        <div class="transaction-details-div h-100">
                             <div class="h5 m-2 mb-4 text-default">
                                 <i class="fad fa-users mr-3"></i> Agent(s)
                             </div>
@@ -269,8 +269,8 @@
 
                     <div class="row">
 
-                        <div class="col-12 col-md-6 my-2">
-                            <div class="transaction-details-div shadow h-100">
+                        <div class="col-12 col-md-6 my-3">
+                            <div class="transaction-details-div h-100">
                                 <div class="h5 m-2 mb-4 text-default">
                                     <i class="fad fa-money-check-alt mr-3"></i> Earnest Deposit
                                 </div>
@@ -292,8 +292,8 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-6 my-2">
-                            <div class="transaction-details-div shadow h-100">
+                        <div class="col-12 col-md-6 my-3">
+                            <div class="transaction-details-div h-100">
                                 <div class="h5 m-2 mb-4 text-default">
                                     <i class="fad fa-copy mr-3"></i> Title Company
                                 </div>
@@ -335,8 +335,8 @@
                 }
                 @endphp
                 <div class="row">
-                    <div class="col-12 my-2">
-                        <div class="transaction-details-div shadow">
+                    <div class="col-12 my-3">
+                        <div class="transaction-details-div">
                             <div class="row d-flex align-items-center">
                                 <div class="col-12 col-sm-6 col-xl-3">
                                     <div class="h5 m-2 mb-2 mb-xl-4 text-default">

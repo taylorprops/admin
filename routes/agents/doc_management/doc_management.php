@@ -184,14 +184,18 @@
     /////// Earnest ////////////////
     // get earnest
     Route::get('/agents/doc_management/transactions/get_earnest', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest');
-    // get checks_in
-    Route::get('/agents/doc_management/transactions/get_earnest_checks_in', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks_in');
-    // get checks_out
-    Route::get('/agents/doc_management/transactions/get_earnest_checks_out', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks_out');
+    // get checks
+    Route::get('/agents/doc_management/transactions/get_earnest_checks', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks');
     // save earnest
     Route::post('/agents/doc_management/transactions/save_earnest', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_earnest');
     // save add earnest check
     Route::post('/agents/doc_management/transactions/save_add_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_add_earnest_check');
+    // clear/bounce earnest check
+    Route::post('/agents/doc_management/transactions/clear_bounce_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@clear_bounce_earnest_check');
+    // delete earnest check
+    Route::post('/agents/doc_management/transactions/delete_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@delete_earnest_check');
+    // undo delete earnest check
+    Route::post('/agents/doc_management/transactions/undo_delete_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@undo_delete_earnest_check');
 
 
 

@@ -18,6 +18,7 @@ $purple: #9561e2;
 $pink: #f66d9b;
 $red: #b64341;
 $red-light: #f8d9d9;
+$red-lighter: #f5e0e0;
 $orange: #df7935;
 $orange-hover: #e06e23;
 $orange-light: #f8e5e3;
@@ -26,6 +27,7 @@ $yellow: #ffed4a;
 $yellow-light: #f7efae;
 $green: #2d8d2d;
 $green-light: #bef1be;
+$green-lighter: #d2f1d2;
 $green-dark: #1b631b;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
@@ -132,10 +134,18 @@ a.text-green:hover {
     background: rgba($green, .1) !important;
     background-color: rgba($green, .1) !important;
 }
+.bg-green-lighter {
+    background: $green-lighter !important;
+    background-color: $green-lighter !important;
+}
 
 .bg-red-light {
     background: $red-light !important;
     background-color: $red-light !important;
+}
+.bg-red-lighter {
+    background: $red-lighter !important;
+    background-color: $red-lighter !important;
 }
 
 

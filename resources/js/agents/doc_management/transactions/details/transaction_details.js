@@ -644,6 +644,11 @@ if (document.URL.match(/transaction_details/)) {
 
                 $('#' + tab + '_tab').html(response.data);
 
+                let document_ids = [];
+                $('.document-div').each(function() {
+                    document_ids.push($(this).data('document-id'));
+                });
+
                 if (tab == 'details') {
 
                     // update counties when state is changed
@@ -693,14 +698,7 @@ if (document.URL.match(/transaction_details/)) {
 
                 } else if (tab == 'documents') {
 
-                    let document_ids = [];
-
                     setTimeout(function () {
-
-                        $('.document-div').each(function() {
-                            document_ids.push($(this).data('document-id'));
-                        });
-                        in_process(document_ids);
 
                         $('.check-all').next('label').css({ transform: 'scale(1.2)' });
                         select_form_group();
@@ -730,13 +728,10 @@ if (document.URL.match(/transaction_details/)) {
                         }
 
                         get_emailed_documents();
+                        in_process(document_ids);
 
 
                     }, 100);
-
-                    setInterval(function() {
-                        in_process(document_ids);
-                    }, 3000);
 
                 } else if (tab == 'checklist') {
 
@@ -915,8 +910,14 @@ if (document.URL.match(/transaction_details/)) {
                     if(window.get_emailed_docs_interval) {
                         clearInterval(get_emailed_docs_interval);
                     }
+                    if(window.in_process_interval) {
+                        clearInterval(in_process_interval);
+                    }
                     if($(this).data('tab') == 'documents') {
                         window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
+                        window.in_process_interval = setInterval(function(){
+                            in_process(document_ids);
+                        }, 3000);
                     }
 
                 });
@@ -939,6 +940,8 @@ if (document.URL.match(/transaction_details/)) {
                     select_refresh();
                     global_loading_off();
                 }, 100);
+
+                //window.scrollTo(0,0);
 
             })
             .catch(function (error) {

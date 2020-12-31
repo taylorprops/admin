@@ -48,7 +48,7 @@ window.form_elements = function () {
             // check if form-ele already applied
             if (element.closest('.form-ele').length == 0) {
 
-                let select_input_id = Math.floor(Math.random() * 100000) + 1;
+                let select_input_id = Math.floor(Math.random() * 1000000000000000) + 10000000000;
                 // avoid duplicate ids
                 if ($('#' + select_input_id).length > 0) {
                     console.log('dupes');
@@ -73,8 +73,13 @@ window.form_elements = function () {
                 // select label is added in select_html
                 // file label is added in file_html
                 let label = $(this).data('label');
+
                 if (!label) {
                     label = '';
+                }
+
+                if(label.match(/'/)) {
+                    label = label.replace(/'/g, '"');
                 }
 
                 let small = $(this).hasClass('form-small') ? 'form-small' : '';
@@ -117,12 +122,12 @@ window.form_elements = function () {
 
                 } else if (form_type == 'form-checkbox') {
 
-                    element.wrap('<div class="form-ele pretty p-default p-thick p-smooth p-pulse"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
+                    element.wrap('<div class="form-ele pretty p-default p-thick p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
 
 
                 } else if (form_type == 'form-radio') {
 
-                    element.wrap('<div class="form-ele pretty p-default p-thick p-round p-smooth p-pulse"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
+                    element.wrap('<div class="form-ele pretty p-default p-thick p-round p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
 
                 } else if (form_type == 'form-input-color') {
 

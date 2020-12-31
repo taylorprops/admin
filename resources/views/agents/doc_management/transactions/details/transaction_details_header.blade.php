@@ -25,7 +25,7 @@ if($transaction_type == 'listing') {
 
 $status = $resource_items -> GetResourceName($property -> Status);
 @endphp
-<div class="row mt-1 mt-sm-4">
+<div class="row mt-1 mt-sm-5">
 
     <div class="col-12 col-lg-7">
 
@@ -172,7 +172,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
 </div>
 
 @if($transaction_type != 'referral')
-<div class="row mt-1 mb-2 listing-header-details">
+<div class="row my-4 listing-header-details">
 
     <div class="col-12">
 
