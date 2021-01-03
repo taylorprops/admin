@@ -6,7 +6,7 @@
                 <div class="col-12 col-lg-4">
                     <a href="javascript: void(0)" id="add_member_button" class="btn btn-success"><i class="fa fa-plus mr-2"></i> Add Member</a>
                     <div class="list-group my-3 border-top
-                    " id="members_tab" role="tablist">
+                    " id="members_tab_section" role="tablist">
                         <a class="list-group-item list-group-item-action hide font-weight-bold" id="add_member_group" data-toggle="list" href="#add_member_div" role="tab">New Contact</a>
                         @foreach($members as $member)
                             @php

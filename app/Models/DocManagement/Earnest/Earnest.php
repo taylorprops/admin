@@ -18,4 +18,13 @@ class Earnest extends Model
     public function notes() {
         return $this -> hasMany('App\Models\DocManagement\Earnest\EarnestNotes', 'Earnest_ID', 'id');
     }
+
+    public function agent() {
+        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
+    }
+
+    public function property() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
+    }
+
 }

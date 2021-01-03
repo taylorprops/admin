@@ -17,6 +17,10 @@ class ResourceItems extends Model
     public $timestamps = false;
     protected $guarded = [];
 
+    public function earnest() {
+        return $this -> hasMany('App\Models\DocManagement\Earnest\Earnest', 'earnest_account_id', 'resource_id') -> with('checks') ;
+    }
+
     // allow only active records on all queries
     /* public static function boot() {
         parent::boot();

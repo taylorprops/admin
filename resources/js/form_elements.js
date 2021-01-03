@@ -667,7 +667,7 @@ function reset_labels() {
     });
 }, 500); */
 
-window.validate_form = function (form) {
+window.validate_form = function (form, debug = false) {
 
     // TODO: add checkbox and radio validation
     let pass = 'yes';
@@ -677,15 +677,15 @@ window.validate_form = function (form) {
 
     form.find('.required').each(function () {
 
-        let ele, classname;
+        let ele, classname, ele_name;
         let required = $(this);
 
         if (required.hasClass('form-radio')) {
 
             ele = required.closest('.form-ele');
             classname = 'invalid invalid-radio';
-            name = required.prop('name');
-            if ($('[name="' + name + '"]:checked').length == 0) {
+            radio_name = required.prop('name');
+            if ($('[name="' + radio_name + '"]:checked').length == 0) {
                 ele.addClass(classname);
                 pass = 'no';
             } else {
@@ -773,6 +773,10 @@ window.validate_form = function (form) {
         }, 800);
 
         toastr['error']('All Required Fields Must Be Completed');
+
+        if(debug == true) {
+            console.log('Invalid field: '+invalid_focus.prop('id'));
+        }
 
     }
 

@@ -188,8 +188,12 @@
     Route::get('/agents/doc_management/transactions/get_earnest_checks', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_checks');
     // save earnest
     Route::post('/agents/doc_management/transactions/save_earnest', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_earnest');
+    // save earnest amounts
+    Route::post('/agents/doc_management/transactions/save_earnest_amounts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_earnest_amounts');
     // save add earnest check
     Route::post('/agents/doc_management/transactions/save_add_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_add_earnest_check');
+    // save edit earnest check
+    Route::post('/agents/doc_management/transactions/save_edit_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_edit_earnest_check');
     // clear/bounce earnest check
     Route::post('/agents/doc_management/transactions/clear_bounce_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@clear_bounce_earnest_check');
     // delete earnest check

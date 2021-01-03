@@ -5,7 +5,7 @@
 <div class="container page-commission-breakdowns">
     <div class="row">
         <div class="col-12">
-            <h2>Commission Breakdowns</h2>
+            <h2>Commission Breakdowns and Checks</h2>
         </div>
     </div>
 

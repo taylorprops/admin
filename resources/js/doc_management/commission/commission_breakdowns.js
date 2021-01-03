@@ -53,7 +53,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
             data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], true, true, true, true);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -81,7 +81,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -90,6 +90,8 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
         $('#check_in_upload').off('change').on('change', function () {
 
             if($(this).val() != '') {
+
+                $(this).closest('.form-ele').find('label').addClass('active');
 
                 $('#check_in_date').val('');
                 $('#check_in_amount').val('');
@@ -112,7 +114,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
             }
 
@@ -164,7 +166,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -240,7 +242,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -259,7 +261,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
             toastr['success']('Check Successfully Edited');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     } */
 
@@ -291,7 +293,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -310,7 +312,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
             toastr['success']('Check Successfully Reactivated');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -366,7 +368,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
                 }
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         } else {

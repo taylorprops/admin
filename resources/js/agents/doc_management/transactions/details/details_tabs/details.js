@@ -31,7 +31,7 @@ if (document.URL.match(/transaction_details/)) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
     }
@@ -73,7 +73,7 @@ if (document.URL.match(/transaction_details/)) {
             }
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -116,7 +116,7 @@ if (document.URL.match(/transaction_details/)) {
             }
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -141,7 +141,7 @@ if (document.URL.match(/transaction_details/)) {
                 }, 100);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 

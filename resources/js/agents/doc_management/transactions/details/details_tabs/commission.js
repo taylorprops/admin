@@ -40,7 +40,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             });
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -65,7 +65,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -151,6 +151,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         });
 
         formData.append('Contract_ID', Contract_ID);
+        formData.append('Commission_ID', $('#Commission_ID').val());
         axios.post('/agents/doc_management/transactions/save_commission', formData, axios_options)
         .then(function (response) {
             if(show_toastr == 'yes') {
@@ -161,7 +162,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -214,7 +215,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -233,7 +234,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -264,7 +265,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -319,7 +320,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -338,7 +339,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -369,7 +370,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -407,14 +408,14 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             total_commission();
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
 
     window.show_add_check_in = function() {
 
-        $('#add_check_in_modal').modal();
+        $('#add_check_in_modal').modal('show');
         $('#add_check_in_modal').on('hidden.bs.modal', clear_add_check_form);
         // shared with commission js
         get_check_info();
@@ -453,7 +454,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             $('.import-check-button').on('click', import_check_in);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -489,7 +490,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -519,7 +520,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -538,7 +539,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -560,7 +561,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -591,7 +592,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             total_commission();
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -605,6 +606,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
             if($(this).val() != '') {
 
+                //$(this).closest('.form-ele').find('label').addClass('active');
+
                 $('#check_out_date, #check_out_amount, #check_out_number').val('');
 
                 global_loading_on('', '<div class="h5 text-white">Scanning Check</div>');
@@ -613,11 +616,11 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 axios.post('/agents/doc_management/transactions/get_check_details', formData, axios_options)
                 .then(function (response) {
                     if(response.data.check_date) {
-                        $('#check_out_date').val(response.data.check_date)/* .trigger('change') */;
-                        $('#check_out_amount').val(response.data.check_amount)/* .trigger('change') */;
-                        $('#check_out_number').val(response.data.check_number)/* .trigger('change') */;
+                        $('#check_out_date').val(response.data.check_date);
+                        $('#check_out_amount').val(response.data.check_amount);
+                        $('#check_out_number').val(response.data.check_number);
                         if(response.data.check_pay_to_agent_id) {
-                            $('#check_out_agent_id').val(response.data.check_pay_to_agent_id)/* .trigger('change') */;
+                            $('#check_out_agent_id').val(response.data.check_pay_to_agent_id);
                             select_refresh();
                         }
                     }
@@ -626,7 +629,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
             }
 
@@ -634,9 +637,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         $('#check_out_agent_id').on('change', function() {
             if($(this).val() != '') {
-                $('#check_out_recipient').val($(this).find('option:selected').data('recipient'))/* .trigger('change') */;
+                $('#check_out_recipient').val($(this).find('option:selected').data('recipient'));
             } else {
-                $('#check_out_recipient').val('')/* .trigger('change') */;
+                $('#check_out_recipient').val('');
             }
         });
 
@@ -683,7 +686,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -721,7 +724,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
             $('#edit_check_out_modal').find('.custom-form-element').each(function() {
                 if(button.val() != '') {
-                    button/* .trigger('change') */;
+                    button;
                 }
             });
 
@@ -736,7 +739,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
             $('#edit_check_out_agent_id').on('change', function() {
                 if(button.val() > 0) {
-                    $('#edit_check_out_recipient').val(button.find('option:selected').data('recipient'))/* .trigger('change') */;
+                    $('#edit_check_out_recipient').val(button.find('option:selected').data('recipient'));
                 } else {
                     $('#edit_check_out_recipient').val('');
                 }
@@ -772,7 +775,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -800,7 +803,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -819,13 +822,13 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
 
     clear_add_check_form = function() {
-        $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('')/* .trigger('change') */;
+        $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('');
         $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
     }
 
@@ -847,7 +850,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             $('.notes-list-group').html(response.data);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -864,10 +867,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         .then(function (response) {
             get_commission_notes();
             toastr['success']('Note Successfully Added');
-            $('.commission-notes-input').val('')/* .trigger('change') */;
+            $('.commission-notes-input').val('');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 

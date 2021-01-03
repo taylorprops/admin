@@ -52,7 +52,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             }, 2000);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -82,7 +82,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             $('#send_email_agent_button').off('click').on('click', send_email_agent)
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -128,7 +128,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             toastr['success']('Agent Successfully Emailed');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -162,7 +162,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -187,7 +187,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 }
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -206,7 +206,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 update_notes_count();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -248,7 +248,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -275,7 +275,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 $('#confirm_remove_checklist_item_modal').modal('hide');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -328,7 +328,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 clear_selected_form();
 
                 $(this).addClass('selected');
-                $('#add_checklist_item_name').val('')/* .trigger('change') */;
+                $('#add_checklist_item_name').val('');
                 $(this).addClass('bg-green-light selected').find('.checked-div').removeClass('d-none').next('.form-name-display').removeClass('text-primary').addClass('text-success');
 
             }
@@ -388,7 +388,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
         }
@@ -757,7 +757,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 

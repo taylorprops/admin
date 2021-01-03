@@ -4,9 +4,9 @@
 
         <div class="d-flex justify-content-between align-items-center">
 
-            <div class="d-flex justify-content-start align-items-center">
+            <div class="d-flex justify-content-start align-items-center bg-blue-light p-3 rounded earnest-questions">
 
-                <div class="mr-2 wp-250">
+                <div class="mr-4 wpx-250">
 
                     <select class="custom-form-element form-select" id="earnest_held_by" name="earnest_held_by" data-label="Earnest Held By">
                         <option value=""></option>
@@ -19,9 +19,9 @@
 
                 </div>
 
-                <div class="mr-2 wp-250">
+                <div class="mr-2 wpx-250">
 
-                    <select class="custom-form-element form-select" id="earnest_account" name="earnest_account" data-label="Earnest Account">
+                    <select class="custom-form-element form-select" id="earnest_account_id" name="earnest_account_id" data-label="Earnest Account">
                         <option value=""></option>
                         @foreach($earnest_accounts as $earnest_account)
                             <option value="{{ $earnest_account -> resource_id }}" @if($earnest_account -> resource_id == $suggested_earnest_account) selected @endif>{{ $earnest_account -> resource_state }} - {{ $earnest_account -> resource_account_number }} - {{ $earnest_account -> resource_name }}</option>
@@ -36,12 +36,10 @@
 
             </div>
 
-            <div class="">
-                <div class="alert alert-info mb-0 font-12 in-escrow-alert">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>In Escrow</div>
-                        <div class="ml-3" id="in_escrow"></div>
-                    </div>
+            <div class="alert alert-info mb-0 font-12 in-escrow-alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>In Escrow</div>
+                    <div class="ml-3" id="in_escrow"></div>
                 </div>
             </div>
 
@@ -66,10 +64,10 @@
                         <div class="h4 text-success"><i class="fad fa-money-check-alt mr-2"></i> Checks In</div>
                     </div>
 
-                    <div class="font-12 text-success">Total: <span id="checks_in_total"></span></div>
+                    <div class="font-12 text-success">Total: <span id="earnest_checks_in_total"></span></div>
 
                     <div>
-                        <button class="btn btn-success wp-150 add-check-button" data-check-type="in"><i class="fal fa-plus mr-2"></i> Add Check In</button>
+                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="in"><i class="fal fa-plus mr-2"></i> Add Check In</button>
                     </div>
                 </div>
 
@@ -94,10 +92,10 @@
                         <div class="h4 text-danger"><i class="fad fa-money-check-alt mr-2"></i> Checks Out</div>
                     </div>
 
-                    <div class="font-12 text-danger">Total: <span id="checks_out_total"></span></div>
+                    <div class="font-12 text-danger">Total: <span id="earnest_checks_out_total"></span></div>
 
                     <div>
-                        <button class="btn btn-success wp-150 add-check-button" data-check-type="out"><i class="fal fa-plus mr-2"></i> Add Check Out</button>
+                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="out"><i class="fal fa-plus mr-2"></i> Add Check Out</button>
                     </div>
                 </div>
 

@@ -93,7 +93,7 @@ if(document.URL.match(/common_fields/)) {
                             toastr['success']('Reorder Successfully');
                         })
                         .catch(function (error) {
-                            console.log(error);
+
                         });
 
                     }
@@ -103,7 +103,7 @@ if(document.URL.match(/common_fields/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -123,7 +123,7 @@ if(document.URL.match(/common_fields/)) {
                 $('#save_add_common_field_button').html('<i class="fal fa-save mr-2"></i> Save');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -141,7 +141,7 @@ if(document.URL.match(/common_fields/)) {
                 toastr['success']('Field Successfully Saved');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 

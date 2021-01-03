@@ -1,0 +1,28 @@
+.page-balance-earnest {
+
+    .earnest-totals {
+        position: sticky;
+        top: 90px;
+    }
+
+    .earnest-totals-tab.active {
+        background: $primary;
+        color: $white;
+    }
+
+    .earnest-check-hr {
+        height: 5px;
+    }
+
+    .check-row {
+
+        &.cleared {
+            background: rgba($green, .1);
+        }
+        &.bounced {
+            background: rgba($red, .1);
+        }
+
+    }
+
+}

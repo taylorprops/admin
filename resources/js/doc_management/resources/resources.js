@@ -372,7 +372,7 @@ function show_add_resource(ele) {
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
         }
     });
@@ -555,7 +555,7 @@ function save_edit_resource(ele, resource_input, resource_state_select, resource
                 toastr['success']('Resource Edited Successfully');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -604,7 +604,7 @@ function delete_deactivate_resource_resource(ele, action) {
             $('#confirm_delete_deactivate_resource_modal').modal('hide');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 }
 

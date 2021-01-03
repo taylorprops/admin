@@ -57,6 +57,9 @@ require('./doc_management/review/review.js');
 // commission
 require('./doc_management/commission/commission_breakdowns.js');
 
+// earnest
+require('./doc_management/earnest/earnest.js');
+
 
 
 

@@ -1578,7 +1578,7 @@ a.ui-button:active,
 }
 
 .text-orange {
-  color: #df7935;
+  color: #df7935 !important;
 }
 
 .text-gray {
@@ -12975,6 +12975,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  padding-bottom: 200px;
+}
+
 @media (max-width: 620px) {
   .loading-spinner,
   .loading-spinner-html {
@@ -13132,35 +13136,35 @@ ul {
   max-width: 600px !important;
 }
 
-.wp-75 {
+.wpx-75 {
   width: 75px;
 }
 
-.wp-80 {
+.wpx-80 {
   width: 80px;
 }
 
-.wp-90 {
+.wpx-90 {
   width: 90px;
 }
 
-.wp-100 {
+.wpx-100 {
   width: 100px;
 }
 
-.wp-125 {
+.wpx-125 {
   width: 125px;
 }
 
-.wp-150 {
+.wpx-150 {
   width: 150px;
 }
 
-.wp-200 {
+.wpx-200 {
   width: 200px;
 }
 
-.wp-250 {
+.wpx-250 {
   width: 250px;
 }
 
@@ -13489,13 +13493,15 @@ body.modal-open {
 }
 
 .dataTables_wrapper .dt-buttons .btn {
-  padding: 0.3rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
 }
 
 .dataTables_wrapper .dataTable.table th {
   background: #4c9bdb;
   color: #f8fcff;
   vertical-align: middle;
+  font-size: 0.8rem;
 }
 
 .dataTables_wrapper .dataTable.table td {
@@ -13503,6 +13509,19 @@ body.modal-open {
   vertical-align: middle;
   font-size: 0.8rem;
   color: #7a7979;
+}
+
+.dataTables_wrapper .dataTables_length {
+  font-size: 0.9rem;
+}
+
+.dataTables_wrapper .dataTables_info {
+  font-size: 0.8rem;
+}
+
+.dataTables_wrapper .page-link {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
 }
 
 @media (max-width: 1200px) {
@@ -17018,6 +17037,11 @@ header .main-search-input::placeholder {
   overflow: auto;
 }
 
+.edit-earnest-check-preview-div {
+  height: 200px;
+  overflow: auto;
+}
+
 .earnest-check-details li {
   font-size: 0.7rem;
   padding: 4px;
@@ -17764,5 +17788,28 @@ header .main-search-input::placeholder {
 
 .add-check-in-form-div {
   display: none;
+}
+
+.page-balance-earnest .earnest-totals {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 90px;
+}
+
+.page-balance-earnest .earnest-totals-tab.active {
+  background: #4c9bdb;
+  color: #fff;
+}
+
+.page-balance-earnest .earnest-check-hr {
+  height: 5px;
+}
+
+.page-balance-earnest .check-row.cleared {
+  background: rgba(45, 141, 45, 0.1);
+}
+
+.page-balance-earnest .check-row.bounced {
+  background: rgba(182, 67, 65, 0.1);
 }
 

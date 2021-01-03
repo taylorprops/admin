@@ -61,7 +61,7 @@ if (document.URL.match(/transaction_add_details_/)) {
                 window.location = '/agents/doc_management/transactions/add/transaction_required_details/'+response.data.id+'/'+transaction_type;
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 

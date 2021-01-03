@@ -8,6 +8,10 @@ html {
     scroll-behavior: smooth;
 }
 
+body {
+    padding-bottom: 200px;
+}
+
 @media (max-width: 620px) {
 
     .loading-spinner, .loading-spinner-html {
@@ -156,28 +160,28 @@ ul {
 }
 
 
-.wp-75 {
+.wpx-75 {
     width: 75px;
 }
-.wp-80 {
+.wpx-80 {
     width: 80px;
 }
-.wp-90 {
+.wpx-90 {
     width: 90px;
 }
-.wp-100 {
+.wpx-100 {
     width: 100px;
 }
-.wp-125 {
+.wpx-125 {
     width: 125px;
 }
-.wp-150 {
+.wpx-150 {
     width: 150px;
 }
-.wp-200 {
+.wpx-200 {
     width: 200px;
 }
-.wp-250 {
+.wpx-250 {
     width: 250px;
 }
 

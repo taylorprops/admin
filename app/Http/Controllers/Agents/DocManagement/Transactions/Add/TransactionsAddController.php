@@ -453,18 +453,6 @@ class TransactionsAddController extends Controller {
         // add agent details
         $property_details -> Agent_ID = $agent -> id;
 
-        /* if($transaction_type == 'listing') {
-            $property_details -> ListAgentFirstName = $agent -> first_name;
-            $property_details -> ListAgentLastName = $agent -> last_name;
-            $property_details -> ListAgentEmail = $agent -> email;
-            $property_details -> ListAgentPreferredPhone = $agent -> cell_phone;
-        } else {
-            $property_details -> BuyerAgentFirstName = $agent -> first_name;
-            $property_details -> BuyerAgentLastName = $agent -> last_name;
-            $property_details -> BuyerAgentEmail = $agent -> email;
-            $property_details -> BuyerAgentPreferredPhone = $agent -> cell_phone;
-            $property_details -> ContractPrice = preg_replace('/[\$,]+/', '', $request -> contract_price) ?? null;
-        } */
 
         if($transaction_type == 'contract') {
             if($request -> listing_type == 'sale') {
@@ -509,6 +497,7 @@ class TransactionsAddController extends Controller {
         $street_address = ucwords(strtolower($property_details -> FullStreetAddress));
 
         $Commission_ID = '';
+        $Earnest_ID = '';
         if($transaction_type == 'contract') {
             // add to commission and get commission id
             $commission = new Commission();
@@ -526,6 +515,7 @@ class TransactionsAddController extends Controller {
             $add_earnest -> Contract_ID = $new_transaction -> Contract_ID;
             $add_earnest -> Agent_ID = $request -> Agent_ID;
             $add_earnest -> save();
+            $Earnest_ID = $add_earnest -> id;
         }
 
         // add email address
@@ -533,6 +523,7 @@ class TransactionsAddController extends Controller {
         $email = $address.'_'.$code.'@'.config('global.vars.property_email');
 
         $new_transaction -> Commission_ID = $Commission_ID;
+        $new_transaction -> Earnest_ID = $Earnest_ID;
         $new_transaction -> PropertyEmail = $email;
         $new_transaction -> save();
 

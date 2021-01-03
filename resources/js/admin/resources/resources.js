@@ -175,12 +175,12 @@ function show_add_resource(ele) {
     cancel_button.show().on('click', function () {
         add_resource_div.slideUp('fast');
         add_button.show();
-        resource_input.val('')/* .trigger('change') */;
+        resource_input.val('');
         if (resource_state_select) {
-            resource_state_select.val('')/* .trigger('change') */;
+            resource_state_select.val('');
         }
         if (resource_input_color) {
-            resource_input_color.val(resource_input_color.data('default-value'))/* .trigger('change') */;
+            resource_input_color.val(resource_input_color.data('default-value'));
         }
         cancel_button.hide();
         reset_add_resource_div(add_resource_div, add_button, resource_input, resource_state_select, cancel_button);
@@ -227,7 +227,7 @@ function show_add_resource(ele) {
                     options();
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
         }
     });
@@ -238,13 +238,13 @@ function show_add_resource(ele) {
 function reset_add_resource_div(add_resource_div, add_button, resource_input, resource_state_select, cancel_button) {
     add_resource_div.slideUp('fast');
     add_button.show();
-    resource_input.val('')/* .trigger('change') */;
+    resource_input.val('');
     if (resource_state_select) {
-        resource_state_select.val('')/* .trigger('change') */;
+        resource_state_select.val('');
     }
     cancel_button.hide();
     add_resource_div.find('input, select').each(function () {
-        $(this).val($(this).data('default-value'))/* .trigger('change') */;
+        $(this).val($(this).data('default-value'));
     });
 }
 
@@ -290,10 +290,10 @@ function reset_edit_resource_div(list_group_item, resource_div, resource_input, 
     resource_div.hide();
     resource_input.val(resource_input.data('default-value'));
     if (resource_state_select) {
-        resource_state_select.val(resource_state_select.data('default-value'))/* .trigger('change') */;
+        resource_state_select.val(resource_state_select.data('default-value'));
     }
     if (resource_input_color) {
-        resource_input_color.val(resource_input_color.data('default-value'))/* .trigger('change') */;
+        resource_input_color.val(resource_input_color.data('default-value'));
     }
 
     select_refresh();
@@ -350,7 +350,7 @@ function save_edit_resource(ele, resource_input, resource_state_select, resource
                 toastr['success']('Resource Edited Successfully');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -399,7 +399,7 @@ function delete_deactivate_resource_resource(ele, action) {
             $('#confirm_delete_deactivate_resource_modal').modal('hide');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 }
 

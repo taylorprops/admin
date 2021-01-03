@@ -139,6 +139,16 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/get_edit_properties_html', 'DocManagement\Fill\FieldsController@get_edit_properties_html');
 
 
+    /********* Balance Earnest ************/
+    // balance earnest page
+    Route::get('/doc_management/balance_earnest', 'DocManagement\Earnest\BalanceEarnestController@balance_earnest');
+    // get earnest totals
+    Route::get('/doc_management/get_earnest_totals', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_totals');
+    // get earnest checks
+    Route::get('/doc_management/get_earnest_checks', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_checks');
+
+
+
 
     /********* Document Review ************/
     // doc review page

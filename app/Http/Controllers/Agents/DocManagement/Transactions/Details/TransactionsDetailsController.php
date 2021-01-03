@@ -1088,9 +1088,15 @@ class TransactionsDetailsController extends Controller {
         $Agent_ID = $request -> Agent_ID;
 
         $emailed_documents = TransactionDocumentsEmailed::where('transaction_type', $transaction_type)
-            -> where('Listing_ID', $Listing_ID)
-            -> where('Contract_ID', $Contract_ID)
-            -> where('Referral_ID', $Referral_ID)
+            -> where(function($q) use ($transaction_type, $Listing_ID, $Contract_ID, $Referral_ID) {
+                if($transaction_type == 'listing') {
+                    $q -> where('Listing_ID', $Listing_ID);
+                } else if($transaction_type == 'contract') {
+                    $q -> where('Contract_ID', $Contract_ID);
+                } else if($transaction_type == 'referral') {
+                    $q -> where('Referral_ID', $Referral_ID);
+                }
+            })
             -> where('Agent_ID', $Agent_ID)
             -> where('active', 'yes')
             -> where('email_status', 'success')
@@ -3051,7 +3057,7 @@ class TransactionsDetailsController extends Controller {
 
         $new_file_name = str_replace('.pdf', '', $check -> getClientOriginalName());
         $new_file_name = date('YmdHis').'_'.sanitize($new_file_name).'.png';
-        exec('convert -density 300 -quality 100 '.$check.'[0] '.Storage::disk('public') -> path('tmp/'.$new_file_name));
+        exec('convert -density 300 -quality 100 '.$check.'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path('tmp/'.$new_file_name));
 
         $text = (new TesseractOCR(Storage::disk('public') -> path('tmp/'.$new_file_name)))
             -> run();
@@ -3520,7 +3526,7 @@ class TransactionsDetailsController extends Controller {
         // earnest accounts
         $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> orderBy('resource_order') -> get();
 
-        $suggested_earnest_account = $earnest -> earnest_account;
+        $suggested_earnest_account = $earnest -> earnest_account_id;
         if($suggested_earnest_account == '') {
 
             $state = $property -> StateOrProvince;
@@ -3553,10 +3559,63 @@ class TransactionsDetailsController extends Controller {
 
         // update earnest
         $earnest = Earnest::find($request -> Earnest_ID);
-        $earnest -> update(['held_by' => $request -> earnest_held_by, 'earnest_account' => $request -> earnest_account]);
+        $earnest -> update(['held_by' => $request -> earnest_held_by, 'earnest_account_id' => $request -> earnest_account_id]);
 
         // update property
         $property = Contracts::find($earnest -> Contract_ID) -> update(['EarnestHeldBy' => $request -> earnest_held_by]);
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function save_earnest_amounts(Request $request) {
+
+        // update earnest amounts
+        $earnest = Earnest::find($request -> Earnest_ID);
+        /* $amount_total = $request -> amount_total;
+        $amount_received = $request -> amount_received;
+        $amount_released = $request -> amount_released; */
+
+        $checks = $earnest -> checks() -> get();
+
+
+        $amount_received = 0;
+        $amount_released = 0;
+
+        foreach($checks as $check) {
+
+            if($check -> active == 'yes') {
+
+                if($check -> check_status == 'cleared') {
+                    if($check -> check_type == 'in') {
+                        $amount_received += $check -> check_amount;
+                    } else if($check -> check_type == 'out') {
+                        $amount_released += $check -> check_amount;
+                    }
+                }
+
+            }
+
+        }
+
+        $amount_total = $amount_received - $amount_released;
+
+        // get status
+        $status = 'pending';
+        if($amount_received > 0) {
+            if($amount_received > $amount_released) {
+                $status = 'active';
+            } else if($amount_received == $amount_released) {
+                $status = 'released';
+            }
+        }
+
+        $earnest -> update(['status' => $status, 'amount_total' => $amount_total, 'amount_received' => $amount_received, 'amount_released' => $amount_released]);
+
+        // update property
+        if($request -> amount_received > 0) {
+            $property = Contracts::find($earnest -> Contract_ID) -> update(['EarnestAmount' => $request -> amount_received]);
+        }
 
         return response() -> json(['status' => 'success']);
 
@@ -3598,7 +3657,7 @@ class TransactionsDetailsController extends Controller {
         $image_location = '/storage/'.$path.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path($path.'/'.$new_image_name));
+        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path($path.'/'.$new_image_name));
 
         $add_earnest = new EarnestChecks();
         $add_earnest -> Earnest_ID = $Earnest_ID;
@@ -3619,6 +3678,33 @@ class TransactionsDetailsController extends Controller {
 
     }
 
+    public function save_edit_earnest_check(Request $request) {
+
+        $check_id = $request -> edit_earnest_check_id;
+        $check_name = $request -> edit_earnest_check_name;
+        $payable_to = $request -> edit_earnest_payable_to;
+        $check_date = $request -> edit_earnest_check_date;
+        $check_number = $request -> edit_earnest_check_number;
+        $check_amount = preg_replace('/[\$,]+/', '', $request -> edit_earnest_check_amount);
+        $date_deposited = $request -> edit_earnest_date_deposited;
+        $mail_to_address = $request -> edit_earnest_mail_to_address;
+        $date_sent = $request -> edit_earnest_date_sent;
+
+        $edit_earnest = EarnestChecks::find($check_id);
+        $edit_earnest -> check_name = $check_name;
+        $edit_earnest -> payable_to = $payable_to;
+        $edit_earnest -> check_date = $check_date;
+        $edit_earnest -> check_number = $check_number;
+        $edit_earnest -> check_amount = $check_amount;
+        $edit_earnest -> date_deposited = $date_deposited;
+        $edit_earnest -> mail_to_address = $mail_to_address;
+        $edit_earnest -> date_sent = $date_sent;
+        $edit_earnest -> save();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
     public function clear_bounce_earnest_check(Request $request) {
 
         $check_id = $request -> check_id;
@@ -3632,6 +3718,8 @@ class TransactionsDetailsController extends Controller {
         }
 
         $update_check = EarnestChecks::find($check_id) -> update(['check_status' => $status, 'date_cleared' => $date_cleared]);
+
+        return response() -> json(['status' => 'success']);
 
     }
 
@@ -3766,9 +3854,11 @@ class TransactionsDetailsController extends Controller {
         $add_earnest -> Contract_ID = $Contract_ID;
         $add_earnest -> Agent_ID = $Agent_ID;
         $add_earnest -> save();
+        $Earnest_ID = $add_earnest -> id;
 
         $new_transaction -> PropertyEmail = $email;
         $new_transaction -> Commission_ID = $Commission_ID;
+        $new_transaction -> Earnest_ID = $Earnest_ID;
         $new_transaction -> save();
 
         // add Contract_ID to members already in members

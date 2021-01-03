@@ -605,7 +605,7 @@ window.nl2br = function(str, replaceMode, isXhtml) {
             location_details.push(county);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
         return location_details;

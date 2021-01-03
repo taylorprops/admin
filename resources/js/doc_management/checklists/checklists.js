@@ -11,7 +11,7 @@ if (document.URL.match(/checklists/)) {
             let checklist_location_id = global_get_url_parameters('checklist_location_id');
             let type = global_get_url_parameters('checklist_type');
             $('#list_' + checklist_location_id).trigger('click');
-            $('#list_div_' + checklist_location_id).find('.checklist-type-option').val(type)/* .trigger('change') */;
+            $('#list_div_' + checklist_location_id).find('.checklist-type-option').val(type);
             checklist_type();
             //select_refresh();
         }
@@ -563,15 +563,15 @@ if (document.URL.match(/checklists/)) {
         let represent = $(this).data('represent');
 
         // assign form input values
-        $('#checklist_location_id').val(location_id)/* .trigger('change') */;
-        $('#checklist_type').val(checklist_type)/* .trigger('change') */;
-        $('#checklist_property_type_id').val(property_type)/* .trigger('change') */;
-        $('#checklist_property_sub_type_id').val(property_sub_type)/* .trigger('change') */;
-        $('#checklist_sale_rent').val(sale_rent)/* .trigger('change') */;
-        $('#checklist_represent').val(represent)/* .trigger('change') */;
+        $('#checklist_location_id').val(location_id);
+        $('#checklist_type').val(checklist_type);
+        $('#checklist_property_type_id').val(property_type);
+        $('#checklist_property_sub_type_id').val(property_sub_type);
+        $('#checklist_sale_rent').val(sale_rent);
+        $('#checklist_represent').val(represent);
 
         if (checklist_type== 'listing') {
-            $('#checklist_represent').val('seller')/* .trigger('change') */;
+            $('#checklist_represent').val('seller');
         }
 
 

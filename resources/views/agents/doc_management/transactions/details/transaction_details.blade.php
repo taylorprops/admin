@@ -13,7 +13,7 @@
         <div class="col-md-12 px-1 px-sm-3 mt-3 details-tabs">
             <ul id="tabs" class="nav nav-tabs details-list-group">
 
-                <li class="nav-item"><a href="javascript: void(0)" data-tab="details" data-target="#details_tab" data-toggle="tab" class="nav-link active"><i class="fad fa-home-lg-alt mr-2 d-none d-md-inline-block"></i> Details</a></li>
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="details" id="open_details_tab" data-target="#details_tab" data-toggle="tab" class="nav-link active"><i class="fad fa-home-lg-alt mr-2 d-none d-md-inline-block"></i> Details</a></li>
 
                 @if($transaction_type != 'referral')
                     <li class="nav-item"><a href="javascript: void(0)" data-tab="members" id="open_members_tab" data-target="#members_tab" data-toggle="tab" class="nav-link"><i class="fad fa-user-friends mr-2 d-none d-md-inline-block"></i> Members</a></li>
@@ -1569,27 +1569,27 @@
                                 <div class="col-12">
                                     <div class="h5 text-orange">Check Details</div>
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                <div class="col-12 col-sm-6 col-lg-4 check-in">
                                     <input type="text" class="custom-form-element form-input required" name="add_earnest_check_name" id="add_earnest_check_name" data-label="Name On Check">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                <div class="col-12 col-sm-6 col-lg-4 check-out">
                                     <input type="text" class="custom-form-element form-input required" name="add_earnest_check_payable_to" id="add_earnest_check_payable_to" data-label="Payable To">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input datepicker required" name="add_earnest_check_date" id="add_earnest_check_date" data-label="Date On Check">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input numbers-only required" name="add_earnest_check_number" id="add_earnest_check_number" data-label="Check Number">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="add_earnest_check_amount" id="add_earnest_check_amount" data-label="Check Amount">
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                <div class="col-12 col-sm-6 col-lg-4 check-in">
                                     <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_deposited" id="add_earnest_check_date_deposited" data-label="Date Deposited">
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
+                                <div class="col-12 col-sm-6 col-lg-4 check-out">
                                     <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_sent" id="add_earnest_check_date_sent" data-label="Date Sent">
                                 </div>
 
@@ -1636,10 +1636,7 @@
                         <form id="edit_earnest_check_form" enctype="multipart/form-data">
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <div class="h5 text-orange">Upload</div>
-                                </div>
-                                <div class="col-12">
-                                    <div><input type="file" accept="application/pdf" class="custom-form-element form-input-file required" name="edit_earnest_check_upload" id="edit_earnest_check_upload" data-label="Click to search or Drag and Drop files here"></div>
+                                    <div class="h5 text-orange">Check Image</div>
                                 </div>
                                 <div class="col-12">
                                     <div class="edit-earnest-check-preview-div"></div>
@@ -1650,36 +1647,37 @@
                                 <div class="col-12">
                                     <div class="h5 text-orange">Check Details</div>
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
+                                <div class="col-12 col-sm-6 col-lg-4 edit-check-in">
                                     <input type="text" class="custom-form-element form-input required" name="edit_earnest_check_name" id="edit_earnest_check_name" data-label="Name On Check">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
-                                    <input type="text" class="custom-form-element form-input required" name="edit_earnest_check_payable_to" id="edit_earnest_check_payable_to" data-label="Payable To">
+                                <div class="col-12 col-sm-6 col-lg-4 edit-check-out">
+                                    <input type="text" class="custom-form-element form-input required" name="edit_earnest_payable_to" id="edit_earnest_payable_to" data-label="Payable To">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input datepicker required" name="edit_earnest_check_date" id="edit_earnest_check_date" data-label="Date On Check">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input numbers-only required" name="edit_earnest_check_number" id="edit_earnest_check_number" data-label="Check Number">
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="edit_earnest_check_amount" id="edit_earnest_check_amount" data-label="Check Amount">
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-in">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_check_date_deposited" id="edit_earnest_check_date_deposited" data-label="Date Deposited">
+                                <div class="col-12 col-sm-6 col-lg-4 edit-check-in">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_date_deposited" id="edit_earnest_date_deposited" data-label="Date Deposited">
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 check-out">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_check_date_sent" id="edit_earnest_check_date_sent" data-label="Date Sent">
+                                <div class="col-12 col-sm-6 col-lg-4 edit-check-out">
+                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_date_sent" id="edit_earnest_date_sent" data-label="Date Sent">
                                 </div>
 
-                                <div class="col-12 col-lg-9 check-out">
-                                    <input type="text" class="custom-form-element form-input name="edit_earnest_check_mailing_address" id="edit_earnest_check_mailing_address" data-label="Mail To Address">
+                                <div class="col-12 col-lg-4 edit-check-out">
+                                    <textarea class="custom-form-element form-textarea" name="edit_earnest_mail_to_address" id="edit_earnest_mail_to_address" data-label="Mail To Address"></textarea>
                                 </div>
 
                             </div>
 
+                            <input type="hidden" id="edit_earnest_check_id" name="edit_earnest_check_id">
                             <input type="hidden" id="edit_earnest_check_type" name="edit_earnest_check_type">
 
                         </form>
@@ -1759,7 +1757,7 @@
 
                             <div class="row bright-search-row">
                                 <div class="col-12">
-                                    <a class="btn btn-primary btn-sm my-3" data-toggle="collapse" href="#agent_search_div" role="button" aria-expanded="false" aria-controls="agent_search_div">
+                                    <a class="btn btn-primary my-3" data-toggle="collapse" href="#agent_search_div" role="button" aria-expanded="false" aria-controls="agent_search_div">
                                         <i class="fad fa-search mr-2"></i> Search Agents in Bright MLS
                                     </a>
                                     <div class="collapse border" id="agent_search_div">

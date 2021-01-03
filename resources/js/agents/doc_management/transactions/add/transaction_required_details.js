@@ -47,10 +47,10 @@ if (document.URL.match(/transaction_required_details/)) {
 
 
         $('#import_property_address_button').on('click', function() {
-            $('#ClientStreet').val($(this).data('street'))/* .trigger('change') */;
-            $('#ClientCity').val($(this).data('city'))/* .trigger('change') */;
-            $('#ClientState').val($(this).data('state'))/* .trigger('change') */;
-            $('#ClientZip').val($(this).data('zip'))/* .trigger('change') */;
+            $('#ClientStreet').val($(this).data('street'));
+            $('#ClientCity').val($(this).data('city'));
+            $('#ClientState').val($(this).data('state'));
+            $('#ClientZip').val($(this).data('zip'));
             select_refresh();
         });
 
@@ -170,7 +170,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 $('.not-using-heritage').show();
             } else {
                 $('.not-using-heritage').hide();
-                $('#TitleCompany').val('')/* .trigger('change') */;
+                $('#TitleCompany').val('');
             }
         });
 
@@ -198,7 +198,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 window.location ='/agents/doc_management/transactions/transaction_details/'+Referral_ID+'/referral';
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
     }
@@ -209,8 +209,8 @@ if (document.URL.match(/transaction_required_details/)) {
         if(commission > 0 && percent > 0) {
             let referral_commission = percent * commission;
             let receiving_commission = commission - referral_commission;
-            $('#AgentCommission').val(referral_commission)/* .trigger('change') */;
-            $('#OtherAgentCommission').val(receiving_commission)/* .trigger('change') */;
+            $('#AgentCommission').val(referral_commission);
+            $('#OtherAgentCommission').val(receiving_commission);
             format_money_with_decimals($('#AgentCommission'));
             format_money_with_decimals($('#OtherAgentCommission'));
         }
@@ -317,7 +317,7 @@ if (document.URL.match(/transaction_required_details/)) {
             member_div.find('[name^='+member+'_zip]').val($(this).data('contact-zip'));
             member_div.find('[name^='+member+'_crm_contact_id]').val($(this).data('contact-id'));
 
-            member_div.find('input')/* .trigger('change') */;
+            member_div.find('input');
             setTimeout(select_refresh, 500);
             $('#import_contact_modal').modal('hide');
         });
@@ -356,7 +356,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 window.location = '/agents/doc_management/transactions/transaction_details/' + response.data.id + '/' + response.data.type;
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -476,10 +476,10 @@ if (document.URL.match(/transaction_required_details/)) {
                     if (!$(e.target).is('.address-autocomplete-div *')) {
                         $('.address-autocomplete-div').hide();
                     } else {
-                        container.find('.'+member+'-street').val(street)/* .trigger('change') */;
-                        container.find('.'+member+'-city').val(city)/* .trigger('change') */;
-                        container.find('.'+member+'-state').val(state)/* .trigger('change') */;
-                        container.find('.'+member+'-zip').val(zip)/* .trigger('change') */;
+                        container.find('.'+member+'-street').val(street);
+                        container.find('.'+member+'-city').val(city);
+                        container.find('.'+member+'-state').val(state);
+                        container.find('.'+member+'-zip').val(zip);
                         select_refresh();
                         $('.address-autocomplete-div').hide();
                     }

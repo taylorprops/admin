@@ -120,7 +120,7 @@ if (document.URL.match(/transaction_details/)) {
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -193,7 +193,7 @@ if (document.URL.match(/transaction_details/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -230,7 +230,7 @@ if (document.URL.match(/transaction_details/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -253,7 +253,7 @@ if (document.URL.match(/transaction_details/)) {
             member_div.find('.member-home-zip').val($(this).data('contact-zip'));
             member_div.find('.member-crm-contact-id').val($(this).data('contact-id'));
 
-            //$('input')/* .trigger('change') */;
+            //$('input');
             setTimeout(select_refresh, 500);
             $('#import_contact_modal').modal('hide');
 

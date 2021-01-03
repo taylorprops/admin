@@ -236,10 +236,9 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-4">
+            @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
 
-                @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
-
+                <div class="col-12 col-sm-6 col-xl-4">
                     @php
                     $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
                     <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
@@ -285,8 +284,10 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                     </div>
 
-                @endif
-            </div>
+                </div>
+
+            @endif
+
 
             <div class="col-12 col-sm-6 col-xl-3">
 
@@ -316,7 +317,13 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                     <span class="text-primary text-nowrap">@if($transaction_type == 'listing') Expires Date @else Settle Date @endif</span>
                                 </div>
                                 <div class="col-6 text-left">
-                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> ExpirationDate)) }} @else {{ date('n/j/Y', strtotime($property -> CloseDate)) }} @endif
+                                    @php
+                                    $settle_date = '';
+                                    if($property -> CloseDate != '') {
+                                        $settle_date = date('n/j/Y', strtotime($property -> CloseDate));
+                                    }
+                                    @endphp
+                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> ExpirationDate)) }} @else {{ $settle_date }} @endif
                                 </div>
                             </div>
                             <div class="row">

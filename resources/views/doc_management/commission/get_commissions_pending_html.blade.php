@@ -10,11 +10,11 @@
         <table class="table table-bordered table-sm commissions-pending-table">
             <thead>
                 <tr>
-                    <th class="wp-125"></th>
-                    <th class="wp-100">Settle Date</th>
+                    <th class="wpx-125"></th>
+                    <th class="wpx-100">Settle Date</th>
                     <th>Agent</th>
                     <th>Property Address/Client</th>
-                    <th class="wp-100">Amount Left</th>
+                    <th class="wpx-100">Amount Left</th>
                 </tr>
             </thead>
             <tbody>

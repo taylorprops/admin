@@ -69,7 +69,7 @@ if(document.URL.match(/document_review/)) {
 
     function cancel_search_properties() {
         $('.property-list-header, .property-item').show();
-        $('#search_properties').val('')/* .trigger('change') */;
+        $('#search_properties').val('');
     }
 
     function set_property_item_active(ele) {
@@ -202,7 +202,7 @@ if(document.URL.match(/document_review/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -317,7 +317,7 @@ if(document.URL.match(/document_review/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -345,7 +345,7 @@ if(document.URL.match(/document_review/)) {
             }); */
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }

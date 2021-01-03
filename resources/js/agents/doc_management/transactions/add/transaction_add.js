@@ -239,8 +239,8 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             })
             .then(function (response) {
                 let data = response.data;
-                $('#enter_city').val(data.city)/* .trigger('change') */;
-                $('#enter_state').val(data.state)/* .trigger('change') */;
+                $('#enter_city').val(data.city);
+                $('#enter_state').val(data.state);
                 update_county_select(data.state);
                 setTimeout(function() {
                     $('#enter_county').val(data.county);
@@ -249,7 +249,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
     }
@@ -275,7 +275,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             show_property(response, 'mls', '', '', '');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -333,7 +333,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                     window.location = '/agents/doc_management/transactions/add/transaction_required_details_referral/'+Referral_ID;
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
             } else {
@@ -358,7 +358,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                     show_property(response, 'enter', '', '', '');
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
             }
@@ -444,7 +444,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                         window.location = '/agents/doc_management/transactions/add/transaction_required_details_referral/'+Referral_ID;
                     })
                     .catch(function (error) {
-                        console.log(error);
+
                     });
 
                 } else {
@@ -467,7 +467,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                         show_property(response, 'search', street_number, street_name, zip);
                     })
                     .catch(function (error) {
-                        console.log(error);
+
                     });
 
                 }
@@ -496,16 +496,16 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
     function autofill_manual_entry(street_number, street_name, zip) {
         let unit = $('#address_search_unit').val();
-        $('#enter_street_number').val(street_number)/* .trigger('change') */;
-        $('#enter_street_name').val(street_name)/* .trigger('change') */;
-        $('#enter_zip').val(zip)/* .trigger('change') */;
-        $('#enter_unit').val(unit)/* .trigger('change') */;
+        $('#enter_street_number').val(street_number);
+        $('#enter_street_name').val(street_name);
+        $('#enter_zip').val(zip);
+        $('#enter_unit').val(unit);
         setTimeout(function() {
             fill_location($('#enter_zip').val());
         }, 500);

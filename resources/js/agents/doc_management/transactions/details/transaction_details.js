@@ -3,8 +3,13 @@ if (document.URL.match(/transaction_details/)) {
 
     $(function() {
 
-        load_tabs('');
+        $('html, body').animate({scrollTop:0}, 500, 'swing');
 
+        load_tabs('details');
+
+        /* $('#open_details_tab').off('click').on('click', function () {
+            load_tabs('details');
+        }); */
         $('#open_members_tab').one('click', function () {
             load_tabs('members');
         });
@@ -39,7 +44,7 @@ if (document.URL.match(/transaction_details/)) {
 
             let val = $(this).val();
 
-            if (val.length > 4) {
+            if (val.length > 3) {
 
                 $('.search-results').html('');
 
@@ -133,8 +138,8 @@ if (document.URL.match(/transaction_details/)) {
 
         // open tabs from url parameters
         let tab = global_get_url_parameters('tab');
-        if(tab == 'commission') {
-            $('#open_commission_tab').trigger('click');
+        if(tab != '') {
+            $('[data-tab="' + tab + '"]').trigger('click');
         }
 
 
@@ -179,7 +184,7 @@ if (document.URL.match(/transaction_details/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -209,7 +214,7 @@ if (document.URL.match(/transaction_details/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -268,7 +273,7 @@ if (document.URL.match(/transaction_details/)) {
                     load_tabs('details');
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
             }
 
@@ -326,7 +331,7 @@ if (document.URL.match(/transaction_details/)) {
                             toastr['success']('Cancellation Successfully Submitted');
                         })
                         .catch(function (error) {
-                            console.log(error);
+
                         });
                     }
 
@@ -405,7 +410,7 @@ if (document.URL.match(/transaction_details/)) {
             toastr['success'](success);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -434,19 +439,19 @@ if (document.URL.match(/transaction_details/)) {
                 $('.buyer-agent-details').show();
                 $('.agent-details-required').addClass('required');
                 $('.agent-details').each(function() {
-                    $(this).val($(this).data('agent-detail'))/* .trigger('change') */;
+                    $(this).val($(this).data('agent-detail'));
                 });
             } else if($(this).val() == 'our_agent') {
                 $('.our-agent-div').show();
                 $('.agent-details-required').addClass('required');
                 $('#accept_contract_our_agent').addClass('required').on('change', function() {
                     if($(this).val() == '') {
-                        $('.agent-details').val('')/* .trigger('change') */;
+                        $('.agent-details').val('');
                         $('.buyer-agent-details').hide();
                     } else {
                         $('.buyer-agent-details').show();
                         $('.agent-details').each(function() {
-                            $(this).val($(this).data('agent-detail'))/* .trigger('change') */;
+                            $(this).val($(this).data('agent-detail'));
                         });
                         let option = $(this).find('option:selected');
                         $('#accept_contract_buyer_agent_company').val(option.data('company'));
@@ -463,14 +468,16 @@ if (document.URL.match(/transaction_details/)) {
             }
         });
 
+
         $('#accept_contract_using_heritage').on('change', function() {
             if($(this).val() == 'yes') {
                 $('.not-using-heritage').hide();
-                $('#accept_contract_title_company').val('')/* .trigger('change') */;
+                $('#accept_contract_title_company').val('');
             } else {
                 $('.not-using-heritage').show();
             }
         });
+        $('.not-using-heritage').hide();
 
     }
 
@@ -487,12 +494,12 @@ if (document.URL.match(/transaction_details/)) {
         let office_state = ele.data('agent-state');
         let office_zip = ele.data('agent-zip');
 
-        $('#accept_contract_buyer_agent_first').val(agent_first)/* .trigger('change') */;
-        $('#accept_contract_buyer_agent_last').val(agent_last)/* .trigger('change') */;
-        $('#accept_contract_buyer_agent_email').val(agent_email)/* .trigger('change') */;
-        $('#accept_contract_buyer_agent_phone').val(agent_phone)/* .trigger('change') */;
-        $('#accept_contract_buyer_agent_mls_id').val(agent_mls_id)/* .trigger('change') */;
-        $('#accept_contract_buyer_agent_company').val(agent_company)/* .trigger('change') */;
+        $('#accept_contract_buyer_agent_first').val(agent_first);
+        $('#accept_contract_buyer_agent_last').val(agent_last);
+        $('#accept_contract_buyer_agent_email').val(agent_email);
+        $('#accept_contract_buyer_agent_phone').val(agent_phone);
+        $('#accept_contract_buyer_agent_mls_id').val(agent_mls_id);
+        $('#accept_contract_buyer_agent_company').val(agent_company);
         $('#accept_contract_buyer_agent_street').val(office_street);
         $('#accept_contract_buyer_agent_city').val(office_city);
         $('#accept_contract_buyer_agent_state').val(office_state);
@@ -619,6 +626,7 @@ if (document.URL.match(/transaction_details/)) {
 
     window.load_tabs = function (tab, reorder = true) {
 
+
         let Listing_ID = $('#Listing_ID').val();
         let Contract_ID = $('#Contract_ID').val();
         let Referral_ID = $('#Referral_ID').val();
@@ -665,7 +673,7 @@ if (document.URL.match(/transaction_details/)) {
                     $('#UsingHeritage').on('change', function() {
                         if($(this).val() == 'yes') {
                             $('.not-using-heritage').hide();
-                            $('#TitleCompany').val('')/* .trigger('change') */;
+                            $('#TitleCompany').val('');
                         } else {
                             $('.not-using-heritage').show();
                         }
@@ -852,9 +860,9 @@ if (document.URL.match(/transaction_details/)) {
                     save_commission('no');
 
                     show_title();
-                    /* $('#using_heritage').on('change', function() {
-                        show_title();
-                    }); */
+                    // $('#using_heritage').on('change', function() {
+                    //     show_title();
+                    // });
 
                     $('.add-check-in-button').off('click').on('click', show_add_check_in);
                     $('.add-check-out-button').off('click').on('click', show_add_check_out);
@@ -867,7 +875,7 @@ if (document.URL.match(/transaction_details/)) {
                     });
 
                     $('#add_income_deduction_div').on('hidden.bs.collapse', function () {
-                        $('#income_deduction_description, #income_deduction_amount').val('')/* .trigger('change') */;
+                        $('#income_deduction_description, #income_deduction_amount').val('');
                     });
 
                     $('#save_add_commission_deduction_button').off('click').on('click', function() {
@@ -875,18 +883,18 @@ if (document.URL.match(/transaction_details/)) {
                     });
 
                     $('#add_commission_deduction_div').on('hidden.bs.collapse', function () {
-                        $('#commission_deduction_description, #commission_deduction_amount').val('')/* .trigger('change') */;
+                        $('#commission_deduction_description, #commission_deduction_amount').val('');
                     });
 
                     $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
 
                     $('.total').each(function() {
                         if($(this).val() == '') {
-                            $(this).val('0')/* .trigger('change') */;
+                            $(this).val('0');
                         }
-                        /* $(this).on('focus', function () {
-                            $(this).select();
-                        }); */
+                        // $(this).on('focus', function () {
+                        //     $(this).select();
+                        // });
                     });
 
 
@@ -894,13 +902,17 @@ if (document.URL.match(/transaction_details/)) {
                 } else if(tab == 'earnest') {
 
                     $('#save_earnest_button').off('click').on('click', save_earnest);
-                    $('.add-check-button').off('click').on('click', function() {
-                        add_earnest_check($(this).data('type'));
+                    $('.add-earnest-check-button').off('click').on('click', function() {
+                        add_earnest_check($(this).data('check-type'));
                     });
-                    $('#save_add_earnest_check_button').off('click').on('click', save_add_earnest_check);
+                    $('#save_add_earnest_check_button').off('click').on('click', function() {
+                        $(this).prop('disabled', true);
+                        save_add_earnest_check();
+                    });
                     get_earnest_check_info();
-                    get_earnest_checks('in');
-                    get_earnest_checks('out');
+                    get_earnest_checks('in', false);
+                    get_earnest_checks('out', false);
+                    save_earnest();
 
                 }
 
@@ -941,7 +953,16 @@ if (document.URL.match(/transaction_details/)) {
                     global_loading_off();
                 }, 100);
 
-                //window.scrollTo(0,0);
+
+
+                /* setTimeout(function() {
+                    $('[id]').each(function(){
+                        var ids = $('[id="'+this.id+'"]');
+                        if(ids.length>1 && ids[0]==this) {
+                            console.warn('Multiple IDs #'+this.id);
+                        }
+                    });
+                }, 3000); */
 
             })
             .catch(function (error) {
@@ -1049,7 +1070,7 @@ if (document.URL.match(/transaction_details/)) {
             $('.hoa').show();
         } else {
             $('.hoa').hide();
-            $('[name=hoa_condo]').val('none')/* .trigger('change') */.attr('required', false);
+            $('[name=hoa_condo]').val('none').attr('required', false);
         }
 
         let listing_type = $('[name=listing_type]').val();

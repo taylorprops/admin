@@ -604,7 +604,7 @@
 
                             <ul class="nav nav-tabs" id="billing_details_tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link options-tab active" id="billing_details_tab" data-toggle="tab" href="#billing_details_div" role="tab" aria-controls="billing_details_div" aria-selected="true">Agent Billing Details</a>
+                                    <a class="nav-link options-tab active" id="billing_details_sub_tab" data-toggle="tab" href="#billing_details_div" role="tab" aria-controls="billing_details_div" aria-selected="true">Agent Billing Details</a>
                                 </li>
                             </ul>
 
@@ -1033,7 +1033,7 @@
 
         </div>
 
-        <input type="hidden" class="form-value" id="Commission_ID" name="Commission_ID" value="{{ $commission -> id }}">
+        {{-- <input type="hidden" class="form-value" id="Commission_ID" name="Commission_ID" value="{{ $commission -> id }}"> --}}
 
     </form>
 

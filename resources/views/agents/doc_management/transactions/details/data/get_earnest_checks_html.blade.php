@@ -1,5 +1,6 @@
 @php
-$checks_total = 0;
+$cleared_total = 0;
+$pending_total = 0;
 $deleted = 0;
 @endphp
 @foreach ($checks as $check)
@@ -15,7 +16,9 @@ $deleted = 0;
         $classes = '';
         if($check -> active == 'yes') {
             if($check -> check_status == 'cleared') {
-                $checks_total += $check -> check_amount;
+                $cleared_total += $check -> check_amount;
+            } else if($check -> check_status == 'pending') {
+                $pending_total += $check -> check_amount;
             }
         } else {
             $classes = $check -> active == 'no' ? 'inactive hidden' : '';
@@ -127,24 +130,45 @@ $deleted = 0;
             </div>
 
             <div class="col-12 col-md-2">
+
                 <div class="d-flex justify-content-around align-items-center h-100">
 
                     @if($check -> active == 'yes')
                         <div>
+
                             <a href="{{ $check -> file_location }}" class="btn btn-primary btn-block" target="_blank"><i class="fa fa-eye mr-2"></i> View</a>
-                            <button class="btn btn-primary btn-block edit-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fa fa-pencil mr-2"></i> Edit</button>
+
+                            <button class="btn btn-primary btn-block edit-earnest-check-button"
+                                data-check-id="{{ $check -> id }}"
+                                data-check-type="{{ $check_type }}"
+                                data-file-location="{{ $check -> file_location }}"
+                                data-image-location="{{ $check -> image_location }}"
+                                data-check-name="{{ $check -> check_name }}"
+                                data-payable-to="{{ $check -> payable_to }}"
+                                data-check-date="{{ $check -> check_date }}"
+                                data-check-number="{{ $check -> check_number }}"
+                                data-check-amount="{{ $check -> check_amount }}"
+                                data-date-deposited="{{ $check -> date_deposited }}"
+                                data-mail-to-address="{{ $check -> mail_to_address }}"
+                                data-date-sent="{{ $check -> date_sent }}"
+                                >
+                                <i class="fa fa-pencil mr-2"></i> Edit
+                            </button>
+
                             @if($check -> check_status == 'pending')
-                                <button class="btn btn-danger btn-block delete-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fa fa-ban mr-2"></i> Delete</button>
+                                <button class="btn btn-danger btn-block delete-earnest-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fa fa-ban mr-2"></i> Delete</button>
                             @endif
+
                         </div>
                     @else
                         @php $deleted += 1; @endphp
                         <div class="text-center">
                             <span class="text-danger mb-3"><i class="fad fa-ban mr-2"></i> Deleted</span>
-                            <a href="javascript: void(0)" class="btn btn-block btn-primary undo-delete-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fad fa-undo-alt mr-2"></i> Undo</a>
+                            <a href="javascript: void(0)" class="btn btn-block btn-primary undo-delete-earnest-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fad fa-undo-alt mr-2"></i> Undo</a>
                         </div>
                     @endif
                 </div>
+
             </div>
 
         </div>
@@ -154,10 +178,11 @@ $deleted = 0;
 @if($deleted > 0)
     <div class="row">
         <div class="col-12 mb-4">
-            <a href="javascript: void(0)" class="btn btn-sm btn-primary show-deleted-checks-button" data-check-type="{{ $check_type}}">Show Deleted Checks</a>
+            <a href="javascript: void(0)" class="btn btn-sm btn-primary show-deleted-earnest-checks-button" data-check-type="{{ $check_type}}">Show Deleted Checks</a>
         </div>
     </div>
 @endif
 
-<input type="hidden" id="earnest_checks_{{ $check_type }}_total_amount" value="{{ $checks_total }}">
+<input type="hidden" id="earnest_checks_{{ $check_type }}_cleared_total" value="{{ $cleared_total }}">
+<input type="hidden" id="earnest_checks_{{ $check_type }}_pending_total" value="{{ $pending_total }}">
 

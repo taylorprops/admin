@@ -139,7 +139,7 @@ if (document.URL.match(/edit_files/)) {
                 init();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -422,12 +422,12 @@ if (document.URL.match(/edit_files/)) {
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -728,7 +728,7 @@ if (document.URL.match(/edit_files/)) {
                 get_edit_file_docs();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -822,7 +822,7 @@ if (document.URL.match(/edit_files/)) {
                     $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save'); */
                 })
                 .catch(function (error) {
-                    //console.log(error);
+
                     });
 
         }
@@ -845,7 +845,7 @@ if (document.URL.match(/edit_files/)) {
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
             }, 1000);
@@ -1243,7 +1243,7 @@ if (document.URL.match(/edit_files/)) {
             });
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
 
@@ -1589,7 +1589,7 @@ if (document.URL.match(/edit_files/)) {
             location.reload();
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -1682,7 +1682,7 @@ if (document.URL.match(/edit_files/)) {
                 toastr['success']('Document Saved Successfully');
             })
             .catch(function (error) {
-                //console.log(error);
+
                 });
 
 
@@ -1713,7 +1713,7 @@ if (document.URL.match(/edit_files/)) {
             }, 500);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -1763,7 +1763,7 @@ if (document.URL.match(/edit_files/)) {
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
 
         } else {

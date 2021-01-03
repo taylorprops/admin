@@ -278,7 +278,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 toastr['success']('Page Successfully Removed')
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -467,7 +467,7 @@ if (document.URL.match(/create\/add_fields/)) {
 
                     })
                     .catch(function (error) {
-                        console.log(error);
+
                     });
 
                 } else {
@@ -856,7 +856,7 @@ if (document.URL.match(/create\/add_fields/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 

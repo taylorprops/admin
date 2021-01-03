@@ -135,7 +135,7 @@
                                                         <div>
                                                             <div class="dropdown">
 
-                                                                <button class="btn btn-primary dropdown-toggle checklist-item-dropdown" type="button" id="checklist_item_options_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+                                                                <button class="btn btn-primary dropdown-toggle checklist-item-dropdown" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
 
                                                                 <div class="dropdown-menu dropdown-primary">
 

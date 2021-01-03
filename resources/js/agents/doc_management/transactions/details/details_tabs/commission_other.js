@@ -73,7 +73,7 @@ if (document.URL.match(/commission_other/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }

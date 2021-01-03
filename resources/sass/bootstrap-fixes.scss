@@ -168,14 +168,18 @@ body.modal-open {
 
 // datatables
 .dataTables_wrapper {
+
     .dt-buttons .btn {
-        padding: .3rem;
+        padding: .2rem .4rem;
+        font-size: .8rem;
     }
+
     .dataTable {
         &.table th {
             background: $blue;
             color: $blue-light;
             vertical-align: middle;
+            font-size: .8rem;
         }
         &.table td {
             padding: 0.4rem;
@@ -183,6 +187,19 @@ body.modal-open {
             font-size: .8rem;
             color: $text-gray;
         }
+    }
+
+    .dataTables_length {
+        font-size: .9rem;
+    }
+
+    .dataTables_info {
+        font-size: .8rem;
+    }
+
+    .page-link {
+        padding: .3rem .6rem;
+        font-size: .7rem;
     }
 }
 

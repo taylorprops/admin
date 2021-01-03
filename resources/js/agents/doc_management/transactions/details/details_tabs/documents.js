@@ -86,7 +86,7 @@ if (document.URL.match(/transaction_details/)) {
             clear_in_process(response.data.not_in_process);
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -139,7 +139,7 @@ if (document.URL.match(/transaction_details/)) {
 
         })
         .catch(function (error) {
-            console.log(error);
+
         });
 
     }
@@ -197,7 +197,7 @@ if (document.URL.match(/transaction_details/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
         }
@@ -245,7 +245,7 @@ if (document.URL.match(/transaction_details/)) {
                 global_loading_off();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -285,7 +285,7 @@ if (document.URL.match(/transaction_details/)) {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -329,7 +329,7 @@ if (document.URL.match(/transaction_details/)) {
             toastr['success']('Documents Successfully Emailed');
         })
         .catch(function (error) {
-            console.log(error);
+
         });
     }
 
@@ -414,7 +414,7 @@ if (document.URL.match(/transaction_details/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -442,7 +442,7 @@ if (document.URL.match(/transaction_details/)) {
                 toastr['success']('Document successfully duplicated');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -525,7 +525,7 @@ if (document.URL.match(/transaction_details/)) {
                 }, 500);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -593,7 +593,7 @@ if (document.URL.match(/transaction_details/)) {
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
         }
     }
@@ -621,7 +621,7 @@ if (document.URL.match(/transaction_details/)) {
                 load_checklist_on_tab_click();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -655,7 +655,7 @@ if (document.URL.match(/transaction_details/)) {
 
                     })
                     .catch(function (error) {
-                        console.log(error);
+
                     });
 
                 }
@@ -794,7 +794,7 @@ if (document.URL.match(/transaction_details/)) {
 
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -982,7 +982,7 @@ if (document.URL.match(/transaction_details/)) {
                 $('#save_add_to_checklist_button').show();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
 
     }
@@ -1167,7 +1167,7 @@ if (document.URL.match(/transaction_details/)) {
 
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
         }
     }
@@ -1297,7 +1297,7 @@ if (document.URL.match(/transaction_details/)) {
                     $('.modal').modal('hide');
                 })
                 .catch(function (error) {
-                    console.log(error);
+
                 });
         }
     }
@@ -1327,7 +1327,7 @@ if (document.URL.match(/transaction_details/)) {
                 load_checklist_on_tab_click();
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -1362,7 +1362,7 @@ if (document.URL.match(/transaction_details/)) {
                 $('#move_documents_modal').modal('hide');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -1398,7 +1398,7 @@ if (document.URL.match(/transaction_details/)) {
                 toastr['success']('Document Moved To Trash');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -1434,7 +1434,7 @@ if (document.URL.match(/transaction_details/)) {
                 $('#confirm_delete_documents_modal').modal('hide');
             })
             .catch(function (error) {
-                console.log(error);
+
             });
     }
 
@@ -1462,9 +1462,9 @@ if (document.URL.match(/transaction_details/)) {
             ele.closest('.folder-header').next('.collapse').collapse('show');
         }
         if (ele.is(':checked')) {
-            ele.closest('.folder-div').find('.document-div').find('input').not('input:disabled').prop('checked', true)/* .trigger('change') */;
+            ele.closest('.folder-div').find('.document-div').find('input').not('input:disabled').prop('checked', true);
         } else {
-            ele.closest('.folder-div').find('.document-div').find('input').prop('checked', false)/* .trigger('change') */;
+            ele.closest('.folder-div').find('.document-div').find('input').prop('checked', false);
         }
         show_bulk_options();
     }

@@ -10,14 +10,14 @@
         <table class="table table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
-                    <th class="wp-80"></th>
+                    <th class="wpx-80"></th>
                     <th>Received</th>
                     <th>Agent</th>
                     <th>Property Address</th>
                     <th>Check #</th>
                     <th>Check Date</th>
                     <th>Amount</th>
-                    <th class="wp-80"></th>
+                    <th class="wpx-80"></th>
                 </tr>
             </thead>
             <tbody>
@@ -70,7 +70,7 @@
         <table class="table table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
-                    <th class="wp-100"></th>
+                    <th class="wpx-100"></th>
                     <th>Received</th>
                     <th>Agent</th>
                     <th>Client</th>
@@ -78,7 +78,7 @@
                     <th>Check #</th>
                     <th>Check Date</th>
                     <th>Amount</th>
-                    <th class="wp-80"></th>
+                    <th class="wpx-80"></th>
                 </tr>
             </thead>
             <tbody>
