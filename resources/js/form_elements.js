@@ -1,6 +1,64 @@
+setInterval(function() {
+    $('.custom-form-element').each(function() {
+        if($(this).closest('.form-ele').length == 0) {
+            form_elements();
+        }
+    });
+}, 100);
+
+// FORM INPUT CHANGES
+$(document).on('change', '.custom-form-element', function() {
+
+    if(!$(this).hasClass('form-input-checkbox')) {
+
+        let label = $(this).closest('.form-ele').find('label');
+        if($(this).val() != '') {
+            label.addClass('active');
+        } else {
+            label.removeClass('active');
+        }
+        if($(this).hasClass('form-select')) {
+            if($(this).val() != $(this).next('.form-select-wrapper').find('.form-select-value-input').val()) {
+                select_refresh($(this), null);
+            }
+        }
+
+    }
+
+});
+
+
+// activate labels on focus and hide on blur if empty
+$(document).on('focus', 'input.custom-form-element, textarea.custom-form-element', function(e) {
+    if(!$(this).hasClass('form-input-file')) {
+        e.stopImmediatePropagation();
+        $(this).next('label').addClass('active');
+        hide_dropdowns();
+    }
+});
+
+$(document).on('blur', '.custom-form-element', function() {
+    if($(this).val() == '') {
+        $(this).next('label').removeClass('active');
+    }
+});
+
+
+// show file name in input
+$(document).on('change', '.custom-file-input', function() {
+    let file_name = $(this).val().split('\\').pop();
+    if($(this).val() != '') {
+        $(this).siblings('.custom-file-label').addClass('selected').html(file_name);
+        $(this).siblings('.form-input-label').addClass('active');
+    } else {
+        $(this).siblings('.custom-file-label').removeClass('selected').html('');
+        $(this).siblings('.form-input-label').removeClass('active');
+    }
+});
+
 window.form_elements = function () {
 
-
+    console.log('form_elements');
     /*
     Element classes
     input | .form-input
@@ -36,391 +94,333 @@ window.form_elements = function () {
 
         //$('.form-select-value-input').removeClass('caret');
 
-        // add container and label
-        form_element.each(function () {
+        //if($('.' + form_type).length > 0) {
 
-            index += 1;
+            // add container and label
+            form_element.each(function () {
 
-            const element = $(this);
+                index += 1;
 
-            const multiple = (element.attr('multiple') == 'multiple' || element.attr('multiple') == true) ? true : false;
+                const element = $(this);
 
-            // check if form-ele already applied
-            if (element.closest('.form-ele').length == 0) {
+                const multiple = (element.attr('multiple') == 'multiple' || element.attr('multiple') == true) ? true : false;
 
-                let select_input_id = Math.floor(Math.random() * 1000000000000000) + 10000000000;
-                // avoid duplicate ids
-                if ($('#' + select_input_id).length > 0) {
-                    console.log('dupes');
-                    select_input_id = select_input_id + index;
-                }
+                // check if form-ele already applied
+                if (element.closest('.form-ele').length == 0) {
 
-                let id = 'input_' + select_input_id;
-
-                if (element.attr('id') != undefined) {
-                    id = element.attr('id');
-                } else {
-                    element.attr('id', id);
-                }
-
-                let active_label = '';
-                if (element.val() != '') {
-                    active_label = 'active';
-                }
-
-                // wrap element with form-ele
-                // add labels on all except: select and file input
-                // select label is added in select_html
-                // file label is added in file_html
-                let label = $(this).data('label');
-
-                if (!label) {
-                    label = '';
-                }
-
-                if(label.match(/'/)) {
-                    label = label.replace(/'/g, '"');
-                }
-
-                let small = $(this).hasClass('form-small') ? 'form-small' : '';
-                let wide = $(this).hasClass('form-wide') ? 'form-wide' : '';
-
-                element.show();
-
-                if (form_type == 'form-input' || form_type == 'form-textarea') {
-
-                    element.wrap('<div class="form-ele '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+'">' + label + '</label>');
-
-                } else if (form_type == 'form-input-file') {
-
-                    element.addClass('custom-file-input');
-
-                    element.wrap('<div class="form-ele custom-file '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
-
-
-                    /* let required_class = '';
-                    if(element.hasClass('required')) {
-                        required_class = 'required-form-ele';
-                    }
-                    let clone = element.wrap('<div></div>').parent().html();
-                    element.unwrap();
-                    let file_html = ' \
-                    <div class="form-ele md-form my-0 mt-2"> \
-                        <div class="d-flex justify-content-start align-items-center file-field '+required_class+'"> \
-                            <i class="fad fa-upload float-left"></i> \
-                            '+ clone + ' \
-                            <div class="file-path-wrapper w-100"> \
-                                <input class="file-path" type="text" placeholder="'+ label + '"> \
-                            </div> \
-                        </div> \
-                    </div> \
-                    ';
-
-                    let parent = element.parent();
-                    element.remove();
-                    parent.html(file_html); */
-
-                } else if (form_type == 'form-checkbox') {
-
-                    element.wrap('<div class="form-ele pretty p-default p-thick p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
-
-
-                } else if (form_type == 'form-radio') {
-
-                    element.wrap('<div class="form-ele pretty p-default p-thick p-round p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
-
-                } else if (form_type == 'form-input-color') {
-
-
-                    let color = $(this).val();
-                    let classname = 'add-resource-color';
-                    if ($(this).hasClass('edit-resource-color')) {
-                        classname = 'edit-resource-color';
-                    }
-                    let color_html = ' \
-                    <div class="form-ele"> \
-                        <div class="colorpicker-div d-flex justify-content-between"> \
-                            <div class="colorpicker-text">'+ label + '</div> \
-                            <label class="colorpicker-label"><input type="color" class="'+ classname + ' colorpicker" value="' + color + '" data-default-value="' + color + '"></label> \
-                        </div> \
-                    </div> \
-                    ';
-
-                    let parent = element.parent();
-                    element.remove();
-                    parent.html(color_html);
-
-                } else if (form_type == 'form-select') {
-
-                    element.wrap('<div class="form-ele select"></div>');
-                    // get wrapper to append to
-                    let wrapper = element.parent();
-
-                    // hide select element
-                    element.hide();
-
-                    let disabled = '';
-                    if (element.prop('disabled') == true) {
-                        disabled = 'disabled';
+                    let select_input_id = Math.floor(Math.random() * 1000000000000000) + 10000000000;
+                    // avoid duplicate ids
+                    if ($('#' + select_input_id).length > 0) {
+                        console.log('ERROR: There are multiple elements with the same id');
+                        select_input_id = select_input_id + index;
                     }
 
-                    // add delete if clearable
-                    let clear_value = '';
-                    if (disabled == '') {
-                        clear_value = '<div class="form-select-value-cancel"><i class="fal fa-times"></i></div>';
+                    let id = 'input_' + select_input_id;
+
+                    if (element.attr('id') != undefined) {
+                        id = element.attr('id');
+                    } else {
+                        element.attr('id', id);
                     }
 
-                    let select_html = ' \
-                    <div class="form-select-wrapper"> \
-                        ' + clear_value + ' \
-                        <label class="' + form_type + '-label ' + small + '" for="select_value_' + select_input_id + '">' + label + '</label> \
-                        <input type="text" class="form-select-value-input caret '+ disabled + '" id="select_value_' + select_input_id + '" readonly ' + disabled + '> \
-                        <div class="form-select-dropdown shadow '+wide+'"> \
-                    ';
-                    //if(!element.hasClass('form-select-no-search')) {
-                        select_html += ' \
-                            <div class="form-select-search-div"> \
-                                <input type="text" class="form-select-search-input" placeholder="Search"> \
-                            </div> \
-                        ';
-                    //}
-                    select_html += ' \
-                            <div class="form-select-options-div"> \
-                                <ul class="form-select-ul"></ul> \
-                            </div> \
-                        </div > \
-                    </div> \
-                    ';
-
-                    wrapper.append(select_html);
-
-                    let input = wrapper.find('.form-select-value-input');
-
-                    // add dropdown html
-                    let input_text = '';
-                    element.children('option').map(function (index, option) {
-                        option = $(option);
-                        let value = option.prop('value');
-
-                        if (value != '') {
-
-                            let selected = '';
-                            let text = option.text();
-
-                            if (option.prop('selected') == true || option.prop('selected') == 'selected') {
-                                selected = 'active';
-                                input_text = text;
-                            }
-
-
-                            let li_html = text;
-                            let multiple_li_class = '';
-
-                            if (multiple) {
-                                let checked = (option.prop('selected') == 'checked' || option.prop('selected') == true) ? 'checked' : '';
-                                li_html = ' \
-                                <div class="form-ele mt-1 mb-1 pretty p-default p-pulse"> \
-                                    <input type="checkbox" class="custom-form-element form-checkbox form-check-input" id="check_'+ select_input_id + '_' + index + '" data-index="' + index + '" data-value="' + value + '" data-text="' + text + '" ' + checked + '> \
-                                    <div class="state p-primary-o"> \
-                                        <label class="form-check-label" for="check_'+ select_input_id + '_' + index + '">' + text + '</label> \
-                                    </div> \
-                                </div > \
-                                ';
-                                multiple_li_class = 'form-check-input-multiple';
-                            }
-
-                            let li = '<li class="form-select-li ' + selected + ' ' + multiple_li_class + '" data-index="' + index + '" data-value="' + value + '" data-text="' + text + '">' + li_html + '</li>';
-                            wrapper.find('.form-select-ul').append(li);
-
-                        }
-
-                    });
-
+                    let active_label = '';
                     if (element.val() != '') {
-                        if (!multiple) {
-                            // add value to input if selected
-                            input.val(input_text).trigger('change');
+                        active_label = 'active';
+                    }
+
+                    // wrap element with form-ele
+                    // add labels on all except: select and file input
+                    // select label is added in select_html
+                    // file label is added in file_html
+                    let label = element.data('label');
+                    let label_view = '';
+                    if (!label) {
+                        label = '';
+                        label_view = 'hidden';
+                    }
+
+                    // if html in label
+                    if(label.match(/='/)) {
+                        label = label.replace(/'/g, '"');
+                    }
+
+                    let small = element.hasClass('form-small') ? 'form-small' : '';
+                    let wide = element.hasClass('form-wide') ? 'form-wide' : '';
+
+                    element.show();
+
+                    if (form_type == 'form-input' || form_type == 'form-textarea') {
+
+                        element.wrap('<div class="form-ele '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+'">' + label + '</label>');
+
+                    } else if (form_type == 'form-input-file') {
+
+                        element.addClass('custom-file-input');
+
+                        element.wrap('<div class="form-ele custom-file '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
+
+
+                    } else if (form_type == 'form-checkbox') {
+
+                        element.wrap('<div class="form-ele pretty p-default p-thick p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
+
+
+                    } else if (form_type == 'form-radio') {
+
+                        element.wrap('<div class="form-ele pretty p-default p-thick p-round p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
+
+                    } else if (form_type == 'form-input-color') {
+
+
+                        let color = $(this).val();
+                        let classname = 'add-resource-color';
+                        if ($(this).hasClass('edit-resource-color')) {
+                            classname = 'edit-resource-color';
                         }
-                        // show cancel option
+                        let color_html = ' \
+                        <div class="form-ele"> \
+                            <div class="colorpicker-div d-flex justify-content-between"> \
+                                <div class="colorpicker-text">'+ label + '</div> \
+                                <label class="colorpicker-label"><input type="color" class="'+ classname + ' colorpicker" value="' + color + '" data-default-value="' + color + '"></label> \
+                            </div> \
+                        </div> \
+                        ';
+
+                        let parent = element.parent();
+                        element.remove();
+                        parent.html(color_html);
+
+                    } else if (form_type == 'form-select') {
+
+                        element.wrap('<div class="form-ele '+small+' select"></div>');
+                        // get wrapper to append to
+                        let wrapper = element.parent();
+
+                        // hide select element
+                        element.hide();
+
+                        let disabled = '';
+                        if (element.prop('disabled') == true) {
+                            disabled = 'disabled';
+                        }
+
+                        // add delete if clearable
+                        let clear_value = '';
+                        if (disabled == '') {
+                            clear_value = '<div class="form-select-value-cancel"><i class="fal fa-times"></i></div>';
+                        }
+
+                        let select_html = ' \
+                        <div class="form-select-wrapper"> \
+                            ' + clear_value + ' \
+                            <label class="' + form_type + '-label ' + small + ' '+label_view+'" for="select_value_' + select_input_id + '">' + label + '</label> \
+                            <input type="text" class="form-select-value-input caret '+ disabled + '" id="select_value_' + select_input_id + '" readonly ' + disabled + '> \
+                            <div class="form-select-dropdown shadow '+wide+'"> \
+                        ';
+                        //if(!element.hasClass('form-select-no-search')) {
+                            select_html += ' \
+                                <div class="form-select-search-div"> \
+                                    <input type="text" class="form-select-search-input" placeholder="Search"> \
+                                </div> \
+                            ';
+                        //}
+                        select_html += ' \
+                                <div class="form-select-options-div"> \
+                                    <ul class="form-select-ul"></ul> \
+                                </div> \
+                            </div > \
+                        </div> \
+                        ';
+
+                        wrapper.append(select_html);
+
+                        let input = wrapper.find('.form-select-value-input');
+
+                        // add dropdown html
+                        let input_text = '';
+                        element.children('option').map(function (index, option) {
+                            option = $(option);
+                            let value = option.prop('value');
+
+                            if (value != '') {
+
+                                let selected = '';
+                                let text = option.text();
+
+                                if (option.prop('selected') == true || option.prop('selected') == 'selected') {
+                                    selected = 'active';
+                                    input_text = text;
+                                }
+
+
+                                let li_html = text;
+                                let multiple_li_class = '';
+
+                                if (multiple) {
+                                    let checked = (option.prop('selected') == 'checked' || option.prop('selected') == true) ? 'checked' : '';
+                                    li_html = ' \
+                                    <div class="mt-1 mb-1 pretty p-default p-pulse"> \
+                                        <input type="checkbox" class="form-check-input select-checkbox" id="check_'+ select_input_id + '_' + index + '" data-index="' + index + '" data-value="' + value + '" data-text="' + text + '" ' + checked + '> \
+                                        <div class="state p-primary-o"> \
+                                            <label class="form-check-label" for="check_'+ select_input_id + '_' + index + '">' + text + '</label> \
+                                        </div> \
+                                    </div > \
+                                    ';
+                                    multiple_li_class = 'form-check-input-multiple';
+                                }
+
+                                let li = '<li class="form-select-li ' + selected + ' ' + multiple_li_class + '" data-index="' + index + '" data-value="' + value + '" data-text="' + text + '">' + li_html + '</li>';
+                                wrapper.find('.form-select-ul').append(li);
+
+                            }
+
+                        });
+
+                        if (element.val() != '') {
+                            if (!multiple) {
+                                // add value to input if selected
+                                input.val(input_text).trigger('change');
+                            }
+                            // show cancel option
+                            if (!element.hasClass('form-select-no-cancel')) {
+                                if(wrapper.find('.form-select-value-input').val() == '') {
+                                    wrapper.find('.form-select-value-input').addClass('caret');
+                                    wrapper.find('.form-select-value-cancel').hide();
+                                } else {
+                                    wrapper.find('.form-select-value-input').removeClass('caret');
+                                    wrapper.find('.form-select-value-cancel').show();
+                                }
+                            }
+                            wrapper.find('label').addClass('active');
+                        }
+
+                        // add save button to exit out of multiple select
+                        if (multiple) {
+                            wrapper.find('.form-select-dropdown').append('<div class="w-100 form-select-save-div"><div class="d-flex d-flex justify-content-center p-0"><a href="javascript: void(0)" class="form-select-multiple-save btn btn-success btn-sm">Close</a></div></div>');
+                            $('.form-select-multiple-save').on('click', function () {
+                                setTimeout(function() {
+                                    hide_dropdowns();
+                                }, 100);
+                            });
+
+                            set_multiple_select_value(wrapper, input);
+
+                            /* // when a checkbox in a multiple select is changed
+                            set_multiple_select(wrapper, input); */
+
+                        }
+
+                        // remove cancel option if class form-select-no-cancel is set
                         if (!element.hasClass('form-select-no-cancel')) {
-                            if(wrapper.find('.form-select-value-input').val() == '') {
-                                wrapper.find('.form-select-value-input').addClass('caret');
+                            wrapper.find('.form-select-value-cancel').on('click', function () {
+                                element.val('').find('option').attr('selected', false);
+                                element.trigger('change');
+                                wrapper.find('.form-select-value-input').val('').trigger('change');
+                                wrapper.find('label').removeClass('active');
+                                wrapper.find('li').removeClass('active');
                                 wrapper.find('.form-select-value-cancel').hide();
+                                wrapper.find('.form-select-value-input').addClass('caret');
+                                wrapper.find('.form-check-input').prop('checked', false);
+                                hide_dropdowns();
+                            });
+                        }
+
+                        // hide search option if class form-select-no-search is set
+                        if (element.hasClass('form-select-no-search')) {
+
+                            wrapper.find('.form-select-search-div').css({ 'opacity': '0', 'height': '0px' });
+
+                        }
+
+                        dropdown_search(wrapper, input, element, multiple);
+
+
+                        // when a single li is clicked
+                        wrapper.find('.form-select-li').on('click', function () {
+
+                            if (!$(this).hasClass('form-check-input-multiple')) {
+
+                                hide_dropdowns();
+                                let li = $(this);
+                                let value = li.data('value');
+                                let text = li.data('text');
+                                let input = li.closest('.form-ele').find('.form-select-value-input');
+                                let dropdown = li.closest('.form-ele').find('.form-select-dropdown');
+                                let element = li.closest('.form-ele').find('.form-select');
+
+                                $('.form-select-matched-option').removeClass('form-select-matched-option');
+                                // set input value
+                                input.val(text);
+                                shorten_value(input, text, false);
+                                input.trigger('change');
+                                wrapper.find('label').addClass('active');
+
+                                // remove active from all li and add to selected
+                                dropdown.find('.form-select-li').removeClass('active');
+                                li.addClass('active');
+                                // update select element
+                                element.val(value);
+                                element.trigger('change');
+
+                                // reset_select();
                             } else {
+                                set_multiple_select($(this));
+                            }
+
+                            if (!element.hasClass('form-select-no-cancel')) {
+                                input.siblings('.form-select-value-cancel').show();
                                 wrapper.find('.form-select-value-input').removeClass('caret');
-                                wrapper.find('.form-select-value-cancel').show();
+                            }
+
+                        });
+
+
+
+                    } // end else if (form_type == 'form-select') {
+
+                    if (form_type != 'form-checkbox' && form_type != 'form-radio') {
+                        if(element.hasClass('required')) {
+                            if(form_type == 'form-select') {
+                                $(this).next('div').find('.form-select-value-input').addClass('required-form-ele');
+                            } else if(form_type == 'form-input-file') {
+                                $(this).next('label').addClass('required-form-ele');
                             }
                         }
-                        wrapper.find('label').addClass('active');
-                    }
 
-                    // add save button to exit out of multiple select
-                    if (multiple) {
-                        wrapper.find('.form-select-dropdown').append('<div class="w-100 form-select-save-div"><div class="d-flex d-flex justify-content-center p-0"><a href="javascript: void(0)" class="form-select-multiple-save btn btn-success btn-sm">Close</a></div></div>');
-                        $('.form-select-multiple-save').on('click', function () {
-                            setTimeout(function() {
-                                hide_dropdowns();
-                            }, 100);
-                        });
+                        if(element.hasClass('datepicker')) {
 
-                        set_multiple_select_value(wrapper, input);
+                            element.prop('readonly', true);
 
-                        /* // when a checkbox in a multiple select is changed
-                        set_multiple_select(wrapper, input); */
+                            let wrapper = element.closest('.form-ele');
 
-                    }
+                            element.closest('.form-ele').append('<div class="form-datepicker-cancel"><i class="fal fa-times fa-xs"></i></div><div class="datepicker-div"><i class="fal fa-calendar-alt fa-xs"></i></div>');
 
-                    // remove cancel option if class form-select-no-cancel is set
-                    if (!element.hasClass('form-select-no-cancel')) {
-                        wrapper.find('.form-select-value-cancel').on('click', function () {
-                            element.val('').find('option').attr('selected', false);
-                            element.trigger('change');
-                            wrapper.find('.form-select-value-input').val('').trigger('change');
-                            wrapper.find('label').removeClass('active');
-                            wrapper.find('li').removeClass('active');
-                            wrapper.find('.form-select-value-cancel').hide();
-                            wrapper.find('.form-select-value-input').addClass('caret');
-                            wrapper.find('.form-check-input').prop('checked', false);
-                            hide_dropdowns();
-                        });
-                    }
-
-                    // hide search option if class form-select-no-search is set
-                    if (element.hasClass('form-select-no-search')) {
-
-                        wrapper.find('.form-select-search-div').css({ 'opacity': '0', 'height': '0px' });
-
-                    }
-
-                    dropdown_search(wrapper, input, element, multiple);
-
-
-                    // when a single li is clicked
-                    wrapper.find('.form-select-li').off('click').on('click', function () {
-
-                        if (!$(this).hasClass('form-check-input-multiple')) {
-
-                            hide_dropdowns();
-                            let li = $(this);
-                            let value = li.data('value');
-                            let text = li.data('text');
-                            let input = li.closest('.form-ele').find('.form-select-value-input');
-                            let dropdown = li.closest('.form-ele').find('.form-select-dropdown');
-                            let element = li.closest('.form-ele').find('.form-select');
-
-                            $('.form-select-matched-option').removeClass('form-select-matched-option');
-                            // set input value
-                            input.val(text);
-                            shorten_value(input, text, false);
-                            input.trigger('change');
-                            wrapper.find('label').addClass('active');
-
-                            // remove active from all li and add to selected
-                            dropdown.find('.form-select-li').removeClass('active');
-                            li.addClass('active');
-                            // update select element
-                            element.val(value);
-                            element.trigger('change');
-
-                            // reset_select();
-                        } else {
-                            set_multiple_select($(this));
-                        }
-
-                        if (!element.hasClass('form-select-no-cancel')) {
-                            input.siblings('.form-select-value-cancel').show();
-                            wrapper.find('.form-select-value-input').removeClass('caret');
-                        }
-
-                    });
-
-
-
-                } // end else if (form_type == 'form-select') {
-
-                if (form_type != 'form-checkbox' && form_type != 'form-radio') {
-                    if(element.hasClass('required')) {
-                        if(form_type == 'form-select') {
-                            $(this).next('div').find('.form-select-value-input').addClass('required-form-ele');
-                        } else if(form_type == 'form-input-file') {
-                            $(this).next('label').addClass('required-form-ele');
-                        }
-                    }
-
-                    if(element.hasClass('datepicker')) {
-
-                        element.prop('readonly', true);
-
-                        let wrapper = element.closest('.form-ele');
-
-                        element.closest('.form-ele').append('<div class="form-datepicker-cancel"><i class="fal fa-times fa-xs"></i></div><div class="datepicker-div"><i class="fal fa-calendar-alt fa-xs"></i></div>');
-
-                        show_cancel_date(wrapper, element);
-                        element.on('change', function() {
                             show_cancel_date(wrapper, element);
-                        });
+                            element.on('change', function() {
+                                show_cancel_date(wrapper, element);
+                            });
 
-                        if(element.val() != '') {
-                            wrapper.find('label').addClass('active');
+                            if(element.val() != '') {
+                                wrapper.find('label').addClass('active');
+                            }
+
                         }
-
                     }
-                }
 
-                // hide any open select dropdowns
-                /* element.closest('.form-ele *').on('focus', function () {
-                    console.log('hiding dropdowns');
-                    hide_dropdowns();
-                }); */
+                    // hide any open select dropdowns
+                    /* element.closest('.form-ele *').on('focus', function () {
+                        console.log('hiding dropdowns');
+                        hide_dropdowns();
+                    }); */
 
 
-            } // end if (!element.parent().hasClass('form-ele')) {
+                } // end if (!element.parent().hasClass('form-ele')) {
 
-        }); // end form_element.each(function () {
+            }); // end form_element.each(function () {
+
+        //}
 
     }); // end form_elements.map(function (form_type) {
-
-
-    // FORM INPUT CHANGES
-    $('.custom-form-element').not('.form-input-checkbox').on('change', function() {
-        let label = $(this).closest('.form-ele').find('label');
-        if($(this).val() != '') {
-            label.addClass('active');
-        } else {
-            label.removeClass('active');
-        }
-        if($(this).hasClass('form-select')) {
-            if($(this).val() != '' && $(this).closest('.form-ele').find('.form-select-value-input').val() == '') {
-                select_refresh();
-            }
-        }
-    });
-
-
-
-    // activate labels on focus and hide on blur if empty
-    $('input.custom-form-element, textarea.custom-form-element').not('.form-input-file').off('focus').on('focus', function (e) {
-        $(this).next('label').addClass('active');
-        hide_dropdowns();
-    });
-
-    $('.custom-form-element').off('blur').on('blur', function () {
-        if($(this).val() == '') {
-            $(this).next('label').removeClass('active');
-        }
-    });
-
-    // show file name in input
-    $('.custom-file-input').on('change', function() {
-        let file_name = $(this).val().split('\\').pop();
-        if($(this).val() != '') {
-            $(this).siblings('.custom-file-label').addClass('selected').html(file_name);
-            $(this).siblings('.form-input-label').addClass('active');
-        } else {
-            $(this).siblings('.custom-file-label').removeClass('selected').html('');
-            $(this).siblings('.form-input-label').removeClass('active');
-        }
-    });
 
 
     if ($('input[type=color]').length > 0) {
@@ -439,10 +439,11 @@ window.form_elements = function () {
 
     // show dropdown on focus or click
     $('.form-select-value-input').on('focus', function (e) {
+        e.stopImmediatePropagation();
         $(this).addClass('form-select-value-input-focus');
         show_dropdown($(this));
     });
-    $('.form-select-value-input').on('mousedown', function (e) {
+    $('.form-select-value-input').off('mousedown').on('mousedown', function (e) {
         e.preventDefault();
         $(this).addClass('form-select-value-input-focus');
         show_dropdown($(this));
@@ -459,35 +460,41 @@ window.form_elements = function () {
 
 window.set_multiple_select = function(li) {
 
-    let wrapper = li.closest('.form-select-ul');
     let form_ele = li.closest('.form-ele');
+    let form_select = form_ele.find('.form-select');
+    let ul = form_ele.find('.form-select-ul');
     let input = form_ele.find('.form-select-value-input');
-    let selected_checks = [];
-    wrapper.find('.form-select-li').removeClass('active');
-    form_ele.find('option').prop('selected', false);
-    wrapper.find('.form-check-input:checked').each(function () {
+    //let selected_checks = [];
+
+    ul.find('.form-select-li').removeClass('active');
+    form_select.find('option').prop('selected', false);
+
+    ul.find('.form-check-input:checked').each(function () {
+
         let checked = $(this);
         let index = checked.data('index');
-        selected_checks.push(checked.data('value'));
+        //selected_checks.push(checked.data('value'));
         checked.closest('li').addClass('active');
         // to show selected first use below
         // $(this).closest('li').addClass('active').prependTo('.form-select-ul');
 
         // set select element value
-        form_ele.find('option').eq(index).prop('selected', true).trigger('change');
-        //console.log(index, form_ele.find('option').length);
+        form_select.find('option').eq(index).prop('selected', true);
+
     });
 
-    form_ele.trigger('change');
-
-    if (form_ele.val() == '') {
-        form_ele.closest('.form-ele').find('.form-select-value-cancel').hide();
-        wrapper.find('.form-select-value-input').addClass('caret');
+    if (form_select.val() == '') {
+        form_select.closest('.form-ele').find('.form-select-value-cancel').hide();
+        ul.find('.form-select-value-input').addClass('caret');
         input.val('');
     }
 
+    form_select.on('blur', function() {
+        $(this).trigger('change');
+    });
+
     // shorten input value if too long
-    set_multiple_select_value(wrapper, input);
+    set_multiple_select_value(ul, input);
 
 }
 
@@ -789,7 +796,7 @@ function shorten_value(input, value, multiple) {
         // shorten value if bigger than input
         let perc = .12;
         if (multiple == false) {
-            perc = .14;
+            perc = .12;
         }
         let max_chars = Math.round(parseInt(input.width()) * perc);
         if (value.length > max_chars) {
@@ -800,21 +807,42 @@ function shorten_value(input, value, multiple) {
     }
 }
 
-window.select_refresh = function (ele = '') {
+window.select_refresh = function (ele, parent = null) {
 
-    let parent = $('body');
-    if(ele != '') {
-        parent = ele;
+    if(!parent) {
+        if(ele.closest('.form-ele').length == 1) {
+            ele.unwrap();
+            ele.next('.form-select-wrapper').remove();
+            ele.next('.required-div').remove();
+        }
+    } else {
+        parent.find('.form-select').each(function() {
+            if($(this).closest('.form-ele').length == 1) {
+                $(this).unwrap();
+                $(this).next('.form-select-wrapper').remove();
+                $(this).next('.required-div').remove();
+            }
+        });
     }
-    parent.find('.form-select-value-input.caret').removeClass('caret');
+    form_elements();
 
-    parent.find('.form-ele').find('.form-select').each(function () {
+}
+
+/* window.select_refresh = function (parent = '') {
+console.log('select_refresh');
+    let container = $('body');
+    if(parent != '') {
+        container = parent;
+    }
+    container.find('.form-select-value-input.caret').removeClass('caret');
+
+    container.find('.form-ele').find('.form-select').each(function () {
         $(this).unwrap().show();
         $(this).next('.form-select-wrapper').remove();
         $(this).next('.required-div').remove();
     });
-    form_elements();
-}
+
+} */
 
 function set_multiple_select_value(wrapper, input) {
 

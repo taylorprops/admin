@@ -4,7 +4,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
 
     $(function() {
 
-        form_elements();
+        //form_elements();
 
         // search address in google
         search_address_continue();
@@ -244,7 +244,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                 update_county_select(data.state);
                 setTimeout(function() {
                     $('#enter_county').val(data.county);
-                    select_refresh();
+                    //select_refresh();
                     enter_address_form_check();
                 }, 500);
             })
@@ -492,7 +492,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                 $('#enter_county').append('<option value="' + v.county.toUpperCase() + '">' + v.county + '</option>');
             });
             setTimeout(function () {
-                select_refresh();
+                //select_refresh();
             }, 500);
         })
         .catch(function (error) {

@@ -2,7 +2,7 @@ if (document.URL.match(/transaction_required_details/)) {
 // TODO: need to add company, bank, LLC  as seller
     $(function() {
 
-        form_elements();
+        //form_elements();
 
         $('.add-member-button').on('click', add_member);
 
@@ -51,7 +51,7 @@ if (document.URL.match(/transaction_required_details/)) {
             $('#ClientCity').val($(this).data('city'));
             $('#ClientState').val($(this).data('state'));
             $('#ClientZip').val($(this).data('zip'));
-            select_refresh();
+            //select_refresh();
         });
 
         $('#CommissionAmount, #AgentCommission, #OtherAgentCommission').on('change', function() {
@@ -254,7 +254,7 @@ if (document.URL.match(/transaction_required_details/)) {
             $('#ReceivingAgentOfficeZip').val(office_zip);
             $('#ReceivingAgentOfficePhone').val(office_phone);
         //}
-        select_refresh();
+        //select_refresh();
 
         $('.search-results').fadeOut('slow');
         $('#receiving_agent_search_div, #referring_agent_search_div').collapse('hide');
@@ -283,7 +283,6 @@ if (document.URL.match(/transaction_required_details/)) {
         $('#ListAgentOfficeState').val(office_state);
         $('#ListAgentOfficeZip').val(office_zip);
         $('#ListAgentMlsId').val(agent_mls);
-        //select_refresh();
 
         $('.search-results-container').fadeOut('slow');
         $('#list_agent_search_div').collapse('hide');
@@ -318,7 +317,9 @@ if (document.URL.match(/transaction_required_details/)) {
             member_div.find('[name^='+member+'_crm_contact_id]').val($(this).data('contact-id'));
 
             member_div.find('input');
-            setTimeout(select_refresh, 500);
+            /* setTimeout(function() {
+                select_refresh(member_div);
+            }, 500); */
             $('#import_contact_modal').modal('hide');
         });
     }
@@ -452,7 +453,7 @@ if (document.URL.match(/transaction_required_details/)) {
         $('.'+member+'-container').append(member_div);
         let count = $('.'+member+'-div').length;
         $('.'+member+'-div').fadeIn('slow').last().find('.'+member+'-header').text((member == 'seller' ? member_type_seller : member_type_buyer)+ ' 2');
-        form_elements();
+        //form_elements();
         if(count == 2) {
             $('.add-member-button[data-member="'+member+'"]').hide();
         } else {
@@ -480,7 +481,7 @@ if (document.URL.match(/transaction_required_details/)) {
                         container.find('.'+member+'-city').val(city);
                         container.find('.'+member+'-state').val(state);
                         container.find('.'+member+'-zip').val(zip);
-                        select_refresh();
+                        //select_refresh();
                         $('.address-autocomplete-div').hide();
                     }
 
@@ -499,7 +500,7 @@ if (document.URL.match(/transaction_required_details/)) {
         // TODO
         let member = $(this).data('member');
         $(this).closest('.'+member+'-div').fadeOut().remove();
-        form_elements();
+        //form_elements();
 
         /* let member_type_seller = 'Seller';
         let member_type_buyer = 'Buyer';

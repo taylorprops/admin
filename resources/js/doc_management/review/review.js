@@ -28,7 +28,7 @@ if(document.URL.match(/document_review/)) {
             $('.cancellation[data-id="' + $('#review_contract_id').val() +'"]').trigger('click');
         }
 
-        form_elements();
+        //form_elements();
 
         /* text-editor */
 
@@ -194,7 +194,7 @@ if(document.URL.match(/document_review/)) {
             $('#property_id').val(id);
             $('#property_type').val(type);
 
-            form_elements();
+            //form_elements();
 
             setTimeout(function() {
                 global_loading_off();
@@ -272,13 +272,15 @@ if(document.URL.match(/document_review/)) {
             $('.email-agent-button').off('click').on('click', function() {
                 reset_email();
                 show_email_agent();
-                let options = {
-                    menubar: false,
-                    statusbar: false,
-                    toolbar: false
-                }
-                text_editor(options);
             });
+
+            let options = {
+                menubar: false,
+                statusbar: false,
+                toolbar: false
+            }
+            text_editor(options);
+            console.log($('.text-editor').length);
 
             let zoom_input = $('#zoom').slider({
                 formatter: function(value) {

@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-dashboard-agent-container">
+<div class="container page-container page-dashboard-agent-container">
 
 
 </div>

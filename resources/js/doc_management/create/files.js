@@ -12,7 +12,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
     function init() {
         // get forms for each form group
-        let data_count = $('.forms-data').length;
+        //let data_count = $('.forms-data').length;
         //global_loading_on('', '<div class="h3 text-white">Loading...</div>');
 
         // load first form group
@@ -22,8 +22,6 @@ if (document.URL.match(/create\/upload\/files/)) {
         let order = $('#list_div_' + form_group_id).find('.uploads-filter-sort').val();
 
         get_forms(form_group_id, state, order);
-
-
 
 
     }
@@ -63,7 +61,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
                 //global_loading_off();
 
-                form_elements();
+                //form_elements();
 
                 let ele = form_group.find('.activate-upload');
 
@@ -149,7 +147,7 @@ if (document.URL.match(/create\/upload\/files/)) {
         .then(function (response) {
 
             $('#form_manage_div').html(response.data);
-            form_elements();
+            //form_elements();
 
             let state = $('#manage_form_state').val();
             let form_name = $('#manage_form_name').val();
@@ -165,7 +163,7 @@ if (document.URL.match(/create\/upload\/files/)) {
             });
 
             global_tooltip();
-            select_refresh();
+            //select_refresh();
 
         })
         .catch(function (error) {
@@ -204,7 +202,7 @@ if (document.URL.match(/create\/upload\/files/)) {
             setTimeout(function() {
                 $('#add_form_to_checklists_div').html(response.data);
                 $('#add_to_checklists_form_name').text(form_name);
-                form_elements();
+                //form_elements();
                 $('#add_to_checklists_table').DataTable({
                     'paging': false,
                     "aaSorting": [],
@@ -528,7 +526,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                 list_div.find('.published.notactive').show();
             }
         }
-        select_refresh();
+        //select_refresh();
 
     }
 
@@ -644,12 +642,11 @@ if (document.URL.match(/create\/upload\/files/)) {
                 $.each(form_categories, function (i, e) {
                     $('#edit_form_categories').find('option[value="' + e + '"]').prop('selected', true);
                 });
-                $('#edit_form_categories');
+                setTimeout(function() {
+                    $('#edit_form_categories').trigger('change');
+                }, 200);
 
                 $('#edit_file_id').val(upload_id);
-                setTimeout(function () {
-                    select_refresh();
-                }, 500);
 
                 $('#edit_file_modal').modal();
 
@@ -676,11 +673,11 @@ if (document.URL.match(/create\/upload\/files/)) {
 
         $('#save_add_item_no_form_button').off('click').on('click', save_non_form_item);
 
-        select_refresh();
+        //select_refresh();
 
         $('#no_form_form_group_id').on('change', function () {
             $('#no_form_state').val(ele.find('option:selected').data('state'));
-            select_refresh();
+            //select_refresh();
         });
     }
 
@@ -762,11 +759,11 @@ if (document.URL.match(/create\/upload\/files/)) {
 
         $('.show-forms-button').hide();
 
-        select_refresh();
+        //select_refresh();
 
         setTimeout(function () {
 
-            $(document).on('change', '#file_upload', function () {
+            $('#file_upload').off('change').on('change', function () {
 
                 if($(this).val() != '') {
 
@@ -790,13 +787,11 @@ if (document.URL.match(/create\/upload\/files/)) {
                             let row = ' \
                             <div class="d-flex justify-content-start align-items-center title-option w-100"> \
                                 <div><a href="javascript: void(0)" class="btn btn-success add-title">Select</a></div> \
-                                <div class="w-100"><input type="text" class="custom-form-element form-input" value="' + title + '"></div> \
+                                <div class="w-100"><input type="text" class="custom-form-element form-input" value="' + title + '" data-label=""></div> \
                             </div> \
                             ';
                             $('#form_names').append(row);
                         });
-                        select_refresh();
-                        global_loading_off();
 
                         $('.add-title').on('click', function() {
                             $('.show-forms-button').show();
@@ -804,6 +799,8 @@ if (document.URL.match(/create\/upload\/files/)) {
                             $('#file_name_display, #helper_text').val(title);
                             $('#form_names_div').collapse('hide');
                         });
+
+                        global_loading_off();
 
                     })
                     .catch(function (error) {
@@ -821,7 +818,7 @@ if (document.URL.match(/create\/upload\/files/)) {
             });
             $('#form_group_id').on('change', function () {
                 $('#state').val(ele.find('option:selected').data('state'));
-                select_refresh();
+                //select_refresh();
             });
         }, 500);
 
@@ -845,7 +842,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                 .then(function (response) {
                     $('#add_upload_modal').modal('hide');
                     $('#file_name_display, #file_upload, #form_categories, #form_tags, #checklist_group_id').val('');
-                    select_refresh();
+                    //select_refresh();
                     get_forms(form_group_id, state, order);
                     $('#upload_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
                 })

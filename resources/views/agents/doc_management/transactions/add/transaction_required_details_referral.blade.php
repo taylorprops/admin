@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container-600 page-required-details mx-auto mb-5 pb-5">
+<div class="container-600 page-container page-required-details mx-auto mb-5 pb-5">
     <div class="row">
         <div class="col-12">
 

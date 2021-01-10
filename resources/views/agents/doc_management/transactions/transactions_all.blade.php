@@ -2,7 +2,7 @@
 @section('title', 'Transactions')
 
 @section('content')
-<div class="container page-transactions">
+<div class="container page-container page-transactions">
     <div class="row my-3">
 
         <div class="col-12 col-sm-6">

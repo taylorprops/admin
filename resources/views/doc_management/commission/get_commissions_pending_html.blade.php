@@ -10,7 +10,7 @@
         <table class="table table-bordered table-sm commissions-pending-table">
             <thead>
                 <tr>
-                    <th class="wpx-125"></th>
+                    <th class="wpx-125 text-primary">View</th>
                     <th class="wpx-100">Settle Date</th>
                     <th>Agent</th>
                     <th>Property Address/Client</th>

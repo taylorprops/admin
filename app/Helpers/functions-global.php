@@ -60,5 +60,21 @@ function get_mb($size) {
     return sprintf("%4.2f", $size/1048576);
 }
 
+function get_initials($string) {
+
+    if(strlen($string) > 0) {
+        $words = explode(' ', $string);
+        $initials = '';
+
+        foreach ($words as $w) {
+            $initials .= $w[0];
+        }
+
+        return $initials;
+    }
+    return '';
+
+}
+
 
 ?>

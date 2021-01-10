@@ -1,21 +1,40 @@
 if (document.URL.match(/transaction_details/)) {
 
     $(function() {
-        $(document).on('click', function(e) {
-            if(e.target.classList.contains('save-member-button')) {
-                save_add_member($(this));
-            } else if(e.target.classList.contains('bank-trust')) {
+
+        dt_contacts = setInterval(function() {
+            if($('#contacts_table').length == 1) {
+                let contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], false, true, true, true, true);
+                clearInterval(dt_contacts);
+            }
+        }, 500)
+
+        $(document).on('click', '.btn, input', function(e) {
+
+            let ele = $(this);
+            let id = ele.attr('id');
+            let classes = ele[0].classList;
+
+            if(classes.contains('save-member-button')) {
+                save_add_member();
+            } else if(classes.contains('bank-trust')) {
+                show_bank_trust(ele);
+            } else if(classes.contains('delete-member-button')) {
+                confirm_delete_member(ele);
+            } else if(classes.contains('bank-trust')) {
                 show_bank_trust();
+            } else if(classes.contains('import-contact-button')) {
+                show_import_modal($(this).data('ele'));
+            } else if(id == 'add_member_button') {
+                show_add_member();
             }
         });
 
-        $(document).on('change', function(e) {
-            if(e.target.classList.contains('member-type-id')) {
-                show_hide_fields();
-            }
-        });
+
+        $(document).on('change', '.member-type-id', show_hide_fields);
 
     });
+
 
     window.show_hide_fields = function() {
 
@@ -63,22 +82,24 @@ if (document.URL.match(/transaction_details/)) {
 
         }
 
+        $('.import-contact-button').prop('disabled', false);
+
 
     }
 
-    window.show_bank_trust = function() {
-        let input = $(this).closest('.col-12').next('.member-entity-name-div');
-        if($(this).is(':checked')) {
+    window.show_bank_trust = function(ele) {
+
+        let input = ele.closest('.col-12').next('.member-entity-name-div');
+        if(ele.is(':checked')) {
             input.fadeIn();
         } else {
             input.fadeOut();
         }
     }
 
-    window.save_add_member = function(ele) {
-        console.log('working');
+    window.save_add_member = function() {
+
         let form = $('.member-div.active');
-        console.log(form.length);
         let validate = validate_form(form);
 
         if(validate == 'yes') {
@@ -114,8 +135,8 @@ if (document.URL.match(/transaction_details/)) {
                 toastr['success']('Member Successfully Added');
                 setTimeout(function() {
                     //scrollToAnchor('scroll_to');
-                    load_tabs('documents');
-                    load_tabs('checklist');
+                    //load_tabs('documents');
+                    //load_tabs('checklist');
                     load_details_header();
                 }, 500);
             })
@@ -127,10 +148,12 @@ if (document.URL.match(/transaction_details/)) {
     }
 
     window.show_add_member = function() {
+
         let transaction_type = $('#transaction_type').val();
         let Listing_ID = $('#Listing_ID').val();
         let Contract_ID = $('#Contract_ID').val();
         let Referral_ID = $('#Referral_ID').val();
+
         axios.get('/agents/doc_management/transactions/add_member_html', {
             params: {
                 transaction_type: transaction_type,
@@ -181,15 +204,9 @@ if (document.URL.match(/transaction_details/)) {
                 }
             });
 
-            select_refresh();
-
             /* setTimeout(function() {
-                $('.member-type-id').on('change', show_hide_fields);
-                $('.bank-trust').on('click', show_bank_trust);
-
-            }, 500); */
-
-
+                form_elements();
+            }, 100); */
 
         })
         .catch(function (error) {
@@ -203,8 +220,8 @@ if (document.URL.match(/transaction_details/)) {
         $('.list-group-item-member.active').eq(active_tab).trigger('click');
     }
 
-    window.confirm_delete_member = function() {
-        let id = $(this).data('member-id');
+    window.confirm_delete_member = function(ele) {
+        let id = ele.data('member-id');
         $('#confirm_delete_member_modal').modal();
         $('#delete_member_button').off('click').on('click', function() {
             delete_member(id);
@@ -254,7 +271,7 @@ if (document.URL.match(/transaction_details/)) {
             member_div.find('.member-crm-contact-id').val($(this).data('contact-id'));
 
             //$('input');
-            setTimeout(select_refresh, 500);
+            //setTimeout(select_refresh, 500);
             $('#import_contact_modal').modal('hide');
 
             setTimeout(function() {

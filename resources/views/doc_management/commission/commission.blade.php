@@ -2,7 +2,7 @@
 @section('title', 'Commission Breakdowns')
 
 @section('content')
-<div class="container page-commission-breakdowns">
+<div class="container page-container page-commission-breakdowns">
     <div class="row">
         <div class="col-12">
             <h2>Commission Breakdowns and Checks</h2>
@@ -52,7 +52,7 @@
                                     <table class="table table-bordered table-sm" id="deleted_checks_table">
                                         <thead>
                                             <tr>
-                                                <th></th>
+                                                <th class="text-primary">View</th>
                                                 <th>Received</th>
                                                 <th>Agent</th>
                                                 <th>Client</th>

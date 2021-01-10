@@ -5,6 +5,7 @@
         <div class="row">
 
             <div class="col-12 col-md-6">
+                <span class="font-weight-bold text-orange">First select a Member Type</span>
                 <select class="custom-form-element form-select form-select-no-search form-select-no-cancel member-type-id required" data-label="Member Type">
                     <option value=""></option>
                     @foreach($contact_types as $contact_type)
@@ -26,7 +27,7 @@
             </div>
 
             <div class="col-12 col-md-6 d-flex align-items-center">
-                <a href="javascript: void(0)" class="btn btn-sm btn-primary import-contact-button" data-ele="#add_member_div"><i class="fad fa-cloud-download-alt mr-2"></i> Import Contact</a>
+                <button class="btn btn-sm btn-primary import-contact-button" data-ele="#add_member_div" disabled><i class="fad fa-cloud-download-alt mr-2"></i> Import Contact</button>
                 <a href="javascript: void(0)" class="btn btn-sm btn-danger cancel-add-member-button"><i class="fad fa-do-not-enter mr-2"></i> Cancel</a>
             </div>
 

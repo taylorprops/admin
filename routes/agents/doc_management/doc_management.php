@@ -246,6 +246,23 @@
     Route::post('/agents/doc_management/transactions/edit_files/convert_to_pdf', 'Agents\DocManagement\Transactions\EditFiles\TransactionsEditFilesController@convert_to_pdf') -> name('convert_to_pdf');
 
 
+    // ** ESIGN
+
+    // esign
+    Route::get('/esign', 'Esign\EsignController@esign');
+
+    // add documents
+    Route::get('/esign/esign_add_documents', 'Esign\EsignController@esign_add_documents');
+
+    // add signers
+    Route::get('/esign/esign_add_signers', 'Esign\EsignController@esign_add_signers');
+
+    // esign add fields
+    Route::get('/esign/esign_add_fields/{User_ID}/{document_ids}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_fields');
+
+    // send for signatures
+    Route::post('/esign/esign_send_for_signatures', 'Esign\EsignController@esign_send_for_signatures');
+
 
 ///////////////////////////////// ADMIN ONLY //////////////////////////////////////////////
 /**********  File review /**********/

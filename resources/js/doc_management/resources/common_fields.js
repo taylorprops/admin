@@ -7,16 +7,12 @@ if(document.URL.match(/common_fields/)) {
 
         $(document).on('focus', '.common-field-input, .common-field-input-value, .form-select-search-input', function() {
             $('.save-edit-common-field-button').hide();
-            $(this).closest('.common-field-input-container').find('.save-edit-common-field-button').show().on('click', function() {
-
-            });
+            $(this).closest('.common-field-input-container').find('.save-edit-common-field-button').show();
         });
 
         $(document).on('click', '.form-ele *', function() {
             $('.save-edit-common-field-button').hide();
-            $(this).closest('.common-field-input-container').find('.save-edit-common-field-button').show().on('click', function() {
-
-            });
+            $(this).closest('.common-field-input-container').find('.save-edit-common-field-button').show();
         });
 
         $(document).on('click', '.save-edit-common-field-button', function() {
@@ -64,7 +60,7 @@ if(document.URL.match(/common_fields/)) {
                 }
                 text_editor(options);
 
-                form_elements();
+                //form_elements();
 
                 $('.sortable-fields').sortable({
                     //placeholder: 'bg-sortable',
@@ -119,7 +115,7 @@ if(document.URL.match(/common_fields/)) {
                 toastr['success']('Field Successfully Added');
                 get_common_fields();
                 $('#add_common_field_collapse').collapse('hide').find('input, select').val('');
-                select_refresh();
+                //select_refresh();
                 $('#save_add_common_field_button').html('<i class="fal fa-save mr-2"></i> Save');
             })
             .catch(function (error) {

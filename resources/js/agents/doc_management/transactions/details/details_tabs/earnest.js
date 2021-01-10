@@ -3,7 +3,7 @@ if (document.URL.match(/transaction_details/)) {
     /* TODO:
     earnest_held_by
         needs to be disabled if there are checks in
-        on change - show/hide checks div
+        on change - show/hide checks div if we are not holding earnest
 
     when saving checks
         update commission tab details - earnest amount
@@ -17,8 +17,6 @@ if (document.URL.match(/transaction_details/)) {
     window.get_earnest_checks = function(check_type, save = true) {
 
         let Earnest_ID = $('#Earnest_ID').val();
-
-        //$('#earnest_checks_'+check_type+'_div').html('');
 
         axios.get('/agents/doc_management/transactions/get_earnest_checks', {
             params: {
@@ -34,8 +32,6 @@ if (document.URL.match(/transaction_details/)) {
         .then(function (response) {
 
             $('#earnest_checks_'+check_type+'_div').html(response.data);
-
-            //form_elements();
 
             $('.cleared-checkbox').on('change', function() {
                 cleared_bounced($(this));
@@ -65,8 +61,8 @@ if (document.URL.match(/transaction_details/)) {
             // set totals for in and out sections
             $('#earnest_checks_'+check_type+'_total').html(global_format_number_with_decimals($('#earnest_checks_'+check_type+'_cleared_total').val()));
 
+            $('.pending-alert').remove();
             if($('#earnest_checks_'+check_type+'_pending_total').val() > 0) {
-                $('.pending-alert').remove();
                 $('.in-escrow-alert').append('<div class="font-8 text-danger pending-alert">Pending '+global_format_number_with_decimals($('#earnest_checks_'+check_type+'_pending_total').val()));
             }
 
@@ -102,8 +98,14 @@ if (document.URL.match(/transaction_details/)) {
 
                 axios.post('/agents/doc_management/transactions/save_earnest_amounts', formData, axios_options)
                 .then(function (response) {
-                    $('#earnest_deposit_amount, #EarnestAmount').val(parseFloat(checks_in_total).toFixed(2));
-                    save_commission('no');
+
+                    /* $('#EarnestAmount').val(parseFloat(checks_in_total).toFixed(2));
+
+                    if($('#earnest_deposit_amount').length == 1) {
+                        $('#earnest_deposit_amount').val(parseFloat(checks_in_total).toFixed(2));
+                        save_commission('no');
+                    } */
+
                 })
                 .catch(function (error) {
 
@@ -271,9 +273,15 @@ if (document.URL.match(/transaction_details/)) {
     window.save_add_earnest_check = function() {
 
         let Earnest_ID = $('#Earnest_ID').val();
+        let Agent_ID = $('#Agent_ID').val();
+        let Contract_ID = $('#Contract_ID').val();
+
         let form = $('#add_earnest_check_form');
         let formData = new FormData(form[0]);
+
         formData.append('Earnest_ID', Earnest_ID);
+        formData.append('Agent_ID', Agent_ID);
+        formData.append('Contract_ID', Contract_ID);
 
         let validate = validate_form(form);
 
@@ -334,7 +342,7 @@ if (document.URL.match(/transaction_details/)) {
         });
     }
 
-    window.save_earnest = function () {
+    window.save_earnest = function (show_toastr = 'no') {
 
         let Earnest_ID = $('#Earnest_ID').val();
         let form = $('#earnest_form');
@@ -343,8 +351,11 @@ if (document.URL.match(/transaction_details/)) {
 
         axios.post('/agents/doc_management/transactions/save_earnest', formData, axios_options)
         .then(function (response) {
-            toastr['success']('Details Saved Successfully');
-            load_tabs('details');
+            if(show_toastr == 'yes') {
+                toastr['success']('Earnest Details Saved Successfully');
+            }
+            /* load_tabs('details');
+            load_tabs('commission'); */
         })
         .catch(function (error) {
 

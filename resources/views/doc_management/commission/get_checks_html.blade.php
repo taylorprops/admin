@@ -10,7 +10,7 @@
         <table class="table table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
-                    <th class="wpx-80"></th>
+                    <th class="wpx-80 text-primary">Edit</th>
                     <th>Received</th>
                     <th>Agent</th>
                     <th>Property Address</th>
@@ -70,7 +70,7 @@
         <table class="table table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
-                    <th class="wpx-100"></th>
+                    <th class="wpx-100 text-primary">View</th>
                     <th>Received</th>
                     <th>Agent</th>
                     <th>Client</th>

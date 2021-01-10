@@ -138,7 +138,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     }
 
-    window.save_commission = function (show_toastr) {
+    window.save_commission = function (show_toastr_commission = 'no') {
 
         let Contract_ID = $('#Contract_ID').val();
         let form = $('#commission_form');
@@ -154,12 +154,12 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         formData.append('Commission_ID', $('#Commission_ID').val());
         axios.post('/agents/doc_management/transactions/save_commission', formData, axios_options)
         .then(function (response) {
-            if(show_toastr == 'yes') {
+            if(show_toastr_commission == 'yes') {
                 toastr['success']('Commission Details Successfully Saved');
             }
-            if(page == 'details') {
+            /* if(page == 'details') {
                 load_tabs('details');
-            }
+            } */
         })
         .catch(function (error) {
 
@@ -621,7 +621,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                         $('#check_out_number').val(response.data.check_number);
                         if(response.data.check_pay_to_agent_id) {
                             $('#check_out_agent_id').val(response.data.check_pay_to_agent_id);
-                            select_refresh();
+                            //select_refresh($('#add_check_out_form'));
                         }
                     }
                     $('.check-out-preview-div').html('<div class="border border-primary mt-2 check-preview"><img src="'+response.data.check_location+'" class="w-100"></div>');
@@ -745,7 +745,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 }
             });
 
-            select_refresh();
+            //select_refresh($('#edit_check_out_modal'));
         }, 100);
 
     }

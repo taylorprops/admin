@@ -322,7 +322,7 @@ class TransactionsAddController extends Controller {
         $docs_folder -> Referral_ID = $Referral_ID;
         $docs_folder -> Agent_ID = $Agent_ID;
         $docs_folder -> folder_name = 'Referral Documents';
-        $docs_folder -> doc_order = 0;
+        $docs_folder -> folder_order = 0;
         $docs_folder -> save();
 
         $trash_folder = new TransactionDocumentsFolders();

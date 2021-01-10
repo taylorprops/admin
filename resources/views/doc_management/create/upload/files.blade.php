@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Uploaded Files')
 @section('content')
-<div class="container page-files">
+<div class="container page-container page-files">
     <h2>Forms</h2>
     <div class="row">
         <div class="col-3">
@@ -83,7 +83,7 @@
                 <form id="checklist_type_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="checklist_type_title">Select Checklist Type</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -116,7 +116,7 @@
                 <form id="add_to_checklists_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="add_to_checklists_modal_title">Add Form to Checklists <span class="text-yellow-light ml-3" id="add_to_checklists_form_name"></span></h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -137,7 +137,7 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="remove_form_title">Remove Form</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -161,7 +161,7 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="replace_form_title">Replace Form</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -189,7 +189,7 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="form_manage_title">Manage Form</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -206,7 +206,7 @@
                 <form id="edit_file_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="edit_file_modal_title">Edit Form Details</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -293,7 +293,7 @@
                 <form id="add_item_no_form_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="add_item_no_form_modal_title">Add Checklist Item - No Form</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -380,7 +380,7 @@
                 <form id="upload_file_form" enctype="multipart/form-data">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="add_upload_modal_title">Add Form</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -521,7 +521,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="confirm_publish_modal_title">Delete Form</h3>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times fa-2x"></i>
                     </button>
                 </div>
@@ -544,7 +544,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="confirm_delete_modal_title">Delete Form</h3>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times fa-2x"></i>
                     </button>
                 </div>

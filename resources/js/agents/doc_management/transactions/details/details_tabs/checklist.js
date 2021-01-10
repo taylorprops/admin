@@ -52,7 +52,7 @@ if (document.URL.match(/transaction_details/)) {
 
                     $('#save_change_checklist_button').html('<i class="fad fa-check mr-2"></i> Save');
                     load_tabs('checklist');
-                    load_documents_on_tab_click();
+                    //load_documents_on_tab_click();
                     $('#change_checklist_modal').modal('hide');
                     toastr['success']('Checklist Successfully Changed');
 
@@ -91,7 +91,7 @@ if (document.URL.match(/transaction_details/)) {
         .then(function (response) {
             $('#confirm_delete_checklist_item_doc_modal').modal('hide');
             toastr['success']('Document Removed From Checklist');
-            load_documents_on_tab_click();
+            //load_documents_on_tab_click();
             load_details_header();
             let doc_count = button.closest('.checklist-item-div').find('.doc-count');
             doc_count.text(parseInt(doc_count.text()) - 1);
@@ -230,7 +230,7 @@ if (document.URL.match(/transaction_details/)) {
 
             toastr['success']('Document Added To Checklist');
             load_tabs('checklist');
-            load_documents_on_tab_click();
+            //load_documents_on_tab_click();
             if(response.data) {
                 if(response.data.release_submitted == 'yes') {
                     $('#cancel_contract_button').trigger('click');

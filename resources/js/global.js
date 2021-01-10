@@ -1,20 +1,32 @@
 import datepicker from 'js-datepicker';
 
+// check for duplicate ids
+/* setTimeout(function() {
+    $('[id]').each(function(){
+        var ids = $('[id="'+this.id+'"]');
+        if(ids.length > 1 && ids[0] == this) {
+            console.warn('Multiple IDs #'+this.id);
+        }
+    });
+}, 3000); */
+
 $(function() {
 
     (function($){
         var originalVal = $.fn.val;
         $.fn.val = function(){
             var prev;
-            if(arguments.length>0){
+            if(arguments.length > 0){
                 prev = originalVal.apply(this,[]);
             }
-            var result =originalVal.apply(this,arguments);
-            if(arguments.length>0 && prev!=originalVal.apply(this,[]))
+            var result = originalVal.apply(this,arguments);
+            if(arguments.length > 0 && prev != originalVal.apply(this,[]))
                 $(this).change();
             return result;
         };
     })(jQuery);
+
+
 
     /* global_page_transition(); */
 
@@ -30,6 +42,7 @@ $(function() {
     }
 
     window.text_editor = function(options) {
+
         if(options.selector == '') {
             options.selector = '.text-editor';
         }
@@ -77,9 +90,10 @@ $(function() {
         console.log('error = '+error);
     });
 
-    $(document).on('click', '.modal-dismiss, .modal-backdrop', function() {
+    /* $(document).on('click', '.modal-dismiss, .modal-backdrop', function() {
         $('.modal-backdrop').remove();
-    });
+    }); */
+
 
 
     $(document).on('focus', '.numbers-only', function () {
@@ -138,7 +152,7 @@ $(function() {
         }
     }
 
-    window.data_table = function(table, sort_by, no_sort_cols, show_buttons, show_search, show_info, show_paging) {
+    window.data_table = function(table, sort_by, no_sort_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
 
         /*
         table = $('#table_id')
@@ -161,10 +175,33 @@ $(function() {
         }
 
         let buttons = '';
+
         if(show_buttons == true) {
-            datatable_settings.buttons = ['excel', 'pdf'];
+            datatable_settings.buttons = [
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }
+            ];
             buttons = '<B>';
+
+            if(hide_cols == true) {
+                datatable_settings.buttons.push({
+                    extend: 'colvis',
+                    text: 'Hide Columns'
+                });
+            }
         }
+
+
 
         let search = '';
         if(show_search == true) {
@@ -185,7 +222,7 @@ $(function() {
             length = '<l>';
         }
 
-        datatable_settings.dom = '<"d-flex justify-content-between align-items-center text-gray"'+search+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
+        datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"'+search+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
 
         table.DataTable(datatable_settings);
 

@@ -68,7 +68,7 @@ if (document.URL.match(/commission_other/)) {
                 $('.show-view-add-button').on('click', popout_row);
 
                 global_format_money();
-                form_elements();
+                //form_elements();
                 show_fields();
 
             })

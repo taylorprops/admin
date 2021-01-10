@@ -19,8 +19,9 @@ if (document.URL.match(/transaction_details/)) {
                 show_add_folder();
             } else if(classes.contains('check-all')) {
                 check_all(ele);
+            } else if(classes.contains('doc-get-signed-button')) {
+                get_signed(ele); // has document-id
             } else if(classes.contains('doc-delete-button')) {
-                console.log('clicked');
                 show_delete_one_document(ele);
             }  else if(classes.contains('delete-folder-button')) {
                 confirm_delete_folder(ele.data('folder-id'));
@@ -75,6 +76,29 @@ if (document.URL.match(/transaction_details/)) {
 
 
     });
+
+    window.get_signed = function(ele) {
+
+        let Listing_ID = $('#Listing_ID').val() > 0 ? $('#Listing_ID').val() : 0;
+        let Contract_ID = $('#Contract_ID').val() > 0 ? $('#Contract_ID').val() : 0;
+        let Referral_ID = $('#Referral_ID').val() > 0 ? $('#Referral_ID').val() : 0;
+        let transaction_type = $('#transaction_type').val();
+        let Agent_ID = $('#Agent_ID').val();
+        let User_ID = '0';
+        let document_ids = [];
+        if(ele.data('document-id')) {
+            document_ids.push(ele.data('document-id'));
+        } else {
+            $('.check-document:checked').each(function () {
+                document_ids.push($(this).data('document-id'));
+            });
+        }
+
+        document_ids = document_ids.join(',');
+
+        window.open('/esign/esign_add_fields/'+User_ID+'/'+document_ids+'/'+Agent_ID+'/'+Listing_ID+'/'+Contract_ID+'/'+Referral_ID+'/'+transaction_type, '_blank');
+
+    }
 
     window.in_process = function(document_ids) {
 
@@ -189,7 +213,7 @@ if (document.URL.match(/transaction_details/)) {
                         $('#emailed_documents_container').show();
                     });
 
-                    select_refresh($('#emailed_documents_container'));
+                    //select_refresh($('#emailed_documents_container'));
 
                 }
 
@@ -343,7 +367,6 @@ if (document.URL.match(/transaction_details/)) {
             });
         } else {
             document_ids.push(ele.data('document-id'));
-            console.log(document_ids);
         }
 
         let formData = new FormData();
@@ -407,7 +430,6 @@ if (document.URL.match(/transaction_details/)) {
                     </div> \
                     ';
                     $(new_address_row).insertBefore($(this).closest('.row'));
-                    form_elements();
 
                 });
 
@@ -510,7 +532,7 @@ if (document.URL.match(/transaction_details/)) {
 
                     });
 
-                    form_elements();
+                    //form_elements();
                     $('[data-toggle="popover"]').popover();
 
                     $('#save_document_name_button').on('click', function() {
@@ -583,7 +605,7 @@ if (document.URL.match(/transaction_details/)) {
                     $('.selected-images-slider').html('');
                     $('#split_document_modal').on('hide.bs.modal', function () {
                         load_tabs('documents');
-                        load_checklist_on_tab_click();
+                        //load_checklist_on_tab_click();
                     });
                     // change status and count of checklist items
                     ele.parent().next().html('<span class="badge checklist-item-badge bg-blue-light text-primary p-1" title="We have received your document for this item. It is in the review process"><span class="d-none d-sm-inline-block"><i class="fal fa-stopwatch fa-lg mr-1"></i> </span>Pending</span>');
@@ -618,7 +640,7 @@ if (document.URL.match(/transaction_details/)) {
             .then(function (response) {
                 toastr['success']('Document Successfully Renamed')
                 load_tabs('documents', false);
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
             })
             .catch(function (error) {
 
@@ -972,7 +994,7 @@ if (document.URL.match(/transaction_details/)) {
             .then(function (response) {
                 toastr['success']('Documents Successfully Added')
                 load_tabs('documents', false);
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
                 if(response.data) {
                     if(response.data.release_submitted == 'yes') {
                         $('#cancel_contract_button').trigger('click');
@@ -1141,7 +1163,7 @@ if (document.URL.match(/transaction_details/)) {
                 .then(function (response) {
 
                     load_tabs('documents');
-                    load_checklist_on_tab_click();
+                    //load_checklist_on_tab_click();
 
                     setTimeout(function() {
 
@@ -1249,7 +1271,7 @@ if (document.URL.match(/transaction_details/)) {
             $('.form-group-div').hide();
             $('[data-form-group-id="' + $('.select-form-group').val() + '"]').show();
         }
-        select_refresh($('#add_individual_template_modal'));
+        //select_refresh($('#add_individual_template_modal'));
     }
 
     window.show_upload_documents = function() {
@@ -1324,7 +1346,7 @@ if (document.URL.match(/transaction_details/)) {
         axios.post('/agents/doc_management/transactions/delete_folder', formData, axios_options)
             .then(function (response) {
                 load_tabs('documents', false);
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
             })
             .catch(function (error) {
 
@@ -1358,7 +1380,7 @@ if (document.URL.match(/transaction_details/)) {
         axios.post('/agents/doc_management/transactions/move_documents_to_folder', formData, axios_options)
             .then(function (response) {
                 load_tabs('documents');
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
                 $('#move_documents_modal').modal('hide');
             })
             .catch(function (error) {
@@ -1394,7 +1416,7 @@ if (document.URL.match(/transaction_details/)) {
             .then(function (response) {
                 //button.closest('.document-div').appendTo($('.folder-div').last().find('[id^=documents_folder_]'));
                 load_tabs('documents', false);
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
                 toastr['success']('Document Moved To Trash');
             })
             .catch(function (error) {
@@ -1429,7 +1451,7 @@ if (document.URL.match(/transaction_details/)) {
         axios.post('/agents/doc_management/transactions/move_documents_to_trash', formData, axios_options)
             .then(function (response) {
                 load_tabs('documents', false);
-                load_checklist_on_tab_click();
+                //load_checklist_on_tab_click();
                 toastr['success']('Documents Moved To Trash');
                 $('#confirm_delete_documents_modal').modal('hide');
             })

@@ -1,0 +1,258 @@
+.page-esign {
+
+}
+
+.page-esign-add-documents {
+
+}
+
+.page-esign-add-signers {
+
+}
+
+.page-esign-add-fields {
+
+    overflow-x: hidden;
+    //border: 1px solid $border-color;
+
+    .file-view {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 130px);
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding-bottom: 200px;
+        -vendor-animation-duration: 2s;
+        animation-duration: 2s;
+    }
+
+    .file-view-container {
+        padding: 8px 0px 0px 0px;
+    }
+
+    .file-view-page-container {
+        -vendor-animation-duration: 2s;
+        animation-duration: 2s;
+        opacity: .3;
+
+        &.active {
+            opacity: 1;
+        }
+    }
+
+    .file-view-thumb-container {
+        -vendor-animation-duration: 2s;
+        animation-duration: 2s;
+        opacity: .8;
+
+        &.active {
+            opacity: 1;
+        }
+    }
+
+
+    .file-view-thumb-container {
+        border: 2px solid rgba($primary-color, .2);
+        margin-bottom: 5px;
+        max-width: 100px;
+    }
+
+    .file-view-thumb-container.active {
+        border: 2px solid $primary-color;
+    }
+
+    .file-view-thumb-footer {
+        font-size: .7rem;
+    }
+
+
+    // options
+    .form-options-container {
+        max-width: 100%;
+        //overflow-x: auto;
+    }
+    .form-options-div {
+        width: 100px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .fill-form-option {
+        width: 100%;
+        height: 100%;
+        display: block;
+        padding: 10px 0px;
+    }
+
+    .edit-form-action.active {
+        background: $primary;
+
+        &:hover {
+            color: $yellow;
+        }
+    }
+
+    .initials-one {
+        position: absolute;
+        top: 5px;
+        left: 40%;
+    }
+    .initials-two {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+    }
+
+    @media (max-width: 1300px) {
+        .thumbs-div {
+            display: none;
+        }
+    }
+
+
+    // Fields
+
+    // page container
+    .fields-container {
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .field-div {
+
+        color: #000;
+        box-shadow: none;
+        display: block;
+        z-index: 3;
+        background: rgba($orange, .3);
+
+        .field-options-holder {
+            position: absolute;
+            left: 0px;
+            top: -60px;
+            width: 110px;
+            width: auto;
+            background: transparent;
+
+            &.right {
+                right: 0px;
+                left: auto;
+            }
+        }
+
+        .select-signer-div {
+            position: absolute;
+            left: 0px;
+            right: auto;
+            bottom: -140px;
+            width: 170px;
+            background: $primary;
+            color: $white;
+
+            &.right {
+                right: 0px;
+                left: auto;
+
+            }
+
+            .form-ele {
+                margin-top: 10px;
+
+                .form-select-value-input {
+                    padding: 4px 20px 2px 5px;
+                }
+            }
+
+        }
+
+        .btn-group .btn {
+            margin-right: 2px;
+            width: 45px;
+        }
+
+        .field-handle {
+            cursor: move;
+        }
+        .field-close {
+            cursor: pointer;
+        }
+
+        // resizable handles
+        .ui-resizable-handle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 10px solid $primary-color;
+        }
+        /* .ui-resizable-e {
+            bottom: 5px;
+            right: -20px;
+            cursor: e-resize;
+        }
+        .ui-resizable-w {
+            bottom: 5px;
+            left: -20px;
+            cursor: w-resize;
+            transform: rotate(180deg);
+        } */
+
+        .ui-resizable-nw {
+            top: -15px;
+            left: -15px;
+            cursor: nw-resize;
+            transform: rotate(225deg);
+        }
+        .ui-resizable-ne {
+            top: -15px;
+            right: -15px;
+            cursor: ne-resize;
+            transform: rotate(315deg);
+        }
+        .ui-resizable-se {
+            bottom: -15px;
+            right: -15px;
+            cursor: se-resize;
+            transform: rotate(45deg);
+        }
+        .ui-resizable-sw {
+            bottom: -15px;
+            left: -15px;
+            cursor: sw-resize;
+            transform: rotate(135deg);
+        }
+
+        /* .data-div {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            font-size: .8rem;
+            padding-left: 2px;
+            z-index: 0;
+
+        } */
+
+        .inputs-container {
+            display: none;
+        }
+
+        .field-options-holder, .select-signer-div, .field-handle {
+            display: none !important;
+        }
+
+        &.show {
+
+            border: 1px solid $primary;
+            z-index: 5;
+
+            .field-options-holder, .select-signer-div, .field-handle {
+                display: block !important;
+            }
+        }
+
+    }
+}

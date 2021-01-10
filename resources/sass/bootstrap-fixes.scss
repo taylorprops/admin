@@ -16,8 +16,8 @@
     }
 
     .modal-dialog .modal-content .modal-header {
-        border-top-left-radius: .6rem !important;
-        border-top-right-radius: .6rem !important;
+        border-top-left-radius: .3rem !important;
+        border-top-right-radius: .3rem !important;
     }
 
     .modal-dialog {
@@ -25,8 +25,8 @@
     }
 
 
-    .modal-header {
-        background: $blue;
+    .modal-header:not(.bg-success):not(.bg-danger) {
+        background: $white;
         padding: .5rem .5rem .5rem 1rem !important;
 
         h1,
@@ -34,7 +34,7 @@
         h3,
         h4,
         h5 {
-            color: white !important;
+            color: $primary !important;
         }
 
         .fa-times {
@@ -42,11 +42,27 @@
         }
     }
 
+    .modal-header.bg-success, .modal-header.bg-danger {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: $white !important;
+        }
+
+        .fa-times {
+            color: $white !important;
+        }
+
+    }
+
     .modal-dialog .modal-content {
-        border-top-left-radius: .7rem !important;
-        border-top-right-radius: .7rem !important;
-        border-bottom-left-radius: .7rem !important;
-        border-bottom-right-radius: .7rem !important;
+        border-top-left-radius: .4rem !important;
+        border-top-right-radius: .4rem !important;
+        border-bottom-left-radius: .4rem !important;
+        border-bottom-right-radius: .4rem !important;
         border:  2px solid $blue-light !important;
     }
 
@@ -58,8 +74,8 @@ body.modal-open {
 } */
 
 *::-webkit-scrollbar {
-    width: .4em;
-    height: .4em;
+    width: .5em;
+    height: .5em;
 }
 
 *::-webkit-scrollbar-track {
@@ -244,3 +260,8 @@ body.modal-open {
     //font-size: 1rem;
     color: #525050;
 } */
+
+/////////// pretty checkboxes and radios
+.pretty .state label:before, .pretty .state label:after {
+    background: $white !important;
+}

@@ -450,7 +450,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 //ele.find('.form-select.field-data-name').val(common_name).data('default-value', common_name);
                 //ele.find('.form-input.field-data-name').val(custom_name).data('default-value', custom_name);
 
-                select_refresh();
+                //form_elements();
 
             })
             .catch(function (error) {

@@ -178,9 +178,9 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
         <div class="row">
 
-            <div class="col-12 col-sm-6 col-xl-4">
+            <div class="col-12 col-sm-6 col-xl-4 h-100">
 
-                <div class="bg-blue-light text-gray rounded p-2 border">
+                <div class="bg-blue-light text-gray rounded p-2 border h-100">
 
                     <div class="row">
 
@@ -205,7 +205,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                     <div>
                                         {{ $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName }}
                                         <br>
-                                        {{ $property -> ListOfficeName }}
+                                        {{ shorten_text($property -> ListOfficeName, 28) }}
                                     </div>
                                 </div>
 
@@ -238,13 +238,13 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
             @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
 
-                <div class="col-12 col-sm-6 col-xl-4">
+                <div class="col-12 col-sm-6 col-xl-4 h-100">
                     @php
                     $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
                     <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
                     @endphp
 
-                    <div class="bg-blue-light text-gray rounded p-2 border">
+                    <div class="bg-blue-light text-gray rounded p-2 border h-100">
 
                         <div class="row">
 
@@ -261,7 +261,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                     <div>
                                         {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
                                         <br>
-                                        {{ $property -> BuyerOfficeName }}
+                                        {{ shorten_text($property -> BuyerOfficeName, 28) }}
                                     </div>
                                 </div>
                             </div>
@@ -289,9 +289,9 @@ $status = $resource_items -> GetResourceName($property -> Status);
             @endif
 
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-12 col-sm-6 col-xl-3 h-100">
 
-                <div class="bg-blue-light text-gray rounded h-100 border">
+                <div class="bg-blue-light text-gray rounded h-100 border header-status-div">
 
                     @if($for_sale || $transaction_type == 'listing')
 

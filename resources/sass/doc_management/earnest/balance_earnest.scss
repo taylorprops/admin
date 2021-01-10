@@ -1,13 +1,38 @@
 .page-balance-earnest {
 
-    .earnest-totals {
+    .earnest-key {
         position: sticky;
         top: 90px;
-    }
+        z-index: 1;
 
-    .earnest-totals-tab.active {
-        background: $primary;
-        color: $white;
+
+        .earnest-totals-tab.active {
+            background: $primary;
+            color: $white;
+        }
+
+        #earnest_search_results {
+            display: none;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 1400px;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid $border-color;
+            z-index: 5;
+
+            #earnest_search_results_div {
+                z-index: 6;
+            }
+
+            .earnest-search-results-container {
+                max-height: 400px;
+                overflow: auto;
+            }
+
+        }
+
     }
 
     .earnest-check-hr {

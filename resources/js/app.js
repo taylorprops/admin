@@ -50,6 +50,12 @@ require('./agents/doc_management/transactions/shared/checklist_review.js');
 // edit files
 require('./agents/doc_management/transactions/edit_files/edit_files.js');
 
+// esign
+require('./esign/esign.js');
+require('./esign/esign_add_signers.js');
+require('./esign/esign_add_documents.js');
+require('./esign/esign_add_fields.js');
+
 
 // review documents
 require('./doc_management/review/review.js');

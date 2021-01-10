@@ -146,6 +146,8 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/get_earnest_totals', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_totals');
     // get earnest checks
     Route::get('/doc_management/get_earnest_checks', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_checks');
+    // search earnest checks
+    Route::get('/doc_management/search_earnest_checks', 'DocManagement\Earnest\BalanceEarnestController@search_earnest_checks');
 
 
 
@@ -177,7 +179,6 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/commission_other/commission_other_details/{Commission_ID}', 'DocManagement\Commission\CommissionController@commission_other_details');
     // save edit check in
     Route::post('/doc_management/commission/save_edit_queue_check', 'DocManagement\Commission\CommissionController@save_edit_queue_check');
-
 
 
 

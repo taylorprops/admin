@@ -2328,7 +2328,8 @@ class TransactionsDetailsController extends Controller {
             $input_file = $storage_full_path . '/' . $new_file_name;
             $output_files = $storage_path . '/' . $storage_dir_pages . '/page_%02d.pdf';
             $new_image_name = str_replace($ext, 'jpg', $new_file_name);
-            $output_images = $storage_path . '/' . $storage_dir_images . '/' . $new_image_name;
+            //$output_images = $storage_path . '/' . $storage_dir_images . '/' . $new_image_name;
+            $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
 
             // add individual pages to pages directory
             $create_pages = exec('pdftk ' . $input_file . ' burst output ' . $output_files . ' flatten', $output, $return);
@@ -2345,8 +2346,14 @@ class TransactionsDetailsController extends Controller {
             foreach ($saved_images_directory as $saved_image) {
                 // get just file_name
                 $images_file_name = basename($saved_image);
-                $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
-                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1;
+                /* $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
+                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1; */
+                $page_number = preg_match('/page_([0-9]+)\.jpg/', $images_file_name, $matches);
+                $match = $matches[1];
+                if(substr($match, 0, 1 == 0)) {
+                    $match = substr($match, 1);
+                }
+                $page_number = count($matches) > 1 ? $match + 1 : 1;
 
                 // add images to database
                 $upload_images = new TransactionUploadImages();
@@ -3624,6 +3631,8 @@ class TransactionsDetailsController extends Controller {
     public function save_add_earnest_check(Request $request) {
 
         $Earnest_ID = $request -> Earnest_ID;
+        $Agent_ID = $request -> Agent_ID;
+        $Contract_ID = $request -> Contract_ID;
         $check_type = $request -> add_earnest_check_type;
         $check_name = $request -> add_earnest_check_name;
         $payable_to = $request -> add_earnest_check_payable_to;
@@ -3661,6 +3670,8 @@ class TransactionsDetailsController extends Controller {
 
         $add_earnest = new EarnestChecks();
         $add_earnest -> Earnest_ID = $Earnest_ID;
+        $add_earnest -> Agent_ID = $Agent_ID;
+        $add_earnest -> Contract_ID = $Contract_ID;
         $add_earnest ->  check_type = $check_type;
         $add_earnest -> check_name = $check_name;
         $add_earnest -> payable_to = $payable_to;

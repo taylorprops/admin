@@ -372,7 +372,7 @@ class UploadController extends Controller {
         exec('convert '.Storage::disk('public') -> path('tmp/tmp_'.$new_file_name_pdf).'[0] -density 300 -flatten -trim -quality 100% -background white '.Storage::disk('public') -> path('tmp/'.$new_file_name_image));
         // scan text
         $text = (new TesseractOCR(Storage::disk('public') -> path('tmp/'.$new_file_name_image)))
-            -> whitelist(range('a', 'z'), range('A', 'Z'), '-_/\'/')
+            -> allowlist(range('a', 'z'), range('A', 'Z'), '-_/\'/')
             -> run();
         // store results to text file so we can loop through the lines
         $temp_text_file =  '/tmp/'.date('YmdHis').'.txt';
@@ -404,7 +404,7 @@ class UploadController extends Controller {
             }
         }
 
-        $titles = array_slice($titles, 0, 15);
+        $titles = array_slice($titles, 0, 10);
 
         $upload_location = '/storage/tmp/'.$new_file_name_pdf;
 
@@ -426,7 +426,7 @@ class UploadController extends Controller {
             $filename = $file_name_orig;
 
             $ext = $file -> getClientOriginalExtension();
-            $file_name_remove_numbers = preg_replace('/[0-9-_\s]+\.'.$ext.'/', '.'.$ext, $filename);
+            $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $filename);
             $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
             $clean_filename = sanitize($file_name_no_ext);
             $new_filename = $clean_filename.'.'.$ext;
@@ -489,7 +489,8 @@ class UploadController extends Controller {
             $input_file = $storage_full_path.'/'.$new_filename;
             $output_files = $storage_path.'/'.$storage_dir_pages.'/page_%02d.pdf';
             $new_image_name = str_replace($ext, 'jpg', $new_filename);
-            $output_images = $storage_path.'/'.$storage_dir_images.'/'.$new_image_name;
+            //$output_images = $storage_path.'/'.$storage_dir_images.'/'.$new_image_name;
+            $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
 
             // add individual pages to pages directory
             $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten', $output, $return);
@@ -508,8 +509,14 @@ class UploadController extends Controller {
             foreach ($saved_images_directory as $saved_image) {
                 // get just filename
                 $images_file_name = basename($saved_image);
-                $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
-                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1;
+                /* $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
+                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1; */
+                $page_number = preg_match('/page_([0-9]+)\.jpg/', $images_file_name, $matches);
+                $match = $matches[1];
+                if(substr($match, 0, 1 == 0)) {
+                    $match = substr($match, 1);
+                }
+                $page_number = count($matches) > 1 ? $match + 1 : 1;
                 // add images to database
                 $upload = new UploadImages();
                 $upload -> file_id = $file_id;

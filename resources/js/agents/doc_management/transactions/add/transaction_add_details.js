@@ -28,7 +28,7 @@ if (document.URL.match(/transaction_add_details_/)) {
         show_hide();
         $('.show-hide').on('change', show_hide);
 
-        form_elements();
+        //form_elements();
 
         $('#submit_details_form_button').off('click').on('click', function(e) {
             e.preventDefault();
@@ -103,8 +103,8 @@ if (document.URL.match(/transaction_add_details_/)) {
         }
 
         setTimeout(function() {
-            select_refresh();
-        }, 500);
+            //select_refresh();
+        }, 100);
 
     }
 

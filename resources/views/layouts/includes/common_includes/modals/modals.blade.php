@@ -64,7 +64,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="confirm_title"></h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>

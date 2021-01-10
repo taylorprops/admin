@@ -68,7 +68,7 @@ function options() {
         confirm_delete_deactivate_resource($(this));
     });
 
-    form_elements();
+    //form_elements();
 
 }
 
@@ -391,7 +391,7 @@ function reset_add_resource_div(add_resource_div, add_button, resource_input, re
     add_resource_div.find('input, select').each(function () {
         $(this).val($(this).data('default-value'));
     });
-    select_refresh();
+    //select_refresh();
 }
 
 function show_edit_resource(ele) {
@@ -440,7 +440,6 @@ function show_edit_resource(ele) {
     save.off('click').on('click', function () {
 
         save_edit_resource($(this), resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, resource_account_number_input, list_group_item, resource_div, resource_type);
-        //select_refresh();
 
     });
 
@@ -468,7 +467,7 @@ function reset_edit_resource_div(list_group_item, resource_div, resource_input, 
     if (resource_addendums_select) {
         resource_addendums_select.val(resource_addendums_select.data('default-value'));
     }
-    select_refresh();
+    //select_refresh();
 }
 
 function save_edit_resource(ele, resource_input, resource_state_select, resource_input_color, resource_association_select, resource_addendums_select, resource_form_group_type_select, resource_county_abbr_input, resource_account_number_input, list_group_item, resource_div, resource_type) {

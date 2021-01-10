@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-dashboard-admin-container">
+<div class="container page-container page-dashboard-admin-container">
     <div class="row">
         <div class="col-12">
 

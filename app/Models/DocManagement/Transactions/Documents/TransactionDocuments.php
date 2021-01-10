@@ -22,5 +22,9 @@ class TransactionDocuments extends Model {
         return compact('file_name', 'file_location_converted');
     }
 
+    public function images_converted() {
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages', 'document_id', 'file_id') -> orderBy('page_number');
+    }
+
 
 }

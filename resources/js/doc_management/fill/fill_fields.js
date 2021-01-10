@@ -6,7 +6,7 @@ if (document.URL.match(/create\/fill_fields/)) {
 
     $(function() {
 
-        form_elements();
+        //form_elements();
 
         $('[data-address-type="state"]').addClass('uppercase').attr('maxlength', 2);
         $('[data-address-type="zip"]').addClass('numbers-only').attr('maxlength', 5);

@@ -12,8 +12,7 @@ if (document.URL.match(/checklists/)) {
             let type = global_get_url_parameters('checklist_type');
             $('#list_' + checklist_location_id).trigger('click');
             $('#list_div_' + checklist_location_id).find('.checklist-type-option').val(type);
-            checklist_type();
-            //select_refresh();
+            //change_checklist_type();
         }
 
         $('.referral-tab').on('shown.bs.tab', function (e) {
@@ -25,6 +24,14 @@ if (document.URL.match(/checklists/)) {
             $('.referral-tab-data').find('.non-referral-checklist-div').show();
             $('.referral-tab-data').find('.referral-checklist-div').hide();
         }); */
+
+
+        // moved this from init
+        $('.checklist-location').not('.loaded').off('click').on('click',function() {
+            $(this).addClass('loaded');
+            let location_id = $(this).data('id');
+            get_checklists(location_id, 'listing');
+        });
 
 
 
@@ -58,28 +65,18 @@ if (document.URL.match(/checklists/)) {
             copy_checklist($(this).data('location-id'));
         });
 
-        $(document).on('change', function(e) {
-            if(e.target.classList.contains('select-form-group')) {
-                show_form_group();
-            // toggle listing and contract checklists
-            } else if(e.target.classList.contains('checklist-type-option')) {
-                checklist_type();
-            }
+        $('.select-form-group').off('change').on('change', show_form_group);
 
-        });
+        $('.checklist-type-option').off('change').on('change', change_checklist_type);
 
 
         sortable_checklists();
 
-        $('.checklist-location').not('.loaded').off('click').on('click',function() {
-            $(this).addClass('loaded');
-            let location_id = $(this).data('id');
-            get_checklists(location_id, 'listing');
-        });
 
-        setTimeout(function() {
+
+        /* setTimeout(function() {
             select_refresh();
-        }, 200);
+        }, 200); */
 
     }
 
@@ -136,7 +133,7 @@ if (document.URL.match(/checklists/)) {
             $('#copy_checklists_location_id').val(location_id);
             $('#copy_checklists_checklist_type').val(checklist_type);
 
-            form_elements();
+            //form_elements();
             global_tooltip();
             // highlight selected check rows
             $('.export-to-form-group').on('change', function() {
@@ -199,7 +196,7 @@ if (document.URL.match(/checklists/)) {
 
     }
 
-    function checklist_type() {
+    function change_checklist_type() {
 
         $('.checklist-items-container').hide();
         $('.checklist-type-option').each(function () {
@@ -374,7 +371,7 @@ if (document.URL.match(/checklists/)) {
 
             sortable_checklist_items();
             forms_status();
-            select_refresh();
+            //form_elements();
 
             show_form_group();
 
@@ -510,7 +507,7 @@ if (document.URL.match(/checklists/)) {
             },
         })
         .then(function (response) {
-            select_refresh();
+            //form_elements();
             forms_status();
         })
         .catch(function (error) {
@@ -584,7 +581,18 @@ if (document.URL.match(/checklists/)) {
 
         show_hide_options();
 
-        $('#checklist_type, #checklist_property_type_id, #checklist_sale_rent, #checklist_property_sub_type_id, #checklist_represent').unbind('change').on('change', show_hide_options);
+        $('#checklist_modal').on('change', '.form-select', function(e) {
+
+            let ele = $(this);
+            let id = ele.attr('id');
+
+            let ids = ['checklist_type', 'checklist_property_type_id', 'checklist_sale_rent', 'checklist_property_sub_type_id', 'checklist_represent'];
+
+            if(ids.includes(id)) {
+                show_hide_options();
+            }
+
+        });
 
 
         $('#save_checklist_button').off('click').on('click', save_checklist);
@@ -592,7 +600,7 @@ if (document.URL.match(/checklists/)) {
     }
 
     function show_hide_options() {
-
+console.log('show_hide_options');
         let select_checklist_type = $('#checklist_type');
         let select_checklist_property_type = $('#checklist_property_type_id');
         let select_checklist_sale_rent = $('#checklist_sale_rent');
@@ -628,7 +636,7 @@ if (document.URL.match(/checklists/)) {
             select_checklist_type.val('contract');
         }
 
-        select_refresh();
+        //select_refresh();
 
     }
 

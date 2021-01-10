@@ -25,7 +25,7 @@ if (document.URL.match(/transaction_details/)) {
             .then(function (response) {
                 if(response.data.success == 'ok') {
                     //load_tabs('details');
-                    load_tabs('commission');
+                    //load_tabs('commission');
                     load_details_header();
                     toastr['success']('Transaction Details Saved!');
                 }
@@ -59,7 +59,7 @@ if (document.URL.match(/transaction_details/)) {
 
 
                 load_tabs('details');
-                load_tabs('checklist');
+                //load_tabs('checklist');
                 if(transaction_type == 'listing') {
                     load_details_header();
                 } else {

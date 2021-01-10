@@ -2,7 +2,7 @@
 @section('title', 'Common Fields')
 
 @section('content')
-<div class="container-1400 page-common-fields mx-auto">
+<div class="container-1400 page-container page-common-fields mx-auto">
     <div class="row">
         <div class="col-12">
 

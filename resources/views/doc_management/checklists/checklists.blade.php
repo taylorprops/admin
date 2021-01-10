@@ -2,7 +2,7 @@
 @section('title', 'Checklists')
 
 @section('content')
-<div class="container page-checklists">
+<div class="container page-container page-checklists">
     <h2>Checklists</h2>
     <div class="container">
 
@@ -98,7 +98,7 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="confirm_copy_title">Confirm Copy</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -119,7 +119,7 @@
                 <form id="copy_checklists_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="copy_checklists_modal_title">Copy Checklists To Another Form Group</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -143,7 +143,7 @@
                 <form id="checklist_items_form">
                     <div class="modal-header d-flex justify-content-between">
                         <h4 class="modal-title text-white" id="checklist_items_modal_title"></h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times fa-2x"></i>
                         </button>
                     </div>
@@ -170,7 +170,7 @@
                 <form id="checklist_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="checklist_modal_title">Add/Edit Checklist</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>
                     </div>
@@ -244,7 +244,7 @@
                 <form id="confirm_delete_checklist_form">
                     <div class="modal-header bg-danger draggable-handle">
                         <h3 class="modal-title" id="confirm_delete_checklist_modal_title">Delete Checklist</h3>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times fa-2x"></i>
                         </button>
                     </div>
@@ -271,7 +271,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="confirm_remove_file_modal_title">Remove Form From Checklist</h3>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times fa-2x"></i>
                 </button>
             </div>

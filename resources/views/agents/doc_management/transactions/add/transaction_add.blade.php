@@ -10,14 +10,14 @@ if(auth() -> user() -> group == 'agent') {
 @endphp
 <input type="hidden" id="transaction_type" value="{{ $transaction_type }}">
 <input type="hidden" id="Agent_ID" value="{{ $Agent_ID }}">
-<div class="container page-add-transaction">
+<div class="container-1000 page-container page-add-transaction mx-auto p-3">
     <div class="row">
 
         <div class="col-12">
 
-            <div class="row mb-5">
+            <div class="row mb-3 mb-lg-5">
                 <div class="col-12">
-                    <div class="h1 text-primary mt-4 mb-2">Add {{ $transaction_type_header }}</div>
+                    <div class="h1 text-primary mt-4">Add {{ $transaction_type_header }}</div>
                 </div>
             </div>
 
@@ -25,12 +25,13 @@ if(auth() -> user() -> group == 'agent') {
                 <!-- address search container -->
                 <div class="d-flex justify-content-center w-100">
                     <div id="address_search_container" class="address-container mls-container collapse show">
-                        <div class="h3 text-center text-orange mb-4">To Begin, Search By Property Address</div>
+                        <div class="h3 text-center text-orange mb-4">Search By Address</div>
+
                         <div class="mt-5">
                             <div class="row">
                                 <div class="col-sm-9 col-lg-10">
-                                    <div class="h5 text-gray">
-                                        Enter Property Street Address
+                                    <div class="font-10 text-gray">
+                                        Enter Property Address
                                         @if($transaction_type != 'referral')
                                         <span class="text-orange font-normal">
                                             <a href=".mls-container" class="text-orange font-9" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".mls-container"> <i class="fad fa-arrows-alt-h mx-3"></i> or Use MLS ID Search</a>
@@ -39,12 +40,13 @@ if(auth() -> user() -> group == 'agent') {
                                     </div>
                                     <input type="text" class="w-100" id="address_search_street">
                                 </div>
-                                <div class="col-sm-3 col-lg-2">
-                                    <div class="h5 text-gray">Unit</div>
+                                <div class="col-4 col-sm-3 col-lg-2">
+                                    <div class="font-10 text-gray mt-4 mt-sm-0">Unit</div>
                                     <input type="text" class="w-100" id="address_search_unit">
                                 </div>
                             </div>
                         </div>
+
                         <div class="address-search-error hide">
                             <div class="alert alert-danger text-danger w-50 my-3 mx-auto text-center" role="alert">
                                 <i class="fad fa-exclamation-circle fa-lg mr-3"></i> Street Number not valid. Please enter the address manually
@@ -261,7 +263,7 @@ if(auth() -> user() -> group == 'agent') {
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_agent_id_modal_title">Select Agent</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -291,7 +293,7 @@ if(auth() -> user() -> group == 'agent') {
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="multiple_results_title">Multiple Results Found</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>

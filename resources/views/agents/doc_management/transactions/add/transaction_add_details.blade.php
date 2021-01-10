@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-add-transaction-details">
+<div class="container page-container page-add-transaction-details">
     <div class="row">
         <div class="col-12">
 

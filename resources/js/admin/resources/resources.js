@@ -63,7 +63,7 @@ function options() {
         confirm_delete_deactivate_resource($(this));
     });
 
-    form_elements();
+    //form_elements();
 
 }
 
@@ -296,7 +296,7 @@ function reset_edit_resource_div(list_group_item, resource_div, resource_input, 
         resource_input_color.val(resource_input_color.data('default-value'));
     }
 
-    select_refresh();
+    //select_refresh();
 }
 
 function save_edit_resource(ele, resource_input, resource_state_select, resource_input_color, list_group_item, resource_div, resource_type) {

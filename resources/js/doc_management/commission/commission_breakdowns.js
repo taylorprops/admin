@@ -10,7 +10,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
     $(function() {
 
         if(page == 'commission') {
-            form_elements();
+            //form_elements();
             global_format_money();
             get_check_info();
             get_commissions_pending();
@@ -34,7 +34,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
         }
 
-        $('#save_add_check_in_button').off('click').on('click', save_add_check_in);
+        $(document).on('click', '#save_add_check_in_button', save_add_check_in);
 
     });
 
@@ -77,7 +77,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
             $('.delete-check-button').off('click').on('click', show_delete_queue_check);
             $('.undo-delete-check-button').off('click').on('click', undo_delete_queue_check);
 
-            select_refresh();
+            //select_refresh();
 
         })
         .catch(function (error) {
@@ -204,7 +204,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
                 $('.address').removeClass('required').closest('.form-ele').find('.form-select-value-input').removeClass('required-form-ele');
             }
 
-            select_refresh();
+            //select_refresh();
 
         }, 100);
 
@@ -386,7 +386,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
         $('#add_check_in_form').find('.custom-form-element').not('[type=radio]').val('').trigger('change');
         $('.check-in-preview-div').html('');
         $('#check_in_date_received').val(format_date(new Date().getTime()));
-        select_refresh();
+        //select_refresh();
 
     }
 

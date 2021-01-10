@@ -27,4 +27,8 @@ class Earnest extends Model
         return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
     }
 
+    public function earnest_account() {
+        return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'earnest_account_id');
+    }
+
 }

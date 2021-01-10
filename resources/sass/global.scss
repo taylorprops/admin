@@ -8,13 +8,14 @@ html {
     scroll-behavior: smooth;
 }
 
-body {
+.page-container {
     padding-bottom: 200px;
 }
 
 @media (max-width: 620px) {
 
-    .loading-spinner, .loading-spinner-html {
+    .loading-spinner,
+    .loading-spinner-html {
         width: 90% !important;
         margin-left: auto;
         margin-right: auto;
@@ -60,10 +61,16 @@ h2 {
     margin: 1.5rem 0;
 }
 
-*, input, select, textarea, option, button {
+
+*,
+input,
+select,
+textarea,
+option,
+button {
 
     &:not(.mce-content-body) {
-        outline: none!important;
+        outline: none !important;
     }
 }
 
@@ -72,6 +79,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 input[type=number] {
     -moz-appearance: textfield;
 }
@@ -79,6 +87,7 @@ input[type=number] {
 .relative {
     position: relative;
 }
+
 .absolute {
     position: absolute;
 }
@@ -86,12 +95,15 @@ input[type=number] {
 .overflow-y-hidden {
     overflow-y: hidden;
 }
+
 .overflow-x-hidden {
     overflow-x: hidden;
 }
+
 a:hover {
     text-decoration: none;
 }
+
 .pointer {
     cursor: pointer;
 }
@@ -114,8 +126,9 @@ ul {
 }
 
 .btn {
-    box-shadow: 0 4px 7px 0 rgba(0,0,0,0.16), 0 4px 12px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.16), 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 }
+
 .btn:not(.btn-rounded),
 .btn:not(.btn-rounded):hover {
     border: 1px transparent;
@@ -137,24 +150,39 @@ ul {
 .container-full {
     max-width: 96VW;
 }
+
 .container {
     max-width: 1500px !important;
 }
+
 .container-1400 {
     max-width: 1400px !important;
 }
+
+.container-1350 {
+    max-width: 1350px !important;
+}
+
+.container-1300 {
+    max-width: 1300px !important;
+}
+
 .container-1200 {
     max-width: 1200px !important;
 }
+
 .container-1100 {
     max-width: 1100px !important;
 }
+
 .container-1000 {
     max-width: 1000px !important;
 }
+
 .container-800 {
     max-width: 800px !important;
 }
+
 .container-600 {
     max-width: 600px !important;
 }
@@ -163,24 +191,31 @@ ul {
 .wpx-75 {
     width: 75px;
 }
+
 .wpx-80 {
     width: 80px;
 }
+
 .wpx-90 {
     width: 90px;
 }
+
 .wpx-100 {
     width: 100px;
 }
+
 .wpx-125 {
     width: 125px;
 }
+
 .wpx-150 {
     width: 150px;
 }
+
 .wpx-200 {
     width: 200px;
 }
+
 .wpx-250 {
     width: 250px;
 }
@@ -188,15 +223,19 @@ ul {
 .w-5 {
     width: 5%;
 }
+
 .w-10 {
     width: 10%;
 }
+
 .w-20 {
     width: 20%;
 }
+
 .w-30 {
     width: 30%;
 }
+
 .w-40 {
     width: 40%;
 }
@@ -204,12 +243,15 @@ ul {
 .w-60 {
     width: 60%;
 }
+
 .w-70 {
     width: 70%;
 }
+
 .w-80 {
     width: 80%;
 }
+
 .w-90 {
     width: 90%;
 }
@@ -217,24 +259,31 @@ ul {
 .uppercase {
     text-transform: uppercase
 }
+
 .hide {
     display: none;
 }
+
 .hidden {
     display: none !important;
 }
+
 .font-14 {
     font-size: 1.4rem;
 }
+
 .font-13 {
     font-size: 1.3rem;
 }
+
 .font-12 {
     font-size: 1.2rem;
 }
+
 .font-11 {
     font-size: 1.1rem;
 }
+
 .font-10 {
     font-size: 1.0rem;
 }
@@ -260,6 +309,7 @@ ul {
     background: $primary;
     color: $white;
 }
+
 @keyframes fadeIn {
     from {
         opacity: 0.25;
@@ -316,11 +366,13 @@ ul {
 .ck.ck-toolbar {
     background: $blue-light !important;
 }
-.ck.ck-button, a.ck.ck-button {
+
+.ck.ck-button,
+a.ck.ck-button {
     font-size: .6rem !important;
 }
 
-.ck.ck-editor__editable_inline  {
+.ck.ck-editor__editable_inline {
     border: 1px solid $border-color !important;
 
     &:focus {
@@ -329,3 +381,30 @@ ul {
     }
 }
 
+@media (max-width: 767.98px) {
+
+    h1,
+    .h1 {
+        font-size: 1.7rem;
+    }
+
+    h2,
+    .h2 {
+        font-size: 1.5rem;
+    }
+
+    h3,
+    .h3 {
+        font-size: 1.3rem;
+    }
+
+    h4,
+    .h4 {
+        font-size: 1.2rem;
+    }
+
+    h5,
+    .h5 {
+        font-size: 1.1rem;
+    }
+}

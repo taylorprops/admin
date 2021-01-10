@@ -12975,7 +12975,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+.page-container {
   padding-bottom: 200px;
 }
 
@@ -13114,6 +13114,14 @@ ul {
 
 .container-1400 {
   max-width: 1400px !important;
+}
+
+.container-1350 {
+  max-width: 1350px !important;
+}
+
+.container-1300 {
+  max-width: 1300px !important;
 }
 
 .container-1200 {
@@ -13338,6 +13346,33 @@ a.ck.ck-button {
   box-shadow: 0 0 5px #78c4e7 !important;
 }
 
+@media (max-width: 767.98px) {
+  h1,
+  .h1 {
+    font-size: 1.7rem;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.5rem;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.3rem;
+  }
+
+  h4,
+  .h4 {
+    font-size: 1.2rem;
+  }
+
+  h5,
+  .h5 {
+    font-size: 1.1rem;
+  }
+}
+
 .modal .modal-lg .modal-content,
 .modal .modal-xl .modal-content {
   margin-bottom: 50px;
@@ -13352,36 +13387,54 @@ a.ck.ck-button {
 }
 
 .modal .modal-dialog .modal-content .modal-header {
-  border-top-left-radius: 0.6rem !important;
-  border-top-right-radius: 0.6rem !important;
+  border-top-left-radius: 0.3rem !important;
+  border-top-right-radius: 0.3rem !important;
 }
 
 .modal .modal-dialog {
   margin: 0 auto !important;
 }
 
-.modal .modal-header {
-  background: #4c9bdb;
+.modal .modal-header:not(.bg-success):not(.bg-danger) {
+  background: #fff;
   padding: 0.5rem 0.5rem 0.5rem 1rem !important;
 }
 
-.modal .modal-header h1,
-.modal .modal-header h2,
-.modal .modal-header h3,
-.modal .modal-header h4,
-.modal .modal-header h5 {
-  color: white !important;
+.modal .modal-header:not(.bg-success):not(.bg-danger) h1,
+.modal .modal-header:not(.bg-success):not(.bg-danger) h2,
+.modal .modal-header:not(.bg-success):not(.bg-danger) h3,
+.modal .modal-header:not(.bg-success):not(.bg-danger) h4,
+.modal .modal-header:not(.bg-success):not(.bg-danger) h5 {
+  color: #4c9bdb !important;
 }
 
-.modal .modal-header .fa-times {
+.modal .modal-header:not(.bg-success):not(.bg-danger) .fa-times {
   margin-right: 15px;
 }
 
+.modal .modal-header.bg-success h1,
+.modal .modal-header.bg-success h2,
+.modal .modal-header.bg-success h3,
+.modal .modal-header.bg-success h4,
+.modal .modal-header.bg-success h5,
+.modal .modal-header.bg-danger h1,
+.modal .modal-header.bg-danger h2,
+.modal .modal-header.bg-danger h3,
+.modal .modal-header.bg-danger h4,
+.modal .modal-header.bg-danger h5 {
+  color: #fff !important;
+}
+
+.modal .modal-header.bg-success .fa-times,
+.modal .modal-header.bg-danger .fa-times {
+  color: #fff !important;
+}
+
 .modal .modal-dialog .modal-content {
-  border-top-left-radius: 0.7rem !important;
-  border-top-right-radius: 0.7rem !important;
-  border-bottom-left-radius: 0.7rem !important;
-  border-bottom-right-radius: 0.7rem !important;
+  border-top-left-radius: 0.4rem !important;
+  border-top-right-radius: 0.4rem !important;
+  border-bottom-left-radius: 0.4rem !important;
+  border-bottom-right-radius: 0.4rem !important;
   border: 2px solid #f8fcff !important;
 }
 
@@ -13391,8 +13444,8 @@ body.modal-open {
 } */
 
 *::-webkit-scrollbar {
-  width: 0.4em;
-  height: 0.4em;
+  width: 0.5em;
+  height: 0.5em;
 }
 
 *::-webkit-scrollbar-track {
@@ -13562,6 +13615,11 @@ body.modal-open {
     //font-size: 1rem;
     color: #525050;
 } */
+
+.pretty .state label:before,
+.pretty .state label:after {
+  background: #fff !important;
+}
 
 /*
   All a user has to do to change the calendar size is
@@ -14204,8 +14262,7 @@ body.modal-open {
 }
 
 .form-ele .form-select-li:hover {
-  color: #fff !important;
-  background: #4c9bdb;
+  background: #f8fcff;
   border-radius: 5px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   cursor: pointer;
@@ -16228,6 +16285,10 @@ header .main-search-input::placeholder {
   max-width: 200px;
 }
 
+.page-add-transaction input {
+  color: #7a7979;
+}
+
 .page-add-transaction .property-container {
   max-width: 1000px;
 }
@@ -16412,6 +16473,10 @@ header .main-search-input::placeholder {
 
 .page-transaction-details .listing-header-details .btn {
   padding: 0.1rem 0.2rem;
+}
+
+.page-transaction-details .header-status-div {
+  line-height: 1.44rem;
 }
 
 .page-transaction-details .commission-container .btn-lg,
@@ -17314,6 +17379,12 @@ header .main-search-input::placeholder {
   -vendor-animation-duration: 8s;
   -webkit-animation-duration: 8s;
           animation-duration: 8s;
+  opacity: 0.4;
+}
+
+.page-fill-fields .file-view-page-container.active,
+.page-fill-fields .file-view-thumb-container.active {
+  opacity: 1;
 }
 
 .page-fill-fields .file-view-thumb-container {
@@ -17579,6 +17650,249 @@ header .main-search-input::placeholder {
   background: #f8fcff;
 }
 
+.page-esign-add-fields {
+  overflow-x: hidden;
+}
+
+.page-esign-add-fields .file-view {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 130px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-bottom: 200px;
+  -vendor-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+          animation-duration: 2s;
+}
+
+.page-esign-add-fields .file-view-container {
+  padding: 8px 0px 0px 0px;
+}
+
+.page-esign-add-fields .file-view-page-container {
+  -vendor-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+          animation-duration: 2s;
+  opacity: 0.3;
+}
+
+.page-esign-add-fields .file-view-page-container.active {
+  opacity: 1;
+}
+
+.page-esign-add-fields .file-view-thumb-container {
+  -vendor-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+          animation-duration: 2s;
+  opacity: 0.8;
+}
+
+.page-esign-add-fields .file-view-thumb-container.active {
+  opacity: 1;
+}
+
+.page-esign-add-fields .file-view-thumb-container {
+  border: 2px solid rgba(76, 155, 219, 0.2);
+  margin-bottom: 5px;
+  max-width: 100px;
+}
+
+.page-esign-add-fields .file-view-thumb-container.active {
+  border: 2px solid #4c9bdb;
+}
+
+.page-esign-add-fields .file-view-thumb-footer {
+  font-size: 0.7rem;
+}
+
+.page-esign-add-fields .form-options-container {
+  max-width: 100%;
+}
+
+.page-esign-add-fields .form-options-div {
+  width: 100px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.page-esign-add-fields .fill-form-option {
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 10px 0px;
+}
+
+.page-esign-add-fields .edit-form-action.active {
+  background: #4c9bdb;
+}
+
+.page-esign-add-fields .edit-form-action.active:hover {
+  color: #ffed4a;
+}
+
+.page-esign-add-fields .initials-one {
+  position: absolute;
+  top: 5px;
+  left: 40%;
+}
+
+.page-esign-add-fields .initials-two {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+}
+
+@media (max-width: 1300px) {
+  .page-esign-add-fields .thumbs-div {
+    display: none;
+  }
+}
+
+.page-esign-add-fields .fields-container {
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+}
+
+.page-esign-add-fields .field-div {
+  color: #000;
+  box-shadow: none;
+  display: block;
+  z-index: 3;
+  background: rgba(223, 121, 53, 0.3);
+  /* .ui-resizable-e {
+      bottom: 5px;
+      right: -20px;
+      cursor: e-resize;
+  }
+  .ui-resizable-w {
+      bottom: 5px;
+      left: -20px;
+      cursor: w-resize;
+      transform: rotate(180deg);
+  } */
+  /* .data-div {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      font-size: .8rem;
+      padding-left: 2px;
+      z-index: 0;
+
+  } */
+}
+
+.page-esign-add-fields .field-div .field-options-holder {
+  position: absolute;
+  left: 0px;
+  top: -60px;
+  width: 110px;
+  width: auto;
+  background: transparent;
+}
+
+.page-esign-add-fields .field-div .field-options-holder.right {
+  right: 0px;
+  left: auto;
+}
+
+.page-esign-add-fields .field-div .select-signer-div {
+  position: absolute;
+  left: 0px;
+  right: auto;
+  bottom: -140px;
+  width: 170px;
+  background: #4c9bdb;
+  color: #fff;
+}
+
+.page-esign-add-fields .field-div .select-signer-div.right {
+  right: 0px;
+  left: auto;
+}
+
+.page-esign-add-fields .field-div .select-signer-div .form-ele {
+  margin-top: 10px;
+}
+
+.page-esign-add-fields .field-div .select-signer-div .form-ele .form-select-value-input {
+  padding: 4px 20px 2px 5px;
+}
+
+.page-esign-add-fields .field-div .btn-group .btn {
+  margin-right: 2px;
+  width: 45px;
+}
+
+.page-esign-add-fields .field-div .field-handle {
+  cursor: move;
+}
+
+.page-esign-add-fields .field-div .field-close {
+  cursor: pointer;
+}
+
+.page-esign-add-fields .field-div .ui-resizable-handle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 10px solid #4c9bdb;
+}
+
+.page-esign-add-fields .field-div .ui-resizable-nw {
+  top: -15px;
+  left: -15px;
+  cursor: nw-resize;
+  transform: rotate(225deg);
+}
+
+.page-esign-add-fields .field-div .ui-resizable-ne {
+  top: -15px;
+  right: -15px;
+  cursor: ne-resize;
+  transform: rotate(315deg);
+}
+
+.page-esign-add-fields .field-div .ui-resizable-se {
+  bottom: -15px;
+  right: -15px;
+  cursor: se-resize;
+  transform: rotate(45deg);
+}
+
+.page-esign-add-fields .field-div .ui-resizable-sw {
+  bottom: -15px;
+  left: -15px;
+  cursor: sw-resize;
+  transform: rotate(135deg);
+}
+
+.page-esign-add-fields .field-div .inputs-container {
+  display: none;
+}
+
+.page-esign-add-fields .field-div .field-options-holder,
+.page-esign-add-fields .field-div .select-signer-div,
+.page-esign-add-fields .field-div .field-handle {
+  display: none !important;
+}
+
+.page-esign-add-fields .field-div.show {
+  border: 1px solid #4c9bdb;
+  z-index: 5;
+}
+
+.page-esign-add-fields .field-div.show .field-options-holder,
+.page-esign-add-fields .field-div.show .select-signer-div,
+.page-esign-add-fields .field-div.show .field-handle {
+  display: block !important;
+}
+
 .page-document-review .bottom-line {
   position: fixed;
   bottom: 0px;
@@ -17790,15 +18104,37 @@ header .main-search-input::placeholder {
   display: none;
 }
 
-.page-balance-earnest .earnest-totals {
+.page-balance-earnest .earnest-key {
   position: -webkit-sticky;
   position: sticky;
   top: 90px;
+  z-index: 1;
 }
 
-.page-balance-earnest .earnest-totals-tab.active {
+.page-balance-earnest .earnest-key .earnest-totals-tab.active {
   background: #4c9bdb;
   color: #fff;
+}
+
+.page-balance-earnest .earnest-key #earnest_search_results {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 1400px;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  z-index: 5;
+}
+
+.page-balance-earnest .earnest-key #earnest_search_results #earnest_search_results_div {
+  z-index: 6;
+}
+
+.page-balance-earnest .earnest-key #earnest_search_results .earnest-search-results-container {
+  max-height: 400px;
+  overflow: auto;
 }
 
 .page-balance-earnest .earnest-check-hr {

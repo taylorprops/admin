@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container-fluid page-document-review px-0">
+<div class="container-fluid page-container page-document-review px-0">
 
     <div class="row no-gutters vh-100">
 

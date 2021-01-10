@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-transaction-details mb-5">
+<div class="container page-container page-transaction-details mb-5">
 
     <div id="details_header" class="animate__animated animate__slow animate__fadeIn"></div>
 
@@ -13,19 +13,19 @@
         <div class="col-md-12 px-1 px-sm-3 mt-3 details-tabs">
             <ul id="tabs" class="nav nav-tabs details-list-group">
 
-                <li class="nav-item"><a href="javascript: void(0)" data-tab="details" id="open_details_tab" data-target="#details_tab" data-toggle="tab" class="nav-link active"><i class="fad fa-home-lg-alt mr-2 d-none d-md-inline-block"></i> Details</a></li>
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="details" data-target="#details_tab" data-toggle="tab" class="nav-link transaction-details-nav-link active"><i class="fad fa-home-lg-alt mr-2 d-none d-md-inline-block"></i> Details</a></li>
 
                 @if($transaction_type != 'referral')
-                    <li class="nav-item"><a href="javascript: void(0)" data-tab="members" id="open_members_tab" data-target="#members_tab" data-toggle="tab" class="nav-link"><i class="fad fa-user-friends mr-2 d-none d-md-inline-block"></i> Members</a></li>
+                    <li class="nav-item"><a href="javascript: void(0)" data-tab="members" data-target="#members_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-user-friends mr-2 d-none d-md-inline-block"></i> Members</a></li>
                 @endif
 
-                <li class="nav-item"><a href="javascript: void(0)" data-tab="documents" id="open_documents_tab" data-target="#documents_tab" data-toggle="tab" class="nav-link"><i class="fad fa-folder-open mr-2 d-none d-md-inline-block"></i> Documents</a></li>
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="documents"  data-target="#documents_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-folder-open mr-2 d-none d-md-inline-block"></i> Documents</a></li>
 
-                <li class="nav-item"><a href="javascript: void(0)" data-tab="checklist" id="open_checklist_tab" data-target="#checklist_tab" data-toggle="tab" class="nav-link"><i class="fad fa-tasks mr-2 d-none d-md-inline-block"></i> Checklist</a></li>
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="checklist"  data-target="#checklist_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-tasks mr-2 d-none d-md-inline-block"></i> Checklist</a></li>
 
                 @if($transaction_type == 'listing')
 
-                    <li class="nav-item"><a href="javascript: void(0)" data-tab="contracts" id="open_contracts_tab" data-target="#contracts_tab" data-toggle="tab" class="nav-link"><i class="fad fa-file-signature mr-2 d-none d-md-inline-block"></i> {{ $for_sale ? 'Contracts' : 'Leases' }}</a></li>
+                    <li class="nav-item"><a href="javascript: void(0)" data-tab="contracts"  data-target="#contracts_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-file-signature mr-2 d-none d-md-inline-block"></i> {{ $for_sale ? 'Contracts' : 'Leases' }}</a></li>
 
                 @else
 
@@ -40,10 +40,10 @@
                     @endphp
 
                     {{-- show listing link if exists --}}
-                    <li class="nav-item"><a href="javascript: void(0)" data-tab="{{ $commission }}" id="open_{{ $commission }}_tab" data-target="#{{ $commission }}_tab" data-toggle="tab" class="nav-link"><i class="fad fa-sack-dollar mr-2 d-none d-md-inline-block"></i> Commission</a></li>
+                    <li class="nav-item"><a href="javascript: void(0)" data-tab="{{ $commission }}"{{--  id="open_{{ $commission }}_tab" --}} data-target="#{{ $commission }}_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-sack-dollar mr-2 d-none d-md-inline-block"></i> Commission</a></li>
 
                     @if($for_sale && auth() -> user() -> group == 'admin')
-                        <li class="nav-item"><a href="javascript: void(0)" data-tab="earnest" id="open_earnest_tab" data-target="#earnest_tab" data-toggle="tab" class="nav-link"><i class="fad fa-envelope-open-dollar mr-2 d-none d-md-inline-block"></i> Earnest</a></li>
+                        <li class="nav-item"><a href="javascript: void(0)" data-tab="earnest" data-target="#earnest_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-envelope-open-dollar mr-2 d-none d-md-inline-block"></i> Earnest</a></li>
                     @endif
 
                 @endif
@@ -124,7 +124,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="import_title">Confirm Import</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -143,7 +143,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="delete_member_title">Confirm</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -163,7 +163,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="import_contact_modal_title">Select Contacts</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -223,7 +223,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="send_email_modal_title">Email Documents</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -374,7 +374,7 @@
             <form id="add_individual_template_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="add_individual_template_modal_title">Add Individual Template Documents</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -544,7 +544,7 @@
             <form id="add_checklist_template_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="add_checklist_template_modal_title">Add Checklist Template Documents</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -663,7 +663,7 @@
             <form id="upload_documents_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="upload_documents_modal_title">Upload Documents</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -735,7 +735,7 @@
             <form id="move_documents_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="move_documents_modal_title">Move Documents</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -776,7 +776,7 @@
             <form id="add_to_checklist_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="add_to_checklist_modal_title">Assign To Checklist</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -804,7 +804,7 @@
             <form id="add_folder_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="add_folder_modal_title">Add Folder</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -829,7 +829,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="delete_document_title">Delete Document</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -857,7 +857,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="delete_folder_title">Delete Folder</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -883,7 +883,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="delete_documents_title">Move To Trash</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -920,7 +920,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="split_document_modal_title">Split Document</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -943,7 +943,7 @@
             <form id="rename_document_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="rename_document_modal_title">Rename Document</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -975,7 +975,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="matches_title">Matches Found</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1005,7 +1005,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="change_checklist_modal_title">Change Checklist</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1084,7 +1084,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="change_checklist_title">Change Checklist Title</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1112,7 +1112,7 @@
             <form id="add_document_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="add_document_modal_title">Add Document To Checklist Item</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>
@@ -1140,7 +1140,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="delete_checklist_item_doc_title">Delete Document</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1171,7 +1171,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="add_check_in_modal_title">Add Check In - <span id="add_check_in_address"></span></h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1247,7 +1247,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="edit_check_in_modal_title">Edit Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1302,7 +1302,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="add_check_out_modal_title">Add Check Out</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1423,7 +1423,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="edit_check_out_modal_title">Edit Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1543,7 +1543,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="add_earnest_check_modal_title">Add Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1624,7 +1624,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="edit_earnest_check_modal_title">Add Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1704,7 +1704,7 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="accept_contract_modal_title">Accept {{ $for_sale ? 'Contract' : 'Lease' }}</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1934,7 +1934,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="cancel_listing_modal_title">cancel Listing</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1958,7 +1958,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="undo_cancel_title">Undo Release/Cancellation</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -1985,7 +1985,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="cancel_contract_modal_title">Cancel {{ $for_sale ? 'Contract' : 'Lease' }}</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -2065,7 +2065,7 @@
             <form id="required_fields_form">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="required_fields_modal_title">Add Required Fields</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>

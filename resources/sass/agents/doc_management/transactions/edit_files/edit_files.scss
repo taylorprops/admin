@@ -58,6 +58,11 @@
     .file-view-page-container, .file-view-thumb-container {
         -vendor-animation-duration: 8s;
         animation-duration: 8s;
+        opacity: .4;
+
+        &.active {
+            opacity: 1;
+        }
     }
 
 

@@ -7,28 +7,11 @@ if (document.URL.match(/transaction_details/)) {
 
         load_tabs('details');
 
-        /* $('#open_details_tab').off('click').on('click', function () {
-            load_tabs('details');
-        }); */
-        $('#open_members_tab').one('click', function () {
-            load_tabs('members');
-        });
-        $('#open_checklist_tab').one('click', function () {
-            load_tabs('checklist');
-        });
-        $('#open_documents_tab').one('click', function () {
-            load_tabs('documents');
-        });
-        $('#open_contracts_tab').one('click', function () {
-            load_tabs('contracts');
-        });
-        $('#open_commission_tab').one('click', function () {
-            load_tabs('commission');
+        $(document).on('click', '.transaction-details-nav-link', function() {
+            console.log('clicked', $(this).data('tab'));
+            load_tabs($(this).data('tab'));
         });
 
-        $('#open_earnest_tab').one('click', function () {
-            load_tabs('earnest');
-        });
 
         $(document).on('click', '.process-cancellation-button', function() {
             let Contract_ID = $(this).data('contract-id');
@@ -128,6 +111,27 @@ if (document.URL.match(/transaction_details/)) {
         }
 
         $('#agent_search').on('keyup', search_bright_agents);
+
+        $(document).on('click', '.nav-link[data-tab]', function() {
+
+            if(window.get_emailed_docs_interval) {
+                clearInterval(get_emailed_docs_interval);
+            }
+            if(window.in_process_interval) {
+                clearInterval(in_process_interval);
+            }
+            if($(this).data('tab') == 'documents') {
+                window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
+                window.in_process_interval = setInterval(function(){
+                    let document_ids = [];
+                    $('.document-div').each(function() {
+                        document_ids.push($(this).data('document-id'));
+                    });
+                    in_process(document_ids);
+                }, 3000);
+            }
+
+        });
 
         $(document).on('mouseup', function (e) {
             var container = $('.search-results-container');
@@ -652,11 +656,6 @@ if (document.URL.match(/transaction_details/)) {
 
                 $('#' + tab + '_tab').html(response.data);
 
-                let document_ids = [];
-                $('.document-div').each(function() {
-                    document_ids.push($(this).data('document-id'));
-                });
-
                 if (tab == 'details') {
 
                     // update counties when state is changed
@@ -681,28 +680,10 @@ if (document.URL.match(/transaction_details/)) {
 
                 } else if (tab == 'members') {
 
-                    $(document).on('click', '.import-contact-button', function () {
-                        show_import_modal($(this).data('ele'));
-                    });
-
-                    let contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], false, true, true, true);
-
-
-
-
-                    $('#add_member_button').off('click').on('click', show_add_member);
-                    //$('.save-member-div').off('click').on('click', '.save-member-button', save_add_member);
-                    $('.delete-member-button').off('click').on('click', confirm_delete_member);
-
-                    /* setTimeout(function () {
-                        show_hide_fields();
-                        $('.member-type-id').on('change', show_hide_fields);
-                        $('.bank-trust').on('click', show_bank_trust);
-                    }, 200); */
-
                     $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
                         show_hide_fields();
                     });
+
 
                 } else if (tab == 'documents') {
 
@@ -736,8 +717,14 @@ if (document.URL.match(/transaction_details/)) {
                         }
 
                         get_emailed_documents();
-                        in_process(document_ids);
 
+                        setTimeout(function() {
+                            let document_ids = [];
+                            $('.document-div').each(function() {
+                                document_ids.push($(this).data('document-id'));
+                            });
+                            in_process(document_ids);
+                        }, 1000);
 
                     }, 100);
 
@@ -783,12 +770,7 @@ if (document.URL.match(/transaction_details/)) {
                             reset_email();
 
                             show_email_agent();
-                            let options = {
-                                menubar: false,
-                                statusbar: false,
-                                toolbar: false
-                            }
-                            text_editor(options);
+
                         });
 
                         $('.notes-div').each(function() {
@@ -901,7 +883,9 @@ if (document.URL.match(/transaction_details/)) {
 
                 } else if(tab == 'earnest') {
 
-                    $('#save_earnest_button').off('click').on('click', save_earnest);
+                    $('#save_earnest_button').off('click').on('click', function() {
+                        save_earnest('yes');
+                    });
                     $('.add-earnest-check-button').off('click').on('click', function() {
                         add_earnest_check($(this).data('check-type'));
                     });
@@ -912,12 +896,12 @@ if (document.URL.match(/transaction_details/)) {
                     get_earnest_check_info();
                     get_earnest_checks('in', false);
                     get_earnest_checks('out', false);
-                    save_earnest();
+                    save_earnest('no');
 
                 }
 
 
-                $('.nav-link[data-tab]').on('click', function() {
+                /* $(document).on('click', '.nav-link[data-tab]', function() {
 
                     if(window.get_emailed_docs_interval) {
                         clearInterval(get_emailed_docs_interval);
@@ -928,11 +912,15 @@ if (document.URL.match(/transaction_details/)) {
                     if($(this).data('tab') == 'documents') {
                         window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
                         window.in_process_interval = setInterval(function(){
+                            let document_ids = [];
+                            $('.document-div').each(function() {
+                                document_ids.push($(this).data('document-id'));
+                            });
                             in_process(document_ids);
                         }, 3000);
                     }
 
-                });
+                }); */
 
                 $('.draggable').draggable({
                     handle: '.draggable-handle'
@@ -948,21 +936,10 @@ if (document.URL.match(/transaction_details/)) {
                 // init tooltips and form elements
                 global_tooltip();
 
-                setTimeout(function() {
-                    select_refresh();
+                //setTimeout(function() {
+                    //form_elements();
                     global_loading_off();
-                }, 100);
-
-
-
-                /* setTimeout(function() {
-                    $('[id]').each(function(){
-                        var ids = $('[id="'+this.id+'"]');
-                        if(ids.length>1 && ids[0]==this) {
-                            console.warn('Multiple IDs #'+this.id);
-                        }
-                    });
-                }, 3000); */
+                //}, 100);
 
             })
             .catch(function (error) {
@@ -982,19 +959,6 @@ if (document.URL.match(/transaction_details/)) {
         }
 
     }
-
-    window.load_documents_on_tab_click = function() {
-        $('#open_documents_tab').off().on('show.bs.tab', function (e) {
-            load_tabs('documents', false);
-        });
-    }
-
-    window.load_checklist_on_tab_click = function() {
-        $('#open_checklist_tab').off().on('show.bs.tab', function (e) {
-            load_tabs('checklist');
-        });
-    }
-
 
     function sortable_documents() {
         $('.sortable-documents').sortable({

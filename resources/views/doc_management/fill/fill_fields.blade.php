@@ -2,7 +2,7 @@
 @section('title', 'Fill Fields')
 @section('content')
 
-<div class="container-fluid page-fill-fields file-view-container p-0">
+<div class="container-fluid page-container page-fill-fields file-view-container p-0">
 
         <div class="container-fluid">
             <div class="row">

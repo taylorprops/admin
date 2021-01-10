@@ -2,7 +2,7 @@
 @section('title', 'Fillable Files')
 @section('content')
 
-<div class="container page-files mt-5">
+<div class="container page-container page-files mt-5">
     <div class="row">
         <div class="col-12">
             @foreach ($files as $file)

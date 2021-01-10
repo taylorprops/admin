@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-transaction-details">
+<div class="container page-container page-transaction-details">
 
     <h2>Commission Breakdown</h2>
     <div class="row">
@@ -22,7 +22,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="edit_check_in_modal_title">Edit Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -77,7 +77,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="edit_check_out_modal_title">Edit Check</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>
@@ -194,7 +194,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary draggable-handle">
                 <h4 class="modal-title" id="add_check_out_modal_title">Add Check Out</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
                 </button>
             </div>

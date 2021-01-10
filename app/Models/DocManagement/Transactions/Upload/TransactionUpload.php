@@ -14,6 +14,14 @@ class TransactionUpload extends Model
     protected $primaryKey = 'file_id';
     protected $guarded = [];
 
+    public function images() {
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Upload\TransactionUploadImages', 'file_id', 'file_id') -> orderBy('page_number');
+    }
+
+    public function pages() {
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Upload\TransactionUploadPages', 'file_id', 'file_id') -> orderBy('page_number');
+    }
+
     /* public function scopeFormGroupFiles($query, $location_id, $Listing_ID, $Contract_ID, $type) {
 
         $forms_available = $this -> where('form_group_id', $location_id)

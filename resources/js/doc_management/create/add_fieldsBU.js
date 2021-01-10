@@ -415,7 +415,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 show_edit_properties($(this));
             });
 
-            form_elements();
+            //form_elements();
 
         }
 

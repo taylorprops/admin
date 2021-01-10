@@ -6,7 +6,7 @@
 <script>
     let states = JSON.parse({!!json_encode($states_json)!!});
 </script>
-<div class="container-1000 page-required-details mx-auto mb-5 pb-5">
+<div class="container-1000 page-container page-required-details mx-auto mb-5 pb-5">
     <div class="row">
         <div class="col-8 mb-5 mx-auto">
 
@@ -140,7 +140,7 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="import_contact_modal_title">Select Contacts</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times mt-2"></i>
                     </button>
                 </div>

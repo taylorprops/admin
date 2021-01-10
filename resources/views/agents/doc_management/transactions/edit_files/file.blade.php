@@ -2,7 +2,7 @@
 @section('title', 'Edit - '.$file_name)
 @section('content')
 
-<div class="container page-fill-fields file-view-container mx-auto p-0">
+<div class="container page-container page-fill-fields file-view-container mx-auto p-0">
 
     <div class="container-1200 mx-auto">
 
