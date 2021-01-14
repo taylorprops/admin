@@ -66,22 +66,57 @@ if(document.URL.match(/esign_add_fields/)) {
 
         $(document).on('click', '.close-field-button', hide_active_field);
 
-        $(document).on('click', '#next_button', next);
+        $(document).on('click', '#send_for_signatures_button', show_send_for_signatures);
 
         // remove field
         $(document).on('click', '.remove-field', function () {
             $(this).closest('.field-div').remove();
         });
 
+        $(document).on('change', '.signer-select', function () {
+            show_signer($(this));
+        });
+
+        $('#active_signer').val($('.signer-select-option:first').val());
+
 
         ///////////////////// Functions //////////////////////
 
-        function next() {
+        function show_send_for_signatures() {
 
-            let Agent_ID = $('#Agent_ID').val();
-            let document_ids = $('#document_ids').val();
+            if ($('.field-div').length > 0) {
 
+                $('#send_for_signatures_modal').modal('show');
+
+                $('#save_send_for_signatures_button').off('click').on('click', function() {
+
+                    let form = $('#send_for_signatures_form');
+                    let validate = validate_form(form);
+
+                    if(validate == 'yes') {
+                        send_for_signatures();
+                    }
+                });
+
+            } else {
+
+                toastr['error']('You must add signature fields before sending');
+
+            }
+
+        }
+
+        function send_for_signatures() {
+
+            let envelope_id = $('#envelope_id').val();
+            let subject = $('#envelope_subject').val();
+            let message = $('#envelope_message').val();
             let data = [];
+            let document_ids = [];
+            $('.file-view-page-container').each(function() {
+                document_ids.push($(this).data('document-id'));
+            });
+            document_ids = document_ids.filter(global_array_unique);
 
             if ($('.field-div').length > 0) {
 
@@ -91,7 +126,8 @@ if(document.URL.match(/esign_add_fields/)) {
                     let field_id = field_div.data('field-id');
                     let field_type = field_div.data('field-type');
                     let document_id = field_div.data('document-id');
-                    let signer = field_div.find('.signer').val();
+                    let signer_id = field_div.find('.signer-select option:selected').data('signer-id');
+                    let signer = field_div.find('.signer-select').val();
                     let required_input = field_div.find('.signature-required');
                     let required = 'no';
                     if(required_input.is(':checked')) {
@@ -99,10 +135,12 @@ if(document.URL.match(/esign_add_fields/)) {
                     }
 
 
+
                     let field_data = {
                         'document_id': document_id,
                         'field_id': field_id,
                         'field_type': field_type,
+                        'signer_id': signer_id,
                         'signer': signer,
                         'required': required,
                         'page': field_div.data('page'),
@@ -121,7 +159,9 @@ if(document.URL.match(/esign_add_fields/)) {
             let fields = JSON.stringify(data);
 
             let formData = new FormData();
-            formData.append('Agent_ID', Agent_ID);
+            formData.append('envelope_id', envelope_id);
+            formData.append('subject', subject);
+            formData.append('message', message);
             formData.append('document_ids', document_ids);
             formData.append('fields', fields);
             axios.post('/esign/esign_send_for_signatures', formData, axios_options)
@@ -129,7 +169,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+
             });
         }
 
@@ -145,28 +185,80 @@ if(document.URL.match(/esign_add_fields/)) {
                 let container = $(e.target.parentNode);
 
                 let coords = set_and_get_field_coordinates(e, null, 'no', field_type);
-                let x_perc = coords.x;
-                let y_perc = coords.y;
-                let h_perc = coords.h;
-                let w_perc = coords.w;
+                let x_perc = coords.x_perc;
+                let y_perc = coords.y_perc;
+                let h_perc = coords.h_perc;
+                let w_perc = coords.w_perc;
 
                 // create unique id for field
                 let field_id = Date.now();
+                let field_id_date = '';
+                if(field_type == 'signature') {
+                    field_id_date = parseInt(Date.now()) + 1;
+                }
 
                 let field = field_html(h_perc, w_perc, x_perc, y_perc, field_id, $('#active_page').val(), field_type, document_id);
+                let field_date = '';
+                if(field_type == 'signature') {
+                    field_date = field_html(h_perc - 1, w_perc, x_perc + 18, y_perc + 1, field_id_date, $('#active_page').val(), 'date', document_id);
+                }
 
                 $('.field-div.show').removeClass('show');
 
                 // append new field
                 container.append(field);
+                if(field_type == 'signature') {
+                    container.append(field_date);
+                }
 
-                let ele = $('.field-div.show');
+
+                let ele = $('.field-div.show[data-field-type="'+field_type+'"]');
+                let ele_date = '';
+                if(field_type == 'signature') {
+                    ele_date = $('.field-div.show[data-field-type="date"]');
+                }
+
+
+                let selected_option = ele.find('.signer-select-option[data-name="'+$('#active_signer').val()+'"]');
+                selected_option.prop('selected', true);
+                let field_name = selected_option.data('name');
+                let field_div_html = '';
+                let field_name_date = '';
+                let field_div_html_date = '';
+
+                if(field_type == 'signature') {
+                    let selected_option_date = ele_date.find('.signer-select-option[data-name="'+$('#active_signer').val()+'"]');
+                    selected_option_date.prop('selected', true);
+                    field_name_date = selected_option_date.data('name');
+
+                }
+
+                if(field_type == 'signature') {
+                    field_div_html = '<div><i class="fal fa-signature mr-2"></i> <span class="field-div-name">'+field_name+'</span></div>';
+                    field_div_html_date = '<div><i class="fal fa-calendar mr-2"></i> <span class="field-div-name">'+field_name_date+'</span></div>';
+                } else if(field_type == 'initials') {
+                    let initials_array = field_name.match(/\b(\w)/g);
+                    let initials = initials_array.join('');
+                    field_div_html = '<span class="field-div-name">'+initials+'</span>';
+                } else if(field_type == 'date') {
+                    field_div_html = '<div><i class="fal fa-calendar mr-2"></i>  <span class="field-div-name">'+field_name+'</span></div>';
+                }
+
+
+                ele.find('.field-html').html(field_div_html);
+                if(field_type == 'signature') {
+                    ele_date.find('.field-html').html(field_div_html_date);
+                }
 
                 // run this again in case it was placed out of bounds
                 set_and_get_field_coordinates(null, ele, 'no', field_type);
-
                 set_field_options(ele, field_type);
 
+                if(field_type == 'signature') {
+                    set_and_get_field_coordinates(null, ele_date, 'no', 'date');
+                    set_field_options(ele_date, 'date');
+                    $('.field-div.show[data-field-type="date"]').removeClass('show');
+                }
 
             }
 
@@ -214,8 +306,11 @@ if(document.URL.match(/esign_add_fields/)) {
 
         function field_html(h_perc, w_perc, x_perc, y_perc, field_id, page, field_type, document_id) {
 
-            return ' \
+            let signer_options = $('#signer_options_html').html();
+
+            let field_html = ' \
             <div class="field-div show" style="position: absolute; top: '+y_perc+'%; left: '+x_perc+'%; height: '+h_perc+'%; width: '+w_perc+'%;" id="field_'+field_id+'" data-field-id="'+field_id+'" data-field-type="'+field_type+'" data-page="'+page+'" data-document-id="'+ document_id + '"> \
+                <div class="field-html w-100 h-100 text-center text-primary small"></div> \
                 <div class="field-options-holder"> \
                     <div class="d-flex justify-content-around"> \
                         <div class="btn-group" role="group" aria-label="Field Options"> \
@@ -225,12 +320,9 @@ if(document.URL.match(/esign_add_fields/)) {
                     </div> \
                 </div> \
                 <div class="select-signer-div font-8 p-2"> \
-                    Signature for:\
-                    <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer"> \
-                        <option value="seller_one">Seller One</option> \
-                        <option value="seller_two">Seller Two</option> \
-                        <option value="buyer_one">Buyer One</option> \
-                        <option value="buyer_two">Buyer Two</option> \
+                    '+ucwords(field_type)+' for:\
+                    <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer-select"> \
+                        '+signer_options+' \
                     </select> \
                     <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="yes" checked data-label="Required"> \
                 </div> \
@@ -240,6 +332,21 @@ if(document.URL.match(/esign_add_fields/)) {
                 <div class="field-handle ui-resizable-handle ui-resizable-sw"></div> \
             </div> \
             ';
+
+            return field_html;
+        }
+
+        function show_signer(ele) {
+
+            let container = ele.closest('.field-div');
+            let field_type = container.data('field-type');
+            let name = ele.find('option:selected').val();
+            if(field_type == 'initials') {
+                let initials_array = name.match(/\b(\w)/g);
+                name = initials_array.join('');
+            }
+            container.find('.field-div-name').text(name);
+            $('#active_signer').val(name);
         }
 
         function set_and_get_field_coordinates(e, ele, existing, field_type) {
@@ -321,10 +428,10 @@ if(document.URL.match(/esign_add_fields/)) {
             }, 10);
 
             return {
-                h: h_perc,
-                w: w_perc,
-                x: x_perc,
-                y: y_perc
+                h_perc: h_perc,
+                w_perc: w_perc,
+                x_perc: x_perc,
+                y_perc: y_perc
             }
 
         }

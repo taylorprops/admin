@@ -4,19 +4,15 @@ namespace App\Models\Esign;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EsignDocuments extends Model
+class EsignDocumentsImages extends Model
 {
-    public $table = 'esign_documents';
+    public $table = 'esign_documents_images';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];
 
     public function images() {
         return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'id');
-    }
-
-    public function fields() {
-        return $this -> hasMany('App\Models\Esign\EsignFields', 'document_id', 'id');
     }
 
 }

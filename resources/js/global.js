@@ -1,5 +1,6 @@
 import datepicker from 'js-datepicker';
 
+
 // check for duplicate ids
 /* setTimeout(function() {
     $('[id]').each(function(){
@@ -11,20 +12,6 @@ import datepicker from 'js-datepicker';
 }, 3000); */
 
 $(function() {
-
-    (function($){
-        var originalVal = $.fn.val;
-        $.fn.val = function(){
-            var prev;
-            if(arguments.length > 0){
-                prev = originalVal.apply(this,[]);
-            }
-            var result = originalVal.apply(this,arguments);
-            if(arguments.length > 0 && prev != originalVal.apply(this,[]))
-                $(this).change();
-            return result;
-        };
-    })(jQuery);
 
 
 
@@ -531,10 +518,10 @@ window.global_fmtssn = function (socInput) {
 PURPOSE: remove duplicates from array
 USAGE:
 group_ids = ['a', 'b', 'c', 'c'];
-group_ids = group_ids.filter(global_filter_array);
+group_ids = group_ids.filter(global_array_unique);
 */
 
-window.global_filter_array = function (value, index, self) {
+window.global_array_unique = function (value, index, self) {
     return self.indexOf(value) === index;
 }
 

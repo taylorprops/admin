@@ -84,7 +84,7 @@ if (document.URL.match(/transaction_details/)) {
         let Referral_ID = $('#Referral_ID').val() > 0 ? $('#Referral_ID').val() : 0;
         let transaction_type = $('#transaction_type').val();
         let Agent_ID = $('#Agent_ID').val();
-        let User_ID = '0';
+        let User_ID = $('#User_ID').val();
         let document_ids = [];
         if(ele.data('document-id')) {
             document_ids.push(ele.data('document-id'));
@@ -96,7 +96,7 @@ if (document.URL.match(/transaction_details/)) {
 
         document_ids = document_ids.join(',');
 
-        window.open('/esign/esign_add_fields/'+User_ID+'/'+document_ids+'/'+Agent_ID+'/'+Listing_ID+'/'+Contract_ID+'/'+Referral_ID+'/'+transaction_type, '_blank');
+        window.open('/esign/esign_add_documents/'+User_ID+'/'+document_ids+'/'+Agent_ID+'/'+Listing_ID+'/'+Contract_ID+'/'+Referral_ID+'/'+transaction_type, '_blank');
 
     }
 

@@ -13387,8 +13387,8 @@ a.ck.ck-button {
 }
 
 .modal .modal-dialog .modal-content .modal-header {
-  border-top-left-radius: 0.3rem !important;
-  border-top-right-radius: 0.3rem !important;
+  border-top-left-radius: 0.2rem !important;
+  border-top-right-radius: 0.2rem !important;
 }
 
 .modal .modal-dialog {
@@ -13430,11 +13430,15 @@ a.ck.ck-button {
   color: #fff !important;
 }
 
+.modal .modal-body {
+  padding: 2rem;
+}
+
 .modal .modal-dialog .modal-content {
-  border-top-left-radius: 0.4rem !important;
-  border-top-right-radius: 0.4rem !important;
-  border-bottom-left-radius: 0.4rem !important;
-  border-bottom-right-radius: 0.4rem !important;
+  border-top-left-radius: 0.2rem !important;
+  border-top-right-radius: 0.2rem !important;
+  border-bottom-left-radius: 0.2rem !important;
+  border-bottom-right-radius: 0.2rem !important;
   border: 2px solid #f8fcff !important;
 }
 
@@ -15442,12 +15446,12 @@ header .main-search-input::placeholder {
 }
 
 .page-files .list-group-container {
-  max-height: 78VH;
+  max-height: 83VH;
   overflow: auto;
 }
 
 .page-files .list-group-divs {
-  max-height: 66.5VH;
+  max-height: 73VH;
   overflow: auto;
 }
 
@@ -17650,6 +17654,10 @@ header .main-search-input::placeholder {
   background: #f8fcff;
 }
 
+.page-esign-add-documents .file-image {
+  max-height: 50px;
+}
+
 .page-esign-add-fields {
   overflow-x: hidden;
 }
@@ -17761,6 +17769,7 @@ header .main-search-input::placeholder {
   display: block;
   z-index: 3;
   background: rgba(223, 121, 53, 0.3);
+  cursor: pointer;
   /* .ui-resizable-e {
       bottom: 5px;
       right: -20px;
@@ -17785,6 +17794,15 @@ header .main-search-input::placeholder {
   } */
 }
 
+.page-esign-add-fields .field-div .field-html {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .page-esign-add-fields .field-div .field-options-holder {
   position: absolute;
   left: 0px;
@@ -17804,7 +17822,7 @@ header .main-search-input::placeholder {
   left: 0px;
   right: auto;
   bottom: -140px;
-  width: 170px;
+  width: 270px;
   background: #4c9bdb;
   color: #fff;
 }

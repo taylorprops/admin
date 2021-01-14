@@ -56,7 +56,7 @@ class TransactionChecklistItemsDocs extends Model
         foreach (glob($destination.'/*') as $file) {
 
             $order = 0;
-            if(preg_match('/-([0-9]+)\.jpg/', $file, $match)) {
+            if(preg_match('/page_([0-9]+)\.jpg/', $file, $match)) {
                 $order = $match[1];
             }
             $page_number = $order + 1;

@@ -2218,13 +2218,13 @@ class TransactionsDetailsController extends Controller {
             $file_name_display = preg_replace('/-/', ' ', $file_name_remove_numbers);
             $file_name_no_ext = str_replace('.' . $ext, '', $file_name_remove_numbers);
             $clean_file_name = sanitize($file_name_no_ext);
-            $new_file_name = $clean_file_name . '.' . $ext;
+            $new_file_name = date('YmdHis') . '_' . $clean_file_name . '.' . $ext;
 
             // convert to pdf if image
             if($ext != 'pdf') {
                 $new_file_name = date('YmdHis') . '_' . $clean_file_name . '.pdf';
                 $file_name_display = $file_name_no_ext . '.pdf';
-                $create_images = exec('convert -quality 100 -density 300 -page letter ' . $file . ' /tmp/' . $new_file_name, $output, $return);
+                $create_images = exec('convert -quality 80 -density 200 -page letter ' . $file . ' /tmp/' . $new_file_name, $output, $return);
                 $file = '/tmp/' . $new_file_name;
             }
 
@@ -2337,7 +2337,7 @@ class TransactionsDetailsController extends Controller {
             exec('rm ' . $storage_path . '/' . $storage_dir_pages . '/doc_data.txt');
 
             // add individual images to images directory
-            $create_images = exec('convert -density 300 -quality 100 ' . $input_file . ' -background white -alpha remove -strip ' . $output_images, $output, $return);
+            $create_images = exec('convert -density 200 -quality 80 ' . $input_file . ' -background white -alpha remove -strip ' . $output_images, $output, $return);
 
             // get all image files images_storage_path to use as file location
             $saved_images_directory = Storage::files('public/' . $storage_dir . '/images');
@@ -3064,7 +3064,7 @@ class TransactionsDetailsController extends Controller {
 
         $new_file_name = str_replace('.pdf', '', $check -> getClientOriginalName());
         $new_file_name = date('YmdHis').'_'.sanitize($new_file_name).'.png';
-        exec('convert -density 300 -quality 100 '.$check.'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path('tmp/'.$new_file_name));
+        exec('convert -density 200 -quality 80 '.$check.'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path('tmp/'.$new_file_name));
 
         $text = (new TesseractOCR(Storage::disk('public') -> path('tmp/'.$new_file_name)))
             -> run();
@@ -3189,7 +3189,7 @@ class TransactionsDetailsController extends Controller {
         $image_location = '/storage/commission/'.$path.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_image_name));
 
         if($page == 'details') {
 
@@ -3324,7 +3324,7 @@ class TransactionsDetailsController extends Controller {
         $image_location = '/storage/commission/checks_out/'.$Commission_ID.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_image_name));
 
         $add_check = new CommissionChecksOut();
         $add_check -> Commission_ID = $Commission_ID;
@@ -3666,7 +3666,7 @@ class TransactionsDetailsController extends Controller {
         $image_location = '/storage/'.$path.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 300 -quality 100 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path($path.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path($path.'/'.$new_image_name));
 
         $add_earnest = new EarnestChecks();
         $add_earnest -> Earnest_ID = $Earnest_ID;

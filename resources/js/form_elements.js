@@ -1,3 +1,5 @@
+let validate_email = require('email-validator');
+
 setInterval(function() {
     $('.custom-form-element').each(function() {
         if($(this).closest('.form-ele').length == 0) {
@@ -5,6 +7,22 @@ setInterval(function() {
         }
     });
 }, 100);
+
+// trigger change on any input changes
+(function($){
+    let originalVal = $.fn.val;
+    $.fn.val = function() {
+        let prev;
+        if(arguments.length > 0) {
+            prev = originalVal.apply(this,[]);
+        }
+        let result = originalVal.apply(this,arguments);
+        if(arguments.length > 0 && prev != originalVal.apply(this,[])) {
+            $(this).change();
+        }
+        return result;
+    };
+})(jQuery);
 
 // FORM INPUT CHANGES
 $(document).on('change', '.custom-form-element', function() {
@@ -58,7 +76,7 @@ $(document).on('change', '.custom-file-input', function() {
 
 window.form_elements = function () {
 
-    console.log('form_elements');
+    //console.log('form_elements');
     /*
     Element classes
     input | .form-input
@@ -246,6 +264,9 @@ window.form_elements = function () {
 
                                 let selected = '';
                                 let text = option.text();
+                                /* if(option.data('html')) {
+                                    text = option.data('html');
+                                } */
 
                                 if (option.prop('selected') == true || option.prop('selected') == 'selected') {
                                     selected = 'active';
@@ -362,7 +383,7 @@ window.form_elements = function () {
                                 element.val(value);
                                 element.trigger('change');
 
-                                // reset_select();
+
                             } else {
                                 set_multiple_select($(this));
                             }
@@ -682,10 +703,13 @@ window.validate_form = function (form, debug = false) {
     $('.invalid-label').removeClass('invalid-label');
     $('.invalid-input').removeClass('invalid-input');
 
+    let invalid_email = 'no';
+
     form.find('.required').each(function () {
 
         let ele, classname, ele_name;
         let required = $(this);
+
 
         if (required.hasClass('form-radio')) {
 
@@ -711,7 +735,7 @@ window.validate_form = function (form, debug = false) {
                 ele.removeClass(classname);
             }
 
-        } else if (required.hasClass('form-input')) {
+        } else if (required.hasClass('form-input') || required.hasClass('form-textarea')) {
 
             ele = required;
             classname = 'invalid invalid-input';
@@ -721,6 +745,15 @@ window.validate_form = function (form, debug = false) {
                 pass = 'no';
             } else {
                 ele.removeClass(classname);
+            }
+
+            if(required.attr('type') == 'email') {
+                if(!validate_email.validate(required.val())) {
+                    ele.addClass(classname);
+                    ele.next('label').addClass('invalid-label');
+                    pass = 'no';
+                    invalid_email = 'yes';
+                }
             }
 
         } else if (required.hasClass('form-select')) {
@@ -733,7 +766,7 @@ window.validate_form = function (form, debug = false) {
                     has_val = 'yes';
                 }
             } else {
-                if (required.val() != '' || required.find('option:selected').length > 0) {
+                if (required.val() != '' || (required.find('option:selected').length > 0 && required.val() != '')) {
                     has_val = 'yes';
                 }
             }
@@ -777,9 +810,13 @@ window.validate_form = function (form, debug = false) {
 
         $('html, body').animate({
             scrollTop: invalid_focus.offset().top - 140
-        }, 800);
+        }, 200);
 
-        toastr['error']('All Required Fields Must Be Completed');
+        if(invalid_email == 'yes') {
+            toastr['error']('All Required Fields Must Be Completed and Email Address is Invalid');
+        } else {
+            toastr['error']('All Required Fields Must Be Completed');
+        }
 
         if(debug == true) {
             console.log('Invalid field: '+invalid_focus.prop('id'));

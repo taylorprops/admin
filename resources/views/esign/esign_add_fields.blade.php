@@ -8,7 +8,7 @@
 
         <div class="col-12">
 
-            <div class="form-options-container w-100 d-flex justify-content-between">
+            <div class="form-options-container w-100 d-flex justify-content-between align-items-center">
 
                 <div class="d-flex justify-content-start align-items-center">
 
@@ -29,10 +29,10 @@
                         </a>
                     </div>
 
-                    <div class="form-options-div ml-5">
-                        <button class="btn btn-success fill-form-option" id="next_button"><i class="fal fa-arrow-right fa-lg"></i><br>Next</button>
-                    </div>
+                </div>
 
+                <div class="mr-4">
+                    <button class="btn btn-success fill-form-option font-11" id="send_for_signatures_button">Send for Signatures <i class="fal fa-share-all ml-2"></i></button>
                 </div>
 
             </div>
@@ -54,7 +54,7 @@
                         @foreach($documents as $document)
 
                             @php
-                            $images = $document -> images_converted;
+                            $images = $document -> images;
                             $total_pages = count($images);
                             $active = $loop -> first ? 'active' : '';
                             @endphp
@@ -63,16 +63,16 @@
 
                                 @php
                                 $c = $image -> page_number;
-                                $page_id = $document -> file_id.'_'.$c;
+                                $page_id = $document -> id.'_'.$c;
                                 @endphp
 
                                 <div class="h5 bg-primary p-2 text-center mb-0" id="page_{{ $page_id }}">
                                     <span class="badge text-white font-10">Page <?php echo $c.' of '.$total_pages; ?></span>
                                 </div>
-                                <div class="file-view-page-container border border-primary w-100 {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> file_id }}">
+                                <div class="file-view-page-container border border-primary w-100 {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}">
                                     <div class="fields-container w-100 h-100">
 
-                                        <img class="file-image-bg w-100 h-100" src="{{ $image -> file_location }}?r={{ date('YmdHis') }}">
+                                        <img class="file-image-bg w-100 h-100" src="{{ $image -> image_location }}?r={{ date('YmdHis') }}">
 
                                     </div>
                                 </div>
@@ -98,10 +98,10 @@
 
                     @foreach($documents as $document)
 
-                    <div class="text-primary small @if(!$loop -> first) border-top @endif py-2 text-center">{{ $document -> file_name_display }}</div>
+                    <div class="text-primary small @if(!$loop -> first) border-top @endif py-2 text-center">{{ $document -> file_name }}</div>
 
                     @php
-                    $images = $document -> images_converted;
+                    $images = $document -> images;
                     $active_doc = $loop -> first ? 'active' : '';
                     @endphp
 
@@ -109,7 +109,7 @@
 
                             @php
                             $c = $image -> page_number;
-                            $page_id = $document -> file_id.'_'.$c;
+                            $page_id = $document -> id.'_'.$c;
                             if($active_doc != '') {
                                 $active = '';
                                 if($loop -> first) {
@@ -119,7 +119,7 @@
                             @endphp
                             <div class="file-view-thumb-container mb-2 mx-auto {{ $active }}" id="thumb_{{ $page_id }}" data-id="{{ $page_id }}">
                                 <div class="file-view-thumb">
-                                    <a href="javascript: void(0)"><img class="file-thumb w-100 h-100" src="{{ $image -> file_location }}?r={{ date('YmdHis') }}"></a>
+                                    <a href="javascript: void(0)"><img class="file-thumb w-100 h-100" src="{{ $image -> image_location }}?r={{ date('YmdHis') }}"></a>
                                 </div>
                                 <div class="file-view-thumb-footer text-center mb-1">
                                     Page {{ $c }}
@@ -139,11 +139,36 @@
 
 </div>
 
-<input type="hidden" id="Listing_ID" value="{{ $Listing_ID }}">
-<input type="hidden" id="Contract_ID" value="{{ $Contract_ID }}">
-<input type="hidden" id="Referral_ID" value="{{ $Referral_ID }}">
-<input type="hidden" id="transaction_type" value="{{ $transaction_type }}">
-<input type="hidden" id="Agent_ID" value="{{ $Agent_ID }}">
-<input type="hidden" id="document_ids" value="{{ implode(',', $document_ids) }}">
+<div class="hidden" id="signer_options_html">{!! implode(' ', $signers_options) !!}</div>
+
+<input type="hidden" id="envelope_id" value="{{ $envelope_id }}">
 <input type="hidden" id="active_page" value="1">
+<input type="hidden" id="active_signer" value="">
+
+<div class="modal fade draggable" id="send_for_signatures_modal" tabindex="-1" role="dialog" aria-labelledby="send_for_signatures_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="send_for_signatures_modal_title">Send For Signatures</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="send_for_signatures_form">
+
+                    <div class="h5 text-gray mb-4">Email Details</div>
+
+                    <input type="text" class="custom-form-element form-input required mb-3" id="envelope_subject" data-label="Subject">
+
+                    <textarea class="custom-form-element form-textarea required" rows="8" id="envelope_message" data-label="Message"></textarea>
+
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-lg btn-success" id="save_send_for_signatures_button" data-dismiss"modal">Send <i class="fal fa-share-all ml-2"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

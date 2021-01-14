@@ -108,6 +108,7 @@
     <input type="hidden" id="Contract_ID" value="{{ $property -> Contract_ID }}">
     <input type="hidden" id="Referral_ID" value="{{ $property -> Referral_ID }}">
     <input type="hidden" id="Agent_ID" value="{{ $property -> Agent_ID }}">
+    <input type="hidden" id="User_ID" value="{{ auth() -> user() -> id }}">
     <input type="hidden" id="Commission_ID" value="{{ $property -> Commission_ID }}">
     <input type="hidden" id="transaction_type" value="{{ $transaction_type }}">
     <input type="hidden" id="questions_confirmed" value="{{ $questions_confirmed }}">
@@ -973,7 +974,7 @@
 <div class="modal fade draggable" id="confirm_matches_modal" tabindex="-1" role="dialog" aria-labelledby="matches_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="matches_title">Matches Found</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1169,7 +1170,7 @@
 <div class="modal fade draggable" id="add_check_in_modal" tabindex="-1" role="dialog" aria-labelledby="add_check_in_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl-1400" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_check_in_modal_title">Add Check In - <span id="add_check_in_address"></span></h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1245,7 +1246,7 @@
 <div class="modal fade draggable" id="edit_check_in_modal" tabindex="-1" role="dialog" aria-labelledby="edit_check_in_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_check_in_modal_title">Edit Check</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1300,7 +1301,7 @@
 <div class="modal fade draggable" id="add_check_out_modal" tabindex="-1" role="dialog" aria-labelledby="add_check_out_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_check_out_modal_title">Add Check Out</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1421,7 +1422,7 @@
 <div class="modal fade draggable" id="edit_check_out_modal" tabindex="-1" role="dialog" aria-labelledby="edit_check_out_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_check_out_modal_title">Edit Check</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1541,7 +1542,7 @@
 <div class="modal fade draggable" id="add_earnest_check_modal" tabindex="-1" role="dialog" aria-labelledby="add_earnest_check_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_earnest_check_modal_title">Add Check</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1622,7 +1623,7 @@
 <div class="modal fade draggable" id="edit_earnest_check_modal" tabindex="-1" role="dialog" aria-labelledby="edit_earnest_check_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_earnest_check_modal_title">Add Check</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1932,7 +1933,7 @@
 <div class="modal fade draggable" id="cancel_listing_modal" tabindex="-1" role="dialog" aria-labelledby="cancel_listing_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="cancel_listing_modal_title">cancel Listing</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1956,7 +1957,7 @@
 <div class="modal fade draggable" id="confirm_undo_cancel_modal" tabindex="-1" role="dialog" aria-labelledby="undo_cancel_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="undo_cancel_title">Undo Release/Cancellation</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>
@@ -1983,7 +1984,7 @@
 <div class="modal fade draggable" id="cancel_contract_modal" tabindex="-1" role="dialog" aria-labelledby="cancel_contract_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary draggable-handle">
+            <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="cancel_contract_modal_title">Cancel {{ $for_sale ? 'Contract' : 'Lease' }}</h4>
                 <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times mt-2"></i>

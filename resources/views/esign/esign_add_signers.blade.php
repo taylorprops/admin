@@ -2,11 +2,264 @@
 @section('title', 'E-Sign - Add Signers')
 
 @section('content')
-<div class="container page-container page-esign-add-signers">
-    <div class="row">
-        <div class="col-12">
-test
+
+<div class="container-1000 page-container mt-5 mx-auto page-esign-add-signers">
+
+    <div class="h2 text-primary">E-Sign</div>
+
+    <div class="row mt-5">
+
+        <div class="col-12 col-sm-10">
+
+            <div class="h4 text-orange">Select Signers and Order To Sign</div>
+
+            {{-- Signers --}}
+
+            <button class="btn btn-primary my-4" type="button" data-toggle="collapse" data-target="#add_signer_div" aria-expanded="false" aria-controls="add_signer_div">
+                <i class="fal fa-plus mr-2"></i> Add Signer
+            </button>
+
+
+            <div class="collapse" id="add_signer_div">
+
+                <div class="p-3 border rounded">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="h5 text-primary">Add Signer</div>
+                        <div>
+                            <button class="btn btn-sm btn-danger" data-toggle="collapse" data-target="#add_signer_div" aria-expanded="false" aria-controls="add_signer_div">
+                                <i class="fal fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        @if($members)
+
+                            <div class="col-12 col-sm-5 select-signer-div">
+
+                                <span class="text-gray">Select From Transaction Members</span>
+                                <select class="custom-form-element form-select form-select-no-search signer-select add-signer-field" data-type="signer" data-label="Select Member">
+                                    <option value=""></option>
+                                    @foreach($members as $member)
+                                        @php $member_type = $resource_items -> getResourceName($member -> member_type_id); @endphp
+                                        <option value="{{ $member -> id }}"
+                                            data-name="{{ $member -> first_name.' '.$member -> last_name }}"
+                                            data-email="{{ $member -> email }}"
+                                            data-member-type="{{ $member_type }}">{{ $member_type }} - @if($member -> first_name != ''){{ $member -> first_name.' '.$member -> last_name }}@else{{ $member -> company }}@endif</option>
+                                    @endforeach
+                                </select>
+
+                                <div class="signer-select-fields hidden">
+                                    <input type="hidden" class="add-signer-name">
+                                    <input type="email" class="custom-form-element form-input add-signer-email add-signer-field" data-label="Email">
+                                    <select class="custom-form-element form-select form-select-no-search add-signer-role add-signer-field" data-label="Role">
+                                        <option value=""></option>
+                                        <option value="Other">Other</option>
+                                        <option value="Seller">Seller</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Listing Agent">Listing Agent</option>
+                                        <option value="Buyer Agent">Buyer Agent</option>
+                                        <option value="Broker">Broker</option>
+                                        <option value="Co Agent">Co Agent</option>
+                                        <option value="Loan Officer">Loan Officer</option>
+                                        <option value="Title Rep">Title Rep</option>
+                                        <option value="Attorney">Attorney</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 col-sm-2 mt-3 text-primary font-12 font-weight-bold text-center">Or</div>
+
+                        @endif
+
+
+                        <div class="col-12 col-sm-5 add-signer-fields">
+
+                            @if($members)<span class="text-gray">Add New</span>@endif
+
+                            <input type="text" class="custom-form-element form-input add-signer-name add-signer-field" data-label="Name">
+                            <input type="email" class="custom-form-element form-input add-signer-email add-signer-field" data-label="Email">
+                            <select class="custom-form-element form-select form-select-no-search add-signer-role add-signer-field" data-label="Role">
+                                <option value=""></option>
+                                <option value="Other">Other</option>
+                                <option value="Seller">Seller</option>
+                                <option value="Buyer">Buyer</option>
+                                <option value="Listing Agent">Listing Agent</option>
+                                <option value="Buyer Agent">Buyer Agent</option>
+                                <option value="Broker">Broker</option>
+                                <option value="Co Agent">Co Agent</option>
+                                <option value="Loan Officer">Loan Officer</option>
+                                <option value="Title Rep">Title Rep</option>
+                                <option value="Attorney">Attorney</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-around w-100">
+
+                                <button class="btn btn-success save-add-user" data-type="signer" type="button">
+                                    <i class="fal fa-save mr-2"></i> Add Signer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="signers-container list-group p-4 mt-2 border rounded">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="h4 text-primary">Selected Signers</div>
+                    <div class="text-orange font-10">
+                        Use the bars <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- Recipients --}}
+
+            <button class="btn btn-primary my-4" type="button" data-toggle="collapse" data-target="#add_recipient_div" aria-expanded="false" aria-controls="add_recipient_div">
+                <i class="fal fa-plus mr-2"></i> Add Recipient
+            </button>
+
+
+            <div class="collapse" id="add_recipient_div">
+
+                <div class="p-3 border rounded">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="h5 text-primary">Add Recipient</div>
+                        <div>
+                            <button class="btn btn-sm btn-danger" data-toggle="collapse" data-target="#add_recipient_div" aria-expanded="false" aria-controls="add_recipient_div">
+                                <i class="fal fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        @if($members)
+
+                            <div class="col-12 col-sm-5 select-recipient-div">
+
+                                <span class="text-gray">Select From Transaction Members</span>
+                                <select class="custom-form-element form-select form-select-no-search recipient-select add-recipient-field" data-type="recipient" data-label="Select Member">
+                                    <option value=""></option>
+                                    @foreach($members as $member)
+                                        @php $member_type = $resource_items -> getResourceName($member -> member_type_id); @endphp
+                                        <option value="{{ $member -> id }}"
+                                            data-name="{{ $member -> first_name.' '.$member -> last_name }}"
+                                            data-email="{{ $member -> email }}"
+                                            data-member-type="{{ $member_type }}">{{ $member_type }} - @if($member -> first_name != ''){{ $member -> first_name.' '.$member -> last_name }}@else{{ $member -> company }}@endif</option>
+                                    @endforeach
+                                </select>
+
+                                <div class="recipient-select-fields hidden">
+                                    <input type="hidden" class="add-recipient-name">
+                                    <input type="email" class="custom-form-element form-input add-recipient-email add-recipient-field" data-label="Email">
+                                    <select class="custom-form-element form-select form-select-no-search add-recipient-role add-recipient-field" data-label="Role">
+                                        <option value=""></option>
+                                        <option value="Other">Other</option>
+                                        <option value="Seller">Seller</option>
+                                        <option value="Buyer">Buyer</option>
+                                        <option value="Listing Agent">Listing Agent</option>
+                                        <option value="Buyer Agent">Buyer Agent</option>
+                                        <option value="Broker">Broker</option>
+                                        <option value="Co Agent">Co Agent</option>
+                                        <option value="Loan Officer">Loan Officer</option>
+                                        <option value="Title Rep">Title Rep</option>
+                                        <option value="Attorney">Attorney</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 col-sm-2 mt-3 text-primary font-12 font-weight-bold text-center">Or</div>
+
+                        @endif
+
+
+                        <div class="col-12 col-sm-5 add-recipient-fields">
+
+                            @if($members)<span class="text-gray">Add New</span>@endif
+
+                            <input type="text" class="custom-form-element form-input add-recipient-name add-recipient-field" data-label="Name">
+                            <input type="email" class="custom-form-element form-input add-recipient-email add-recipient-field" data-label="Email">
+                            <select class="custom-form-element form-select form-select-no-search add-recipient-role add-recipient-field" data-label="Role">
+                                <option value=""></option>
+                                <option value="Other">Other</option>
+                                <option value="Seller">Seller</option>
+                                <option value="Buyer">Buyer</option>
+                                <option value="Listing Agent">Listing Agent</option>
+                                <option value="Buyer Agent">Buyer Agent</option>
+                                <option value="Broker">Broker</option>
+                                <option value="Co Agent">Co Agent</option>
+                                <option value="Loan Officer">Loan Officer</option>
+                                <option value="Title Rep">Title Rep</option>
+                                <option value="Attorney">Attorney</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-around w-100">
+                                <button class="btn btn-success save-add-user" data-type="recipient" type="button">
+                                    <i class="fal fa-save mr-2"></i> Add Recipient
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="recipients-container list-group p-4 mt-2 border rounded">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="h4 text-primary">Selected Recipients</div>
+                    <div class="text-orange font-10">
+                        Use the bars <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+                    </div>
+                </div>
+
+            </div>
+
+
         </div>
+
+        <div class="col-12 col-sm-2">
+
+            <div class="mt-4 pt-4 next-div hidden">
+                <a href="javascript: void(0)" class="btn btn-success btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+            </div>
+
+        </div>
+
     </div>
+
 </div>
+
+<input type="hidden" id="envelope_id" value="{{ $envelope_id }}">
 @endsection

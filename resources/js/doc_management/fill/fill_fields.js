@@ -424,7 +424,7 @@ if (document.URL.match(/create\/fill_fields/)) {
                 $(this).find('.field-div').each(function () {
                     group_ids.push($(this).data('group-id'));
                 });
-                group_ids = group_ids.filter(global_filter_array);
+                group_ids = group_ids.filter(global_array_unique);
                 // get all field names and add to field list
                 $.each(group_ids, function (index, group_id) {
                     let group = $('.group_' + group_id);
