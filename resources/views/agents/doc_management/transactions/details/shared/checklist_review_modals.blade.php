@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a href="javascript: void(0);" class="btn btn-lg btn-primary email-agent-docs-complete" data-dismiss="modal"><i class="fal fa-envelope mr-2"></i> Notify Agent</a>
+                <a href="javascript: void(0);" class="btn btn-lg btn-primary email-agent-docs-complete" data-dismiss="modal"><i class="fad fa-envelope mr-2"></i> Notify Agent</a>
             </div>
         </div>
     </div>
@@ -106,8 +106,8 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="send_email_agent_button"><i class="fad fa-share mr-2"></i> Send Message</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary" id="send_email_agent_button"><i class="fad fa-share mr-2"></i> Send Message</a>
             </div>
         </div>
     </div>
@@ -140,8 +140,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_remove_checklist_item_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_remove_checklist_item_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -218,7 +218,7 @@
                                                                     <div title="{{ $form -> file_name_display }}">
                                                                         <a href="{{ $form -> file_location }}" class="btn btn-sm btn-primary mr-2 form-link" target="_blank">View</a>
                                                                         <a href="javascript: void(0)" class="btn btn-sm btn-primary mr-2">Select</a>
-                                                                        <span class="d-none checked-div mr-3"><i class="fa fa-check-circle text-success"></i></span>
+                                                                        <span class="d-none checked-div mr-3"><i class="fal fa-check-circle text-success"></i></span>
                                                                         <span class="text-primary form-name-display">{{ $form -> file_name_display }}</span>
                                                                     </div>
                                                                     <div>
@@ -253,8 +253,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_add_checklist_item_button" data-toggle="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_add_checklist_item_button" data-toggle="modal"><i class="fad fa-save mr-2"></i> Save Checklist Item</a>
             </div>
         </div>
     </div>
@@ -272,29 +271,35 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <div class="rejected-reasons-container">
+                        <div class="rejected-reasons-container text-gray">
                             <form id="rejected_reason_form">
-                                Enter the reason you are rejecting the documents for this checklist item<br>
-                                <input type="text" class="custom-form-element form-input required" id="rejected_reason" placeholder="Enter Reason Rejected">
-                                Or select from the list below
-                                <div class="rejected-reasons-div list-group w-100">
+
+                                <div class="h5 text-orange">Why is this document being rejected?</div>
+
+                                <div class="my-2">Select from the list below</div>
+
+                                <div class="rejected-reasons-div list-group w-100 mb-2">
                                     @foreach($rejected_reasons as $rejected_reason)
                                         <div class="list-group-item list-group-item-action rejected-reason" data-reason="{{ $rejected_reason -> resource_name }}">
                                             <div class="d-flex justify-content-start align-items-center">
-                                                <div class="rejected-selected text-success d-none"><i class="fad fa-check-circle"></i></div>
+                                                <div class="rejected-selected text-success d-none"><i class="fal fa-check-circle"></i></div>
                                                 <div class="ml-3"><a href="javascript:void(0)" class="w-100">{{ $rejected_reason -> resource_name }}</a></div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
+
+                                <span  class="mb-2">Or enter the reason<br>
+
+                                <input type="text" class="custom-form-element form-input required" id="rejected_reason" placeholder="Enter Reason Rejected">
+
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_reject_document_button"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_reject_document_button"><i class="fad fa-save mr-2"></i> Save Rejection Reason</a>
             </div>
         </div>
     </div>

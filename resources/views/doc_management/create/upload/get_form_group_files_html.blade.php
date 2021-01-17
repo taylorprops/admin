@@ -40,7 +40,7 @@ $show_title = false;
 
                     @if($file -> published == 'yes')
 
-                        <span class="badge @if($file -> active == 'yes') badge-success @else badge-danger @endif text-white" data-toggle="tooltip" data-html="true" title="Fields for this form can no longer be edited and the from can no longer be deleted"><i class="fad @if($file -> active == 'yes') fa-check @else fa-ban @endif mr-2"></i> Published</span>
+                        <span class="badge @if($file -> active == 'yes') badge-success @else badge-danger @endif text-white" data-toggle="tooltip" data-html="true" title="Fields for this form can no longer be edited and the from can no longer be deleted"><i class="fal @if($file -> active == 'yes') fa-check @else fa-ban @endif mr-2"></i> Published</span>
 
                         <div>
                             <div class="badge @if($checklist_count > 0) badge-primary text-white @else bg-blue-light text-orange @endif" data-toggle="tooltip" data-html="true" title="Found in {{ $checklist_count }} checklists">
@@ -52,7 +52,7 @@ $show_title = false;
 
                     @if($file -> file_location != '')
 
-                        <a href="/doc_management/create/add_fields/{{ $file -> file_id }}" class="btn btn-sm btn-primary ml-0 add-edit-button" title="Add fields to the form" target="_blank">@if($file -> published == 'no')<i class="fal fa-plus mr-2"></i> Add/Edit @else <i class="fal fa-eye mr-2"></i> View @endif Fields</a>
+                        <a href="/doc_management/create/add_fields/{{ $file -> file_id }}" class="btn btn-sm btn-primary ml-0 add-edit-button" title="Add fields to the form" target="_blank">@if($file -> published == 'no')<i class="fal fa-plus mr-2"></i> Add/Edit @else <i class="fad fa-eye mr-2"></i> View @endif Fields</a>
 
                         @if($file -> published == 'no')
                             <div>

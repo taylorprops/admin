@@ -4,7 +4,7 @@
 
             <div class="row members-list-group">
                 <div class="col-12 col-lg-4">
-                    <a href="javascript: void(0)" id="add_member_button" class="btn btn-success"><i class="fa fa-plus mr-2"></i> Add Member</a>
+                    <a href="javascript: void(0)" id="add_member_button" class="btn btn-primary"><i class="fal fa-plus mr-2"></i> Add Member</a>
                     <div class="list-group my-3 border-top
                     " id="members_tab_section" role="tablist">
                         <a class="list-group-item list-group-item-action hide font-weight-bold" id="add_member_group" data-toggle="list" href="#add_member_div" role="tab">New Contact</a>
@@ -161,7 +161,7 @@
                                     <div class="row">
                                         <div class="col-12 text-center">
                                             @if($disabled == '')
-                                            <a href="javascript: void(0)" class="btn btn-lg btn-success save-member-button font-11 p-3 mt-3"><i class="fad fa-save mr-2"></i> Save Details</a>
+                                            <a href="javascript: void(0)" class="btn btn-lg btn-primary save-member-button font-11 p-3 mt-3"><i class="fad fa-save mr-2"></i> Save Details</a>
                                             @endif
                                         </div>
                                     </div>

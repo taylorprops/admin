@@ -357,7 +357,7 @@ if(document.URL.match(/document_review/)) {
     function close_checklist() {
         $('.checklist-items-container').addClass('animate__animated animate__fadeOut').hide();
         $('.documents-div').children().addClass('animate__animated animate__bounceOutDown');
-        $('.documents-div').html('<div class="h1 text-primary w-100 text-center mt-5 pt-5"><i class="fa fa-arrow-left mr-2"></i> To Begin Select A Property</div>');
+        $('.documents-div').html('<div class="h1 text-primary w-100 text-center mt-5 pt-5"><i class="fal fa-arrow-left mr-2"></i> To Begin Select A Property</div>');
         $('.details-div').children().addClass('animate__animated animate__fadeOut');
         cancel_search_properties();
     }

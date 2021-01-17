@@ -34,7 +34,7 @@ if(auth() -> user() -> group == 'agent') {
                                         Enter Property Address
                                         @if($transaction_type != 'referral')
                                         <span class="text-orange font-normal">
-                                            <a href=".mls-container" class="text-orange font-9" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".mls-container"> <i class="fad fa-arrows-alt-h mx-3"></i> or Use MLS ID Search</a>
+                                            <a href=".mls-container" class="text-orange font-9" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".mls-container"> <i class="fal fa-arrows-alt-h mx-3"></i> or Use MLS ID Search</a>
                                         </span>
                                         @endif
                                     </div>
@@ -53,7 +53,7 @@ if(auth() -> user() -> group == 'agent') {
                             </div>
                         </div>
                         <div class="address-search-continue-div text-center my-4 hide">
-                            <a class="btn btn-success btn-lg py-3 px-5" id="address_search_continue" @if($transaction_type != 'referral') href=".property-container" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".property-container" @else  href="javascript: void(0)" @endif>Continue <i class="fa fa-arrow-circle-right ml-3"></i></a>
+                            <a class="btn btn-primary btn-lg py-3 px-5" id="address_search_continue" @if($transaction_type != 'referral') href=".property-container" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".property-container" @else  href="javascript: void(0)" @endif>Continue <i class="fal fa-arrow-circle-right ml-3"></i></a>
                         </div>
                         <div class="h5 text-center mt-4">
                             <a href=".address-container" id="enter_manually_button" class="btn btn-sm btn-secondary" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".address-container">Or Enter Manually</a>
@@ -115,8 +115,8 @@ if(auth() -> user() -> group == 'agent') {
                             </div>
                         </div>
                         <div class="address-enter-continue-div text-center my-4">
-                            <button id="address_enter_continue" class="btn btn-success btn-lg py-3 px-5" type="button" @if($transaction_type != 'referral') data-toggle="collapse" data-target=".property-container" aria-expanded="false" aria-controls="address_search_container address_enter_container" @endif disabled>
-                                Continue <i class="fa fa-arrow-circle-right ml-3"></i>
+                            <button id="address_enter_continue" class="btn btn-primary btn-lg py-3 px-5" type="button" @if($transaction_type != 'referral') data-toggle="collapse" data-target=".property-container" aria-expanded="false" aria-controls="address_search_container address_enter_container" @endif disabled>
+                                Continue <i class="fal fa-arrow-circle-right ml-3"></i>
                             </button>
                         </div>
                     </form>
@@ -135,7 +135,7 @@ if(auth() -> user() -> group == 'agent') {
                                 <div class="h5 text-gray">
                                     Enter MLS ID
                                     <span class="text-orange font-normal">
-                                        <a href=".mls-container" class="text-orange font-9" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".mls-container"> <i class="fad fa-arrows-alt-h mx-3"></i> or Use Address Search</a>
+                                        <a href=".mls-container" class="text-orange font-9" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".mls-container"> <i class="fal fa-arrows-alt-h mx-3"></i> or Use Address Search</a>
                                     </span>
                                 </div>
                                 <input type="text" class="w-100" id="mls_search">
@@ -148,7 +148,7 @@ if(auth() -> user() -> group == 'agent') {
                         </div>
                     </div>
                     <div class="mls-search-continue-div text-center my-4">
-                        <a href=".property-container" class="btn btn-success btn-lg" id="mls_search_continue" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".property-container">Continue <i class="fa fa-arrow-circle-right ml-3"></i></a>
+                        <a href=".property-container" class="btn btn-primary btn-lg" id="mls_search_continue" data-toggle="collapse" role="button" aria-expanded="false" aria-controls=".property-container">Continue <i class="fal fa-arrow-circle-right ml-3"></i></a>
                     </div>
                 </div>
                 <!-- end mls search container -->
@@ -240,7 +240,7 @@ if(auth() -> user() -> group == 'agent') {
                         <div class="row">
                             <div class="col-12">
                                 <div class="mt-4 text-center w-100">
-                                    <a type="button" class="btn btn-lg btn-success" id="found_property_submit_button">Yes, this is the property <i class="fad fa-check ml-3 fa-lg"></i></a>
+                                    <a type="button" class="btn btn-lg btn-primary" id="found_property_submit_button">Yes, this is the property <i class="fal fa-check ml-3 fa-lg"></i></a>
                                     <br>
                                     <a id="not_my_listing_button" class="btn btn-sm btn-danger mt-5" data-toggle="collapse" href=".property-container" role="button" aria-expanded="false" aria-controls="#mls_match_container #address_container">No, this is not the property</a>
                                 </div>
@@ -282,7 +282,7 @@ if(auth() -> user() -> group == 'agent') {
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-success btn-lg" id="save_add_agent_id_button">Continue <i class="fa fa-arrow-circle-right ml-3"></i></a>
+                <a class="btn btn-primary btn-lg" id="save_add_agent_id_button">Continue <i class="fal fa-arrow-circle-right ml-3"></i></a>
             </div>
         </div>
     </div>
@@ -303,7 +303,7 @@ if(auth() -> user() -> group == 'agent') {
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <a class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Close</a>
+                <a class="btn btn-primary" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Close</a>
             </div>
         </div>
     </div>

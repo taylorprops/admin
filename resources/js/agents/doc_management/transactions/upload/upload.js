@@ -36,7 +36,7 @@ window.upload_documents = function() {
             $('.modal-stack').remove();
             load_tabs('documents');
             //load_tabs('checklist');
-            $('#save_upload_documents_button').html('<i class="fad fa-check mr-2"></i> Upload Documents');
+            $('#save_upload_documents_button').html('<i class="fal fa-check mr-2"></i> Upload Documents');
         },
         onNewFile: function (id, file) {
             // When a new file is added using the file selector or the DnD area
@@ -88,7 +88,7 @@ function ui_multi_add_file(id, file) {
     <li class="media"> \
         <div class="media-body mb-1"> \
             <p class="mb-2 small"> \
-                '+file.name+' - Status: <span class="text-muted">Waiting</span> <a href="javascript: void(0)" data-id="'+id+'" class="cancel-upload float-right text-danger mr-2"><i class="fa fa-times"></i></a> \
+                '+file.name+' - Status: <span class="text-muted">Waiting</span> <a href="javascript: void(0)" data-id="'+id+'" class="cancel-upload float-right text-danger mr-2"><i class="fal fa-times"></i></a> \
             </p> \
             <div class="progress mb-1 small"> \
                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"> \

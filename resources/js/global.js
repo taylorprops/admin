@@ -15,6 +15,7 @@ $(function() {
 
 
 
+
     /* global_page_transition(); */
 
     if(!document.URL.match(/login/)) {
@@ -330,7 +331,7 @@ window.inactivityTime = function () {
 
         let logout = $('#confirm_modal').find('.btn-danger');
         logout.text('Log Off');
-        let stay = $('#confirm_modal').find('.btn-success');
+        let stay = $('#confirm_modal').find('.btn-primary');
         stay.text('Continue Session');
 
         let force_logout = setTimeout(function() {

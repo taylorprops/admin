@@ -105,7 +105,7 @@ if($property -> Owner2 != '') {
                         </div>
 
                         <div class="col-12">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-success add-member-button" data-type="contract" data-member="buyer"><i class="fa fa-plus mr-2"></i> Add {{ $for_sale ? 'Buyer' : 'Renter' }}</a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary add-member-button" data-type="contract" data-member="buyer"><i class="fal fa-plus mr-2"></i> Add {{ $for_sale ? 'Buyer' : 'Renter' }}</a>
                         </div>
 
                     </div>
@@ -157,7 +157,7 @@ if($property -> Owner2 != '') {
                         </div>
 
                         <div class="col-12">
-                            <a href="javascript: void(0);" class="btn btn-sm btn-success add-member-button @if($property -> Owner2 != '') hide @endif" data-type="contract" data-member="seller"><i class="fa fa-plus mr-2"></i> Add {{ $for_sale ? 'Seller' : 'Owner' }}</a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary add-member-button @if($property -> Owner2 != '') hide @endif" data-type="contract" data-member="seller"><i class="fal fa-plus mr-2"></i> Add {{ $for_sale ? 'Seller' : 'Owner' }}</a>
                         </div>
 
                     </div>
@@ -331,7 +331,7 @@ if($property -> Owner2 != '') {
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex justify-content-center w-100 h-100">
-                            <button id="save_required_details" class="waves-effect waves-light btn btn-lg btn-success">Continue <i class="fa fa-arrow-circle-right ml-3"></i></button>
+                            <button id="save_required_details" class="waves-effect waves-light btn btn-lg btn-primary">Continue <i class="fal fa-arrow-circle-right ml-3"></i></button>
                         </div>
                     </div>
                 </div>
@@ -402,7 +402,7 @@ if($property -> Owner2 != '') {
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
                 </div>
             </div>
         </div>

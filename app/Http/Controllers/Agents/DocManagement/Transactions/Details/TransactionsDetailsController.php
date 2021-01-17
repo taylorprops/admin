@@ -148,12 +148,12 @@ class TransactionsDetailsController extends Controller {
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
         if(($property -> Contract_ID > 0 && $property -> Listing_ID > 0) || count($contracts) > 0) {
-            $folders = TransactionDocumentsFolders::where('Agent_ID', $Agent_ID) -> where(function ($query) use ($Listing_ID, $Contract_ID) {
+            $folders = TransactionDocumentsFolders::where(function ($query) use ($Listing_ID, $Contract_ID) {
                 $query -> where('Contract_ID', $Contract_ID) -> orWhere('Listing_ID', $Listing_ID);
             })
             -> orderBy('folder_order') -> get();
         } else {
-            $folders = TransactionDocumentsFolders::where($field, $id) -> where('Agent_ID', $Agent_ID) -> orderBy('folder_order') -> get();
+            $folders = TransactionDocumentsFolders::where($field, $id) -> orderBy('folder_order') -> get();
         }
 
         $transaction_checklist = TransactionChecklists::where($field, $id) -> first();
@@ -972,20 +972,20 @@ class TransactionsDetailsController extends Controller {
         // if our listing and contract include listing folders with contract
         if(($property -> Contract_ID > 0 && $property -> Listing_ID > 0) || count($contracts) > 0) {
 
-            $folders = TransactionDocumentsFolders::where('Agent_ID', $Agent_ID) -> where(function ($query) use ($Listing_ID, $Contract_ID) {
+            $folders = TransactionDocumentsFolders::where(function ($query) use ($Listing_ID, $Contract_ID) {
                 $query -> where('Contract_ID', $Contract_ID) -> orWhere('Listing_ID', $Listing_ID);
             })
             -> orderBy('folder_order') -> get();
 
-            $documents = TransactionDocuments::where('Agent_ID', $Agent_ID) -> where(function ($query) use ($Listing_ID, $Contract_ID) {
+            $documents = TransactionDocuments::where(function ($query) use ($Listing_ID, $Contract_ID) {
                 $query -> where('Contract_ID', $Contract_ID) -> orWhere('Listing_ID', $Listing_ID);
             })
             -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
         } else {
 
-            $folders = TransactionDocumentsFolders::where($field, $id) -> where('Agent_ID', $Agent_ID) -> orderBy('folder_order') -> get();
-            $documents = TransactionDocuments::where($field, $id) -> where('Agent_ID', $Agent_ID) -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
+            $folders = TransactionDocumentsFolders::where($field, $id) -> orderBy('folder_order') -> get();
+            $documents = TransactionDocuments::where($field, $id) -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
         }
 
@@ -2469,7 +2469,7 @@ class TransactionsDetailsController extends Controller {
             $trash_folder = TransactionDocumentsFolders::where('Listing_ID', $property -> Listing_ID) -> where('folder_name', 'Trash') -> first();
         }
         $documents_model = new TransactionDocuments();
-        $documents_checklist = $documents_model -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
+        $documents_checklist = $documents_model -> where($field, $id) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
 
         $resource_items = new ResourceItems();
@@ -2506,7 +2506,7 @@ class TransactionsDetailsController extends Controller {
             $id = $Referral_ID;
         }
 
-        $folders = TransactionDocumentsFolders::where($field, $id) -> where('Agent_ID', $Agent_ID) -> where('folder_name', '!=', 'Trash') -> orderBy('folder_order') -> get();
+        $folders = TransactionDocumentsFolders::where($field, $id) -> where('folder_name', '!=', 'Trash') -> orderBy('folder_order') -> get();
 
         $trash_folder = TransactionDocumentsFolders::where($field, $id) -> where('folder_name', 'Trash') -> first();
         // if the contract was released just use the folder from the listing
@@ -2515,7 +2515,7 @@ class TransactionsDetailsController extends Controller {
         }
 
         $documents_model = new TransactionDocuments();
-        $documents_available = $documents_model -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
+        $documents_available = $documents_model -> where($field, $id) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
         return view('/agents/doc_management/transactions/details/data/get_add_document_to_checklist_documents_html', compact('documents_available', 'folders'));
 

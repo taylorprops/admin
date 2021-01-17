@@ -65,8 +65,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_edit_check_in_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_edit_check_in_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
             </div>
         </div>
     </div>
@@ -182,8 +181,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_edit_check_out_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_edit_check_out_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
             </div>
         </div>
     </div>
@@ -303,8 +301,8 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <button type="button" class="btn btn-success" id="save_add_check_out_button"><i class="fad fa-check mr-2"></i> Save</button>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <button type="button" class="btn btn-success" id="save_add_check_out_button"><i class="fal fa-check mr-2"></i> Save</button>
             </div>
         </div>
     </div>

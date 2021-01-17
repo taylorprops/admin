@@ -116,7 +116,7 @@ if(document.URL.match(/common_fields/)) {
                 get_common_fields();
                 $('#add_common_field_collapse').collapse('hide').find('input, select').val('');
                 //select_refresh();
-                $('#save_add_common_field_button').html('<i class="fal fa-save mr-2"></i> Save');
+                $('#save_add_common_field_button').html('<i class="fad fa-save mr-2"></i> Save');
             })
             .catch(function (error) {
 

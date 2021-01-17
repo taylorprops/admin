@@ -162,7 +162,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
                 }
 
                 $('#add_check_in_modal').modal('hide');
-                $('#save_add_check_in_button').prop('disabled', false).html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_add_check_in_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Save');
 
             })
             .catch(function (error) {
@@ -238,7 +238,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
                 get_checks();
 
                 $('#edit_queue_check_modal').modal('hide');
-                $('#save_edit_queue_check_button').prop('disabled', false).html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_edit_queue_check_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Save');
 
             })
             .catch(function (error) {
@@ -348,7 +348,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
                         let result = ' \
                         <tr> \
-                            <td><a href="javascript: void(0)" class="btn btn-sm btn-primary btn-block m-0 undo-delete-queue-check" data-check-id="'+check['id']+'" data-type="'+check['type']+'"><i class="fal fa-recycle mr-2"></i> Reactivate</a></td> \
+                            <td><a href="javascript: void(0)" class="btn btn-sm btn-primary btn-block m-0 undo-delete-queue-check" data-check-id="'+check['id']+'" data-type="'+check['type']+'"><i class="fad fa-recycle mr-2"></i> Reactivate</a></td> \
                             <td>'+check['date_received']+'</td> \
                             <td>'+agent_name+'</td> \
                             <td>'+client_name+'</td> \
@@ -356,7 +356,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
                             <td>'+check['check_number']+'</td> \
                             <td>'+check['check_date']+'</td> \
                             <td>$'+check['check_amount']+'</td> \
-                            <td><a href="'+check['file_location']+'" target="_blank" class="btn btn-sm btn-block m-0 btn-primary"><i class="fal fa-eye mr-2"></i> View Check</a></td> \
+                            <td><a href="'+check['file_location']+'" target="_blank" class="btn btn-sm btn-block m-0 btn-primary"><i class="fad fa-eye mr-2"></i> View Check</a></td> \
                         ';
                         $('#deleted_checks').append(result);
                     });

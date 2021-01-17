@@ -66,8 +66,8 @@ $deleted = 0;
             @else
                 @php $deleted += 1; @endphp
                 <div class="col-2 text-center">
-                    <span class="text-danger font-weight-bold"><i class="fad fa-ban mr-2"></i> Deleted</span>
-                    <a href="javascript: void(0)" class="btn btn-sm btn-default undo-delete-check-in-button" data-check-id="{{ $check -> id }}"><i class="fad fa-undo-alt mr-2"></i> Undo</a>
+                    <span class="text-danger font-weight-bold"><i class="fal fa-ban mr-2"></i> Deleted</span>
+                    <a href="javascript: void(0)" class="btn btn-sm btn-default undo-delete-check-in-button" data-check-id="{{ $check -> id }}"><i class="fal fa-undo-alt mr-2"></i> Undo</a>
                 </div>
             @endif
         </div>

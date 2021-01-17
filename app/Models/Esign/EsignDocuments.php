@@ -16,7 +16,11 @@ class EsignDocuments extends Model
     }
 
     public function fields() {
-        return $this -> hasMany('App\Models\Esign\EsignFields', 'document_id', 'id');
+        return $this -> hasMany('App\Models\Esign\EsignFields', 'document_id', 'id') -> with('signer');
+    }
+
+    public function signers() {
+        return $this -> hasMany('App\Models\Esign\EsignSigners', 'document_id', 'id');
     }
 
 }

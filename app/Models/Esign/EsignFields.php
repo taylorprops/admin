@@ -10,4 +10,8 @@ class EsignFields extends Model
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function signer() {
+        return $this -> hasOne('App\Models\Esign\EsignSigners', 'id', 'signer_id');
+    }
 }

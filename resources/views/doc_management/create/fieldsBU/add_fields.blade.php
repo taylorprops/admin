@@ -17,7 +17,7 @@
                         </div>
                         <div class="field-wrapper px-3" data-type="name">
                             <div class="textline-div-field rounded my-auto">
-                                <div class="textline-html text-white ml-3 pt-1"><i class="fal fa-user-alt fa-lg mr-2"></i> Name</div>
+                                <div class="textline-html text-white ml-3 pt-1"><i class="fad fa-user-alt fa-lg mr-2"></i> Name</div>
                             </div>
                         </div>
                         <div class="field-wrapper px-3" data-type="address">
@@ -27,7 +27,7 @@
                         </div>
                         <div class="field-wrapper px-3" data-type="date">
                             <div class="textline-div-field rounded my-auto">
-                                <div class="textline-html text-white ml-3 pt-1"><i class="fal fa-calendar-alt fa-lg mr-2"></i> Date</div>
+                                <div class="textline-html text-white ml-3 pt-1"><i class="fad fa-calendar-alt fa-lg mr-2"></i> Date</div>
                             </div>
                         </div>
                         <div class="field-wrapper px-3" data-type="number">
@@ -44,7 +44,7 @@
                             <div class="my-auto ml-1"> Radio Buttons</div>
                         </div>
                         <div class="mr-1 pl-2">
-                            <div><a href="javascript:void(0)" class="btn btn-success" id="save_add_fields"><i class="fad fa-save mr-2"></i> Save</a></div>
+                            <div><a href="javascript:void(0)" class="btn btn-primary" id="save_add_fields"><i class="fad fa-save mr-2"></i> Save</a></div>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                                 <span class="ml-1">Page {{ $c }}</span>
                                 <span class="mr-1">
                                     <a href="javascript:void(0)" class="delete-page-button" data-page-number="{{ $c }}" data-file-id="{{ $image -> file_id }}">
-                                        <i class="fa fa-times text-danger fa-lg"></i>
+                                        <i class="fal fa-times text-danger fa-lg"></i>
                                     </a>
                                 </span>
                             </div>

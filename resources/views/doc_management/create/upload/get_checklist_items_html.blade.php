@@ -35,7 +35,7 @@ $in_checklist = $checklist_items -> ifFormInChecklist($checklist_id, $file_id);
             @endphp
 
             <li class="list-group-item order-checklist-item p-1 d-flex justify-content-start {{ $classes }}">
-                <i class="fad {{ $fa }} {{ $text_color }} {{ $handle }} {{ $mr }} my-auto ml-3"></i>
+                <i class="fal {{ $fa }} {{ $text_color }} {{ $handle }} {{ $mr }} my-auto ml-3"></i>
                 <span class="{{ $handle }} my-auto">{{ $checklist_item_name }}</span>
             </li>
 
@@ -43,7 +43,7 @@ $in_checklist = $checklist_items -> ifFormInChecklist($checklist_id, $file_id);
 
         @if($in_checklist == false && $uploaded_file -> checklist_group_id == $checklist_group -> resource_id)
             <li class="list-group-item order-checklist-item order-checklist-item-sortable p-1 d-flex justify-content-start bg-orange-light">
-                <i class="fad fa-arrows-v text-primary order-checklist-item-sortable-handle mx-3 my-auto"></i>
+                <i class="fal fa-arrows-v text-primary order-checklist-item-sortable-handle mx-3 my-auto"></i>
                 <span class="my-auto order-checklist-item-sortable-handle">{{ $uploaded_file -> file_name_display }}</span>
             </li>
         @endif

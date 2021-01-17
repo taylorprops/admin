@@ -251,6 +251,33 @@
     // esign
     Route::get('/esign', 'Esign\EsignController@esign') -> name('esign');
 
+    // save as draft
+    Route::post('/esign/save_as_draft', 'Esign\EsignController@save_as_draft');
+
+    // delete draft
+    Route::post('/esign/delete_draft', 'Esign\EsignController@delete_draft');
+
+    // restore draft
+    Route::post('/esign/restore_draft', 'Esign\EsignController@restore_draft');
+
+    // save as template
+    Route::post('/esign/save_as_template', 'Esign\EsignController@save_as_template');
+
+    // delete template
+    Route::post('/esign/delete_template', 'Esign\EsignController@delete_template');
+
+    // restore template
+    Route::post('/esign/restore_template', 'Esign\EsignController@restore_template');
+
+    // get esign dashboard tabs
+    Route::get('/esign/get_drafts', 'Esign\EsignController@get_drafts');
+    Route::get('/esign/get_deleted_drafts', 'Esign\EsignController@get_deleted_drafts');
+    Route::get('/esign/get_sent', 'Esign\EsignController@get_sent');
+    Route::get('/esign/get_completed', 'Esign\EsignController@get_completed');
+    Route::get('/esign/get_templates', 'Esign\EsignController@get_templates');
+
+
+
     // add documents
     Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_documents');
 
@@ -271,6 +298,8 @@
 
     // upload docs for envelope
     Route::post('/esign/upload', 'Esign\EsignController@upload');
+
+
 
 
 ///////////////////////////////// ADMIN ONLY //////////////////////////////////////////////

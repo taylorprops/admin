@@ -106,8 +106,8 @@
                     <div class="text-center"><i class="fad fa-exclamation-circle fa-2x mr-2 text-danger"></i> This will replace all checklists in all locations selected. Continue?</div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success modal-confirm-button" id="confirm_copy_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-primary modal-confirm-button" id="confirm_copy_button"><i class="fal fa-check mr-2"></i> Confirm</a>
                 </div>
             </div>
         </div>
@@ -127,8 +127,7 @@
                         <div id="copy_checklists_div"></div>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger btn-lg" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                        <a class="btn btn-success btn-lg" id="save_copy_checklists_button"><i class="fad fa-check mr-2"></i> Copy Checklists</a>
+                        <a class="btn btn-primary btn-lg" id="save_copy_checklists_button"><i class="fal fa-check mr-2"></i> Copy Checklists</a>
                     </div>
                     <input type="hidden" id="copy_checklists_location_id">
                     <input type="hidden" id="copy_checklists_checklist_type">
@@ -155,7 +154,6 @@
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-around">
-                            <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
                             <a class="btn btn-primary" id="save_checklist_items_button"><i class="fad fa-save mr-2"></i> Save Items</a>
                         </div>
                     </div>
@@ -252,8 +250,8 @@
                         Are you sure you want to permanently delete this checklist?
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</a>
-                        <a class="btn btn-success modal-confirm-button" id="confirm_delete_checklist"><i class="fad fa-check"></i> Confirm</a>
+                        <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times"></i> Cancel</a>
+                        <a class="btn btn-primary modal-confirm-button" id="confirm_delete_checklist"><i class="fal fa-check"></i> Confirm</a>
                     </div>
                 </form>
             </div>
@@ -279,8 +277,8 @@
                 Are you sure you want to remove this form from the checklist?
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_remove_file"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_remove_file"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>

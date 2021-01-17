@@ -2,29 +2,6 @@ if(document.URL.match(/esign_add_signers/)) {
 
     $(function () {
 
-        $('.signer-select, .recipient-select').off('change').on('change', function() {
-
-            let type = $(this).data('type');
-
-            if($(this).val() != '') {
-
-                $('.add-'+type+'-fields').find('.add-'+type+'-field').val('').trigger('change');
-
-                let option = $(this).find('option:selected');
-
-                $('.'+type+'-select-fields').removeClass('hidden');
-                $('.'+type+'-select-fields').find('.add-'+type+'-name').val(option.data('name'));
-                $('.'+type+'-select-fields').find('.add-'+type+'-email').val(option.data('email'));
-                $('.'+type+'-select-fields').find('.add-'+type+'-role').val(option.data('member-type'));
-
-            } else {
-                $('.'+type+'-select-fields').addClass('hidden');
-                $('.'+type+'-select-fields').find('.add-'+type+'-field').val('').trigger('change');
-            }
-
-
-        });
-
         $('.add-signer-fields').find('.add-signer-field').on('change', function() {
             if($(this).val() !== '') {
                 $('.signer-select').val('').trigger('change');
@@ -48,8 +25,33 @@ if(document.URL.match(/esign_add_signers/)) {
 
         $(document).on('click', '#add_fields_button', save_signers);
 
+        $('.signer-recipient-select').off('change').on('change', function() {
+
+            let type = $(this).data('type');
+
+            if($(this).val() != '') {
+
+                $('.add-'+type+'-fields').find('.add-'+type+'-field').val('').trigger('change');
+
+                let option = $(this).find('option:selected');
+
+                $('.'+type+'-select-fields').removeClass('hidden');
+                $('.'+type+'-select-fields').find('.add-'+type+'-name').val(option.data('name'));
+                $('.'+type+'-select-fields').find('.add-'+type+'-email').val(option.data('email'));
+                $('.'+type+'-select-fields').find('.add-'+type+'-role').val(option.data('member-type'));
+
+            } else {
+                $('.'+type+'-select-fields').addClass('hidden');
+                $('.'+type+'-select-fields').find('.add-'+type+'-field').val('').trigger('change');
+            }
+
+
+        });
+
 
         function save_signers() {
+
+            $('#add_fields_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
 
             let envelope_id = $('#envelope_id').val();
 

@@ -922,7 +922,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     });
                     if (field_name == null) {
                         field_div.addClass('field-error');
-                        field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must name the field</div>');
+                        field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must name the field</div>');
                         errors = 'yes';
                         errors_found = 'yes';
                     }
@@ -930,7 +930,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     if (type == 'number') {
                         if (field_div.find('select.field-data-number-type').val() == '') {
                             field_div.addClass('field-error');
-                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must enter the number type</div>');
+                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the number type</div>');
                             errors = 'yes';
                             errors_found = 'yes';
                         }
@@ -939,7 +939,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     if (type == 'address') {
                         if (field_div.find('select.field-data-address-type').val() == '') {
                             field_div.addClass('field-error');
-                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must enter the address type</div>');
+                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the address type</div>');
                             errors = 'yes';
                             errors_found = 'yes';
                         }

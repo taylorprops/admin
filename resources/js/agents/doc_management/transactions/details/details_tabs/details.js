@@ -90,7 +90,7 @@ if (document.URL.match(/transaction_details/)) {
 
             if(response.data.status == 'ok') {
 
-                search_response = 'We have located the property in BrightMLS!<br><br><i class="fad fa-exclamation-triangle mr-2"></i> The checklist will be replaced to include the forms required for the new listing. Any relevant forms will be kept in the checklist but some may need to be added or replaced<hr>';
+                search_response = 'We have located the property in BrightMLS!<br><br><i class="fad fa-exclamation-triangle mr-2 text-danger fa-lg"></i> The checklist will be replaced to include the forms required for the new listing. Any relevant forms will be kept in the checklist but some may need to be added or replaced<hr>';
 
                 let listing_details = ' \
                     <div class="row"> \

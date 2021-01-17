@@ -26,15 +26,15 @@
                         @endif
 
                         <div class="form-options-div border-left border-right">
-                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_text_button" data-field-type="user_text"><i class="fal fa-rectangle-wide fa-lg"></i><br>Add Text</a>
+                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_text_button" data-field-type="user_text"><i class="fad fa-rectangle-wide fa-lg"></i><br>Add Text</a>
                         </div>
 
                         <div class="form-options-div border-right ">
-                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_strikeout_button" data-field-type="strikeout"><i class="fal fa-horizontal-rule fa-lg"></i><br>Add Strikeout</a>
+                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_strikeout_button" data-field-type="strikeout"><i class="fad fa-horizontal-rule fa-lg"></i><br>Add Strikeout</a>
                         </div>
 
                         <div class="form-options-div border-right ">
-                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_highlight_button" data-field-type="highlight"><i class="fal fa-highlighter fa-lg"></i><br>Highlight</a>
+                            <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_highlight_button" data-field-type="highlight"><i class="fad fa-highlighter fa-lg"></i><br>Highlight</a>
                         </div>
 
                         <div class="form-options-div ml-5">

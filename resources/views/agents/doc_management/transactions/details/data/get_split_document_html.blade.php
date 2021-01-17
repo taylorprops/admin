@@ -19,7 +19,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <button type="button" class="btn btn-sm btn-primary add-to-selected-button">Add</button>
-                                            <button type="button" class="btn btn-sm btn-danger remove-from-selected-button"><i class="fa fa-times text-white"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger remove-from-selected-button"><i class="fal fa-times text-white"></i></button>
                                         </div>
                                         <span class="badge badge-primary image-order mr-2 p-2"></span>
                                     </div>
@@ -100,7 +100,7 @@
                                                     @endphp
                                                     <div class="list-group-item py-1 px-0 mb-2 border-left-0 border-right-0 d-flex justify-content-start align-items-center" data-checklist-item-id="{{ $checklist_item -> id }}">
                                                         <div class="mr-1 mr-sm-2">
-                                                            <button class="btn btn-sm btn-success add-docs-to-checklist-item-button" data-checklist-item-id="{{ $checklist_item -> id }}" data-checklist-id="{{ $checklist_item -> checklist_id }}" data-file-id="{{ $file_id }}" data-upload-id="{{ $checklist_item -> checklist_form_id }}" disabled><i class="fa fa-plus mr-1 mr-sm-2"></i> Add</button>
+                                                            <button class="btn btn-sm btn-primary add-docs-to-checklist-item-button" data-checklist-item-id="{{ $checklist_item -> id }}" data-checklist-id="{{ $checklist_item -> checklist_id }}" data-file-id="{{ $file_id }}" data-upload-id="{{ $checklist_item -> checklist_form_id }}" disabled><i class="fal fa-plus mr-1 mr-sm-2"></i> Add</button>
                                                         </div>
                                                         <div class="mr-1 mr-sm-2">
                                                             <span class="badge checklist-item-badge {{ $agent_classes }} p-1" title="{{ $helper_text }}"><span class="d-none d-sm-inline-block">{!! $fa !!} </span>{{ $status }}</span>
@@ -138,7 +138,7 @@
                                         <form id="document_name_form">
                                             <input type="text" class="custom-form-element form-input required" id="document_name" data-label="Document Name" value="{{ $file_name }}">
                                             <div class="w-100 text-center">
-                                                <button type="button" class="btn btn-success" id="save_document_name_button" data-file-id="{{ $file_id }}" disabled><i class="fa fa-save mr-2"></i> Save Document</button>
+                                                <button type="button" class="btn btn-primary" id="save_document_name_button" data-file-id="{{ $file_id }}" disabled><i class="fad fa-save mr-2"></i> Save Document</button>
                                             </div>
                                     </div>
                                 </div>

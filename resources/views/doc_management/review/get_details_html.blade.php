@@ -54,7 +54,7 @@
                             <div class="divider"></div>
                             <div class="m-1 p-3 bg-success rounded cancel-status">
                                 <div class="h4 text-white d-flex justify-content-start align-items-center">
-                                    <i class="fad fa-check-circle mr-2"></i>
+                                    <i class="fal fa-check-circle mr-2"></i>
                                     <span>
                                         Cancellation Complete
                                     </span>

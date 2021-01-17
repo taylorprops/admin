@@ -13,11 +13,7 @@
                 <div class="d-flex justify-content-start align-items-center">
 
                     <div class="form-options-div border-left border-right">
-                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_signature_button" data-field-type="signature"><i class="fal fa-signature fa-lg"></i><br>Add Signature</a>
-                    </div>
-
-                    <div class="form-options-div border-right ">
-                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_date_button" data-field-type="date"><i class="fal fa-calendar fa-lg"></i><br>Add Date</a>
+                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_signature_button" data-field-type="signature"><i class="fad fa-signature fa-lg"></i><br>Add Signature</a>
                     </div>
 
                     <div class="form-options-div border-right">
@@ -29,10 +25,30 @@
                         </a>
                     </div>
 
+                    <div class="form-options-div border-right ">
+                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_name_button" data-field-type="name"><span class="font-italic"> Signer Name</span><br>Add Name</a>
+                    </div>
+
+                    <div class="form-options-div border-right ">
+                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_date_button" data-field-type="date"><i class="fad fa-calendar fa-lg"></i><br>Add Date</a>
+                    </div>
+
                 </div>
 
-                <div class="mr-4">
-                    <button class="btn btn-success fill-form-option font-11" id="send_for_signatures_button">Send for Signatures <i class="fal fa-share-all ml-2"></i></button>
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="mr-2">
+                        <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
+                    </div>
+
+                    <div class="mr-4">
+                        <button class="btn btn-primary btn-sm fill-form-option" id="save_as_template_button">Save As Template<i class="fad fa-copy ml-2"></i></button>
+                    </div>
+
+                    <div class="mr-3">
+                        <button class="btn btn-success fill-form-option font-11" id="send_for_signatures_button">Send for Signatures <i class="fad fa-share-all ml-2"></i></button>
+                    </div>
+
                 </div>
 
             </div>
@@ -64,20 +80,77 @@
                                 @php
                                 $c = $image -> page_number;
                                 $page_id = $document -> id.'_'.$c;
+                                $fields = $document -> fields -> where('page', $c);
                                 @endphp
 
-                                <div class="h5 bg-primary p-2 text-center mb-0" id="page_{{ $page_id }}">
-                                    <span class="badge text-white font-10">Page <?php echo $c.' of '.$total_pages; ?></span>
+                                <div class="h5 bg-primary text-white p-3 text-center mb-0" id="page_{{ $page_id }}">
+                                    Page <?php echo $c.' of '.$total_pages; ?>
                                 </div>
                                 <div class="file-view-page-container border border-primary w-100 {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}">
                                     <div class="fields-container w-100 h-100">
 
                                         <img class="file-image-bg w-100 h-100" src="{{ $image -> image_location }}?r={{ date('YmdHis') }}">
 
+                                        @foreach($fields as $field)
+
+                                            @php
+                                            $field_signer = $field -> signer;
+
+                                            $signer_name = $field_signer -> signer_name;
+                                            $field_type = $field -> field_type;
+
+                                            if($field_type == 'signature') {
+                                                $field_div_html = '<div class="field-div-details"><i class="fad fa-signature mr-2"></i> <span class="field-div-name">'.$signer_name.'</span></div>';
+                                            } else if($field_type == 'initials') {
+                                                $initials = get_initials($signer_name);
+                                                $field_div_html = '<span class="field-div-name">'.$initials.'</span>';
+                                            } else if($field_type == 'date') {
+                                                $field_div_html = '<div class="field-div-details"><i class="fad fa-calendar mr-2"></i>  <span class="field-div-name">'.$signer_name.'</span></div>';
+                                            }
+                                            @endphp
+
+                                            <div class="field-div" style="position: absolute; top: {{ $field -> top_perc }}%; left: {{ $field -> left_perc }}%; height: {{ $field -> height_perc }}%; width: {{ $field -> width_perc }}%;"
+                                                id="field_{{ $field -> field_id }}"
+                                                data-field-id="{{ $field -> field_id }}"
+                                                data-field-type="{{ $field -> field_type }}"
+                                                data-page="{{ $field -> page }}"
+                                                data-document-id="{{ $field ->  document_id }}">
+                                                <div class="field-html w-100 h-100 text-center text-primary small">{!! $field_div_html !!}</div>
+                                                <div class="field-options-holder">
+                                                    <div class="d-flex justify-content-around">
+                                                        <div class="btn-group" role="group" aria-label="Field Options">
+                                                            <a type="button" class="btn btn-primary field-handle ml-0"><i class="fal fa-arrows fa-lg"></i></a>
+                                                            <a type="button" class="btn btn-danger remove-field"><i class="fal fa-times-circle fa-lg"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="select-signer-div font-8 p-2">
+                                                    {{ ucwords($field -> field_type) }} for:
+                                                    <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer-select" data-connector-id="{{ $field -> field_id }}">
+                                                        @foreach($signers as $signer_option)
+                                                            <option class="signer-select-option"
+                                                            value="{{ $signer_option -> signer_name }}"
+                                                            data-role="{{ $signer_option -> signer_role }}"
+                                                            data-name="{{ $signer_option -> signer_name }}"
+                                                            data-signer-id="{{ $signer_option -> id }}"
+                                                            @if($signer_option -> id == $field_signer -> id) selected @endif
+                                                            >{{ $signer_option -> signer_name }} - {{ $signer_option -> signer_role }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="yes" checked data-label="Required">
+                                                </div>
+                                                <div class="field-handle ui-resizable-handle ui-resizable-nw"></div>
+                                                <div class="field-handle ui-resizable-handle ui-resizable-ne"></div>
+                                                <div class="field-handle ui-resizable-handle ui-resizable-se"></div>
+                                                <div class="field-handle ui-resizable-handle ui-resizable-sw"></div>
+                                            </div>
+
+                                        @endforeach
+
                                     </div>
                                 </div>
-                                <div class="h5 text-white bg-primary p-2 mb-1 text-center">
-                                    <span class="badge">End Page {{ $c }}</span>
+                                <div class="h5 text-white bg-primary p-3 mb-1 text-center">
+                                    End Page {{ $c }}
                                 </div>
 
                             @endforeach
@@ -144,6 +217,67 @@
 <input type="hidden" id="envelope_id" value="{{ $envelope_id }}">
 <input type="hidden" id="active_page" value="1">
 <input type="hidden" id="active_signer" value="">
+<input type="hidden" id="property_address" value="{{ $property_address }}">
+<input type="hidden" id="saved_draft_name" value="{{ $draft_name }}">
+
+
+<div class="modal fade draggable" id="template_modal" tabindex="-1" role="dialog" aria-labelledby="template_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="template_modal_title">Save Template</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-start align-items-center mb-3">
+                    <div><i class="fad fa-info-circle fa-lg mr-3 text-primary"></i> </div>
+                    <div class="text-8 text-gray">
+                        Templates are used to automatically add all signature fields to a particular document. They will include all signers and fields you have added.
+                    </div>
+                </div>
+                <hr class="my-4">
+                <form id="template_form">
+                    <div class="text-gray mb-4">Enter a name for the Template</div>
+                    <input type="text" class="custom-form-element form-input required" id="template_name" data-label="Template Name">
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="save_template_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Template</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable" id="draft_modal" tabindex="-1" role="dialog" aria-labelledby="draft_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="draft_modal_title">Save Draft</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-start align-items-center mb-3">
+                    <div><i class="fad fa-info-circle fa-lg mr-3 text-primary"></i> </div>
+                    <div class="text-8 text-gray">
+                        Drafts can be saved to use at a later time. They will include all documents, signers and fields you have added.
+                    </div>
+                </div>
+                <hr class="my-4">
+                <form id="draft_form">
+                    <div class="text-gray mb-4">Enter a name for the Draft</div>
+                    <input type="text" class="custom-form-element form-input required" id="draft_name" data-label="Draft Name">
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="save_draft_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Draft</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade draggable" id="send_for_signatures_modal" tabindex="-1" role="dialog" aria-labelledby="send_for_signatures_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal" role="document">
@@ -161,12 +295,12 @@
 
                     <input type="text" class="custom-form-element form-input required mb-3" id="envelope_subject" data-label="Subject">
 
-                    <textarea class="custom-form-element form-textarea required" rows="8" id="envelope_message" data-label="Message"></textarea>
+                    <textarea class="custom-form-element form-textarea required" rows="5" id="envelope_message" data-label="Message"></textarea>
 
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-lg btn-success" id="save_send_for_signatures_button" data-dismiss"modal">Send <i class="fal fa-share-all ml-2"></i></a>
+                <a class="btn btn-lg btn-primary" id="save_send_for_signatures_button" data-dismiss"modal">Send <i class="fad fa-share-all ml-2"></i></a>
             </div>
         </div>
     </div>

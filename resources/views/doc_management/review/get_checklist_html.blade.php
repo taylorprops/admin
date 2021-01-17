@@ -11,7 +11,7 @@
                         <div class="h5 text-primary">{{ $checklist_group -> resource_name }}</div>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-success btn-sm add-checklist-item-button" data-toggle="tooltip" data-group-id="{{ $checklist_group -> resource_id }}" title="Add Checklist Item"><i class="fal fa-plus"></i></button>
+                        <button type="button" class="btn btn-primary btn-sm add-checklist-item-button" data-toggle="tooltip" data-group-id="{{ $checklist_group -> resource_id }}" title="Add Checklist Item"><i class="fal fa-plus"></i></button>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
 
                                 <div class="dropdown">
 
-                                    <button class="btn btn-primary dropdown-toggle checklist-item-dropdown py-0 px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+                                    <button class="btn btn-primary dropdown-toggle checklist-item-dropdown py-0 px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fal fa-bars"></i></button>
 
                                     <div class="dropdown-menu dropdown-primary">
 
@@ -98,7 +98,7 @@
                                 <div class="w-100 text-center mt-2" data-toggle="tooltip" data-html="true" title="{!! $notes_tooltip !!}">
                                     <a class="notes-toggle" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
                                         <span class="fa-stack fa-2x mt-1">
-                                            <i class="fa fa-comment fa-stack-1x @if($notes_unread_count > 0) text-orange @else @if($notes) text-primary @else text-blue-light @endif @endif"></i>
+                                            <i class="fad fa-comment fa-stack-1x @if($notes_unread_count > 0) text-orange @else @if($notes) text-primary @else text-blue-light @endif @endif"></i>
                                             @if($notes_unread_count > 0) <span class="fa-stack-1x notes-count text-white">{{ $notes_unread_count }}</span> @endif
                                         </span>
                                     </a>
@@ -113,7 +113,7 @@
                                 <div class="d-flex justify-content-between align-items-center border-bottom mb-3 pb-3">
                                     <div class="font-weight-bold text-primary">Comments</div>
                                     <a data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
-                                        <i class="fad fa-times-circle text-danger fa-lg"></i>
+                                        <i class="fal fa-times-circle text-danger fa-lg"></i>
                                     </a>
                                 </div>
 
@@ -128,7 +128,7 @@
                                         <input type="text" class="custom-form-element form-input notes-input-{{ $checklist_item_id }}" data-label="Add Comment">
                                     </div>
                                     <div class="col-2 pl-0 mt-1">
-                                        <a href="javascript: void(0)" class="btn btn-success btn-block save-notes-button" data-checklist-id="{{ $checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fa fa-save"></i></a>
+                                        <a href="javascript: void(0)" class="btn btn-primary btn-block save-notes-button" data-checklist-id="{{ $checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
                                     </div>
                                 </div>
                             </div>

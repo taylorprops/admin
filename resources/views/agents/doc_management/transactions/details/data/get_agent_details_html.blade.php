@@ -15,7 +15,7 @@
             <div class="d-flex justify-content-start align-items-center">
                 <div class="mr-3">Soc Sec </div>
                 <div><span class="soc-sec mr-3">{{ $agent_details -> social_security }}</span><span class="soc-sec mr-4">***-**-****</span></div>
-                <div><a href="javascript:void(0)" class="show-soc-sec"><i class="fa fa-eye text-primary"></i></a></div>
+                <div><a href="javascript:void(0)" class="show-soc-sec"><i class="fad fa-eye text-primary"></i></a></div>
             </div>
         </div>
 

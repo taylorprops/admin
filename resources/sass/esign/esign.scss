@@ -131,6 +131,7 @@
         background: rgba($orange, .3);
         cursor: pointer;
 
+
         .field-html {
             position: absolute;
             top: 0px;
@@ -138,6 +139,11 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
+
+            .field-div-details {
+                overflow: hidden;
+                white-space: nowrap;
+            }
         }
 
         .field-options-holder {

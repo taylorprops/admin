@@ -64,7 +64,7 @@ $location = $resource_items -> getLocation($checklist -> checklist_location_id);
                                         </select> --}}
                                     </div>
                                     <div class="col-1 d-flex align-items-center">
-                                        <a class="btn btn-sm btn-danger delete-checklist-item-button"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-sm btn-danger delete-checklist-item-button"><i class="fad fa-trash"></i></a>
                                     </div>
                                 </div>
                             </li>
@@ -92,7 +92,7 @@ $location = $resource_items -> getLocation($checklist -> checklist_location_id);
 
         <div class="mt-3">
             <div class="d-flex justify-content-start">
-                <i class="fal fa-search text-primary mt-4 mr-3 fa-2x"></i>
+                <i class="fad fa-search text-primary mt-4 mr-3 fa-2x"></i>
                 <input type="text" class="custom-form-element form-input mr-5 form-search" data-label="Search">
             </div>
         </div>

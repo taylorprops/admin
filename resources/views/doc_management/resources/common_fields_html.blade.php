@@ -14,7 +14,7 @@
 
                         <div class="d-flex justify-content-between align-items-center common-field-input-container border-bottom" data-field-id="{{ $common_field_people -> id }}">
 
-                            <div class="w-5 sortable-handle"><i class="fad fa-grip-vertical fa-lg"></i></div>
+                            <div class="w-5 sortable-handle"><i class="fal fa-grip-vertical fa-lg"></i></div>
 
                             <div class="w-90 d-flex justify-content-between align-items-center common-field-input-div">
 
@@ -52,7 +52,7 @@
 
                             <div class="w-5">
 
-                                <a href="javascript: void(0)" class="btn btn-sm btn-success save-edit-common-field-button" data-id="{{ $common_field_people -> id }}"><i class="fa fa-save"></i></a>
+                                <a href="javascript: void(0)" class="btn btn-sm btn-success save-edit-common-field-button" data-id="{{ $common_field_people -> id }}"><i class="fad fa-save"></i></a>
 
                             </div>
 
@@ -87,7 +87,7 @@
 
                                 <div class="d-flex align-items-center common-field-input-container border-bottom" data-field-id="{{ $common_field -> id }}">
 
-                                    <div class="w-5 sortable-handle"><i class="fad fa-grip-vertical fa-lg"></i></div>
+                                    <div class="w-5 sortable-handle"><i class="fal fa-grip-vertical fa-lg"></i></div>
 
                                     <div class="w-90 d-flex align-items-center common-field-input-div">
 
@@ -142,7 +142,7 @@
 
                                     <div class="w-10">
 
-                                        <a href="javascript: void(0)" class="btn btn-success save-edit-common-field-button" data-id="{{ $common_field -> id }}"><i class="fa fa-save mr-2"></i> Save</a>
+                                        <a href="javascript: void(0)" class="btn btn-primary save-edit-common-field-button" data-id="{{ $common_field -> id }}"><i class="fad fa-save mr-2"></i> Save</a>
 
                                     </div>
 

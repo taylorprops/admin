@@ -51,17 +51,17 @@
                     <div>
                         @if($transaction_checklist_item_note -> note_status == 'unread')
                             @if($transaction_checklist_item_note -> note_user_id != auth() -> user() -> id)
-                                <button class="btn btn-success btn-sm mark-read-button mb-0" data-note-id="{{ $transaction_checklist_item_note -> id }}" data-notes-collapse="notes_div_{{ $checklist_item_id }}"><i class="fa fa-check mr-2"></i> Mark Read</button>
+                                <button class="btn btn-success btn-sm mark-read-button mb-0" data-note-id="{{ $transaction_checklist_item_note -> id }}" data-notes-collapse="notes_div_{{ $checklist_item_id }}"><i class="fal fa-check mr-2"></i> Mark Read</button>
                             @else
                                 <div class="d-flex justify-content-end align-items-center">
                                     <span class="text-gray small">Not Read</span>
                                     @if($transaction_checklist_item_note -> note_user_id == auth() -> user() -> id)
-                                        <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $transaction_checklist_item_note -> id }}"><i class="fa fa-times-circle text-danger"></i></a>
+                                        <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $transaction_checklist_item_note -> id }}"><i class="fal fa-times-circle text-danger"></i></a>
                                     @endif
                                 </div>
                             @endif
                         @else
-                            <span class="text-success small"><i class="fa fa-check"></i> Read</span>
+                            <span class="text-success small"><i class="fal fa-check"></i> Read</span>
                         @endif
                     </div>
                 </div>

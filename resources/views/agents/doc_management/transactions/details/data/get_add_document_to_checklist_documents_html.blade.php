@@ -5,7 +5,7 @@
             @foreach($documents_available -> where('folder', $folder -> id) as $document_available)
                 <div class="d-flex justify-content-start align-items-center border-bottom">
                     <div>
-                        <button type="button" class="btn btn-sm btn-success select-document-button" data-dismiss="modal" data-document-id="{{ $document_available -> id }}">Add</button>
+                        <button type="button" class="btn btn-sm btn-primary select-document-button" data-dismiss="modal" data-document-id="{{ $document_available -> id }}">Add</button>
                     </div>
                     <div class="ml-2">{{ $document_available -> file_name_display }}</div>
                 </div>

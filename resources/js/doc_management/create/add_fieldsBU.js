@@ -902,7 +902,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 </div> \
                 <div class="field-options-holder focused"> \
                     <div> \
-                        <a href="javascript: void(0)" class="btn btn-sm btn-danger m-0 ml-2 close-field-options"><i class="fa fa-times fa-lg mr-2"></i> Hide</a> \
+                        <a href="javascript: void(0)" class="btn btn-sm btn-danger m-0 ml-2 close-field-options"><i class="fal fa-times fa-lg mr-2"></i> Hide</a> \
                     </div> \
                     <div class="btn-group" role="group" aria-label="Field Options"> \
                         <a type="button" class="btn btn-primary field-handle"><i class="fal fa-arrows fa-lg"></i></a> \
@@ -911,7 +911,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 ';
                 if(type != 'checkbox') {
                         field_div_html += ' \
-                        <a type="button" class="btn btn-primary field-properties" data-group-id="'+ group_id + '" data-field-id="' + field_id +'" data-field-type="' + type +'" data-toggle="collapse" href="#properties_container_'+field_id+'" role="button" aria-expanded="false" aria-controls="properties_container_'+field_id+'"><i class="fal fa-info-circle fa-lg"></i></a> \
+                        <a type="button" class="btn btn-primary field-properties" data-group-id="'+ group_id + '" data-field-id="' + field_id +'" data-field-type="' + type +'" data-toggle="collapse" href="#properties_container_'+field_id+'" role="button" aria-expanded="false" aria-controls="properties_container_'+field_id+'"><i class="fad fa-info-circle fa-lg"></i></a> \
                         ';
                 }
                         field_div_html += ' \
@@ -1233,7 +1233,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     });
                     if (field_name == null) {
                         field_div.addClass('field-error');
-                        field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must name the field</div>');
+                        field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must name the field</div>');
                         errors = 'yes';
                         errors_found = 'yes';
                     }
@@ -1241,7 +1241,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     if (type == 'number') {
                         if (field_div.find('select.field-data-number-type').val() == '') {
                             field_div.addClass('field-error');
-                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must enter the number type</div>');
+                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the number type</div>');
                             errors = 'yes';
                             errors_found = 'yes';
                         }
@@ -1250,7 +1250,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     if (type == 'address') {
                         if (field_div.find('select.field-data-address-type').val() == '') {
                             field_div.addClass('field-error');
-                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fal fa-exclamation-triangle mr-2"></i> You must enter the address type</div>');
+                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the address type</div>');
                             errors = 'yes';
                             errors_found = 'yes';
                         }

@@ -9,7 +9,7 @@
                             <div class="font-14 text-primary ml-3"><i class="fad fa-tasks mr-3"></i> {{ $checklist_type }} Checklist</div>
                             @if(auth() -> user() -> group == 'admin')
                             <div class="ml-4">
-                                <button type="button" class="btn btn-sm btn-primary email-agent-button"><i class="fal fa-envelope mr-2"></i> Email Agent</button>
+                                <button type="button" class="btn btn-sm btn-primary email-agent-button"><i class="fad fa-envelope mr-2"></i> Email Agent</button>
                             </div>
                             @endif
                         </div>
@@ -48,7 +48,7 @@
                         <div class="h5 text-orange checklist-group-header pb-2 @if(!$loop -> first) mt-4 @else mt-3 @endif">
                             {{ $group_name }}
                             @if(auth() -> user() -> group == 'admin')
-                            <button type="button" class="btn btn-sm btn-success add-checklist-item-button" data-group-id="{{ $checklist_group -> resource_id }}"><i class="fal fa-plus"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary add-checklist-item-button" data-group-id="{{ $checklist_group -> resource_id }}"><i class="fal fa-plus"></i></button>
                             @endif
                         </div>
 
@@ -135,7 +135,7 @@
                                                         <div>
                                                             <div class="dropdown">
 
-                                                                <button class="btn btn-primary dropdown-toggle checklist-item-dropdown" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars"></i></button>
+                                                                <button class="btn btn-primary dropdown-toggle checklist-item-dropdown" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fal fa-bars"></i></button>
 
                                                                 <div class="dropdown-menu dropdown-primary">
 
@@ -176,7 +176,7 @@
                                                     <div class="checklist-item-options d-flex justify-content-between align-items-center p-1 my-1 my-md-0 mx-auto bg-light">
                                                         <div class="font-weight-bold text-primary checklist-attachment">Docs</div>
                                                         <div>
-                                                            <button type="button" class="btn btn-sm btn-success add-document-button" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}" data-target="documents_div_{{ $checklist_item_id }}"><i class="fa fa-plus"></i></button>
+                                                            <button type="button" class="btn btn-sm btn-primary add-document-button" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}" data-target="documents_div_{{ $checklist_item_id }}"><i class="fal fa-plus"></i></button>
                                                         </div>
 
                                                         <div>
@@ -194,7 +194,7 @@
                                                         <div class="font-weight-bold text-primary checklist-attachment">Comments</div>
 
                                                         <div>
-                                                            <button type="button" class="btn btn-sm btn-success add-notes-button" data-add-notes-div="add_notes_{{ $checklist_item_id }}" data-toggle="collapse" data-target="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fa fa-plus"></i></button>
+                                                            <button type="button" class="btn btn-sm btn-primary add-notes-button" data-add-notes-div="add_notes_{{ $checklist_item_id }}" data-toggle="collapse" data-target="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fal fa-plus"></i></button>
                                                         </div>
 
                                                         <div>
@@ -224,22 +224,22 @@
                                                             <div class="review-options p-1 {{ $bg_color }}">
 
                                                                 <div class="@if($item_review_status == 'not_reviewed') d-flex @else d-none @endif justify-content-around align-items-center item-not-reviewed">
-                                                                    <button type="button" class="btn btn-sm btn-success accept-checklist-item-button" data-checklist-item-id="{{ $checklist_item_id }}" @if($transaction_documents_count == 0) disabled @endif><i class="fa fa-check mr-2"></i> Accept</button>
-                                                                    <button type="button" class="btn btn-sm btn-danger reject-checklist-item-button" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif @if($transaction_documents_count == 0) disabled @endif><i class="fa fa-minus-circle mr-2"></i> Reject</button>
+                                                                    <button type="button" class="btn btn-sm btn-success accept-checklist-item-button" data-checklist-item-id="{{ $checklist_item_id }}" @if($transaction_documents_count == 0) disabled @endif><i class="fal fa-check mr-2"></i> Accept</button>
+                                                                    <button type="button" class="btn btn-sm btn-danger reject-checklist-item-button" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif @if($transaction_documents_count == 0) disabled @endif><i class="fal fa-minus-circle mr-2"></i> Reject</button>
                                                                 </div>
 
                                                                 <div class="@if($item_review_status == 'accepted') d-flex @else d-none @endif justify-content-around align-items-center item-accepted">
-                                                                    <button type="button" class="btn btn-sm btn-success" disabled><i class="fa fa-check mr-2"></i> Accepted</button>
+                                                                    <button type="button" class="btn btn-sm btn-success" disabled><i class="fal fa-check mr-2"></i> Accepted</button>
                                                                     <div class="small mx-3">
-                                                                        <a href="javascript: void(0)" class="undo-accepted" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif ><i class="fad fa-undo mr-1"></i> Undo</a>
+                                                                        <a href="javascript: void(0)" class="undo-accepted" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif ><i class="fal fa-undo mr-1"></i> Undo</a>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="@if($item_review_status == 'rejected') d-flex @else d-none @endif justify-content-around align-items-center  item-rejected">
                                                                     <div class="small mx-3">
-                                                                        <a href="javascript: void(0)" class="undo-rejected" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif ><i class="fad fa-undo mr-1"></i> Undo</a>
+                                                                        <a href="javascript: void(0)" class="undo-rejected" data-checklist-item-id="{{ $checklist_item_id }}" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif ><i class="fal fa-undo mr-1"></i> Undo</a>
                                                                     </div>
-                                                                    <button type="button" class="btn btn-sm btn-danger" disabled><i class="fa fa-minus-circle mr-2"></i> Rejected</button>
+                                                                    <button type="button" class="btn btn-sm btn-danger" disabled><i class="fal fa-minus-circle mr-2"></i> Rejected</button>
                                                                 </div>
 
                                                             </div>
@@ -270,7 +270,7 @@
                                                                 <div class="col-12 mb-3">
                                                                     <div class="h5 text-primary float-left">Submitted Documents</div>
                                                                     <a class="text-danger float-right" data-toggle="collapse" href="#documents_div_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="documents_div_{{ $checklist_item_id }}">
-                                                                        <i class="fad fa-times-circle fa-2x"></i>
+                                                                        <i class="fal fa-times-circle fa-2x"></i>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -299,7 +299,7 @@
                                                                     </div>
                                                                     <div>
                                                                         <button type="button" class="btn btn-sm btn-danger float-right delete-doc-button" data-document-id="{{ $document_id }}" data-target="#documents_div_{{ $checklist_item_id }}" @if($item_review_status == 'accepted' && $transaction_document -> doc_status == 'viewed') disabled @endif>
-                                                                            <i class="fa fa-times text-white"></i>
+                                                                            <i class="fal fa-times text-white"></i>
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -325,7 +325,7 @@
                                                                     <div class="d-flex justify-content-between">
                                                                         <div class="h5 text-primary float-left">Comments</div>
                                                                         <div class="mb-2">
-                                                                            <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fad fa-times-circle fa-2x"></i></a>
+                                                                            <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fal fa-times-circle fa-2x"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -349,7 +349,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-1">
-                                                                <a href="javascript: void(0)" class="btn btn-success save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fa fa-save"></i></a>
+                                                                <a href="javascript: void(0)" class="btn btn-primary save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
                                                             </div>
                                                         </div>
 

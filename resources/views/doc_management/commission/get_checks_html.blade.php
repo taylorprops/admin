@@ -38,7 +38,7 @@
                                 data-state="{{ $check -> state }}"
                                 data-zip="{{ $check -> zip }}"
                                 >
-                                    <i class="fal fa-edit mr-2"></i> Edit
+                                    <i class="fad fa-edit mr-2"></i> Edit
                                 </a>
                             </td>
                             <td class="text-center">{{ $check -> date_received }}</td>
@@ -105,7 +105,7 @@
                                         data-state="{{ $check_other -> other_checks[0] -> state }}"
                                         data-zip="{{ $check_other -> other_checks[0] -> zip }}"
                                         data-client-name="{{ $check_other -> other_checks[0] -> client_name }}">
-                                        <i class="fal fa-edit mr-2"></i> Edit
+                                        <i class="fad fa-edit mr-2"></i> Edit
                                     </a>
                                     @endif
                                 </td>

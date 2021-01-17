@@ -317,7 +317,7 @@ window.form_elements = function () {
 
                         // add save button to exit out of multiple select
                         if (multiple) {
-                            wrapper.find('.form-select-dropdown').append('<div class="w-100 form-select-save-div"><div class="d-flex d-flex justify-content-center p-0"><a href="javascript: void(0)" class="form-select-multiple-save btn btn-success btn-sm">Close</a></div></div>');
+                            wrapper.find('.form-select-dropdown').append('<div class="w-100 form-select-save-div"><div class="d-flex d-flex justify-content-center p-0"><a href="javascript: void(0)" class="form-select-multiple-save btn btn-primary btn-sm">Close</a></div></div>');
                             $('.form-select-multiple-save').on('click', function () {
                                 setTimeout(function() {
                                     hide_dropdowns();
@@ -414,7 +414,7 @@ window.form_elements = function () {
 
                             let wrapper = element.closest('.form-ele');
 
-                            element.closest('.form-ele').append('<div class="form-datepicker-cancel"><i class="fal fa-times fa-xs"></i></div><div class="datepicker-div"><i class="fal fa-calendar-alt fa-xs"></i></div>');
+                            element.closest('.form-ele').append('<div class="form-datepicker-cancel"><i class="fal fa-times fa-xs"></i></div><div class="datepicker-div"><i class="fad fa-calendar-alt fa-xs"></i></div>');
 
                             show_cancel_date(wrapper, element);
                             element.on('change', function() {

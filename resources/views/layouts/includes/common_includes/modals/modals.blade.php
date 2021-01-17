@@ -2,17 +2,17 @@
 <div class="modal fade" id="modal_success" tabindex="-1" role="dialog" aria-labelledby="modal_success_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-success">
-                <h5 class="modal-title" id="modal_success_title">Success</h5>
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="modal_success_title"><i class="fad fa-check-circle mr-3"></i> Success</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times text-white"></i>
+                    <i class="fal fa-times text-danger"></i>
                 </button>
             </div>
             <div class="modal-body">
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+            <div class="modal-footer d-flex justify-content-around">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Close</button>
             </div>
         </div>
     </div>
@@ -23,16 +23,16 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal_info_title">Info</h5>
+                <h5 class="modal-title text-primary" id="modal_info_title"><i class="fad fa-info-circle mr-3"></i> Info</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times text-white"></i>
+                    <i class="fal fa-times text-danger"></i>
                 </button>
             </div>
             <div class="modal-body">
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+            <div class="modal-footer d-flex justify-content-around">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Close</button>
             </div>
         </div>
     </div>
@@ -42,17 +42,17 @@
 <div class="modal fade" id="modal_danger" tabindex="-1" role="dialog" aria-labelledby="modal_danger_title" aria-hidden="true">
     <div class="modal-notify modal-danger modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-danger">
-                <h5 class="modal-title" id="modal_danger_title">Error</h5>
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="modal_danger_title"><i class="fad fa-exclamation-circle mr-3"></i> Error</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times text-white"></i>
+                    <i class="fal fa-times text-danger"></i>
                 </button>
             </div>
             <div class="modal-body">
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <div class="modal-footer d-flex justify-content-around">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Close</button>
             </div>
         </div>
     </div>
@@ -71,8 +71,8 @@
             <div class="modal-body">
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" data-dismiss="modal" id="confirm_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" data-dismiss="modal" id="confirm_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>

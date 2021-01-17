@@ -5,10 +5,10 @@
             <div class="add-buttons-div mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <a class="btn btn-primary" data-toggle="collapse" href="#add_documents_div" aria-expanded="false" aria-controls="add_documents_div"><i class="fa fa-plus mr-2"></i> Add Documents </a>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#add_documents_div" aria-expanded="false" aria-controls="add_documents_div"><i class="fal fa-plus mr-2"></i> Add Documents </a>
                     </div>
                     <div>
-                        <a href="javascript: void(0)" class="btn btn-primary add-folder-button"><i class="fa fa-plus mr-2"></i> Add Folder</a>
+                        <a href="javascript: void(0)" class="btn btn-primary add-folder-button"><i class="fal fa-plus mr-2"></i> Add Folder</a>
                     </div>
                 </div>
             </div>
@@ -37,11 +37,11 @@
                             <div class="row">
                                 <div class="col-12 col-sm-6">
                                     Checklist Documents<br>
-                                    <a href="javascript:void(0);" class="btn btn-primary" id="add_checklist_template_button"><i class="fa fa-plus mr-2"></i> Add Template</a>
+                                    <a href="javascript:void(0);" class="btn btn-primary" id="add_checklist_template_button"><i class="fal fa-plus mr-2"></i> Add Template</a>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     Individual Documents<br>
-                                    <a href="javascript:void(0);" class="btn btn-primary" id="add_individual_template_button"><i class="fa fa-plus mr-2"></i> Add Documents</a>
+                                    <a href="javascript:void(0);" class="btn btn-primary" id="add_individual_template_button"><i class="fal fa-plus mr-2"></i> Add Documents</a>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                     <div class="add-docs-div bg-blue-light p-3 mb-1 border border-primary rounded-lg text-center">
                         <i class="fad fa-file-upload fa-3x text-primary mb-2"></i>
                         <div class="h5 text-primary mb-3">Upload Documents <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Uploading Documents" data-content="Upload documents from your computer"><i class="fad fa-question-circle ml-2"></i></a></div>
-                        <a href="javascript:void(0);" class="btn btn-primary mt-1 mt-md-4" id="upload_documents_button"><i class="fa fa-plus mr-2"></i> Upload Documents</a>
+                        <a href="javascript:void(0);" class="btn btn-primary mt-1 mt-md-4" id="upload_documents_button"><i class="fal fa-plus mr-2"></i> Upload Documents</a>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3 px-1">
@@ -75,7 +75,7 @@
 
             <div id="emailed_documents_container" class="p-4 mb-3 border rounded animate__animated animate__fadeIn">
 
-                <h5 class="text-orange"><i class="fal fa-envelope mb-3 mr-3"></i> Pending Emailed Documents</h5>
+                <h5 class="text-orange"><i class="fad fa-envelope mb-3 mr-3"></i> Pending Emailed Documents</h5>
 
                 <div class="list-group mb-3" id="emailed_documents_div"></div>
 
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="d-flex justify-content-around mt-3">
-                    <a href="javascript: void(0)" class="btn btn-success" id="add_emailed_documents_button"><i class="fal fa-download mr-2"></i> Import Documents</a>
+                    <a href="javascript: void(0)" class="btn btn-primary" id="add_emailed_documents_button"><i class="fad fa-download mr-2"></i> Import Documents</a>
                 </div>
 
             </div>
@@ -145,7 +145,7 @@
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fad fa-envelope mr-0 mr-md-2"></i><span class="button-text"> Email</span></button>
                     <div class="dropdown-menu">
                         <a class="text-primary dropdown-item docs-email-button" data-docs-type="merged" href="javascript: void(0)"><i class="fad fa-file-alt mr-2 fa-lg"></i> As One Document</a>
-                        <a class="text-primary dropdown-item docs-email-button" data-docs-type="single" href="javascript: void(0)"><i class="fal fa-file mr-2 fa-lg"></i> As Individual Documents</a>
+                        <a class="text-primary dropdown-item docs-email-button" data-docs-type="single" href="javascript: void(0)"><i class="fad fa-file mr-2 fa-lg"></i> As Individual Documents</a>
                     </div>
                 </div>
 
@@ -153,7 +153,7 @@
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fad fa-print mr-0 mr-md-2"></i><span class="button-text"> Print</span></button>
                     <div class="dropdown-menu">
                         <a class="text-primary dropdown-item docs-print-button" data-type="filled" href="javascript: void(0)"><i class="fad fa-file-alt mr-2 fa-lg" data-type="filled"></i> Print Filled</a>
-                        <a class="text-primary dropdown-item docs-print-button" data-type="blank" href="javascript: void(0)"><i class="fal fa-file mr-2 fa-lg" data-type="blank"></i> Print Blank</a>
+                        <a class="text-primary dropdown-item docs-print-button" data-type="blank" href="javascript: void(0)"><i class="fad fa-file mr-2 fa-lg" data-type="blank"></i> Print Blank</a>
                     </div>
                 </div>
 
@@ -161,7 +161,7 @@
                     <button type="button" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fad fa-download mr-0 mr-md-2"></i><span class="button-text"> Download</span></button>
                     <div class="dropdown-menu">
                         <a class="text-primary dropdown-item docs-download-button" data-type="filled" href="javascript: void(0)"><i class="fad fa-file-alt mr-2 fa-lg" data-type="filled"></i> Download Filled</a>
-                        <a class="text-primary dropdown-item docs-download-button" data-type="blank" href="javascript: void(0)"><i class="fal fa-file mr-2 fa-lg" data-type="blank"></i> Download Blank</a>
+                        <a class="text-primary dropdown-item docs-download-button" data-type="blank" href="javascript: void(0)"><i class="fad fa-file mr-2 fa-lg" data-type="blank"></i> Download Blank</a>
                     </div>
                 </div>
 
@@ -212,7 +212,7 @@
                     </div>
                     <div class="h5 mt-2">
                         <a class="folder-collapse text-orange" data-toggle="collapse" href="#documents_folder_{{ $loop -> index }}" aria-expanded="false" aria-controls="documents_folder_{{ $loop -> index }}">
-                            <i class="fal fa-angle-right fa-lg mr-3"></i>
+                            <i class="fad fa-angle-right fa-lg mr-3"></i>
                             <i class="fad fa-folder mr-1 mr-sm-3 fa-lg"></i>
                             {{ $folder_name }}
                         </a>
@@ -221,7 +221,7 @@
                 </div>
                 @if($deletable_folder && $documents -> where('folder', $folder -> id) -> where('assigned', 'yes') -> count() == 0)
                 <div class="pt-1">
-                    <a href="javascript: void(0)" class="btn btn-sm btn-danger delete-folder-button" data-folder-id="{{ $folder -> id }}"><i class="fa fa-trash"></i> <span class="d-none d-sm-inline-block ml-2 delete-folder-button" data-folder-id="{{ $folder -> id }}">Delete Folder</span></a>
+                    <a href="javascript: void(0)" class="btn btn-sm btn-danger delete-folder-button" data-folder-id="{{ $folder -> id }}"><i class="fad fa-trash"></i> <span class="d-none d-sm-inline-block ml-2 delete-folder-button" data-folder-id="{{ $folder -> id }}">Delete Folder</span></a>
                 </div>
                 @endif
             </div>
@@ -246,7 +246,7 @@
 
                                     <div class="d-flex justify-content-start align-items-center">
                                         <div class="mr-2">
-                                            <a href="javascript:void(0)" class="document-handle text-blue"><i class="fal fa-bars fa-lg"></i></a>
+                                            <a href="javascript:void(0)" class="document-handle text-blue"><i class="fad fa-bars fa-lg"></i></a>
                                         </div>
                                         <div class="mx-2 mr-md-4">
                                             <input type="checkbox" class="custom-form-element form-checkbox check-document  {{ $assigned }}" data-document-id="{{ $document -> id }}">
@@ -316,7 +316,7 @@
                                                 <button type="button" class="dropdown-item text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Download Form"><i class="fad fa-download mr-2 mr-xl-0"></i><span class="d-inline-block d-xl-none"> Download</span></button>
                                                 <div class="dropdown-menu">
                                                     <a class="text-primary dropdown-item" href="'.$document -> file_location_converted.'" download="'.$document -> file_name_display.'"><i class="fad fa-file-alt mr-2 fa-lg"></i> Download Filled</a>
-                                                    <a class="text-primary dropdown-item" href="'.$document -> file_location.'" download="'.$document -> file_name_display.'"><i class="fal fa-file mr-2 fa-lg"></i> Download Blank</a>
+                                                    <a class="text-primary dropdown-item" href="'.$document -> file_location.'" download="'.$document -> file_name_display.'"><i class="fad fa-file mr-2 fa-lg"></i> Download Blank</a>
                                                 </div>
                                             </div>';
 
@@ -325,7 +325,7 @@
                                                 <button type="button" class="dropdown-item text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Print Form"><i class="fad fa-print mr-2 mr-xl-0"></i><span class="d-inline-block d-xl-none"> Print</span></button>
                                                 <div class="dropdown-menu">
                                                     <a class="text-primary dropdown-item doc-print-button" href="javascript: void(0)" data-link="'.$document -> file_location_converted.'"><i class="fad fa-file-alt mr-2 fa-lg"></i> Print Filled</a>
-                                                    <a class="text-primary dropdown-item doc-print-button" href="javascript: void(0)" data-link="'.$document -> file_location.'" data-filename="'.$document -> file_name_display.'"><i class="fal fa-file mr-2 fa-lg"></i> Print Blank</a>
+                                                    <a class="text-primary dropdown-item doc-print-button" href="javascript: void(0)" data-link="'.$document -> file_location.'" data-filename="'.$document -> file_name_display.'"><i class="fad fa-file mr-2 fa-lg"></i> Print Blank</a>
                                                 </div>
                                             </div>';
 

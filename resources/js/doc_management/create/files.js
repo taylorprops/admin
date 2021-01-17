@@ -381,7 +381,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                     show_manage_upload(checklist_form_id, checklist_item_group_id);
                 }, 100);
                 toastr['success']('Form Successfully Added To Checklists');
-                $('#save_add_to_checklists_button').html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_add_to_checklists_button').html('<i class="fal fa-check mr-2"></i> Save');
             })
             .catch(function (error) {
 
@@ -786,7 +786,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                         response.data.titles.forEach(function(title) {
                             let row = ' \
                             <div class="d-flex justify-content-start align-items-center title-option w-100"> \
-                                <div><a href="javascript: void(0)" class="btn btn-success add-title">Select</a></div> \
+                                <div><a href="javascript: void(0)" class="btn btn-primary add-title">Select</a></div> \
                                 <div class="w-100"><input type="text" class="custom-form-element form-input" value="' + title + '" data-label=""></div> \
                             </div> \
                             ';

@@ -680,7 +680,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 $('#add_check_out_modal').modal('hide');
                 toastr['success']('Check Successfully Added');
                 get_checks_out(Commission_ID);
-                $('#save_add_check_out_button').prop('disabled', false).html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_add_check_out_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Save');
                 setTimeout(function() {
                     save_commission('no');
                 }, 500);

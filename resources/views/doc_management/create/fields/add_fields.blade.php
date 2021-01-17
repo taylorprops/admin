@@ -3,8 +3,8 @@
 @section('content')
 
 <div class="container page-container page-add-fields file-view-container p-0 mx-auto">
-    {{-- TODO: change this back to @if($published == 'no') --}}
-    @if($published != '')
+
+    @if($published == 'no')
 
         <div class="container-fluid">
             <div class="row bg-blue-light">
@@ -12,12 +12,12 @@
                     <div class="py-2 d-flex justify-content-center align-items-center field-select-container">
                         <div class="field-wrapper px-3" data-type="textline">
                             <div class="textline-div-field rounded my-auto">
-                                <div class="textline-html text-white ml-3 pt-1"><i class="fal fa-text fa-lg mr-2"></i> Textbox</div>
+                                <div class="textline-html text-white ml-3 pt-1"><i class="fad fa-text fa-lg mr-2"></i> Textbox</div>
                             </div>
                         </div>
                         <div class="field-wrapper px-3" data-type="date">
                             <div class="textline-div-field rounded my-auto">
-                                <div class="textline-html text-white ml-3 pt-1"><i class="fal fa-calendar-alt fa-lg mr-2"></i> Date</div>
+                                <div class="textline-html text-white ml-3 pt-1"><i class="fad fa-calendar-alt fa-lg mr-2"></i> Date</div>
                             </div>
                         </div>
                         <div class="field-wrapper px-3" data-type="number">
@@ -117,7 +117,7 @@
                                 <span class="ml-1">Page {{ $c }}</span>
                                 <span class="mr-1">
                                     <a href="javascript:void(0)" class="delete-page-button" data-page-number="{{ $c }}" data-file-id="{{ $image -> file_id }}">
-                                        <i class="fa fa-times text-danger fa-lg"></i>
+                                        <i class="fal fa-times text-danger fa-lg"></i>
                                     </a>
                                 </span>
                             </div>

@@ -15,7 +15,7 @@
         <div class="border rounded p-2 mb-4 check-in-queue">
             <div class="row no-gutters d-flex align-items-center text-gray font-8">
                 <div class="col-6 col-sm-3">
-                    <a href="javascript: void(0)" class="btn btn-success import-check-button" data-check-id="{{ $check_in_queue -> id }}"><i class="fal fa-file-import mr-2"></i> Import</a>
+                    <a href="javascript: void(0)" class="btn btn-primary import-check-button" data-check-id="{{ $check_in_queue -> id }}"><i class="fad fa-file-import mr-2"></i> Import</a>
                 </div>
                 <div class="col-6 col-sm-3">
                     {{ $check_in_queue -> street }}<br>{{ $check_in_queue -> city }}, {{ $check_in_queue -> state }} {{ $check_in_queue -> zip }}
@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-6 col-sm-2">
                     <a class="btn btn-primary" data-toggle="collapse" href="#view_check_div_{{ $id }}" role="button" aria-expanded="false" aria-controls="view_check_div_{{ $id }}">
-                        <i class="fal fa-eye mr-2"></i> View
+                        <i class="fad fa-eye mr-2"></i> View
                     </a>
                 </div>
             </div>

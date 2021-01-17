@@ -471,7 +471,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 let zip = $('.'+member+'-div').eq(0).find('.'+member+'-zip').val();
 
                 let container = $(this).closest('.row');
-                container.find('.address-autocomplete-div').show().html('<a href="javascript:void(0)" class="text-primary"> <i class="fa fa-plus mr-2"></i> Copy from '+(member == 'seller' ? member_type_seller : member_type_buyer)+' 1 address </a>');
+                container.find('.address-autocomplete-div').show().html('<a href="javascript:void(0)" class="text-primary"> <i class="fal fa-plus mr-2"></i> Copy from '+(member == 'seller' ? member_type_seller : member_type_buyer)+' 1 address </a>');
 
                 $(document).on('mousedown', function (e) {
                     if (!$(e.target).is('.address-autocomplete-div *')) {

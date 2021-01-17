@@ -34,7 +34,7 @@
         h3,
         h4,
         h5 {
-            color: $primary !important;
+            color: $primary;
         }
 
         .fa-times {
@@ -42,7 +42,7 @@
         }
     }
 
-    .modal-header.bg-success, .modal-header.bg-danger {
+    /* .modal-header.bg-success, .modal-header.bg-danger {
 
         h1,
         h2,
@@ -56,7 +56,7 @@
             color: $white !important;
         }
 
-    }
+    } */
 
     .modal-body {
         padding: 2rem;
@@ -196,10 +196,16 @@ body.modal-open {
 
     .dataTable {
         &.table th {
-            background: $blue;
-            color: $blue-light;
+            //background: $blue-light;
+            padding: .6rem 0rem .6rem 0.4rem;
+            color: $blue;
             vertical-align: middle;
             font-size: .8rem;
+            border-top: 1px solid $border-color;
+            // border-left: none !important;
+            // border-right: none !important;
+            border-bottom: 1px solid $border-color;
+
         }
         &.table td {
             padding: 0.4rem;
@@ -207,6 +213,13 @@ body.modal-open {
             font-size: .8rem;
             color: $text-gray;
         }
+
+        /* .sorting:before, .sorting_asc:before, .sorting_desc:before, .sorting_asc_disabled:before, .sorting_desc_disabled:before,
+        .sorting:after, .sorting_asc:after, .sorting_desc:after, .sorting_asc_disabled:after, .sorting_desc_disabled:after {
+            color: $blue;
+            font-size: 1rem;
+            line-height: 1rem;
+        } */
     }
 
     .dataTables_length {

@@ -8,7 +8,7 @@ $deleted = 0;
     @php
         $status_class_span = '<span class="text-success font-9">Cleared <i class="fad fa-thumbs-up ml-2"></i></span>';
         if($check -> check_status == 'pending') {
-            $status_class_span = '<span class="text-primary font-9">Pending <i class="fad fa-hourglass ml-2"></i></span>';
+            $status_class_span = '<span class="text-primary font-9">Pending <i class="fal fa-hourglass ml-2"></i></span>';
         } else if($check -> check_status == 'bounced') {
             $status_class_span = '<span class="text-danger font-9">Bounced <i class="fad fa-thumbs-down ml-2"></i></span>';
         }
@@ -136,7 +136,7 @@ $deleted = 0;
                     @if($check -> active == 'yes')
                         <div>
 
-                            <a href="{{ $check -> file_location }}" class="btn btn-primary btn-block" target="_blank"><i class="fa fa-eye mr-2"></i> View</a>
+                            <a href="{{ $check -> file_location }}" class="btn btn-primary btn-block" target="_blank"><i class="fad fa-eye mr-2"></i> View</a>
 
                             <button class="btn btn-primary btn-block edit-earnest-check-button"
                                 data-check-id="{{ $check -> id }}"
@@ -152,19 +152,19 @@ $deleted = 0;
                                 data-mail-to-address="{{ $check -> mail_to_address }}"
                                 data-date-sent="{{ $check -> date_sent }}"
                                 >
-                                <i class="fa fa-pencil mr-2"></i> Edit
+                                <i class="fad fa-pencil mr-2"></i> Edit
                             </button>
 
                             @if($check -> check_status == 'pending')
-                                <button class="btn btn-danger btn-block delete-earnest-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fa fa-ban mr-2"></i> Delete</button>
+                                <button class="btn btn-danger btn-block delete-earnest-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fal fa-ban mr-2"></i> Delete</button>
                             @endif
 
                         </div>
                     @else
                         @php $deleted += 1; @endphp
                         <div class="text-center">
-                            <span class="text-danger mb-3"><i class="fad fa-ban mr-2"></i> Deleted</span>
-                            <a href="javascript: void(0)" class="btn btn-block btn-primary undo-delete-earnest-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fad fa-undo-alt mr-2"></i> Undo</a>
+                            <span class="text-danger mb-3"><i class="fal fa-ban mr-2"></i> Deleted</span>
+                            <a href="javascript: void(0)" class="btn btn-block btn-primary undo-delete-earnest-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fal fa-undo-alt mr-2"></i> Undo</a>
                         </div>
                     @endif
                 </div>

@@ -84,7 +84,7 @@
 
         <div class="col-12 col-sm-3">
             <div class="mt-4 next-div @if(!$docs_to_display) hidden @endif">
-                <a href="javascript: void(0)" class="btn btn-success btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+                <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="">
-                    <btn class="btn btn-success" id="save_earnest_button"><i class="fa fa-save mr-2"></i> Save</btn>
+                    <btn class="btn btn-primary" id="save_earnest_button"><i class="fad fa-save mr-2"></i> Save</btn>
                 </div>
 
             </div>

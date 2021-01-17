@@ -50,7 +50,7 @@ if (document.URL.match(/transaction_details/)) {
                 axios.post('/agents/doc_management/transactions/change_checklist', formData, axios_options)
                 .then(function (response) {
 
-                    $('#save_change_checklist_button').html('<i class="fad fa-check mr-2"></i> Save');
+                    $('#save_change_checklist_button').html('<i class="fal fa-check mr-2"></i> Save');
                     load_tabs('checklist');
                     //load_documents_on_tab_click();
                     $('#change_checklist_modal').modal('hide');

@@ -149,7 +149,7 @@ $checklist = $checklists_model -> where('checklist_type', 'referral') -> first()
                                         data-checklist-location-id="{{ $checklist -> checklist_location_id }}"
                                         data-checklist-type="{{ $checklist -> checklist_type }}"
                                         class="btn btn-sm btn-primary float-right duplicate-checklist-button">
-                                        <i class="fal fa-copy mr-2"></i>
+                                        <i class="fad fa-copy mr-2"></i>
                                         Duplicate
                                     </a>
                                 </div>

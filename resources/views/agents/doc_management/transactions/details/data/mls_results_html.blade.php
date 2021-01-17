@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <div class="h4 text-success"><i class="fad fa-check mr-2"></i> Property Located</div>
+        <div class="h4 text-success"><i class="fal fa-check mr-2"></i> Property Located</div>
         <div class="h5 text-gray">
             The following data can be imported. Deselect any fields you do not want to replace.
             <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Import Data" data-content="Any selected fields will be automatically imported unless your deselect them.<br><br>Some required fields such as address fields will be overwritten.">

@@ -70,10 +70,10 @@ $status = $resource_items -> GetResourceName($property -> Status);
                 @if(in_array($property -> Status, $resource_items -> GetActiveListingStatuses('no', 'yes', 'yes') -> toArray()))
 
                     <div>
-                        <a href="javascript: void(0);" class="btn btn-success mt-2 d-block d-sm-inline-block" id="accept_contract_button"><i class="fa fa-plus mr-2"></i> Accept {{ $for_sale ? 'Contract' : 'Lease' }}</a>
+                        <a href="javascript: void(0);" class="btn btn-success mt-2 d-block d-sm-inline-block" id="accept_contract_button"><i class="fal fa-plus mr-2"></i> Accept {{ $for_sale ? 'Contract' : 'Lease' }}</a>
                     </div>
                     <div>
-                        <a href="javascript: void(0);" class="btn btn-danger mt-2 d-block d-sm-inline-block" id="cancel_listing_button"><i class="fa fa-minus mr-2"></i> {{ $action }} Listing</a>
+                        <a href="javascript: void(0);" class="btn btn-danger mt-2 d-block d-sm-inline-block" id="cancel_listing_button"><i class="fal fa-minus mr-2"></i> {{ $action }} Listing</a>
                     </div>
 
                 @else
@@ -95,13 +95,13 @@ $status = $resource_items -> GetResourceName($property -> Status);
                     }
                     @endphp
                     <div>
-                        <span class="badge {{ $header_status_class }} text-white mr-2 font-12"><i class="fad {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
+                        <span class="badge {{ $header_status_class }} text-white mr-2 font-12"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
                     </div>
 
                     @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'listing_status') || $property -> Status == $resource_items -> GetResourceID('Withdrawn', 'listing_status'))
 
                         <div class="mx-3 mt-1">
-                            <a href="javascript: void(0)"class="undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fad fa-undo mr-1"></i> Undo</a>
+                            <a href="javascript: void(0)"class="undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                         </div>
 
                     @endif
@@ -126,14 +126,14 @@ $status = $resource_items -> GetResourceName($property -> Status);
                         @if($property -> Status == $resource_items -> GetResourceID('Active', 'contract_status'))
 
                             <div>
-                                <a href="javascript: void(0);" class="btn btn-danger mt-2" id="cancel_contract_button" data-for-sale="{{ $for_sale ? 'yes' : 'no' }}" data-listing-expiration-date="{{ $listing_expiration_date }}"><i class="fa fa-minus mr-2"></i> {{ $for_sale ? $action.' Contract' : 'Cancel Lease' }}</a>
+                                <a href="javascript: void(0);" class="btn btn-danger mt-2" id="cancel_contract_button" data-for-sale="{{ $for_sale ? 'yes' : 'no' }}" data-listing-expiration-date="{{ $listing_expiration_date }}"><i class="fal fa-minus mr-2"></i> {{ $for_sale ? $action.' Contract' : 'Cancel Lease' }}</a>
                             </div>
 
                         @elseif($property -> Status == $resource_items -> GetResourceID('Cancel Pending', 'contract_status'))
 
                             <span class="badge bg-orange text-white mr-2 font-12"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</span>
                             <div class="mx-3 mt-1">
-                                <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fad fa-undo mr-1"></i> Undo</a>
+                                <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                             </div>
                             @if(auth() -> user() -> group == 'admin')
                                 <div>
@@ -143,9 +143,9 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                         @elseif($property -> Status == $resource_items -> GetResourceID('Released', 'contract_status') || $property -> Status == $resource_items -> GetResourceID('Canceled', 'contract_status'))
 
-                            <span class="badge bg-danger text-white mr-2 font-13"><i class="fad fa-ban mr-2 text-white"></i> {{ $status }}</span>
+                            <span class="badge bg-danger text-white mr-2 font-13"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</span>
                             <div class="mx-3 mt-1">
-                                <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fad fa-undo mr-1"></i> Undo</a>
+                                <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                             </div>
 
                         @else

@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                             <div>
-                                <a href="javascript: void(0)" class="btn btn-success mt-2" id="save_add_common_field_button"><i class="fal fa-save mr-2"></i> Save</a>
+                                <a href="javascript: void(0)" class="btn btn-primary mt-2" id="save_add_common_field_button"><i class="fad fa-save mr-2"></i> Save</a>
                             </div>
                         </div>
                     </div>

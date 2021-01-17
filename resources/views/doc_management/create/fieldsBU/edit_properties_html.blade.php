@@ -109,10 +109,10 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-around my-2">
 
-                        <button class="btn btn-danger" data-toggle="collapse" href="#properties_container_{{ $field_id }}" role="button" aria-expanded="false" aria-controls="properties_container_{{ $field_id }}"><i class="fad fa-ban mr-2"></i> Cancel</button>
+                        <button class="btn btn-danger" data-toggle="collapse" href="#properties_container_{{ $field_id }}" role="button" aria-expanded="false" aria-controls="properties_container_{{ $field_id }}"><i class="fal fa-ban mr-2"></i> Cancel</button>
 
                         @if($published == 'no')
-                            <a href="javascript: void(0);" class="btn btn-success field-save-properties" data-field-id="{{ $field_id }}" data-group-id="{{ $group_id }}" data-type="{{ $field_type }}"><i class="fad fa-save mr-2"></i> Save</a>
+                            <a href="javascript: void(0);" class="btn btn-primary field-save-properties" data-field-id="{{ $field_id }}" data-group-id="{{ $group_id }}" data-type="{{ $field_type }}"><i class="fad fa-save mr-2"></i> Save</a>
                         @endif
 
                     </div>

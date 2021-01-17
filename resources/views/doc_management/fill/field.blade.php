@@ -174,7 +174,7 @@ if($field_type == 'radio' || $field_type == 'checkbox') {
 
                 </div> <!-- end modal-body -->
                 <div class="modal-footer">
-                    <a href="javascript: void(0);" class="btn btn-success btn-sm shadow save-fillable-fields" data-group-id="{{ $field['group_id'] }}" data-type="{{ $field_type }}" data-field-name-type="{{ $field['field_name_type'] }}">Save</a>
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm shadow save-fillable-fields" data-group-id="{{ $field['group_id'] }}" data-type="{{ $field_type }}" data-field-name-type="{{ $field['field_name_type'] }}">Save</a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</a>
                 </div>
 

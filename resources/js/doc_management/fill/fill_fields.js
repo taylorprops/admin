@@ -415,7 +415,7 @@ if (document.URL.match(/create\/fill_fields/)) {
 
         function field_list() {
             $('.field-list-container').html('');
-            $('.field-list-container').append('<div class="h3 text-white bg-primary-dark p-2"><i class="fal fa-align-left mr-3"></i> Fields</div>');
+            $('.field-list-container').append('<div class="h3 text-white bg-primary-dark p-2"><i class="fad fa-align-left mr-3"></i> Fields</div>');
             $('.file-view-page-container').each(function () {
                 let page_number = $(this).data('id');
                 $('.field-list-container').append('<div class="font-weight-bold text-white bg-primary p-1 pl-2 mb-2">Page ' + page_number + '</div>');

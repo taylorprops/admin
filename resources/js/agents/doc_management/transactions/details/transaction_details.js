@@ -237,7 +237,7 @@ if (document.URL.match(/transaction_details/)) {
 
             let cancel_listing = false;
 
-            let cancel_success = '<div class="d-flex justify-content-center align-items-center p-3"><div><i class="fad fa-check-circle fa-2x text-success"></i></div><div class="text-center ml-3">Your Listing has been successfully canceled.</div></div>';
+            let cancel_success = '<div class="d-flex justify-content-center align-items-center p-3"><div><i class="fal fa-check-circle fa-2x text-success"></i></div><div class="text-center ml-3">Your Listing has been successfully canceled.</div></div>';
 
             // if listing agreement submitted
             if(response.data.listing_accepted == true) {
@@ -321,7 +321,7 @@ if (document.URL.match(/transaction_details/)) {
                 if(response.data.contract_submitted == true) {
                     $('.cancel-contract.docs-not-submitted').removeClass('d-flex').hide();
                     if(response.data.release_submitted == false) {
-                        $('#modal_danger').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><i class="fa fa-exclamation-circle fa-2x text-danger mr-2"></i> <div class="text-center">You must submit a RELEASE for the Sales Contract on the checklist before you can request a cancellation.</div></div>');
+                        $('#modal_danger').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><i class="fad fa-exclamation-circle fa-2x text-danger mr-2"></i> <div class="text-center">You must submit a RELEASE for the Sales Contract on the checklist before you can request a cancellation.</div></div>');
                         return false;
                     } else {
                         // cleared to cancel
@@ -341,7 +341,7 @@ if (document.URL.match(/transaction_details/)) {
 
                 } else {
                     if(response.data.release_submitted == true) {
-                        $('#modal_danger').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><i class="fa fa-exclamation-circle fa-2x text-danger mr-2"></i> <div class="text-center">You must submit a Sales Contract and it must be reviewed before you can submit a release and request a cancellation.</div></div>');
+                        $('#modal_danger').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><i class="fad fa-exclamation-circle fa-2x text-danger mr-2"></i> <div class="text-center">You must submit a Sales Contract and it must be reviewed before you can submit a release and request a cancellation.</div></div>');
                         return false;
                     } else {
                         $('.cancel-contract.docs-not-submitted').addClass('d-flex').show();

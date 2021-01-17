@@ -89,7 +89,7 @@
                                     @endif
 
                                     <div class="col px-1">
-                                        <a href="javascript:void(0)" class="btn btn-success add-resource-save-button mt-3"><i class="fad fa-save mr-2"></i> Save</a>
+                                        <a href="javascript:void(0)" class="btn btn-primary add-resource-save-button mt-3"><i class="fad fa-save mr-2"></i> Save</a>
                                     </div>
                                 </div>
                             </form>
@@ -108,7 +108,7 @@
 
                                     <span class="edit-resource-title list-item-handle float-left">@if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif  @if($resources_item -> resource_account_number) | {{ $resources_item -> resource_account_number }}@endif</span>
 
-                                    {{-- <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fad fa-ban fa-lg"></i></a> --}}
+                                    {{-- <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fal fa-ban fa-lg"></i></a> --}}
 
                                     <a href="javascript: void(0)" class="edit-resource-button text-primary float-right" data-resource-type="{{ $resources_item -> resource_type }}"><i class="fad fa-edit fa-lg"></i></a>
 
@@ -181,10 +181,10 @@
                                             @endif
 
                                             <div class="col-1 px-1">
-                                                <a href="javascript: void(0)" class="save-edit-resource-button" data-resource-id="{{ $resources_item -> resource_id }}"  data-resource-type="{{ $resources_item -> resource_type }}"><i class="fad fa-check text-success fa-2x mt-4"></i></a>
+                                                <a href="javascript: void(0)" class="save-edit-resource-button" data-resource-id="{{ $resources_item -> resource_id }}"  data-resource-type="{{ $resources_item -> resource_type }}"><i class="fal fa-check text-success fa-2x mt-4"></i></a>
                                             </div>
                                             <div class="col-1 px-1">
-                                                <a href="javascript: void(0)" class="close-edit-resource-button"><i class="fad fa-times text-danger fa-2x mt-4"></i></a>
+                                                <a href="javascript: void(0)" class="close-edit-resource-button"><i class="fal fa-times text-danger fa-2x mt-4"></i></a>
                                             </div>
                                         </div>
                                     </form>
@@ -218,8 +218,8 @@
                 <div class="h5 text-center text-orange font-weight-bold delete-deactivate-resource-file-name mt-3"></div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_delete_deactivate_resource"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_delete_deactivate_resource"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>

@@ -18,9 +18,9 @@
                     <div class="d-none {{-- d-md-block col-md-2 pr-0 --}}">
 
                         <div class="doc-list-arrows-div ml-2">
-                            <button type="button" class="btn btn-primary doc-list-arrow mb-2" data-dir="up"><i class="fa fa-arrow-up fa-2x"></i></button>
+                            <button type="button" class="btn btn-primary doc-list-arrow mb-2" data-dir="up"><i class="fal fa-arrow-up fa-2x"></i></button>
                             <br>
-                            <button type="button" class="btn btn-primary doc-list-arrow mt-2" data-dir="down"><i class="fa fa-arrow-down fa-2x"></i></button>
+                            <button type="button" class="btn btn-primary doc-list-arrow mt-2" data-dir="down"><i class="fal fa-arrow-down fa-2x"></i></button>
                         </div>
 
                     </div>
@@ -37,7 +37,7 @@
                                             {{ $document -> file_name_display }}
                                         </div>
                                         <div class="helper @if(!$loop -> first) hide @endif">
-                                            <i class="fad fa-arrow-right fa-2x text-white ml-3"></i>
+                                            <i class="fal fa-arrow-right fa-2x text-white ml-3"></i>
                                         </div>
                                     </div>
                                     <div class="assigned-div text-success">Assigned <i class="fal fa-check-circle"></i></div>
@@ -108,7 +108,7 @@
 
                                         <div class="d-flex justify-content-start align-items-center">
                                             <div class="mr-2">
-                                                <button type="button" class="btn btn-primary btn-sm assign-button {{ $release.' '.$contract.' '.$closing_doc.' '.strtolower($status) }}" data-checklist-id="{{ $checklist_item -> checklist_id }}" data-checklist-item-id="{{ $checklist_item ->  id }}" data-file-name="{{ $checklist_item_name }}"><i class="fa fa-plus mr-2"></i> Assign</button>
+                                                <button type="button" class="btn btn-primary btn-sm assign-button {{ $release.' '.$contract.' '.$closing_doc.' '.strtolower($status) }}" data-checklist-id="{{ $checklist_item -> checklist_id }}" data-checklist-item-id="{{ $checklist_item ->  id }}" data-file-name="{{ $checklist_item_name }}"><i class="fal fa-plus mr-2"></i> Assign</button>
                                             </div>
 
                                             <div class="text-primary">
@@ -132,7 +132,7 @@
                                                     $document_details = $transaction_documents_model -> GetDocInfo($doc -> document_id);
                                                     $file_name = $document_details['file_name'];
                                                     @endphp
-                                                    <div class="d-flex justify-content-start align-items-center docs small"><div><i class="fad fa-check-circle text-success mr-2"></i></div><div>{{ Str::limit($file_name, 85) }}</div></div>
+                                                    <div class="d-flex justify-content-start align-items-center docs small"><div><i class="fal fa-check-circle text-success mr-2"></i></div><div>{{ Str::limit($file_name, 85) }}</div></div>
                                                 @endforeach
                                             </div>
                                         </div>

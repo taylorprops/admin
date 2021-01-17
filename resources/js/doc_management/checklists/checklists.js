@@ -188,7 +188,7 @@ if (document.URL.match(/checklists/)) {
             toastr['success']('Checklists Copied Successfully');
             load_checklists();
             get_checklists(location_id, checklist_type);
-            $('#save_copy_checklists_button').prop('disabled', false).html('<i class="fad fa-check mr-2"></i> Copy Checklists');
+            $('#save_copy_checklists_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Copy Checklists');
         })
         .catch(function (error) {
 
@@ -491,7 +491,7 @@ if (document.URL.match(/checklists/)) {
                         </div> \
                     </div> \
                     <div class="col-1 d-flex align-items-center"> \
-                        <a class="btn btn-sm btn-danger delete-checklist-item-button"><i class="fa fa-trash"></i></a> \
+                        <a class="btn btn-sm btn-danger delete-checklist-item-button"><i class="fad fa-trash"></i></a> \
                     </div> \
                 </div> \
             </li> \

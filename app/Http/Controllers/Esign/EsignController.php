@@ -12,6 +12,7 @@ use Eversign\Document;
 use Eversign\Recipient;
 use Eversign\InitialsField;
 use Eversign\SignatureField;
+use Eversign\TextField;
 use Illuminate\Http\Request;
 
 use Eversign\DateSignedField;
@@ -36,17 +37,123 @@ use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
 class EsignController extends Controller {
 
 
+    ///////////// Dashboard //////////////
+
     public function esign(Request $request) {
 
         return view('/esign/esign');
     }
+
+    public function get_drafts(Request $request) {
+
+        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> get();
+
+        return view('/esign/get_drafts_html', compact('drafts'));
+
+    }
+
+    public function get_deleted_drafts(Request $request) {
+
+        $deleted_drafts = EsignEnvelopes::where('is_draft', 'yes') -> onlyTrashed() -> with('signers') -> get();
+
+        return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
+
+    }
+
+    public function get_sent(Request $request) {
+
+        $envelopes = EsignEnvelopes::where('status', 'sent') -> with('signers') -> get();
+
+        return view('/esign/get_sent_html', compact('envelopes'));
+
+    }
+
+    public function get_completed(Request $request) {
+
+        $envelopes = EsignEnvelopes::where('status', 'completed') -> with('signers') -> get();
+
+        return view('/esign/get_completed_html', compact('envelopes'));
+
+    }
+
+    public function get_templates(Request $request) {
+
+        return view('/esign/get_templates_html');
+
+    }
+
+
+    ////  Drafts ////
+
+    public function save_as_draft(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
+        $draft_name = $request -> draft_name;
+        $envelope = EsignEnvelopes::find($envelope_id) -> update(['is_draft' => 'yes', 'draft_name' => $draft_name]);
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function delete_draft(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
+        $delete_draft = EsignEnvelopes::find($envelope_id) -> delete();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function restore_draft(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
+        $restore_draft = EsignEnvelopes::withTrashed() -> where('id', $envelope_id) -> restore();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    //// Template ////
+
+    public function save_as_template(Request $request) {
+
+        dd($request -> all());
+        /* $envelope_id = $request -> envelope_id;
+        $template_name = $request -> template_name;
+        $envelope = EsignEnvelopes::find($envelope_id) -> update(['is_template' => 'yes', 'template_name' => $template_name]);
+
+        return response() -> json(['status' => 'success']); */
+
+    }
+
+    public function delete_template(Request $request) {
+
+        /* $envelope_id = $request -> envelope_id;
+        $delete_template = EsignEnvelopes::find($envelope_id) -> delete();
+
+        return response() -> json(['status' => 'success']); */
+
+    }
+
+    public function restore_template(Request $request) {
+
+        /* $envelope_id = $request -> envelope_id;
+        $restore_template = EsignEnvelopes::withTrashed() -> where('id', $envelope_id) -> restore();
+
+        return response() -> json(['status' => 'success']); */
+
+    }
+
+
+
+    ///////////// End Dashboard //////////////
 
     public function esign_add_documents(Request $request) {
 
         $Listing_ID = $request -> Listing_ID ?? null;
         $Contract_ID = $request -> Contract_ID ?? null;
         $Referral_ID = $request -> Referral_ID ?? null;
-        $User_ID = $request -> User_ID ?? null;
+        $User_ID = $request -> User_ID ?? auth() -> user() -> id;
         $Agent_ID = $request -> Agent_ID ?? null;
         $transaction_type = $request -> transaction_type ?? null;
 
@@ -205,7 +312,7 @@ class EsignController extends Controller {
 
                 // get file location
                 $file_name = basename($doc_from_location);
-                $add_esign_doc_file_location = '/storage/esign/'.$envelope_id.'/'.$file_name;
+                $add_esign_doc_file_location = '/storage/'.$document_folder.'/'.$file_name;
 
                 // page count
                 $pages_total = exec('pdftk ' . $doc_from_location . ' dump_data | sed -n \'s/^NumberOfPages:\s//p\'');
@@ -382,7 +489,16 @@ class EsignController extends Controller {
 
         $envelope_id = $request -> envelope_id;
 
-        $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> get();
+        $envelope = EsignEnvelopes::find($envelope_id);
+
+        $draft_name = $envelope -> draft_name ?? null;
+        $property_address = null;
+        if($envelope -> transaction_type != '') {
+            $property = Listings::GetPropertyDetails($envelope -> transaction_type, [$envelope -> Listing_ID, $envelope -> Contract_ID, $envelope -> Referral_ID]);
+            $property_address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        }
+
+        $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> with('fields') -> get();
 
         $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
         $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
@@ -394,24 +510,7 @@ class EsignController extends Controller {
         }
 
 
-        return view('/esign/esign_add_fields', compact('envelope_id', 'documents', 'signers', 'signers_options'));
-
-        /* $Listing_ID = $request -> Listing_ID;
-        $Contract_ID = $request -> Contract_ID;
-        $Referral_ID = $request -> Referral_ID;
-        $User_ID = $request -> User_ID;
-        $Agent_ID = $request -> Agent_ID;
-        $transaction_type = $request -> transaction_type;
-        $document_ids = explode(',', $request -> document_ids);
-
-        // need documents to be in order of checked docs
-        $documents = collect();
-        foreach($document_ids as $document_id) {
-            $docs = TransactionDocuments::where('file_id', $document_id) -> with('images_converted') -> get();
-            $documents = $documents -> merge($docs);
-        }
-
-        return view('/esign/esign_add_fields', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents')); */
+        return view('/esign/esign_add_fields', compact('envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options'));
 
     }
 
@@ -424,6 +523,8 @@ class EsignController extends Controller {
         $fields = collect($fields) -> map(function ($fields) {
             return (object) $fields;
         });
+
+        $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
 
         // add fields to db
         foreach($fields as $field) {
@@ -444,13 +545,20 @@ class EsignController extends Controller {
 
         }
 
+        if($request -> draft == 'yes') {
+            return response() -> json(['status' => 'draft saved']);
+        }
+
         $subject = $request -> subject;
         $message = $request -> message;
 
         // update esign_envelope table with subject and message
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
             'subject' => $subject,
-            'message' => $message
+            'message' => $message,
+            'is_draft' => 'no',
+            'draft_name' => '',
+            'status' => 'sent'
         ]);
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
@@ -548,6 +656,13 @@ class EsignController extends Controller {
                         //$dateSignedField -> setTextStyle('U');
                         $document_field -> setY($y);
 
+                    } else if($field -> field_type == 'name') {
+
+                        $document_field = new TextField();
+                        $document_field -> setValue($field -> signer);
+                        $document_field -> setTextSize(11);
+                        $document_field -> setY($y);
+
                     }
 
                     $document_field -> setIdentifier($document_id.$c);
@@ -572,9 +687,17 @@ class EsignController extends Controller {
 
         //Saving the created file_to_sign to the API.
         $newlyCreatedDocument = $client -> createDocument($file_to_sign);
-        dump($newlyCreatedDocument);
+        $hash = $newlyCreatedDocument -> getDocumentHash();
 
+        // update esign_envelope table with new hash
+        $envelope = EsignEnvelopes::find($envelope_id) -> update([
+            'document_hash' => $hash
+        ]);
+
+        return response() -> json(['status' => 'sent']);
 
     }
+
+
 
 }

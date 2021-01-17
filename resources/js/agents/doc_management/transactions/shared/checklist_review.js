@@ -215,7 +215,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             formData.append('note_id', note_id);
             axios.post('/agents/doc_management/transactions/mark_note_read', formData, axios_options)
                 .then(function (response) {
-                    button.parent().html('<span class="text-success small"><i class="fa fa-check"></i> Read</span>');
+                    button.parent().html('<span class="text-success small"><i class="fal fa-check"></i> Read</span>');
                     update_notes_count();
                 })
                 .catch(function (error) {
@@ -236,7 +236,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                     let default_icon = '';
 
                     if (page_type == 'checklist') {
-                        required_icon = '<i class="fal fa-exclamation-circle fa-lg mr-2"></i> ';
+                        required_icon = '<i class="fad fa-exclamation-circle fa-lg mr-2"></i> ';
                         default_icon = '<i class="fal fa-minus-circle fa-lg mr-2"></i> ';
                     }
                     parent = ele.closest('.checklist-item-div');
@@ -454,8 +454,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             setTimeout(function () {
                 $('#rejected_reason').focus();
             }, 500);
-            $('#rejected_reason').keyup(function () {
-                if ($(this).val().length > 0) {
+            $('#rejected_reason').on('keyup', function () {
+                if ($(this).val().length > 2) {
                     $('.rejected-reason').hide();
                     let search = new RegExp($(this).val(), 'i')
                     $('.rejected-reason').each(function () {
@@ -472,6 +472,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 $('#rejected_reason').val($(this).data('reason'));
                 $('.rejected-selected').addClass('d-none');
                 $(this).find('.rejected-selected').removeClass('d-none');
+                $('#save_reject_document_button').trigger('click');
             });
 
             $('#save_reject_document_button').off('click').on('click', function () {
@@ -568,7 +569,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
                                 let admin_success_message = ' \
                                 <div class="d-flex justify-content-start align-items-center"> \
-                                    <i class="fa fa-check-circle mr-4 text-success fa-lg"></i> \
+                                    <i class="fal fa-check-circle mr-4 text-success fa-lg"></i> \
                                     <div>All required documents have been approved!</div> \
                                 </div> \
                                 ';
@@ -576,7 +577,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                                 if(response.data.contract == 'yes') {
                                     admin_success_message += ' \
                                     <div class="d-flex justify-content-start align-items-center"> \
-                                    <i class="fa fa-check-circle mr-4 text-success fa-lg"></i> \
+                                    <i class="fal fa-check-circle mr-4 text-success fa-lg"></i> \
                                         <div >The Completed/Signed ALTA is now a required item on the checklist</div> \
                                     </div> \
                                     ';
@@ -739,11 +740,11 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                             if(response.data.release_status == 'accepted') {
                                 toastr['success']('Contract Successfully Released');
                                 if (page_type == 'review') {
-                                    $('.cancel-status').removeClass('bg-danger').addClass('bg-success').find('div').html('<i class="fad fa-check-circle mr-2"></i> \
+                                    $('.cancel-status').removeClass('bg-danger').addClass('bg-success').find('div').html('<i class="fal fa-check-circle mr-2"></i> \
                                     <span> \
                                         Cancellation Complete \
                                     </span>');
-                                    $('.property-item.cancellation[data-id="'+Contract_ID+'"]').find('.property-item-div').append('<div class="complete">Complete <i class="fad fa-check-circle"></i></div>');
+                                    $('.property-item.cancellation[data-id="'+Contract_ID+'"]').find('.property-item-div').append('<div class="complete">Complete <i class="fal fa-check-circle"></i></div>');
                                 }
                             } else if(response.data.release_status == 'not_reviewed') {
                                 if (page_type == 'review') {

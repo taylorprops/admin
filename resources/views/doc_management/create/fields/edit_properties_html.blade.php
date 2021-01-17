@@ -2,7 +2,7 @@
 
     <div class="d-flex justify-content-between align-items-center">
         <div class="font-10 my-2 text-orange">{{ strtoupper($field_category) }}</div>
-        <a type="button" class="btn btn-danger btn-sm close-field-options"><i class="fa fa-times"></i></a>
+        <a type="button" class="btn btn-danger btn-sm close-field-options"><i class="fal fa-times"></i></a>
     </div>
 
     <div class="pt-0 pb-1 px-2 form-div">
@@ -158,12 +158,12 @@
             <div class="col-12">
                 <div class="d-flex justify-content-around mt-3">
                     <a type="button"
-                    class="btn btn-success save-field-properties-button"
+                    class="btn btn-primary save-field-properties-button"
                     data-group-id="{{ $group_id }}"
                     data-field-id="{{ $field_id }}"
                     data-field-category="{{ $field_category }}"
                     >
-                        <i class="fal fa-save fa-lg mr-2"></i> Save
+                        <i class="fad fa-save fa-lg mr-2"></i> Save
                     </a>
                 </div>
             </div>
@@ -183,7 +183,7 @@
                 <div class="alert alert-danger hide mt-3 mb-2" role="alert">
                     <div class="d-flex justify-content-around">
                         <div class="d-flex justify-content-start align-items-center">
-                            <div><i class="fal fa-exclamation-circle fa-2x mr-2"></i></div>
+                            <div><i class="fad fa-exclamation-circle fa-2x mr-2"></i></div>
                             <div class="error-message font-8 text-center"></div>
                         </div>
                     </div>
@@ -307,7 +307,7 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-around my-2">
 
-                        <button class="btn btn-danger" data-toggle="collapse" href="#properties_container_{{ $field_id }}" role="button" aria-expanded="false" aria-controls="properties_container_{{ $field_id }}"><i class="fad fa-ban mr-2"></i> Cancel</button>
+                        <button class="btn btn-danger" data-toggle="collapse" href="#properties_container_{{ $field_id }}" role="button" aria-expanded="false" aria-controls="properties_container_{{ $field_id }}"><i class="fal fa-ban mr-2"></i> Cancel</button>
 
                         @if($published == 'no')
                             <a href="javascript: void(0);" class="btn btn-success field-save-properties" data-field-id="{{ $field_id }}" data-group-id="{{ $group_id }}" data-type="{{ $field_category }}"><i class="fad fa-save mr-2"></i> Save</a>

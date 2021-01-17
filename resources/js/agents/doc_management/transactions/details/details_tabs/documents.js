@@ -600,15 +600,15 @@ if (document.URL.match(/transaction_details/)) {
             axios.post('/agents/doc_management/transactions/save_split_document', formData, axios_options)
                 .then(function (response) {
                     toastr['success']('New Document Successfully Created');
-                    $('.add-docs-to-checklist-item-button').html('<i class="fa fa-plus mr-1 mr-sm-2"></i> Add').prop('disabled', true);
-                    $('#save_document_name_button').html('<i class="fa fa-save mr-2"></i> Save Document').prop('disabled', true);
+                    $('.add-docs-to-checklist-item-button').html('<i class="fal fa-plus mr-1 mr-sm-2"></i> Add').prop('disabled', true);
+                    $('#save_document_name_button').html('<i class="fad fa-save mr-2"></i> Save Document').prop('disabled', true);
                     $('.selected-images-slider').html('');
                     $('#split_document_modal').on('hide.bs.modal', function () {
                         load_tabs('documents');
                         //load_checklist_on_tab_click();
                     });
                     // change status and count of checklist items
-                    ele.parent().next().html('<span class="badge checklist-item-badge bg-blue-light text-primary p-1" title="We have received your document for this item. It is in the review process"><span class="d-none d-sm-inline-block"><i class="fal fa-stopwatch fa-lg mr-1"></i> </span>Pending</span>');
+                    ele.parent().next().html('<span class="badge checklist-item-badge bg-blue-light text-primary p-1" title="We have received your document for this item. It is in the review process"><span class="d-none d-sm-inline-block"><i class="fad fa-stopwatch fa-lg mr-1"></i> </span>Pending</span>');
                     let count = ele.closest('.list-group-item').find('.docs-count-badge').text();
                     count = parseInt(count);
                     ele.closest('.list-group-item').find('.docs-count-badge').text(count + 1);
@@ -720,7 +720,7 @@ if (document.URL.match(/transaction_details/)) {
 
         if (assigned == 'yes') {
             // notify user
-            $('#modal_info').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><div class="mr-4"><i class="fal fa-exclamation-triangle fa-2x text-danger"></i></div><div class="text-gray text-center">Some documents you selected have already be assigned and will not be included</div></div>');
+            $('#modal_info').modal().find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><div class="mr-4"><i class="fad fa-exclamation-triangle fa-2x text-danger"></i></div><div class="text-gray text-center">Some documents you selected have already be assigned and will not be included</div></div>');
             let button = $('#modal_info').find('.modal-footer').find('.btn');
             button.text('Continue');
 
@@ -922,10 +922,10 @@ if (document.URL.match(/transaction_details/)) {
         docs_div.prepend(' \
         <div class="added-document d-flex justify-content-between align-items-center docs" data-document-id="'+document_id+'" data-checklist-id="'+checklist_id+'" data-checklist-item-id="'+checklist_item_id+'"> \
             <div class="d-flex justify-content-start align-items-center text-success"> \
-                <div><i class="fad fa-check-circle mr-2"></i></div> \
+                <div><i class="fal fa-check-circle mr-2"></i></div> \
                 <div>'+file_name.substring(0, 70)+'</div> \
             </div> \
-            <div><a href="javascript: void(0)" class="delete-doc text-danger" data-document-id="'+document_id+'"><i class="fad fa-times-circle mr-1"></i> <span class="small">Remove</span></a></div> \
+            <div><a href="javascript: void(0)" class="delete-doc text-danger" data-document-id="'+document_id+'"><i class="fal fa-times-circle mr-1"></i> <span class="small">Remove</span></a></div> \
         </div>');
 
         active_div.addClass('assigned');
@@ -1170,7 +1170,7 @@ if (document.URL.match(/transaction_details/)) {
                         let sortables = $('.document-div[data-folder-id="' + folder + '"]');
                         reorder_documents(sortables);
 
-                        $('#save_add_individual_template_button, #save_add_checklist_template_button').html('<i class="fad fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
+                        $('#save_add_individual_template_button, #save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
                             if($('.individual-template-form:checked').length > 0) {
                                 $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
                                 save_add_template_documents('individual');
@@ -1284,7 +1284,7 @@ if (document.URL.match(/transaction_details/)) {
         $(document).on('click', '.cancel-upload', function () {
             $("#file_upload").dmUploader('cancel', $(this).data('id'));
             $(this).closest('li').remove();
-            $('#save_upload_documents_button').html('<i class="fad fa-check mr-2"></i> Upload Documents');
+            $('#save_upload_documents_button').html('<i class="fal fa-check mr-2"></i> Upload Documents');
         });
     }
 

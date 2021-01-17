@@ -65,7 +65,7 @@ class TransactionChecklistItems extends Model {
             $status = 'Pending';
             $agent_classes = 'bg-blue-light text-primary';
             $admin_classes = 'bg-danger text-white';
-            $fa = '<i class="fal fa-stopwatch fa-lg mr-2"></i>';
+            $fa = '<i class="fad fa-stopwatch fa-lg mr-2"></i>';
             $helper_text = 'We have received your document for this item. It is in the review process';
             $badge_class = 'badge-blue-light text-primary';
 
@@ -78,14 +78,14 @@ class TransactionChecklistItems extends Model {
                     $status = 'Required';
                     $agent_classes = 'bg-orange text-white';
                     $admin_classes = 'bg-orange text-white';
-                    $fa = '<i class="fal fa-exclamation-circle fa-lg mr-2"></i>';
+                    $fa = '<i class="fad fa-exclamation-circle fa-lg mr-2"></i>';
                     $helper_text = 'This is a required item for this checklist';
                     $badge_class = 'badge-orange text-white';
                 } else {
                     $status = 'If Applicable';
                     $agent_classes = 'bg-default-light text-white';
                     $admin_classes = 'bg-default-light text-white';
-                    $fa = '<i class="fal fa-minus-circle fa-lg mr-2"></i>';
+                    $fa = '<i class="fad fa-minus-circle fa-lg mr-2"></i>';
                     $helper_text = 'Depending on the details of the transaction, this form might not be required';
                     $badge_class = 'badge-primary text-white';
                 }
@@ -98,14 +98,14 @@ class TransactionChecklistItems extends Model {
                     $status = 'Complete';
                     $agent_classes = 'bg-success text-white';
                     $admin_classes = 'bg-success text-white';
-                    $fa = '<i class="fal fa-check fa-lg mr-2"></i>';
+                    $fa = '<i class="fad fa-check fa-lg mr-2"></i>';
                     $helper_text = 'The requirements for this checklist item have been met';
                     $badge_class = 'badge-success text-white';
                 } else if ($checklist_item -> checklist_item_status == 'rejected') {
                     $status = 'Rejected';
                     $agent_classes = 'bg-danger text-white';
                     $admin_classes = 'bg-default text-white';
-                    $fa = '<i class="fal fa-exclamation-circle fa-lg mr-2"></i>';
+                    $fa = '<i class="fad fa-exclamation-circle fa-lg mr-2"></i>';
                     $helper_text = 'Documents for this item have been rejected. They must be added again';
                     $badge_class = 'badge-danger text-white';
                 }

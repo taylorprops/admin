@@ -182,7 +182,7 @@ if (document.URL.match(/transaction_details/)) {
             .then(function (response) {
                 toastr['success']('Check Successfully Edited');
                 $('#edit_earnest_check_modal').modal('hide');
-                $('#save_edit_earnest_check_button').html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_edit_earnest_check_button').html('<i class="fal fa-check mr-2"></i> Save');
                 get_earnest_checks(check_type);
             })
             .catch(function (error) {
@@ -296,7 +296,7 @@ if (document.URL.match(/transaction_details/)) {
                 toastr['success']('Check Successfully Added');
                 $('#add_earnest_check_modal').modal('hide');
                 clear_add_earnest_check_form();
-                $('#save_add_earnest_check_button').prop('disabled', false).html('<i class="fad fa-check mr-2"></i> Save');
+                $('#save_add_earnest_check_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Save');
                 get_earnest_checks(check_type);
             })
             .catch(function (error) {

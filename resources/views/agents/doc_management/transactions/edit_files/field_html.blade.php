@@ -155,7 +155,7 @@ if($field_created_by == 'user') {
             </div>
 
             <div class="d-flex justify-content-around mb-2">
-                <a href="javascript: void(0);" class="btn btn-sm btn-success close-field-button"><i class="fa fa-check-circle mr-2"></i> Finished</a>
+                <a href="javascript: void(0);" class="btn btn-sm btn-primary close-field-button"><i class="fal fa-check-circle mr-2"></i> Finished</a>
             </div>
 
         </div>
@@ -175,7 +175,7 @@ if($field_created_by == 'user') {
                 @endforeach
 
                 <div class="d-flex justify-content-around mb-2">
-                    <a href="javascript: void(0);" class="btn btn-sm btn-success close-field-button"><i class="fa fa-check-circle mr-2"></i> Finished</a>
+                    <a href="javascript: void(0);" class="btn btn-sm btn-primary close-field-button"><i class="fal fa-check-circle mr-2"></i> Finished</a>
                 </div>
 
             </div>

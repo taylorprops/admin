@@ -131,8 +131,7 @@
             </div>
             <div class="modal-body"> </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_import_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_import_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -152,8 +151,7 @@
                 <div class="container text-center">Delete Member?</div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="delete_member_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-primary modal-confirm-button" id="delete_member_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -171,7 +169,7 @@
             <div class="modal-body">
                 <div class="container">
 
-                    <table id="contacts_table" class="table table-striped table-bordered nowrap table-hover table-sm" width="100%">
+                    <table id="contacts_table" class="table nowrap table-hover table-sm" width="100%">
                         <thead>
                             <tr>
                                 <th></th>
@@ -210,8 +208,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                {{-- <a class="btn btn-success" id="save_import_contact_button"><i class="fad fa-check mr-2"></i> Add Contact</a> --}}
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
             </div>
         </div>
     </div>
@@ -363,14 +360,14 @@
 
             </div>
             <div class="d-flex justify-content-around pb-3">
-                <a class="btn btn-success" id="send_email_button"><i class="fad fa-share mr-2"></i> Send Email</a>
+                <a class="btn btn-primary" id="send_email_button"><i class="fad fa-share mr-2"></i> Send Email</a>
             </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade draggable" id="add_individual_template_modal" tabindex="-1" role="dialog" aria-labelledby="add_individual_template_modal_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <form id="add_individual_template_form">
                 <div class="modal-header draggable-handle">
@@ -413,12 +410,12 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="form-groups-container border p-1 p-md-3 p-lg-4 mt-2">
+                                <div class="form-groups-container p-1 p-md-3 p-lg-4 mt-2">
 
                                     @foreach($form_groups as $form_group)
 
                                     <ul class="list-group form-group-div" data-form-group-id="{{ $form_group -> resource_id }}">
-                                        <li class="h4 text-orange list-group-header mt-1">
+                                        <li class="h5 text-orange list-group-header @if($loop -> first) mt-3 @else mt-1 @endif">
                                             {{ $form_group -> resource_state }}
                                             @if($form_group -> resource_state != $form_group -> resource_name) | {{ $form_group -> resource_name }} @endif
                                         </li>
@@ -444,44 +441,39 @@
 
                                             <li class="list-group-item form-name p-1 {{ $form_status_class }}" data-form-id="{{ $form -> file_id }}" data-text="{{ $form -> file_name_display }}" data-tags="{{ $form_categories }}">
 
-                                                <div class="row d-flex align-items-center">
+                                                <div class="d-flex justify-content-between align-items-center">
 
-                                                    <div class="col-2 col-sm-1">
+                                                    <div class="d-flex justify-content-start align-items-center">
 
-                                                        <div class="w-100 d-flex justify-content-end">
+                                                        <div class="ml-3">
+
                                                             <input type="checkbox" class="custom-form-element form-checkbox individual-template-form"
-                                                            id="template_form_{{ $form -> file_id }}"
-                                                            data-file-id="{{ $form -> file_id }}"
-                                                            data-file-name="{{ $form -> file_name }}"
-                                                            data-file-name-display="{{ $form -> file_name_display }}"
-                                                            data-pages-total="{{ $form -> pages_total }}"
-                                                            data-file-location="{{ $form -> file_location }}"
-                                                            data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $form -> file_location)))) }}"
-                                                            >
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="col-10 col-sm-10 col-lg-8">
-
-                                                        <div class="d-flex flex-wrap justify-content-between align-items-center">
-
-                                                            <label class="mb-0" for="template_form_{{ $form -> file_id }}" title="{{ $form -> file_name_display }}">
-                                                                <a class="text-primary pointer">{{ shorten_text($form -> file_name_display, 65) }}</a>
-                                                            </label>
-                                                            <div>
-                                                                <a href="{{ $form -> file_location }}" class="btn btn-sm btn-primary" target="_blank"><i class="fa fa-eye mr-2"></i> View File</a>
-                                                            </div>
+                                                                id="template_form_{{ $form -> file_id }}"
+                                                                data-file-id="{{ $form -> file_id }}"
+                                                                data-file-name="{{ $form -> file_name }}"
+                                                                data-file-name-display="{{ $form -> file_name_display }}"
+                                                                data-pages-total="{{ $form -> pages_total }}"
+                                                                data-file-location="{{ $form -> file_location }}"
+                                                                data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $form -> file_location)))) }}"
+                                                                >
 
                                                         </div>
 
+                                                        <label class="mt-3" for="template_form_{{ $form -> file_id }}" title="{{ $form -> file_name_display }}">
+                                                            <a class="text-primary pointer">{{ shorten_text($form -> file_name_display, 65) }}</a>
+                                                        </label>
+
                                                     </div>
 
-                                                    <div class="col-12 col-lg-3 d-none d-lg-block">
+                                                    <div>
+                                                        <a href="{{ $form -> file_location }}" class="btn btn-sm btn-primary" target="_blank"><i class="fad fa-eye mr-2"></i> View File</a>
+                                                    </div>
+
+                                                    {{-- <div class="col-12 col-lg-3 d-none d-lg-block">
                                                         @foreach(explode(' ', $form_categories) as $tag)
                                                         <span class="badge badge-pill form-pill text-white ml-1" style="background-color: {{ $resource_items -> GetCategoryColor($tag) }}">{{ $resource_items -> getResourceName($tag) }}</span>
                                                         @endforeach
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
 
@@ -531,8 +523,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_add_individual_template_button"><i class="fad fa-check mr-2"></i> Add Documents</a>
+                    <a class="btn btn-primary" id="save_add_individual_template_button"><i class="fal fa-plus mr-2"></i> Add Documents</a>
                 </div>
             </form>
         </div>
@@ -540,7 +531,7 @@
 </div>
 
 <div class="modal fade draggable" id="add_checklist_template_modal" tabindex="-1" role="dialog" aria-labelledby="add_checklist_template_modal_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <form id="add_checklist_template_form">
                 <div class="modal-header draggable-handle">
@@ -596,7 +587,7 @@
                                         $checklist_form_required = $available_files -> where('file_id', $checklist_item_required -> checklist_form_id) -> first();
                                         @endphp
                                         @if($checklist_form_required && $checklist_form_required -> file_location != '')
-                                            <li class="list-group-item">
+                                            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom">
                                                 <div class="d-flex justify-content-start align-items-center">
                                                     <div>
                                                         <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
@@ -616,7 +607,7 @@
                                         @endif
                                     @endforeach
 
-                                    <div class="h5 text-orange">If Applicable Documents</div>
+                                    <div class="h5 text-orange mt-4">If Applicable Documents</div>
 
                                     @foreach($checklist_items_if_applicable as $checklist_item_if_applicable)
                                         @php
@@ -624,7 +615,7 @@
                                         $checklist_form_if_applicable = $available_files -> where('file_id', $checklist_item_if_applicable -> checklist_form_id) -> first();
                                         @endphp
                                         @if($checklist_form_if_applicable -> file_location != '')
-                                            <li class="list-group-item">
+                                            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom">
                                                 <div class="d-flex justify-content-start align-items-center">
                                                     <div>
                                                         <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
@@ -650,8 +641,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_add_checklist_template_button"><i class="fad fa-check mr-2"></i> Add Documents</a>
+                    <a class="btn btn-primary" id="save_add_checklist_template_button"><i class="fal fa-plus mr-2"></i> Add Documents</a>
                 </div>
             </form>
         </div>
@@ -722,8 +712,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_upload_documents_button"><i class="fad fa-check mr-2"></i> Upload Documents</a>
+                    <a class="btn btn-primary" id="save_upload_documents_button"><i class="fad fa-upload mr-2"></i> Upload Documents</a>
                 </div>
             </form>
         </div>
@@ -763,8 +752,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_move_documents_button"><i class="fad fa-check mr-2"></i> Move Documents</a>
+                    <a class="btn btn-primary" id="save_move_documents_button"><i class="fad fa-dolly mr-2"></i> Move Documents</a>
                 </div>
             </form>
         </div>
@@ -791,8 +779,7 @@
                     </div>
                 </div>
                 <div class="modal-footer save-add-to-checklist-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_add_to_checklist_button" data-dismiss="modal" data-checklist-id="{{ $checklist_id }}"><i class="fad fa-check mr-2"></i> Save</a>
+                    <a class="btn btn-primary btn-lg" id="save_add_to_checklist_button" data-dismiss="modal" data-checklist-id="{{ $checklist_id }}"><i class="fad fa-save mr-2"></i> Save Checklist Changes</a>
                 </div>
             </form>
         </div>
@@ -816,8 +803,7 @@
                         <input type="text" class="custom-form-element form-input required" id="new_folder_name" data-label="Folder Name">
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                        <a class="btn btn-success" id="save_add_folder_button"><i class="fad fa-check mr-2"></i> Save Folder</a>
+                        <a class="btn btn-primary" id="save_add_folder_button"><i class="fad fa-save mr-2"></i> Save Folder</a>
                     </div>
                 </div>
             </form>
@@ -846,8 +832,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" data-dismiss="modal" id="confirm_delete_document_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" data-dismiss="modal" id="confirm_delete_document_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -872,8 +858,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_delete_folder_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_delete_folder_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -894,8 +880,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_delete_documents_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_delete_documents_button" data-dismiss="modal"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -931,7 +917,7 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-around align-items-center w-100">
-                    <button type="button" class="btn btn-lg btn-success modal-dismiss" data-dismiss="modal">Finish and Close</button>
+                    <button type="button" class="btn btn-lg btn-primary p-3 modal-dismiss" data-dismiss="modal"><i class="fal fa fa-times mr-2"></i> Finish and Close</button>
                 </div>
             </div>
         </div>
@@ -939,7 +925,7 @@
 </div>
 
 <div class="modal fade draggable" id="rename_document_modal" tabindex="-1" role="dialog" aria-labelledby="rename_document_modal_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="rename_document_form">
                 <div class="modal-header draggable-handle">
@@ -952,19 +938,18 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
-                                <div class="text-center">
-                                    <div class="h4 text-primary">
-                                        Enter New Name
-                                    </div>
-                                    <input type="text" class="custom-form-element form-input" id="new_document_name" data-title="Enter Document Name">
+
+                                <div class="text-gray">
+                                    Enter New Name
                                 </div>
+                                <input type="text" class="custom-form-element form-input" id="new_document_name" data-title="Enter Document Name">
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_rename_document_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                    <a class="btn btn-primary" id="save_rename_document_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Name</a>
                 </div>
             </form>
         </div>
@@ -985,7 +970,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex justify-content-start align-items-center">
-                                <div><i class="fad fa-check-circle fa-2x mr-3 text-success"></i></div>
+                                <div><i class="fal fa-check-circle fa-2x mr-3 text-success"></i></div>
                                 <div>We have found <span id="match_count"></span> documents that can be automatically assigned. Would you like for us to add them?</div>
                             </div>
                         </div>
@@ -993,8 +978,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal" id="cancel_matches_button"><i class="fa fa-times mr-2"></i> Do Not Add Them</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_matches_button"><i class="fad fa-check mr-2"></i> Yes, Add Them!</a>
+                <a class="btn btn-danger" data-dismiss="modal" id="cancel_matches_button"><i class="fal fa-times mr-2"></i> Do Not Add Them</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_matches_button"><i class="fal fa-check mr-2"></i> Yes, Add Them!</a>
             </div>
         </div>
     </div>
@@ -1072,8 +1057,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_change_checklist_button"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_change_checklist_button"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
 
         </div>
@@ -1099,8 +1083,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_change_checklist_button"><i class="fad fa-check mr-2"></i> Continue</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="confirm_change_checklist_button"><i class="fal fa-check mr-2"></i> Continue</a>
             </div>
         </div>
     </div>
@@ -1127,7 +1111,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
                 </div>
                 <input type="hidden" id="add_document_checklist_id">
                 <input type="hidden" id="add_document_checklist_item_id">
@@ -1155,8 +1139,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="delete_checklist_item_doc_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="delete_checklist_item_doc_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -1224,8 +1208,7 @@
                         </form>
 
                         <div class="d-flex justify-content-around">
-                            <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                            <button type="button" class="btn btn-success" id="save_add_check_in_button"><i class="fad fa-check mr-2"></i> Save</button>
+                            <button type="button" class="btn btn-primary" id="save_add_check_in_button"><i class="fad fa-save mr-2"></i> Save Check</button>
                         </div>
 
                     </div>
@@ -1291,8 +1274,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_edit_check_in_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_edit_check_in_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
             </div>
         </div>
     </div>
@@ -1412,8 +1394,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <button type="button" class="btn btn-success" id="save_add_check_out_button"><i class="fad fa-check mr-2"></i> Save</button>
+                <button type="button" class="btn btn-primary" id="save_add_check_out_button"><i class="fad fa-save mr-2"></i> Save Check</button>
             </div>
         </div>
     </div>
@@ -1529,8 +1510,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_edit_check_out_button" data-dismiss="modal"><i class="fad fa-check mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_edit_check_out_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
             </div>
         </div>
     </div>
@@ -1605,8 +1585,7 @@
                         </form>
 
                         <div class="d-flex justify-content-around">
-                            <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                            <button type="button" class="btn btn-success" id="save_add_earnest_check_button"><i class="fad fa-check mr-2"></i> Save</button>
+                            <button type="button" class="btn btn-primary" id="save_add_earnest_check_button"><i class="fad fa-save mr-2"></i> Save Check</button>
                         </div>
 
                     </div>
@@ -1684,8 +1663,7 @@
                         </form>
 
                         <div class="d-flex justify-content-around">
-                            <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                            <button type="button" class="btn btn-success" id="save_edit_earnest_check_button"><i class="fad fa-check mr-2"></i> Save</button>
+                            <button type="button" class="btn btn-primary" id="save_edit_earnest_check_button"><i class="fad fa-save mr-2"></i> Save Check Details</button>
                         </div>
 
                     </div>
@@ -1759,7 +1737,7 @@
                             <div class="row bright-search-row">
                                 <div class="col-12">
                                     <a class="btn btn-primary my-3" data-toggle="collapse" href="#agent_search_div" role="button" aria-expanded="false" aria-controls="agent_search_div">
-                                        <i class="fad fa-search mr-2"></i> Search Agents in Bright MLS
+                                        <i class="fal fa-search mr-2"></i> Search Agents in Bright MLS
                                     </a>
                                     <div class="collapse border" id="agent_search_div">
                                         <div class="p-2 mb-4">
@@ -1922,9 +1900,8 @@
                 </form>
 
             </div>
-            <div class="modal-footer d-flex justify-content-around mb-5 pb-5">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success" id="save_accept_contract_button"><i class="fad fa-check mr-2"></i> Save</a>
+            <div class="modal-footer d-flex justify-content-around pb-3">
+                <a class="btn btn-primary btn-lg p-3" id="save_accept_contract_button"><i class="fad fa-save mr-2"></i> Save Contract Details</a>
             </div>
         </div>
     </div>
@@ -1947,8 +1924,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Do Not Cancel</a>
-                <a class="btn btn-success" id="save_cancel_listing_button"><i class="fad fa-check mr-2"></i> Submit Cancellation</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Do Not Cancel</a>
+                <a class="btn btn-primary" id="save_cancel_listing_button"><i class="fal fa-check mr-2"></i> Submit Cancellation</a>
             </div>
         </div>
     </div>
@@ -1974,8 +1951,8 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="undo_cancel_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary modal-confirm-button" id="undo_cancel_button"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -1997,7 +1974,7 @@
                     {{-- Contracts --}}
                     <div class="list-group-item cancel-contract docs-submitted d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-info-circle text-primary fa-2x"></i>
+                            <i class="fad fa-info-circle text-primary fa-2x"></i>
                         </div>
                         <div>
                             Your cancellation request will submitted to the office for review.
@@ -2005,7 +1982,7 @@
                     </div>
                     <div class="list-group-item cancel-contract docs-not-submitted d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-info-circle text-primary fa-2x"></i>
+                            <i class="fad fa-info-circle text-primary fa-2x"></i>
                         </div>
                         <div>
                             Since we have not reviewed and approved a Sales Contract for this property the Contract will be instantly canceled.
@@ -2013,7 +1990,7 @@
                     </div>
                     <div class="list-group-item cancel-contract has-listing docs-not-submitted d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-info-circle text-primary fa-2x"></i>
+                            <i class="fad fa-info-circle text-primary fa-2x"></i>
                         </div>
                         <div>
                             Your listing will remain active and you will be able to accept a new Sales Contract immediately.
@@ -2023,7 +2000,7 @@
                     {{-- Leases --}}
                     <div class="list-group-item cancel-lease docs-not-submitted d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-info-circle text-primary fa-2x"></i>
+                            <i class="fad fa-info-circle text-primary fa-2x"></i>
                         </div>
                         <div>
                             Since we have not reviewed and approved a Lease Agreement for this property the Lease Agreement will be instantly canceled.
@@ -2032,7 +2009,7 @@
 
                     <div class="list-group-item cancel-lease has-listing docs-not-submitted d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-info-circle text-primary fa-2x"></i>
+                            <i class="fad fa-info-circle text-primary fa-2x"></i>
                         </div>
                         <div>
                             Your listing will remain active and you will be able to accept a new Lease Agreement immediately.
@@ -2040,7 +2017,7 @@
                     </div>
                     <div class="list-group-item expired-listing d-flex justify-content-start align-items-center">
                         <div class="pr-3">
-                            <i class="fa fa-exclamation-circle text-danger fa-2x"></i>
+                            <i class="fad fa-exclamation-circle text-danger fa-2x"></i>
                         </div>
                         <div>
                             Your Listing Agreement is past its expiration date, please submit an extension or Cancel it.
@@ -2052,8 +2029,8 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Do Not Cancel</a>
-                <a class="btn btn-success" id="save_cancel_contract_button"><i class="fad fa-check mr-2"></i> Submit Cancellation</a>
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Do Not Cancel</a>
+                <a class="btn btn-primary" id="save_cancel_contract_button"><i class="fal fa-check mr-2"></i> Submit Cancellation</a>
             </div>
         </div>
     </div>
@@ -2119,8 +2096,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success" id="save_required_fields_button"><i class="fad fa-check mr-2"></i> Save</a>
+                    <a class="btn btn-primary" id="save_required_fields_button"><i class="fad fa-save mr-2"></i> Save Required Details</a>
                 </div>
             </form>
         </div>

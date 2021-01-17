@@ -97,7 +97,7 @@ function added_item_html(resource_id, resource_type, resource_name, resource_sta
     }
     resource_html += ' \
             ' + resource_name_display + '</span > \
-            <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="' + resource_id + '" data-resource-name="' + resource_name + '" data-action="delete"><i class="fad fa-ban fa-lg"></i></a> \
+            <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="' + resource_id + '" data-resource-name="' + resource_name + '" data-action="delete"><i class="fal fa-ban fa-lg"></i></a> \
             <a href="javascript: void(0)" class="edit-resource-button text-primary float-right" data-resource-type="' + resource_type + '"><i class="fad fa-edit fa-lg"></i></a> \
         </div> \
         <div class="resource-div-edit container-fluid"> \

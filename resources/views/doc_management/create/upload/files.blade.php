@@ -58,8 +58,8 @@
                             </div>
                             <div class="col-5">
                                 <div class="d-flex justify-content-between">
-                                    <a href="javascript: void(0)" data-state="{{ $form_group -> resource_state }}" data-form-group-id="{{ $form_group -> resource_id }}" class="btn btn-success upload-file-button mt-3"><i class="fal fa-plus mr-2"></i> Add Form Item</a>
-                                    <a href="javascript: void(0)" data-state="{{ $form_group -> resource_state }}" data-form-group-id="{{ $form_group -> resource_id }}" class="btn btn-success add-non-form-item-button mt-3"><i class="fal fa-plus mr-2"></i> Add Non-Form Item</a>
+                                    <a href="javascript: void(0)" data-state="{{ $form_group -> resource_state }}" data-form-group-id="{{ $form_group -> resource_id }}" class="btn btn-primary upload-file-button mt-3"><i class="fal fa-plus mr-2"></i> Add Form Item</a>
+                                    <a href="javascript: void(0)" data-state="{{ $form_group -> resource_state }}" data-form-group-id="{{ $form_group -> resource_id }}" class="btn btn-primary add-non-form-item-button mt-3"><i class="fal fa-plus mr-2"></i> Add Non-Form Item</a>
                                 </div>
                             </div>
                         </div>
@@ -102,8 +102,8 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                        <a class="btn btn-success modal-confirm-button" id="checklist_type_button"><i class="fad fa-check mr-2"></i> Continue</a>
+                        <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                        <a class="btn btn-primary modal-confirm-button" id="checklist_type_button"><i class="fal fa-check mr-2"></i> Continue</a>
                     </div>
                 </form>
             </div>
@@ -124,8 +124,7 @@
                         <div id="add_form_to_checklists_div"> </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                        <a class="btn btn-success" id="save_add_to_checklists_button"><i class="fad fa-check mr-2"></i> Save</a>
+                        <a class="btn btn-primary" id="save_add_to_checklists_button"><i class="fad fa-save mr-2"></i> Save</a>
                     </div>
                 </form>
             </div>
@@ -149,8 +148,8 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success modal-confirm-button" id="confirm_remove_from_checklist_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-primary modal-confirm-button" id="confirm_remove_from_checklist_button"><i class="fal fa-check mr-2"></i> Confirm</a>
                 </div>
             </div>
         </div>
@@ -177,8 +176,8 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success modal-confirm-button" id="confirm_replace_form_button"><i class="fad fa-check mr-2"></i> Confirm</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-primary modal-confirm-button" id="confirm_replace_form_button"><i class="fal fa-check mr-2"></i> Confirm</a>
                 </div>
             </div>
         </div>
@@ -365,8 +364,7 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                        <a class="btn btn-success" id="save_add_item_no_form_button"><i class="fad fa-check mr-2"></i> Save</a>
+                        <a class="btn btn-primary" id="save_add_item_no_form_button"><i class="fad fa-save mr-2"></i> Save</a>
                     </div>
                 </form>
             </div>
@@ -530,8 +528,8 @@
                     <div class="alert alert-danger"><i class="fad fa-exclamation-triangle mr-2 text-danger"></i> Once published you can no longer add or edit fields</div>
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success modal-confirm-button" id="confirm_publish"><i class="fad fa-check mr-2"></i> Confirm</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-primary modal-confirm-button" id="confirm_publish"><i class="fal fa-check mr-2"></i> Confirm</a>
                 </div>
             </div>
         </div>
@@ -552,8 +550,8 @@
                     Are you sure you want to permanently delete this form?
                 </div>
                 <div class="modal-footer d-flex justify-content-around">
-                    <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                    <a class="btn btn-success modal-confirm-button" id="confirm_delete"><i class="fad fa-check mr-2"></i> Confirm</a>
+                    <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                    <a class="btn btn-primary modal-confirm-button" id="confirm_delete"><i class="fal fa-check mr-2"></i> Confirm</a>
                 </div>
             </div>
         </div>

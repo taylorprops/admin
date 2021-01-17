@@ -40,7 +40,7 @@
                             <div class="col-12 col-sm-5 select-signer-div">
 
                                 <span class="text-gray">Select From Transaction Members</span>
-                                <select class="custom-form-element form-select form-select-no-search signer-select add-signer-field" data-type="signer" data-label="Select Member">
+                                <select class="custom-form-element form-select form-select-no-search signer-select add-signer-field signer-recipient-select" data-type="signer" data-label="Select Member">
                                     <option value=""></option>
                                     @foreach($members as $member)
                                         @php $member_type = $resource_items -> getResourceName($member -> member_type_id); @endphp
@@ -108,8 +108,8 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-around w-100">
 
-                                <button class="btn btn-success save-add-user" data-type="signer" type="button">
-                                    <i class="fal fa-save mr-2"></i> Add Signer
+                                <button class="btn btn-primary save-add-user" data-type="signer" type="button">
+                                    <i class="fad fa-save mr-2"></i> Add Signer
                                 </button>
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                             <div class="col-12 col-sm-5 select-recipient-div">
 
                                 <span class="text-gray">Select From Transaction Members</span>
-                                <select class="custom-form-element form-select form-select-no-search recipient-select add-recipient-field" data-type="recipient" data-label="Select Member">
+                                <select class="custom-form-element form-select form-select-no-search recipient-select add-recipient-field signer-recipient-select" data-type="recipient" data-label="Select Member">
                                     <option value=""></option>
                                     @foreach($members as $member)
                                         @php $member_type = $resource_items -> getResourceName($member -> member_type_id); @endphp
@@ -224,8 +224,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex justify-content-around w-100">
-                                <button class="btn btn-success save-add-user" data-type="recipient" type="button">
-                                    <i class="fal fa-save mr-2"></i> Add Recipient
+                                <button class="btn btn-primary save-add-user" data-type="recipient" type="button">
+                                    <i class="fad fa-save mr-2"></i> Add Recipient
                                 </button>
                             </div>
                         </div>
@@ -252,7 +252,7 @@
         <div class="col-12 col-sm-2">
 
             <div class="mt-4 pt-4 next-div hidden">
-                <a href="javascript: void(0)" class="btn btn-success btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+                <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
             </div>
 
         </div>

@@ -17,7 +17,7 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-start align-items-center w-100 pl-3">
                                 <input type="text" class="custom-form-element form-input" id="search_properties" data-label="Search">
-                                <a href="javascript: void(0)" class="btn btn-danger ml-2 mt-2" id="cancel_search_properties"><i class="fa fa-times mr-2"></i> Clear</a>
+                                <a href="javascript: void(0)" class="btn btn-danger ml-2 mt-2" id="cancel_search_properties"><i class="fal fa-times mr-2"></i> Clear</a>
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@
                         @if(count($cancel_requests) > 0)
 
                             <a href="javascript: void(0)" class="list-group-item property-list-header border-top-0 border-left-0 border-right-0" data-cat="cancels">
-                                <div class="h4 text-orange my-0 ml-2"><i class="fad fa-minus-circle mr-2"></i> Contract Cancellation Requests</div>
+                                <div class="h4 text-orange my-0 ml-2"><i class="fal fa-minus-circle mr-2"></i> Contract Cancellation Requests</div>
                             </a>
 
                             @foreach($cancel_requests as $cancel_request)
@@ -211,8 +211,8 @@
 
                     <div class="sticky bg-white py-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="javascript: void(0);" id="close_checklist_button" class="btn btn-sm btn-primary"><i class="fal fa-chevron-double-left mr-2"></i> Back</a>
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fal fa-chevron-double-right ml-2"></i></a>
+                            <a href="javascript: void(0);" id="close_checklist_button" class="btn btn-sm btn-primary"><i class="fad fa-chevron-double-left mr-2"></i> Back</a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fad fa-chevron-double-right ml-2"></i></a>
                         </div>
                     </div>
 
@@ -235,7 +235,7 @@
             <div class="documents-container">
 
                 <div class="documents-div">
-                    <div class="h1 text-primary w-100 text-center mt-5 pt-5"><i class="fa fa-arrow-left mr-2"></i> To Begin Select A Property</div>
+                    <div class="h1 text-primary w-100 text-center mt-5 pt-5"><i class="fal fa-arrow-left mr-2"></i> To Begin Select A Property</div>
                 </div>
 
             </div>
