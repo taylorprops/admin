@@ -49,11 +49,29 @@ if(document.URL.match(/esign_add_signers/)) {
         });
 
 
+        $('.signers-container').sortable({
+            handle: '.user-handle',
+            stop: function() {
+                reorder('signer');
+            }
+        });
+        reorder('signer');
+        $('.recipients-container').sortable({
+            handle: '.user-handle',
+            stop: function() {
+                reorder('recipient');
+            }
+        });
+        reorder('recipient');
+
+
         function save_signers() {
 
             $('#add_fields_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
 
             let envelope_id = $('#envelope_id').val();
+            let template_id = $('#template_id').val();
+            let is_template = $('#is_template').val();
 
             let signers_data = [];
 
@@ -61,9 +79,11 @@ if(document.URL.match(/esign_add_signers/)) {
             $('.signer-item').each(function () {
                 let data = {
                     'order': c,
+                    'id': $(this).data('id') ?? null,
                     'name': $(this).data('name'),
                     'email': $(this).data('email'),
-                    'role': $(this).data('role')
+                    'role': $(this).data('role'),
+                    'template_role': $(this).data('template-role')
                 }
                 signers_data.push(data);
                 c += 1;
@@ -77,9 +97,11 @@ if(document.URL.match(/esign_add_signers/)) {
             $('.recipient-item').each(function () {
                 let data = {
                     'order': c,
+                    'id': $(this).data('id') ?? null,
                     'name': $(this).data('name'),
                     'email': $(this).data('email'),
-                    'role': $(this).data('role')
+                    'role': $(this).data('role'),
+                    'template_role': $(this).data('template-role')
                 }
                 recipients_data.push(data);
                 c += 1;
@@ -89,14 +111,15 @@ if(document.URL.match(/esign_add_signers/)) {
 
 
             let formData = new FormData();
+            formData.append('is_template', is_template);
             formData.append('envelope_id', envelope_id);
+            formData.append('template_id', template_id);
             formData.append('signers_data', signers_data);
             formData.append('recipients_data', recipients_data);
 
             axios.post('/esign/esign_add_signers_to_envelope', formData, axios_options)
             .then(function (response) {
-                console.log(response.data.envelope_id);
-                window.location = '/esign/esign_add_fields/'+response.data.envelope_id;
+                window.location = '/esign/esign_add_fields/'+response.data.envelope_id+'/'+is_template+'/'+template_id;
             })
             .catch(function (error) {
                 console.log(error);
@@ -107,19 +130,38 @@ if(document.URL.match(/esign_add_signers/)) {
 
         function add_user(type) {
 
-            let form, name, email, role;
-            if($('.'+type+'-select').length > 0 && $('.'+type+'-select').val() != '') {
-                form = $('.'+type+'-select-fields');
+            let form, role, template_role, display_role;
+            let name = '';
+            let email = '';
+            let hidden = '';
+            let other_selected = 'no';
+
+            if($('#is_template').val() == 'yes') {
+
+                form = $('.add-template-'+type+'-fields');
+                template_role = form.find('.add-'+type+'-role').val();
+                role = form.find('.add-'+type+'-role').val().replace(/\s(One|Two|Three|Four)/, '');
+                hidden = 'hidden';
+                display_role = template_role;
+
             } else {
-                form = $('.add-'+type+'-fields');
+
+                if($('.'+type+'-select').length > 0 && $('.'+type+'-select').val() != '') {
+                    form = $('.'+type+'-select-fields');
+                } else {
+                    form = $('.add-'+type+'-fields');
+                    other_selected = 'yes';
+                }
+
+                $('.add-'+type+'-field').removeClass('required');
+
+                form.find('.add-'+type+'-field').addClass('required');
+                name = form.find('.add-'+type+'-name').val();
+                email = form.find('.add-'+type+'-email').val();
+                role = form.find('.add-'+type+'-role').val();
+                display_role = role;
+
             }
-
-            $('.add-'+type+'-field').removeClass('required');
-
-            form.find('.add-'+type+'-field').addClass('required');
-            name = form.find('.add-'+type+'-name').val();
-            email = form.find('.add-'+type+'-email').val();
-            role = form.find('.add-'+type+'-role').val();
 
             let validate = validate_form(form);
 
@@ -128,15 +170,15 @@ if(document.URL.match(/esign_add_signers/)) {
                 $('#add_'+type+'_div').collapse('hide');
 
                 let new_user = ' \
-                <div class="list-group-item '+type+'-item d-flex justify-content-between align-items-center text-gray w-100" data-name="'+name+'" data-email="'+email +'" data-role="'+role+'"> \
+                <div class="list-group-item '+type+'-item d-flex justify-content-between align-items-center text-gray w-100" data-name="'+name+'" data-email="'+email +'" data-role="'+role+'" data-template-role="'+template_role+'"> \
                     <div class="row d-flex align-items-center w-100"> \
-                    <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
+                        <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
                         <div class="col-1"><span class="'+type+'-count font-11 text-orange"></span></div> \
-                        <div class="col-3 font-weight-bold">'+name+'</div> \
-                        <div class="col-3">'+role+'</div> \
-                        <div class="col">'+email+'</div> \
+                        <div class="col-3 '+hidden+' font-weight-bold">'+name+'</div> \
+                        <div class="col-2">'+display_role+'</div> \
+                        <div class="col-4 '+hidden+'">'+email+'</div> \
                     </div> \
-                    <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-2x"></i></a></div> \
+                    <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></a></div> \
                 </div>';
 
                 $('.'+type+'s-container').append(new_user).sortable({
@@ -147,6 +189,10 @@ if(document.URL.match(/esign_add_signers/)) {
                 });
 
                 $('.add-'+type+'-field').removeClass('required').val('');
+
+                if(other_selected == 'yes') {
+                    $('.add-'+type+'-role').val('Other');
+                }
 
                 reorder(type);
 

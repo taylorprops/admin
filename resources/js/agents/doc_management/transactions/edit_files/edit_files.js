@@ -77,7 +77,7 @@ if (document.URL.match(/edit_files/)) {
                             let field_div_container = $('#' + instance.el.id).closest('.field-div-container');
                             let clear_datepicker_button = field_div_container.find('.clear-datepicker');
                             if(clear_datepicker_button.length == 0) {
-                                field_div_container.find('.qs-datepicker').append('<div class="my-2 text-center w-100"><a href="javascript:void(0)" class="clear-datepicker text-danger"><i class="fal fa-times-circle mr-2"></i> Clear</a></div>');
+                                field_div_container.find('.qs-datepicker').append('<div class="my-2 text-center w-100"><a href="javascript:void(0)" class="clear-datepicker text-danger"><i class="fad fa-times-circle mr-2"></i> Clear</a></div>');
                             }
                             clear_datepicker_button.on('click', function() {
                                 clear_datepicker(clear_datepicker_button);
@@ -300,7 +300,7 @@ if (document.URL.match(/edit_files/)) {
                     <div class="d-flex justify-content-around"> \
                         <div class="btn-group" role="group" aria-label="Field Options"> \
                             <a type="button" class="btn btn-primary field-handle"><i class="fal fa-arrows fa-lg"></i></a> \
-                            <a type="button" class="btn btn-danger remove-field"><i class="fal fa-times-circle fa-lg"></i></a> \
+                            <a type="button" class="btn btn-danger remove-field"><i class="fad fa-times-circle fa-lg"></i></a> \
                         </div> \
                     </div> \
                 </div> \

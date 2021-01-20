@@ -270,7 +270,7 @@
                                                                 <div class="col-12 mb-3">
                                                                     <div class="h5 text-primary float-left">Submitted Documents</div>
                                                                     <a class="text-danger float-right" data-toggle="collapse" href="#documents_div_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="documents_div_{{ $checklist_item_id }}">
-                                                                        <i class="fal fa-times-circle fa-2x"></i>
+                                                                        <i class="fad fa-times-circle fa-2x"></i>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -313,44 +313,48 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-12 col-lg-5 px-0 px-sm-2 mx-auto mb-4">
+                                                <div class="col-12 col-lg-5  mx-auto">
 
                                                     <div class="collapse notes-collapse mx-4 mx-auto bg-white" id="notes_{{ $checklist_item_id }}">
 
-                                                        <div class="p-3 mt-3">
+                                                        <div class=" px-0 px-sm-2 mb-4">
 
-                                                            <div class="row">
+                                                            <div class="p-3 mt-3">
 
-                                                                <div class="col-12">
-                                                                    <div class="d-flex justify-content-between">
-                                                                        <div class="h5 text-primary float-left">Comments</div>
-                                                                        <div class="mb-2">
-                                                                            <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fal fa-times-circle fa-2x"></i></a>
+                                                                <div class="row">
+
+                                                                    <div class="col-12">
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div class="h5 text-primary float-left">Comments</div>
+                                                                            <div class="mb-2">
+                                                                                <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fad fa-times-circle fa-2x"></i></a>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <hr>
+                                                                <hr>
 
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="notes-div" data-checklist-item-id="{{ $checklist_item_id }}">
-                                                                        <div class="text-gray">No Comments</div>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="notes-div" data-checklist-item-id="{{ $checklist_item_id }}">
+                                                                            <div class="text-gray">No Comments</div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+
                                                             </div>
 
-                                                        </div>
-
-                                                        <div class="row no-gutters bg-blue-light d-flex align-items-center">
-                                                            <div class="col-11">
-                                                                <div>
-                                                                    <textarea class="custom-form-element form-textarea notes-input-{{ $checklist_item_id }}" data-label="Add Comment"></textarea>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="w-90">
+                                                                    <div>
+                                                                        <textarea class="custom-form-element form-textarea notes-input-{{ $checklist_item_id }}" data-label="Add Comment"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="w-10">
+                                                                    <a href="javascript: void(0)" class="btn btn-primary save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-1">
-                                                                <a href="javascript: void(0)" class="btn btn-primary save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
-                                                            </div>
+
                                                         </div>
 
                                                     </div>

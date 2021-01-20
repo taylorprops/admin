@@ -915,7 +915,7 @@ if (document.URL.match(/create\/add_fields/)) {
                         ';
                 }
                         field_div_html += ' \
-                        <a type="button" class="btn btn-primary remove-field"><i class="fal fa-times-circle fa-lg"></i></a> \
+                        <a type="button" class="btn btn-primary remove-field"><i class="fad fa-times-circle fa-lg"></i></a> \
                     </div> \
                     <div class="mini-slider-div"> \
                         <ul class="mini-slider list-group list-group-flush border border-primary p-0"> \

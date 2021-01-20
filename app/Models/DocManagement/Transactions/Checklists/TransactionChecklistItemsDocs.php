@@ -53,9 +53,10 @@ class TransactionChecklistItemsDocs extends Model
 
         // add the new images to db
         $c = 0;
+        $order = 0;
         foreach (glob($destination.'/*') as $file) {
 
-            $order = 0;
+
             if(preg_match('/page_([0-9]+)\.jpg/', $file, $match)) {
                 $order = $match[1];
             }

@@ -26,7 +26,7 @@
 
                                 <ul class="dropdown-menu dropdown-parent" aria-labelledby="group_dropdown_{{ $id }}">
 
-                                    <li><a href="javascript: void(0)" class="small text-danger clear-common-field-name">Clear <i class="fal fa-times-circle ml-1"></i></a></li>
+                                    <li><a href="javascript: void(0)" class="small text-danger clear-common-field-name">Clear <i class="fad fa-times-circle ml-1"></i></a></li>
 
                                     @php
                                     if($field_category == 'number') {

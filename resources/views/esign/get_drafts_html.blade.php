@@ -1,4 +1,9 @@
-<div class="h4 text-orange my-3">Drafts</div>
+
+<div class="d-flex justify-content-start align-items-center mt-3 mb-5">
+    <div class="h4 text-orange mt-2">Drafts </div>
+    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Drafts" data-content="Envelope Drafts are like email drafts. You can completely prepare a document for signing and save it for a later date. Templates can be used multiple times as well.<br><br>You will be given the option to save your evelope as a draft when creating an envelope."><i class="fad fa-question-circle ml-2"></i></a>
+</div>
+
 
 <div class="table-responsive text-nowrap mb-5">
 
@@ -40,9 +45,9 @@
 
 </div>
 
-<hr>
+<hr class="show-deleted-drafts hidden">
 
-<button class="btn btn-primary ml-0 mb-3" type="button" data-toggle="collapse" data-target="#deleted_drafts_div" aria-expanded="false" aria-controls="deleted_drafts_div">
+<button class="btn btn-primary ml-0 mb-3 show-deleted-drafts hidden" type="button" data-toggle="collapse" data-target="#deleted_drafts_div" aria-expanded="false" aria-controls="deleted_drafts_div">
     View Deleted Drafts
 </button>
 

@@ -275,29 +275,34 @@
     Route::get('/esign/get_sent', 'Esign\EsignController@get_sent');
     Route::get('/esign/get_completed', 'Esign\EsignController@get_completed');
     Route::get('/esign/get_templates', 'Esign\EsignController@get_templates');
+    Route::get('/esign/get_deleted_templates', 'Esign\EsignController@get_deleted_templates');
 
 
 
     // add documents
     Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_documents');
 
+    Route::get('/esign/esign_add_template_documents/{template}', 'Esign\EsignController@esign_add_documents');
+
     // create envelope and send to add signers
     Route::post('/esign/esign_create_envelope', 'Esign\EsignController@esign_create_envelope');
 
     // add signers
-    Route::get('/esign/esign_add_signers/{envelope_id}', 'Esign\EsignController@esign_add_signers');
+    Route::get('/esign/esign_add_signers/{envelope_id}/{is_template?}/{template_id?}', 'Esign\EsignController@esign_add_signers');
 
     // add add signers to envelope
     Route::post('/esign/esign_add_signers_to_envelope', 'Esign\EsignController@esign_add_signers_to_envelope');
 
     // esign add fields
-    Route::get('/esign/esign_add_fields/{envelope_id}', 'Esign\EsignController@esign_add_fields');
+    Route::get('/esign/esign_add_fields/{envelope_id}/{is_template?}/{template_id?}', 'Esign\EsignController@esign_add_fields');
 
     // send for signatures
     Route::post('/esign/esign_send_for_signatures', 'Esign\EsignController@esign_send_for_signatures');
 
     // upload docs for envelope
     Route::post('/esign/upload', 'Esign\EsignController@upload');
+
+
 
 
 

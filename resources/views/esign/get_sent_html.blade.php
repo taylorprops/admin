@@ -1,4 +1,8 @@
-<div class="h4 text-orange my-3">Sent Envelopes</div>
+
+<div class="d-flex justify-content-start align-items-center mt-3 mb-5">
+    <div class="h4 text-orange mt-2">In Process </div>
+    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="In Process" data-content="These are your active envelopes. They have been sent for signatures but have not been signed by all parties yet."><i class="fad fa-question-circle ml-2"></i></a>
+</div>
 
 <div class="table-responsive text-nowrap mb-5">
 

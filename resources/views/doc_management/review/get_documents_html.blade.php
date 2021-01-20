@@ -87,7 +87,7 @@
 
                         <div class="@if($item_review_status == 'rejected') d-flex @else d-none @endif justify-content-around align-items-center mb-xl-1 item-rejected w-100 h-100 p-1 pl-4">
                             <div class="text-danger">
-                                <i class="fal fa-times-circle mr-2"></i> Rejected
+                                <i class="fad fa-times-circle mr-2"></i> Rejected
                             </div>
                             <div class="ml-2 ml-xl-3">
                                 <a href="javascript: void(0)" class="btn btn-primary undo-rejected" @if($checklist_item -> checklist_item_required == 'yes') data-required="yes" @endif ><i class="fal fa-undo mr-1"></i> Undo</a>

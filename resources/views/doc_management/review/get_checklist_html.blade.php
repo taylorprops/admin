@@ -113,7 +113,7 @@
                                 <div class="d-flex justify-content-between align-items-center border-bottom mb-3 pb-3">
                                     <div class="font-weight-bold text-primary">Comments</div>
                                     <a data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
-                                        <i class="fal fa-times-circle text-danger fa-lg"></i>
+                                        <i class="fad fa-times-circle text-danger fa-lg"></i>
                                     </a>
                                 </div>
 

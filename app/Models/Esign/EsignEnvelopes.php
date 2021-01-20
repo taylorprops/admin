@@ -37,4 +37,5 @@ class EsignEnvelopes extends Model
     public function fields() {
         return $this -> hasMany('App\Models\Esign\EsignFields', 'envelope_id', 'id');
     }
+
 }

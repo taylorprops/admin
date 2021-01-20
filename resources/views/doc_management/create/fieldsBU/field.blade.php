@@ -75,7 +75,7 @@ if($field -> field_type == 'textline' || $field -> field_type == 'address' || $f
             @if($show_options)
                 <a type="button" class="btn btn-primary field-properties" data-group-id="{{ $field -> group_id }}" data-field-id="{{ $field -> field_id }}" data-field-type="{{ $field -> field_type }}" data-toggle="collapse" href="#properties_container_{{ $field -> field_id }}" role="button" aria-expanded="false" aria-controls="properties_container_{{ $field -> field_id }}"><i class="fad fa-info-circle fa-lg"></i></a>
             @endif
-            <a type="button" class="btn btn-primary remove-field"><i class="fal fa-times-circle fa-lg"></i></a>
+            <a type="button" class="btn btn-primary remove-field"><i class="fad fa-times-circle fa-lg"></i></a>
         </div>
 
         <div class="mini-slider-div">

@@ -925,7 +925,7 @@ if (document.URL.match(/transaction_details/)) {
                 <div><i class="fal fa-check-circle mr-2"></i></div> \
                 <div>'+file_name.substring(0, 70)+'</div> \
             </div> \
-            <div><a href="javascript: void(0)" class="delete-doc text-danger" data-document-id="'+document_id+'"><i class="fal fa-times-circle mr-1"></i> <span class="small">Remove</span></a></div> \
+            <div><a href="javascript: void(0)" class="delete-doc text-danger" data-document-id="'+document_id+'"><i class="fad fa-times-circle mr-1"></i> <span class="small">Remove</span></a></div> \
         </div>');
 
         active_div.addClass('assigned');

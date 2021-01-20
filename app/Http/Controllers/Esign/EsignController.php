@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Esign;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+
 use Eversign\File;
 use Eversign\Field;
-
 use Eversign\Client;
-
 use Eversign\Signer;
 use Eversign\Document;
 use Eversign\Recipient;
 use Eversign\InitialsField;
 use Eversign\SignatureField;
 use Eversign\TextField;
-use Illuminate\Http\Request;
-
 use Eversign\DateSignedField;
+
 use App\Models\Esign\EsignFields;
 use App\Models\Esign\EsignSigners;
-use App\Http\Controllers\Controller;
 use App\Models\Esign\EsignDocuments;
 use App\Models\Esign\EsignEnvelopes;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Esign\EsignDocumentsImages;
+use App\Models\Esign\EsignTemplates;
 
 use App\Models\DocManagement\Resources\ResourceItems;
 
@@ -78,7 +78,17 @@ class EsignController extends Controller {
 
     public function get_templates(Request $request) {
 
-        return view('/esign/get_templates_html');
+        $templates = EsignTemplates::with('signers') -> get();
+
+        return view('/esign/get_templates_html', compact('templates'));
+
+    }
+
+    public function get_deleted_templates(Request $request) {
+
+        $deleted_templates = EsignTemplates::onlyTrashed() -> with('signers') -> get();
+
+        return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
 
     }
 
@@ -117,30 +127,30 @@ class EsignController extends Controller {
 
     public function save_as_template(Request $request) {
 
-        dd($request -> all());
-        /* $envelope_id = $request -> envelope_id;
+        $template_id = $request -> template_id;
         $template_name = $request -> template_name;
-        $envelope = EsignEnvelopes::find($envelope_id) -> update(['is_template' => 'yes', 'template_name' => $template_name]);
 
-        return response() -> json(['status' => 'success']); */
+        $template = EsignTemplates::find($template_id) -> update(['template_name' => $template_name]);
+
+        return response() -> json(['status' => 'success']);
 
     }
 
     public function delete_template(Request $request) {
 
-        /* $envelope_id = $request -> envelope_id;
+        $envelope_id = $request -> envelope_id;
         $delete_template = EsignEnvelopes::find($envelope_id) -> delete();
 
-        return response() -> json(['status' => 'success']); */
+        return response() -> json(['status' => 'success']);
 
     }
 
     public function restore_template(Request $request) {
 
-        /* $envelope_id = $request -> envelope_id;
+        $envelope_id = $request -> envelope_id;
         $restore_template = EsignEnvelopes::withTrashed() -> where('id', $envelope_id) -> restore();
 
-        return response() -> json(['status' => 'success']); */
+        return response() -> json(['status' => 'success']);
 
     }
 
@@ -150,10 +160,15 @@ class EsignController extends Controller {
 
     public function esign_add_documents(Request $request) {
 
+        $is_template = 'no';
+        if($request -> template) {
+            $is_template = 'yes';
+        }
+
         $Listing_ID = $request -> Listing_ID ?? null;
         $Contract_ID = $request -> Contract_ID ?? null;
         $Referral_ID = $request -> Referral_ID ?? null;
-        $User_ID = $request -> User_ID ?? auth() -> user() -> id;
+        $User_ID = auth() -> user() -> id;
         $Agent_ID = $request -> Agent_ID ?? null;
         $transaction_type = $request -> transaction_type ?? null;
 
@@ -174,6 +189,7 @@ class EsignController extends Controller {
 
                 $doc = TransactionDocuments::where('file_id', $document_id) -> with('images_converted') -> first();
                 $documents = $documents -> merge($doc);
+                $template_id = $doc -> template_id;
 
                 $file_name = $doc -> file_name;
 
@@ -188,11 +204,12 @@ class EsignController extends Controller {
                 $image_location = str_replace('/var/www/admin/storage/app/public', '/storage', $tmp_dir).'/' . $image_name;
 
                 $details = [
-                    'document_id' => $doc -> id,
+                    'document_id' => $doc -> file_id,
                     'file_type' => $doc -> file_type,
                     'file_name' => $file_name,
                     'file_location' => $file_location,
-                    'image_location' => $image_location
+                    'image_location' => $image_location,
+                    'template_id' => $template_id
                 ];
 
                 $docs_to_display[] = $details;
@@ -201,7 +218,15 @@ class EsignController extends Controller {
 
         }
 
-        return view('/esign/esign_add_documents', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display'));
+        $templates = EsignTemplates::get();
+
+        return view('/esign/esign_add_documents', compact('is_template', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
+
+    }
+
+    public function apply_template(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
 
     }
 
@@ -266,27 +291,171 @@ class EsignController extends Controller {
 
         $files = json_decode($request -> file_data, true);
 
-        // Create envelope
-        $envelope = new EsignEnvelopes();
+        $is_template = $request -> is_template;
 
-        $envelope -> Listing_ID = $request -> Listing_ID;
-        $envelope -> Contract_ID = $request -> Contract_ID;
-        $envelope -> Referral_ID = $request -> Referral_ID;
-        $envelope -> User_ID = $request -> User_ID;
-        $envelope -> Agent_ID = $request -> Agent_ID;
-        $envelope -> transaction_type = $request -> transaction_type;
-        $envelope -> save();
-        $envelope_id = $envelope -> id;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+        $User_ID = $request -> User_ID ?? 0;
+        $Agent_ID = $request -> Agent_ID ?? 0;
+        $transaction_type = $request -> transaction_type ?? null;
+
+        if($is_template == 'no') {
+
+            // Create envelope
+            $template_id = 0;
+
+            $envelope = new EsignEnvelopes();
+
+            $envelope -> Listing_ID = $Listing_ID;
+            $envelope -> Contract_ID = $Contract_ID;
+            $envelope -> Referral_ID = $Referral_ID;
+            $envelope -> User_ID = $User_ID;
+            $envelope -> Agent_ID = $Agent_ID;
+            $envelope -> transaction_type = $transaction_type;
+            $envelope -> save();
+            $envelope_id = $envelope -> id;
+
+        } else {
+
+            // Create template
+            $template_id = date('YmdHis');
+
+            $template = new EsignTemplates();
+            $template -> User_ID = $request -> User_ID;
+            $template -> template_name = $request -> template_name;
+            $template -> save();
+            $template_id = $template -> id;
+
+        }
 
         // Add documents and images to envelope and add files to storage
         foreach($files as $file) {
 
+            if($is_template == 'yes') {
+
+                // Create envelope
+                $envelope = new EsignEnvelopes();
+                $envelope -> is_template = $is_template;
+                $envelope -> User_ID = $request -> User_ID;
+                $envelope -> template_id = $template_id;
+                $envelope -> save();
+                $envelope_id = $envelope -> id;
+
+            }
+
+            $applied_template_id = $file['template_applied_id'];
+
             // add doc
             $add_esign_doc = new EsignDocuments();
             $add_esign_doc -> envelope_id = $envelope_id;
+            $add_esign_doc -> template_id = $template_id;
+            $add_esign_doc -> template_applied_id = $applied_template_id;
             $add_esign_doc -> file_name = $file['file_name'];
             $add_esign_doc -> save();
             $add_esign_document_id = $add_esign_doc -> id;
+
+            // if template applied add fields and signers
+            if($applied_template_id > 0) {
+
+                $template_envelopes = EsignTemplates::where('id', $applied_template_id) -> with('signers') -> with('fields') -> get();
+
+                $signers = $template_envelopes -> first() -> signers;
+
+                $fields = $template_envelopes -> first() -> fields;
+
+                // get signer names from members
+                $members = null;
+                if($transaction_type) {
+
+                    if($transaction_type == 'listing') {
+
+                        $members = Members::where('Listing_ID', $Listing_ID) -> get();
+
+                    } else if($transaction_type == 'contract') {
+
+                        $members = Members::where('Contract_ID', $Contract_ID)
+                            -> orWhere(function($query) use ($Listing_ID) {
+                                if($Listing_ID > 0) {
+                                    $query -> where('Listing_ID', $Listing_ID);
+                                }
+                            }) -> get();
+
+                    }
+
+                }
+
+                if($members) {
+
+                    $seller_order = 'One';
+                    $buyer_order = 'One';
+
+                    foreach($members as $member) {
+
+                        $member_role = ResourceItems::getResourceName($member -> member_type_id);
+
+                        if($member_role == 'Seller') {
+
+                            $member -> member_role = 'Seller '.$seller_order;
+                            if($seller_order == 'One') {
+                                $seller_order = 'Two';
+                            }
+
+                        } else if($member_role == 'Buyer') {
+
+                            $member -> member_role = 'Buyer '.$buyer_order;
+                            if($buyer_order == 'One') {
+                                $buyer_order = 'Two';
+                            }
+
+                        } else {
+
+                            $member -> member_role = $member_role;
+
+                        }
+
+                    }
+
+                }
+
+                foreach($signers as $signer) {
+
+                    $role = $signer -> template_role;
+                    $new_signer = $signer -> replicate();
+                    $new_signer -> envelope_id = $envelope_id;
+                    $new_signer -> template_id = 0;
+
+                    if($members) {
+                        foreach($members as $member) {
+                            if($member -> member_role == $role) {
+                                $new_signer -> signer_name = $member -> first_name.' '.$member -> last_name;
+                                $new_signer -> signer_email = $member -> email;
+                            }
+                        }
+                    }
+
+                    $new_signer -> save();
+
+                }
+
+                foreach($fields as $field) {
+
+                    $field_signer = $field -> signer;
+                    $field_signer_role = $field_signer -> template_role;
+                    $new_signer_id = '';
+
+                    $new_signer = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> where('template_role', $field_signer_role) -> pluck('id');
+
+                    $new_field = $field -> replicate();
+                    $new_field -> envelope_id = $envelope_id;
+                    $new_field -> template_id = 0;
+                    $new_field -> document_id = $add_esign_document_id;
+                    $new_field -> signer_id = $new_signer[0];
+                    $new_field -> save();
+
+                }
+
+            }
 
             // create directories for doc and images
             $document_folder = 'esign/'.$envelope_id.'/'.$add_esign_document_id;
@@ -304,7 +473,7 @@ class EsignController extends Controller {
             if($file['document_id'] > 0) {
 
                 // transfer files and images from transactions docs
-                $doc = TransactionDocuments::where('file_id', $file['document_id']) -> with('images_converted') -> first();
+                $doc = TransactionUpload::where('Transaction_Docs_ID', $file['document_id']) -> with('images') -> first();
 
                 // copy document
                 $doc_from_location = Storage::disk('public') -> path(str_replace('/storage/', '', $doc -> file_location_converted));
@@ -323,7 +492,7 @@ class EsignController extends Controller {
                 $add_esign_doc -> save();
 
                 // get images for doc
-                $images = $doc -> images_converted;
+                $images = $doc -> images;
 
                 foreach($images as $image) {
 
@@ -397,21 +566,26 @@ class EsignController extends Controller {
 
         }
 
-        return compact('envelope_id');
+        return compact('envelope_id', 'is_template', 'template_id');
     }
 
     public function esign_add_signers(Request $request) {
 
+        $is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
+        $template_id = $request -> template_id;
+
         $envelope = EsignEnvelopes::find($envelope_id);
+
+        $transaction_type = $envelope -> transaction_type;
         $Listing_ID = $envelope -> Listing_ID;
         $Contract_ID = $envelope -> Contract_ID;
 
-        if($envelope -> transaction_type == 'listing') {
+        if($transaction_type == 'listing') {
 
             $members = Members::where('Listing_ID', $Listing_ID) -> get();
 
-        } else if($envelope -> transaction_type == 'contract') {
+        } else if($transaction_type == 'contract') {
 
             $members = Members::where('Contract_ID', $Contract_ID)
                 -> orWhere(function($query) use ($Listing_ID) {
@@ -449,33 +623,93 @@ class EsignController extends Controller {
 
         }
 
-        return view('/esign/esign_add_signers', compact('envelope_id', 'envelope', 'members', 'resource_items'));
+        $signers = [];
+        $recipients = [];
+        if($is_template == 'no') {
+            $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
+            $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> orderBy('signer_order') -> get();
+        }
+
+        return view('/esign/esign_add_signers', compact('is_template', 'template_id', 'envelope_id', 'envelope', 'members', 'signers', 'recipients', 'resource_items'));
 
     }
 
     public function esign_add_signers_to_envelope(Request $request) {
 
+        $is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
+        $template_id = $request -> template_id;
         $signers = json_decode($request -> signers_data);
         $recipients = json_decode($request -> recipients_data);
 
+        $signer_ids = [];
         foreach($signers as $signer) {
-            $add_signer = new EsignSigners();
+            $signer_ids[] = $signer -> id;
+        }
+        foreach($recipients as $recipient) {
+            $signer_ids[] = $recipient -> id;
+        }
+
+        if($is_template == 'yes') {
+            $envelope_id = 0;
+        } else {
+            // delete current signers
+            $delete_signers = EsignSigners::where('envelope_id', $envelope_id) -> whereNotIn('id', $signer_ids) -> delete();
+        }
+
+        $template_role = '';
+        foreach($signers as $signer) {
+
+            if($signer -> role == 'Buyer' || $signer -> role == 'Seller') {
+                if($template_role == '') {
+                    $template_role = $signer -> role.' One';
+                } else if($template_role == $signer -> role.' One') {
+                    $template_role = $signer -> role.' Two';
+                }
+            } else {
+                $template_role = $signer -> role;
+            }
+
+            if($signer -> id > 0) {
+                $add_signer = EsignSigners::find($signer -> id);
+            } else {
+                $add_signer = new EsignSigners();
+            }
             $add_signer -> envelope_id = $envelope_id;
+            $add_signer -> template_id = $template_id;
             $add_signer -> signer_name = $signer -> name;
             $add_signer -> signer_email = $signer -> email;
             $add_signer -> signer_role = $signer -> role;
+            $add_signer -> template_role = $template_role;
             $add_signer -> signer_order = $signer -> order;
             $add_signer -> recipient_only = 'no';
             $add_signer -> save();
         }
 
+        $template_role = '';
         foreach($recipients as $recipient) {
-            $add_recipient = new EsignSigners();
+
+            if($recipient -> role == 'Buyer' || $recipient -> role == 'Seller') {
+                if($template_role == '') {
+                    $template_role = $recipient -> role.' One';
+                } else if($template_role == $recipient -> role.' One') {
+                    $template_role = $recipient -> role.' Two';
+                }
+            } else {
+                $template_role = $recipient -> role;
+            }
+
+            if($recipient -> id > 0) {
+                $add_recipient = EsignSigners::find($recipient -> id);
+            } else {
+                $add_recipient = new EsignSigners();
+            }
             $add_recipient -> envelope_id = $envelope_id;
+            $add_recipient -> template_id = $template_id;
             $add_recipient -> signer_name = $recipient -> name;
             $add_recipient -> signer_email = $recipient -> email;
             $add_recipient -> signer_role = $recipient -> role;
+            $add_recipient -> template_role = $template_role;
             $add_recipient -> signer_order = $recipient -> order;
             $add_recipient -> recipient_only = 'yes';
             $add_recipient -> save();
@@ -487,36 +721,71 @@ class EsignController extends Controller {
 
     public function esign_add_fields(Request $request) {
 
+        $is_template = $request -> is_template;
+        $template_id = $request -> template_id;
         $envelope_id = $request -> envelope_id;
 
-        $envelope = EsignEnvelopes::find($envelope_id);
+        $draft_name = '';
+        $property_address = '';
+        $template_name = '';
 
-        $draft_name = $envelope -> draft_name ?? null;
-        $property_address = null;
-        if($envelope -> transaction_type != '') {
-            $property = Listings::GetPropertyDetails($envelope -> transaction_type, [$envelope -> Listing_ID, $envelope -> Contract_ID, $envelope -> Referral_ID]);
-            $property_address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        if($envelope_id > 0) {
+
+            $envelope = EsignEnvelopes::find($envelope_id);
+
+            $draft_name = $envelope -> draft_name ?? null;
+            $property_address = null;
+            if($envelope -> transaction_type != '') {
+                $property = Listings::GetPropertyDetails($envelope -> transaction_type, [$envelope -> Listing_ID, $envelope -> Contract_ID, $envelope -> Referral_ID]);
+                $property_address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+            }
+
+            $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> with('fields') -> get();
+
+            $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
+
+        } else {
+
+            $envelopes = EsignEnvelopes::where('template_id', $template_id) -> get();
+
+            $template = EsignTemplates::find($template_id);
+            $template_name = $template -> template_name;
+
+            $documents = collect();
+            foreach($envelopes as $envelope) {
+
+                $doc = EsignDocuments::where('envelope_id', $envelope -> id) -> with('images') -> with('fields') -> get();
+                $documents = $documents -> merge($doc);
+
+            }
+
+            $signers = EsignSigners::where('template_id', $template_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
+
         }
 
-        $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> with('fields') -> get();
 
-        $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
-        $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
+        //$recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
 
         $signers_options = [];
 
         foreach($signers as $signer) {
-            $signers_options[] = '<option class="signer-select-option" value="'.$signer -> signer_name.'" data-role="'.$signer -> signer_role.'" data-name="'.$signer -> signer_name.'" data-signer-id="'.$signer -> id.'">'.$signer -> signer_name.' - '.$signer -> signer_role.'</option>';
+
+            $signer_name = $signer -> signer_name;
+            $signers_options[] = '<option class="signer-select-option" value="'.$signer_name.'" data-role="'.$signer -> signer_role.'" data-name="'.$signer_name.'" data-signer-id="'.$signer -> id.'">'.$signer_name.' - '.$signer -> signer_role.'</option>';
+
+            $signer_options_template[] = '<option class="signer-select-option" value="'.$signer -> template_role.'" data-role="'.$signer -> signer_role.'" data-template-role="'.$signer -> template_role.'" data-name="'.$signer -> template_role.'" data-signer-id="'.$signer -> id.'">'.$signer -> template_role.'</option>';
+
         }
 
 
-        return view('/esign/esign_add_fields', compact('envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options'));
+        return view('/esign/esign_add_fields', compact('is_template', 'template_id', 'envelope_id', 'template_name', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'signer_options_template'));
 
     }
 
     public function esign_send_for_signatures(Request $request) {
 
         $envelope_id = $request -> envelope_id;
+        $template_id = $request -> template_id;
         $document_ids = explode(',', $request -> document_ids);
 
         $fields = json_decode($request -> fields, true);
@@ -524,13 +793,18 @@ class EsignController extends Controller {
             return (object) $fields;
         });
 
-        $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
+        if($template_id > 0) {
+            $delete_current_fields = EsignFields::where('template_id', $template_id) -> delete();
+        } else {
+            $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
+        }
 
         // add fields to db
         foreach($fields as $field) {
 
             $add_field = new EsignFields();
             $add_field -> envelope_id = $envelope_id;
+            $add_field -> template_id = $template_id;
             $add_field -> document_id = $field -> document_id;
             $add_field -> signer_id = $field -> signer_id;
             $add_field -> field_id = $field -> field_id;
@@ -545,8 +819,10 @@ class EsignController extends Controller {
 
         }
 
-        if($request -> draft == 'yes') {
+        if($request -> is_draft == 'yes') {
             return response() -> json(['status' => 'draft saved']);
+        } else if($request -> is_template == 'yes') {
+            return response() -> json(['status' => 'template saved']);
         }
 
         $subject = $request -> subject;

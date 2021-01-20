@@ -56,7 +56,7 @@
                                 <div class="d-flex justify-content-end align-items-center">
                                     <span class="text-gray small">Not Read</span>
                                     @if($transaction_checklist_item_note -> note_user_id == auth() -> user() -> id)
-                                        <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $transaction_checklist_item_note -> id }}"><i class="fal fa-times-circle text-danger"></i></a>
+                                        <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $transaction_checklist_item_note -> id }}"><i class="fad fa-times-circle text-danger"></i></a>
                                     @endif
                                 </div>
                             @endif

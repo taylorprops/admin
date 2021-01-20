@@ -1,4 +1,8 @@
-<div class="h4 text-orange my-3">Completed Envelopes</div>
+
+<div class="d-flex justify-content-start align-items-center mt-3 mb-5">
+    <div class="h4 text-orange mt-2">Completed </div>
+    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Completed" data-content="These are your completed envelopes. They have been sgined by all parties."><i class="fad fa-question-circle ml-2"></i></a>
+</div>
 
 <div class="table-responsive text-nowrap mb-5">
 

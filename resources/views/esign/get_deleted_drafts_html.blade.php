@@ -37,3 +37,4 @@
     </table>
 
 </div>
+<input type="hidden" id="deleted_drafts_count" value="{{ count($deleted_drafts) }}">

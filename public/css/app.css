@@ -13188,6 +13188,10 @@ ul {
   width: 10%;
 }
 
+.w-15 {
+  width: 15%;
+}
+
 .w-20 {
   width: 20%;
 }
@@ -13212,12 +13216,20 @@ ul {
   width: 80%;
 }
 
+.w-85 {
+  width: 85%;
+}
+
 .w-90 {
   width: 90%;
 }
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.no-wrap {
+  white-space: nowrap;
 }
 
 .hide {
