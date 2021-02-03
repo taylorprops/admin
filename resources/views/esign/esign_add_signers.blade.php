@@ -7,23 +7,42 @@
 
     <div class="h2 text-primary">E-Sign</div>
 
-    <div class="row mt-5">
+    @if($template_name != '')
+    <div class="h4 text-orange mt-3">{{ $template_name }}</div>
+    @endif
+
+    <div class="row mt-3">
 
         <div class="col-12 col-sm-10">
 
-            <div class="h4 text-orange">Select Signers and Order To Sign</div>
-
-            <div class="text-gray font-10 mt-3">
-                Use the handles <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="h5 text-gray">Select Signers and Order To Sign</div>
+                <div class="text-gray font-10 mt-3">
+                    Use the handles <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+                </div>
             </div>
+
 
             {{-- Signers --}}
 
-            <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Signers" data-content="Add everyone required to sign the documents. You can reorder the signing order by using the handles and dragging them."><i class="fad fa-question-circle ml-2"></i></a>
+            <div class="d-flex justify-content-start align-items-center">
+                <div>
+                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Signers" data-content="Add everyone required to sign the documents. You can reorder the signing order by using the handles and dragging them.<br><br>Quick Add will add Seller One, Seller Two, Buyer One and Buyer Two with one click"><i class="fad fa-question-circle ml-2"></i></a>
 
-            <button class="btn btn-primary my-4" type="button" data-toggle="collapse" data-target="#add_signer_div" aria-expanded="false" aria-controls="add_signer_div">
-                <i class="fal fa-plus mr-2"></i> Add Signer
-            </button>
+                    <button class="btn btn-primary my-4" type="button" data-toggle="collapse" data-target="#add_signer_div" aria-expanded="false" aria-controls="add_signer_div">
+                        <i class="fal fa-plus mr-2"></i> Add Signer
+                    </button>
+                </div>
+                @if($is_template == 'yes')
+                    <div>
+                        <button class="btn btn-primary my-4 quick-add" type="button">
+                            <i class="fal fa-plus mr-2"></i> Quick Add
+                        </button>
+                    </div>
+                @endif
+            </div>
+
+
 
             <div class="collapse" id="add_signer_div">
 
@@ -161,9 +180,9 @@
                         <div class="row d-flex align-items-center w-100">
                             <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div>
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
-                            <div class="col-3 '+hidden+' font-weight-bold">{{ $signer -> signer_name }}</div>
-                            <div class="col-2">{{ $signer -> signer_role }}</div>
-                            <div class="col-4 '+hidden+'">{{ $signer -> signer_email }}</div>
+                            <div class="col-3 @if($is_template == 'yes') hidden @endif font-weight-bold">{{ $signer -> signer_name }}</div>
+                            <div class="col-2">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
+                            <div class="col-4 @if($is_template == 'yes') hidden @endif">{{ $signer -> signer_email }}</div>
                         </div>
                         <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div>
                     </div>
@@ -310,7 +329,7 @@
 
                 @foreach($recipients as $recipient)
 
-                    <div class="list-group-item signer-item d-flex justify-content-between align-items-center text-gray w-100" data-id="{{ $recipient -> id }}" data-name="{{ $recipient -> signer_name }}" data-email="{{ $recipient -> signer_email }}" data-role="{{ $recipient -> signer_role }}" data-template-role="{{ $recipient -> template_role }}">
+                    <div class="list-group-item recipient-item d-flex justify-content-between align-items-center text-gray w-100" data-id="{{ $recipient -> id }}" data-name="{{ $recipient -> signer_name }}" data-email="{{ $recipient -> signer_email }}" data-role="{{ $recipient -> signer_role }}" data-template-role="{{ $recipient -> template_role }}">
                         <div class="row d-flex align-items-center w-100">
                             <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div>
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
@@ -330,7 +349,7 @@
         <div class="col-12 col-sm-2">
 
             <div class="mt-4 pt-4 next-div @if(!count($signers) > 0) hidden @endif">
-                <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+                <button class="btn btn-primary btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></button>
             </div>
 
         </div>

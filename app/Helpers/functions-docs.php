@@ -1,5 +1,15 @@
 <?php
 
+
+function get_width_height($doc_location) {
+    exec('identify '.$doc_location, $output, $return);
+    preg_match('/[0-9]+x[0-9]+/', $output[0], $match);
+    $size = $match[0];
+    $width = substr($size, 0, strpos($size, 'x'));
+    $height = substr($size, strpos($size, 'x') + 1);
+    return ['width' => $width, 'height' => $height];
+}
+
 function get_value($values, $id) {
 
     foreach ($values as $value) {

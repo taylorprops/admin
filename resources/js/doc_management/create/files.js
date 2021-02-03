@@ -8,6 +8,10 @@ if (document.URL.match(/create\/upload\/files/)) {
             $(this).val(ucwords($(this).val()));
         });
 
+        $('.form-search').on('keyup change', function() {
+            form_search($(this));
+        });
+
     });
 
     function init() {
@@ -24,6 +28,24 @@ if (document.URL.match(/create\/upload\/files/)) {
         get_forms(form_group_id, state, order);
 
 
+    }
+
+    function form_search(ele) {
+
+        let container = ele.closest('.list-div');
+        let val = ele.val();
+        if(val.length > 0) {
+            let regex = new RegExp(val, 'i');
+            container.find('.uploads-list').each(function() {
+                if($(this).data('form-name').match(regex)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $('.uploads-list').show();
+        }
     }
 
     function get_forms(form_group_id, state, order=null) {
@@ -122,6 +144,9 @@ if (document.URL.match(/create\/upload\/files/)) {
                 $('.add-non-form-item-button').hide();
                 $('.upload-file-button').show();
             }
+
+            $('.form-search').val('');
+            $('.uploads-list').show();
 
             let id = $(this).data('id');
             let form_group = $('#list_div_'+id+'_files');

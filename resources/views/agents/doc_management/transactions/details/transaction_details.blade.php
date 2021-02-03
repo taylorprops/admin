@@ -49,7 +49,7 @@
                 @endif
             </ul>
 
-            <div id="details_tabs" class="tab-content details-main-tabs pt-5">
+            <div id="details_tabs" class="tab-content details-main-tabs">
                 <div id="details_tab" class="tab-pane fade active show">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.vars.loader') !!}
@@ -439,7 +439,7 @@
                                             } */
                                             @endphp
 
-                                            <li class="list-group-item form-name p-1 {{ $form_status_class }}" data-form-id="{{ $form -> file_id }}" data-text="{{ $form -> file_name_display }}" data-tags="{{ $form_categories }}">
+                                            <li class="list-group-item form-name p-1 {{ $form_status_class }}" data-form-id="{{ $form -> file_id }}" data-template-id="{{ $form -> template_id }}" data-text="{{ $form -> file_name_display }}" data-tags="{{ $form_categories }}">
 
                                                 <div class="d-flex justify-content-between align-items-center">
 
@@ -450,6 +450,7 @@
                                                             <input type="checkbox" class="custom-form-element form-checkbox individual-template-form"
                                                                 id="template_form_{{ $form -> file_id }}"
                                                                 data-file-id="{{ $form -> file_id }}"
+                                                                data-template-id="{{ $form -> template_id }}"
                                                                 data-file-name="{{ $form -> file_name }}"
                                                                 data-file-name-display="{{ $form -> file_name_display }}"
                                                                 data-pages-total="{{ $form -> pages_total }}"
@@ -592,6 +593,7 @@
                                                     <div>
                                                         <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
                                                         data-file-id="{{ $checklist_form_required -> file_id }}"
+                                                        data-template-id="{{ $checklist_form_required -> template_id }}"
                                                         data-file-name="{{ $checklist_form_required -> file_name }}"
                                                         data-file-name-display="{{ $checklist_form_required -> file_name_display }}"
                                                         data-pages-total="{{ $checklist_form_required -> pages_total }}"
@@ -620,6 +622,7 @@
                                                     <div>
                                                         <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
                                                         data-file-id="{{ $checklist_form_if_applicable -> file_id }}"
+                                                        data-template-id="{{ $checklist_form_if_applicable -> template_id }}"
                                                         data-file-name="{{ $checklist_form_if_applicable -> file_name }}"
                                                         data-file-name-display="{{ $checklist_form_if_applicable -> file_name_display }}"
                                                         data-pages-total="{{ $checklist_form_if_applicable -> pages_total }}"

@@ -158,7 +158,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-around mt-3">
                     <a type="button"
-                    class="btn btn-primary save-field-properties-button"
+                    class="btn btn-primary save-field-properties-button close-field-options"
                     data-group-id="{{ $group_id }}"
                     data-field-id="{{ $field_id }}"
                     data-field-category="{{ $field_category }}"

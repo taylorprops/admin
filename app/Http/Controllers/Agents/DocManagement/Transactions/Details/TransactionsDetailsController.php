@@ -994,8 +994,6 @@ class TransactionsDetailsController extends Controller {
 
         $available_files = new Upload();
 
-
-
         $property_email = $property -> PropertyEmail;
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
@@ -1490,6 +1488,7 @@ class TransactionsDetailsController extends Controller {
             $add_documents -> folder = $folder;
             $add_documents -> doc_order = $file['order'];
             $add_documents -> orig_file_id = $file_id;
+            $add_documents -> template_id = $file['template_id'];
             $add_documents -> file_type = 'system';
             $add_documents -> file_name = $file['file_name'];
             $add_documents -> file_name_display = $file['file_name_display'];
@@ -2218,7 +2217,7 @@ class TransactionsDetailsController extends Controller {
             $file_name_display = preg_replace('/-/', ' ', $file_name_remove_numbers);
             $file_name_no_ext = str_replace('.' . $ext, '', $file_name_remove_numbers);
             $clean_file_name = sanitize($file_name_no_ext);
-            $new_file_name = date('YmdHis') . '_' . $clean_file_name . '.' . $ext;
+            $new_file_name = $clean_file_name.'_'.date('YmdHis').'.'.$ext;
 
             // convert to pdf if image
             if($ext != 'pdf') {
@@ -2481,7 +2480,7 @@ class TransactionsDetailsController extends Controller {
             $checklist_type = 'Lease';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'checklist_items_model', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_item_docs_model', 'transaction_checklist_item_notes_model', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'users', 'documents_available', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
+        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'checklist_items_model', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_item_docs_model', 'transaction_checklist_item_notes_model', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'users', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
     }
 
     public function get_add_document_to_checklist_documents_html(Request $request) {

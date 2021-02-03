@@ -1,8 +1,13 @@
-if(document.URL.match(/esign$/)) {
+if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
     $(function () {
 
-        load_tab('sent');
+        // show successful send modal
+        if(document.URL.match(/esign_show_sent/)) {
+            $('#modal_success').modal().find('.modal-body').html('Your Documents Were Successfully Sent For Signatures');
+        }
+
+        load_tab('in_process');
 
         $('#esign_tabs .nav-link').on('click', function() {
             load_tab($(this).data('tab'));
@@ -10,6 +15,8 @@ if(document.URL.match(/esign$/)) {
                 load_tab('deleted_drafts');
             } else if($(this).data('tab') == 'templates') {
                 load_tab('deleted_templates');
+            } else if($(this).data('tab') == 'system_templates') {
+                load_tab('deleted_system_templates');
             }
         });
 
@@ -60,9 +67,9 @@ if(document.URL.match(/esign$/)) {
                     }
                     }, 200);
 
-                } else if(tab == 'sent') {
+                } else if(tab == 'in_process') {
 
-                    data_table($('#sent_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                    data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
 
                 } else if(tab == 'completed') {
 
@@ -90,6 +97,31 @@ if(document.URL.match(/esign$/)) {
                             $('.show-deleted-templates').removeClass('hidden');
                         } else {
                             $('#deleted_templates_div').collapse('hide');
+                        }
+                    }, 200);
+
+                } else if(tab == 'system_templates') {
+
+                    data_table($('#system_templates_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+
+                    $('.delete-system-template-button').off('click').on('click', function() {
+                        delete_system_template($(this));
+                    });
+
+                } else if(tab == 'deleted_system_templates') {
+
+                    data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], false, true, true, true, true);
+
+                    $('.restore-system-template-button').off('click').on('click', function() {
+                        restore_system_template($(this));
+                    });
+
+                    setTimeout(function() {
+                        $('.show-deleted-system-templates').addClass('hidden');
+                        if($('#deleted_system_templates_count').val() > 0) {
+                            $('.show-deleted-system-templates').removeClass('hidden');
+                        } else {
+                            $('#deleted_system_templates_div').collapse('hide');
                         }
                     }, 200);
 
@@ -138,10 +170,10 @@ if(document.URL.match(/esign$/)) {
 
         function delete_template(ele) {
 
-            let envelope_id = ele.data('envelope-id');
+            let template_id = ele.data('template-id');
 
             let formData = new FormData();
-            formData.append('envelope_id', envelope_id);
+            formData.append('template_id', template_id);
             axios.post('/esign/delete_template', formData, axios_options)
             .then(function (response) {
                 ele.closest('tr').fadeOut();
@@ -157,14 +189,49 @@ if(document.URL.match(/esign$/)) {
 
         function restore_template(ele) {
 
-            let envelope_id = ele.data('envelope-id');
+            let template_id = ele.data('template-id');
 
             let formData = new FormData();
-            formData.append('envelope_id', envelope_id);
+            formData.append('template_id', template_id);
             axios.post('/esign/restore_template', formData, axios_options)
             .then(function (response) {
                 load_tab('deleted_templates');
                 load_tab('templates');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        function delete_system_template(ele) {
+
+            let template_id = ele.data('template-id');
+
+            let formData = new FormData();
+            formData.append('template_id', template_id);
+            axios.post('/esign/delete_system_template', formData, axios_options)
+            .then(function (response) {
+                ele.closest('tr').fadeOut();
+                load_tab('deleted_system_templates');
+                setTimeout(function() {
+                    ele.closest('tr').remove();
+                }, 800);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        function restore_system_template(ele) {
+
+            let template_id = ele.data('template-id');
+
+            let formData = new FormData();
+            formData.append('template_id', template_id);
+            axios.post('/esign/restore_system_template', formData, axios_options)
+            .then(function (response) {
+                load_tab('deleted_system_templates');
+                load_tab('system_templates');
             })
             .catch(function (error) {
                 console.log(error);

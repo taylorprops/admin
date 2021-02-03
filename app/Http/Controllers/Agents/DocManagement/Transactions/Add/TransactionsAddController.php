@@ -235,6 +235,10 @@ class TransactionsAddController extends Controller {
         $property_details['MLS_Verified'] = $mls_verified;
         $property_details['transaction_type'] = $transaction_type;
 
+        $property_details['FullStreetAddress'] = ucwords(strtolower($property_details['FullStreetAddress']));
+        $property_details['City'] = ucwords(strtolower($property_details['City']));
+        $property_details['County'] = ucwords(strtolower($property_details['County']));
+
         $property_details = (object)$property_details;
 
         $resource_items = new ResourceItems();
@@ -249,15 +253,15 @@ class TransactionsAddController extends Controller {
     public function transaction_add_details_referral(Request $request) {
 
         $property_details = [
-            'FullStreetAddress' => $request -> street_number . ' ' . $request -> street_name . ' ' . $request -> street_dir . ' ' . $request -> unit_number,
+            'FullStreetAddress' => $request -> street_number . ' ' . ucwords(strtolower($request -> street_name)) . ' ' . $request -> street_dir . ' ' . $request -> unit_number,
             'StreetNumber' => $request -> street_number,
-            'StreetName' => $request -> street_name,
+            'StreetName' => ucwords(strtolower($request -> street_name)),
             'StreetDirPrefix' => $request -> street_dir,
             'UnitNumber' => $request -> unit_number,
-            'City' => $request -> city,
+            'City' => ucwords(strtolower($request -> city)),
             'StateOrProvince' => $request -> state,
             'PostalCode' => $request -> zip,
-            'County' => $request -> county,
+            'County' => ucwords(strtolower($request -> county)),
             'Agent_ID' => $request -> Agent_ID
         ];
 
@@ -359,15 +363,15 @@ class TransactionsAddController extends Controller {
         }
 
         $property_details = [
-            'FullStreetAddress' => $request -> street_number . ' ' . $request -> street_name . ' ' . $request -> street_dir . ' ' . $request -> unit_number,
+            'FullStreetAddress' => $request -> street_number . ' ' . ucwords(strtolower($request -> street_name)) . ' ' . $request -> street_dir . ' ' . $request -> unit_number,
             'StreetNumber' => $request -> street_number,
-            'StreetName' => $request -> street_name,
+            'StreetName' => ucwords(strtolower($request -> street_name)),
             'StreetDirPrefix' => $request -> street_dir,
             'UnitNumber' => $request -> unit_number,
-            'City' => $request -> city,
+            'City' => ucwords(strtolower($request -> city)),
             'StateOrProvince' => $request -> state,
             'PostalCode' => $request -> zip,
-            'County' => $request -> county,
+            'County' => ucwords(strtolower($request -> county)),
         ];
 
         if($transaction_type == 'listing') {
@@ -431,7 +435,14 @@ class TransactionsAddController extends Controller {
 
         $resource_items = new ResourceItems();
 
-        return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type', 'transaction_type_header'));
+        /* $transaction_type_header = 'Contract/Lease';
+        if($transaction_type == 'listing') {
+            $transaction_type_header = 'Listing';
+        } else if($transaction_type == 'referral') {
+            $transaction_type_header = 'Referral Agreement';
+        } */
+
+        return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
     }
 
     public function save_add_transaction(Request $request) {
@@ -708,6 +719,18 @@ class TransactionsAddController extends Controller {
             $listing_agent -> member_type_id = ResourceItems::ListingAgentResourceId();
             $listing_agent -> disabled = true;
             $listing_agent -> save();
+
+            /* $broker = new Members();
+            $broker -> company = $agent -> company;
+            $broker -> address_office_street = config('global.vars.company_street');
+            $broker -> address_office_city = config('global.vars.company_city');
+            $broker -> address_office_state = config('global.vars.company_state');
+            $broker -> address_office_zip = config('global.vars.company_zip');
+            $broker -> Listing_ID = $Listing_ID;
+            $broker -> Agent_ID = $Agent_ID;
+            $broker -> member_type_id = ResourceItems::BrokerResourceId();
+            $broker -> disabled = true;
+            $broker -> save(); */
 
             $property -> ListAgentFirstName = $agent -> first_name;
             $property -> ListAgentLastName = $agent -> last_name;
@@ -1040,7 +1063,6 @@ class TransactionsAddController extends Controller {
                 if ($bright_db_search[0]['UnitNumber'] != $bright_db_search[1]['UnitNumber']) {
                     $property_details['multiple'] = true;
                     return $property_details;
-                    die();
                 } else {
                     $results['results_bright_id'] = $bright_db_search[0]['ListingId'];
                 }
@@ -1103,7 +1125,6 @@ class TransactionsAddController extends Controller {
                     if ($bright_db_search[0]['UnitNumber'] != $bright_db_search[1]['UnitNumber']) {
                         $property_details['multiple'] = true;
                         return $property_details;
-                        die();
                     } else {
                         $results['results_bright_id'] = $bright_db_search[0]['ListingId'];
                     }

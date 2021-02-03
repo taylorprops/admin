@@ -48,7 +48,7 @@ class TransactionChecklistItemsDocs extends Model
         // delete current images in db
         $remove = TransactionDocumentsImages::where('document_id', $document_id) -> delete();
         // create images from converted file and put in converted_images directory
-        $create_images = exec('convert -density 200 -quality 85 '.$source.' -background white -alpha remove -strip '.$destination.'/'.$filename, $output, $return);
+        $create_images = exec('convert -density 300 -quality 80 '.$source.' -background white -alpha remove -strip -compress JPEG '.$destination.'/page_%02d.jpg');
 
 
         // add the new images to db
@@ -57,10 +57,19 @@ class TransactionChecklistItemsDocs extends Model
         foreach (glob($destination.'/*') as $file) {
 
 
-            if(preg_match('/page_([0-9]+)\.jpg/', $file, $match)) {
+            /* if(preg_match('/page_([0-9]+)\.jpg/', $file, $match)) {
                 $order = $match[1];
             }
-            $page_number = $order + 1;
+            $page_number = $order + 1; */
+
+            $page_number = preg_match('/page_([0-9]+)\.jpg/', $file, $matches);
+            $match = $matches[1];
+            if(substr($match, 0, 1 == 0)) {
+                $match = substr($match, 1);
+            }
+            $page_number = count($matches) > 1 ? $match + 1 : 1;
+
+
             $file_location = str_replace(base_path(), '', $file);
             $file_location = str_replace('/storage/app/public', '/storage', $file_location);
             $add_image = new TransactionDocumentsImages();

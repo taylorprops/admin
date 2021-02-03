@@ -1,4 +1,4 @@
-<div class="p-1 p-md-4 documents-container">
+<div class="p-1 pl-md-4 pr-md-4 pb-md-4 documents-container">
 
     <div class="row mb-3 mb-sm-2 mb-md-1">
         <div class="col-12">
@@ -6,6 +6,16 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <a class="btn btn-primary" data-toggle="collapse" href="#add_documents_div" aria-expanded="false" aria-controls="add_documents_div"><i class="fal fa-plus mr-2"></i> Add Documents </a>
+                    </div>
+                    <div class="alert alert-warning mb-0 p-1" id="in_process_div">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="mr-4">
+                                <i class="fad fa-cog fa-spin fa-lg"></i>
+                            </div>
+                            <div>
+                                You have documents still being processed. They should be available soon.
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <a href="javascript: void(0)" class="btn btn-primary add-folder-button"><i class="fal fa-plus mr-2"></i> Add Folder</a>
@@ -114,21 +124,6 @@
 
         </div>
 
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="alert alert-warning" id="in_process_div">
-                <div class="d-flex justify-content-start align-items-center">
-                    <div class="mr-4">
-                        <i class="fad fa-cog fa-spin fa-lg"></i>
-                    </div>
-                    <div>
-                        You have documents still being processed. They should be available soon.
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -255,7 +250,7 @@
                                             <i class="fad fa-cog fa-spin fa-lg text-orange"></i>
                                         </div>
                                         <div class="text-gray document-title py-1 py-sm-2">
-                                            <a href="{{ $document -> file_location_converted }}" target="_blank">{{ $document -> file_name_display }}</a>
+                                            <a href="{{ $document -> file_location_converted }}?0293847" target="_blank">{{ $document -> file_name_display }}</a>
                                             <div class="d-flex justify-content-start flex-wrap">
                                                 <div>
                                                     <span class="small">Added: {{ date('n/j/Y g:i:sA', strtotime($document -> created_at)) }} </span>

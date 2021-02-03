@@ -141,7 +141,7 @@
             <div class="modal-content">
                 <form id="checklist_items_form">
                     <div class="modal-header d-flex justify-content-between">
-                        <h4 class="modal-title text-white" id="checklist_items_modal_title"></h4>
+                        <h4 class="modal-title" id="checklist_items_modal_title"></h4>
                         <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times fa-2x"></i>
                         </button>

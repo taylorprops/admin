@@ -17,6 +17,7 @@ $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66d9b;
 $red: #b64341;
+$danger_red: #a14f4e;
 $red-light: #f8d9d9;
 $red-lighter: #f5e0e0;
 $orange: #df7935;
@@ -26,6 +27,7 @@ $orange-dark: #943d31;
 $yellow: #ffed4a;
 $yellow-light: #f7efae;
 $green: #2d8d2d;
+$success_green: #518d54;
 $green-light: #bef1be;
 $green-lighter: #d2f1d2;
 $green-dark: #1b631b;
@@ -36,8 +38,8 @@ $default: #647c96;
 $theme-colors: (
     "primary": $blue,
     "secondary": $orange,
-    "danger": $red,
-    "success": $green,
+    "danger": $danger_red,
+    "success": $success_green,
     "default": $default,
     "primary-dark": $blue-dark
 );

@@ -24,6 +24,10 @@ class Upload extends Model
         return $this -> hasMany('App\Models\DocManagement\Create\Fields\Fields', 'file_id');
     }
 
+    public function images() {
+        return $this -> hasMany('App\Models\DocManagement\Create\Upload\UploadImages', 'file_id');
+    }
+
 
     public function scopeIsContract($query, $checklist_form_id) {
 
@@ -198,6 +202,7 @@ class Upload extends Model
 
         $forms_available = $this -> where('form_group_id', $location_id)
             -> where('published', 'yes')
+            -> where('active', 'yes')
             -> orderBy('file_name_display', 'ASC') -> get();
 
         //$forms_in_use = null;

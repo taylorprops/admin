@@ -38,4 +38,8 @@ class EsignEnvelopes extends Model
         return $this -> hasMany('App\Models\Esign\EsignFields', 'envelope_id', 'id');
     }
 
+    public function callbacks() {
+        return $this -> hasMany('App\Models\Esign\EsignCallbacks', 'related_document_hash', 'document_hash');
+    }
+
 }

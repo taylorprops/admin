@@ -1,6 +1,6 @@
 <div class="h4 text-orange my-3">Deleted Drafts</div>
 
-<div class="table-responsive text-nowrap">
+<div class=">
 
     <table id="deleted_drafts_table" class="table table-hover table-bordered" width="100%">
 
@@ -9,7 +9,7 @@
                 <th class="wpx-100"></th>
                 <th>Name</th>
                 <th>Recipients</th>
-                <th>Created</th>
+                <th class="wpx-100">Created</th>
             </tr>
         </thead>
 

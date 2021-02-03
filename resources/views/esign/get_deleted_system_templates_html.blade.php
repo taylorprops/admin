@@ -2,7 +2,7 @@
 
 <div class="">
 
-    <table id="deleted_templates_table" class="table table-hover table-bordered" width="100%">
+    <table id="deleted_system_templates_table" class="table table-hover table-bordered" width="100%">
 
         <thead>
             <tr>
@@ -25,7 +25,7 @@
                 }
                 @endphp
                 <tr>
-                    <td><a href="javascript:void(0)" class="btn btn-primary restore-template-button" data-template-id="{{ $template -> id }}">Restore template <i class="fal fa-undo ml-2"></i></a></td>
+                    <td><a href="javascript:void(0)" class="btn btn-primary restore-system-template-button" data-template-id="{{ $template -> id }}">Restore template <i class="fal fa-undo ml-2"></i></a></td>
                     <td>{{ $template -> template_name }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
                     <td>{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>
@@ -37,4 +37,4 @@
     </table>
 
 </div>
-<input type="hidden" id="deleted_templates_count" value="{{ count($deleted_templates) }}">
+<input type="hidden" id="deleted_system_templates_count" value="{{ count($deleted_templates) }}">

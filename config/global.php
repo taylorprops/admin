@@ -27,6 +27,7 @@ $select_columns_bright_agents = ['ListAgentFirstName,ListAgentLastName,ListAgent
 
 return [
     'vars' => [
+        'app_stage' => env('APP_STAGE'),
         'bad_characters' => $bad_characters,
         'street_suffixes' => $street_suffixes,
         'street_dir_suffixes' => $street_dir_suffixes,

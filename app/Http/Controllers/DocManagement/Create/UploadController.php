@@ -392,7 +392,7 @@ class UploadController extends Controller {
             $line = iconv('UTF-8', 'ASCII//IGNORE//TRANSLIT', $line);
 
             // get words
-            if(preg_match('/^[a-zA-Z\s-_\/]+/', $line, $matches)) {
+            if(preg_match('/^[a-zA-Z-_\/\s]+/', $line, $matches)) {
                 // remove non form names
                 if(!preg_match('/(realtor|association|commission)/i', $matches[0])) {
                     // if more than one word in name
@@ -468,7 +468,7 @@ class UploadController extends Controller {
 
             $file_in = Storage::disk('public') -> path($storage_dir.'/'.$new_filename);
             $file_out = Storage::disk('public') -> path($storage_dir.'/temp_'.$new_filename);
-            exec('pdftk '.$file_in.' output '.$file_out.' flatten');
+            exec('pdftk '.$file_in.' output '.$file_out.' flatten compress');
             exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
 
             $storage_full_path = $storage_path.'/doc_management/uploads/'.$file_id;
@@ -493,13 +493,13 @@ class UploadController extends Controller {
             $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
 
             // add individual pages to pages directory
-            $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten', $output, $return);
+            $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten compress', $output, $return);
 
             // remove data file
             exec('rm '.$storage_path.'/'.$storage_dir_pages.'/doc_data.txt');
 
             // add individual images to images directory
-            $create_images = exec('convert -density 200 -quality 80% -resize 1200 '.$input_file.' -background white -alpha remove -strip '.$output_images, $output, $return);
+            $create_images = exec('convert -density 200 -quality 80% -resize 1200 '.$input_file.'  -compress JPEG -background white -alpha remove -strip '.$output_images, $output, $return);
 
             // get all image files images_storage_path to use as file location
             $saved_images_directory = Storage::files('public/'.$storage_dir.'/images');

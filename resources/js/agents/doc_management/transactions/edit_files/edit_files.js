@@ -281,20 +281,20 @@ if (document.URL.match(/edit_files/)) {
 
             let inline = '';
             if(field_type == 'user_text') {
-                field_class = 'user-field-div textline-div standard';
+                field_class = 'user-field-div textline-div';
                 field_html = '<div class="data-div textline-html inline-editor"></div> \
                 <input type="hidden" class="field-input user-field-input" data-id="" data-field-id="'+field_id+'" data-group-id="'+group_id+'" data-field-type="'+field_type+'">';
                 inline = 'inline';
             } else if (field_type == 'strikeout') {
-                field_class = 'user-field-div strikeout-div standard';
+                field_class = 'user-field-div strikeout-div';
                 field_html = '<div class="data-div strikeout-html"></div>';
             } else if (field_type == 'highlight') {
-                field_class = 'user-field-div highlight-div standard';
+                field_class = 'user-field-div highlight-div';
                 field_html = '<div class="data-div highlight-html"></div>';
             }
 
             return ' \
-            <div class="field-div-container show" style="position: absolute; top: '+y_perc+'%; left: '+x_perc+'%; height: '+h_perc+'%; width: '+w_perc+'%;"> \
+            <div class="field-div-container show '+field_type+'" style="position: absolute; top: '+y_perc+'%; left: '+x_perc+'%; height: '+h_perc+'%; width: '+w_perc+'%;"> \
                 <div class="field-div new '+field_class+' group_'+group_id+' '+inline+'" style="position: absolute; top: 0%; left: 0%; height: 100%; width: 100%;" id="field_'+field_id+'" data-field-id="'+field_id+'" data-group-id="'+group_id+'" data-type="'+field_type+'" data-category="'+field_type+'" data-page="'+page+'"></div> \
                 <div class="field-options-holder w-100"> \
                     <div class="d-flex justify-content-around"> \
@@ -362,6 +362,11 @@ if (document.URL.match(/edit_files/)) {
             field_div.data('xp', x_perc);
             field_div.data('yp', y_perc);
 
+            ele.css({ height: h_perc+'%' });
+            ele.css({ width: w_perc+'%' });
+            ele.css({ left: x_perc+'%' });
+            ele.css({ top: y_perc+'%' });
+
 
             // keep in view
             if (x_perc < 0) {
@@ -404,7 +409,6 @@ if (document.URL.match(/edit_files/)) {
             formData.append('inputs', inputs);
             axios.post('/agents/doc_management/transactions/edit_files/save_edit_system_inputs', formData, axios_options)
             .then(function (response) {
-
                 // add user fields and inputs
                 let Listing_ID = $('#Listing_ID').val();
                 let Contract_ID = $('#Contract_ID').val();
@@ -779,11 +783,36 @@ if (document.URL.match(/edit_files/)) {
 
             toastr['success']('Changes Successfully Saved');
 
-            let els = '.data-div, .file-image-bg, .field-div, .data-div-radio-check, .strikeout-html';
+            let els = '.system-html, .data-div-radio-check, .highlight-html, .user_textinline';
             let styles;
             $(els).each(function () {
                 let data_div = $(this);
-                styles = ['color', 'font-size', 'line-height', 'text-align', 'font-weight', 'opacity', 'background', 'margin-left', 'margin-top', 'padding-left', 'padding-top', 'padding-bottom', 'display', 'position', 'font-family', 'letter-spacing', 'margin-top'];
+                styles = [
+                    /*
+                    'color',
+                    'display',
+                    'font-size',
+                    'font-family',
+                    'font-weight',
+                    'left',
+                    'letter-spacing',
+
+
+                    'opacity',
+                    'overflow',
+                    'padding-bottom',
+                    'position',
+                    'text-align',
+                    'top',
+                    'white-space' */
+                    'background',
+                    'line-height',
+                    'margin-left',
+                    'margin-top',
+                    'padding-left',
+                    'padding-top',
+                    'top'
+                ];
                 $.each(styles, function (index, style) {
                     data_div.data(style, data_div.css(style));
                 });
@@ -791,17 +820,66 @@ if (document.URL.match(/edit_files/)) {
 
             // set inline styles for PDF
             // system fields
-            $('.data-div').not('.data-div-radio-check, .highlight-html, .strikeout-html').css({ 'font-size': '.9rem', 'color': 'black', 'padding-top': '2px', 'font-family': '\'Roboto\', sans-serif' });
-            $('.data-div').not('.inline-editor').css({ 'text-align': 'center' });
-            $('.data-div-checkbox').css({ 'margin-left': '3px', 'margin-top': '2px', 'color': '#000', 'font-size': '1.5em', 'line-height': '35%', 'font-weight': 'bold', 'font-family': '\'Roboto\', sans-serif' });
-            $('.data-div-radio').css({ 'margin-left': '2px', 'color': '#000', 'font-size': '1.5em', 'line-height': '40%', 'font-weight': 'bold', 'font-family': '\'Roboto\', sans-serif' });
+            let font_family = "'Roboto Condensed', sans-serif";
+            $('.data-div.system-html, .textline-html').css({
+                'position': 'absolute',
+                'top': '0px',
+                'left': '0px',
+                'width': '100%',
+                'overflow': 'visible',
+                'white-space': 'nowrap',
+                'font-size': '14px',
+                'color': 'black',
+                'line-height': '1',
+                'padding-top': '0px',
+                'padding-left': '0px',
+                'font-family': font_family
+            });
+            $('.data-div.system-html').not('.inline-editor').css({
+                'text-align': 'center'
+            });
+            $('.data-div-checkbox').css({
+                'display': 'block',
+                'height': '100%',
+                'width': '100%',
+                'margin-left': '1px',
+                'margin-top': '3px',
+                'color': '#000',
+                'font-size': '1.3em',
+                'line-height': '35%',
+                'font-weight': 'bold',
+                'font-family': font_family
+            });
+            $('.data-div-radio').css({
+                'margin-left': '1px',
+                'color': '#000',
+                'font-size': '1.3em',
+                'line-height': '40%',
+                'font-weight': 'bold',
+                'font-family': font_family
+            });
             // remove background
             //$('.file-image-bg').css({ opacity: '0.0' });
 
             // user fields
-            $('.data-div.highlight-html').css({ background: 'yellow', opacity: '0.5', width: '100%', height: '100%' });
-            //$('.data-div.strikeout-html').css({ width: '100%', height: '4px', background: 'black', display: 'block', position: 'relative', 'margin-top': '8px' });
-            $('.data-div.strikeout-html').css({ display: 'none' });
+            $('.data-div.highlight-html').css({
+                'position': 'relative',
+                'display': 'block',
+                'background': 'rgba(255, 237, 74,.3)',
+                'height': '100%',
+                'width': '100% !important'
+            });
+            $('.data-div.strikeout-html').css({
+                'display': 'block',
+                'position': 'absolute',
+                'top': '4px',
+                'left': '0px',
+                'width': '100%',
+                'height': '4px',
+                'background': '#000000',
+                'line-height': '1'
+            });
+            //$('.data-div.strikeout-html').css({ display: 'none' });
 
 
             let file_id = $('#file_id').val();
@@ -813,21 +891,48 @@ if (document.URL.match(/edit_files/)) {
             let transaction_type = $('#transaction_type').val();
 
             // remove datepicker html, datepicker input, background img, modals, left over input fields
-            let elements_remove = '.file-image-bg, .field-div, .field-options-holder, .field-handle, .qs-datepicker-container, .field-datepicker, .inputs-container';
+            let elements_remove = '.file-image-bg, .field-div, .field-options-holder, .field-handle, .qs-datepicker-container, .field-datepicker, .inputs-container, .field-input';
 
             let formData = new FormData();
 
             // get html from all pages to add to pdf layer
             let c = 0;
             $('.file-view-page-container').each(function () {
-                c += 1;
-                let container = $(this);
+
+                /* let container = $(this);
                 let page_html = container.clone();
 
                 page_html.find(elements_remove).remove();
                 page_html = page_html.wrap('<div>').parent().html();
+                //console.log(page_html);
 
-                formData.append('page_' + c, page_html);
+                formData.append('page_' + c, page_html); */
+
+                c += 1;
+                let container = $(this);
+                let page_html_top_clone = container.clone();
+                let page_html_bottom_clone = container.clone();
+                let page_html_top = '';
+                let page_html_bottom = '';
+
+                page_html_top_clone.find(elements_remove).remove();
+                page_html_bottom_clone.find(elements_remove).remove();
+
+                if(page_html_top_clone.find('.field-div-container').not('.highlight').length > 0) {
+                    page_html_top = $(page_html_top_clone.wrap('<div>').parent().html().replace(/\>\s+\</g, '><'));
+                    page_html_top.find('.highlight').remove();
+                    page_html_top = page_html_top.wrap('<div>').parent().html();
+                    formData.append('page_html_top_' + c, page_html_top);
+                    console.log(page_html_top);
+                }
+
+                if(page_html_bottom_clone.find('.highlight').length > 0) {
+                    page_html_bottom = $(page_html_bottom_clone.wrap('<div>').parent().html().replace(/\>\s+\</g, '><'));
+                    page_html_bottom.find('.field-div-container').not('.highlight').remove();
+                    page_html_bottom = page_html_bottom.wrap('<div>').parent().html();
+                    formData.append('page_html_bottom_' + c, page_html_bottom);
+                }
+
             });
 
             formData.append('page_count', c);
@@ -889,8 +994,6 @@ if (document.URL.match(/edit_files/)) {
                 });
 
             }, 1000);
-
-
 
 
         }

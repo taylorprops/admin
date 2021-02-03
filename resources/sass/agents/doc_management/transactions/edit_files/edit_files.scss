@@ -47,6 +47,7 @@
         height: calc(100vh - 130px);
         overflow-y: scroll;
         overflow-x: hidden;
+        padding-bottom: 200px;
         -vendor-animation-duration: 2s;
         animation-duration: 2s;
     }
@@ -58,7 +59,7 @@
     .file-view-page-container, .file-view-thumb-container {
         -vendor-animation-duration: 8s;
         animation-duration: 8s;
-        opacity: .4;
+        opacity: .2;
 
         &.active {
             opacity: 1;
@@ -214,16 +215,23 @@
 
         .data-div {
             position: absolute;
-            bottom: 0px;
+            top: 0px;
             left: 0px;
             width: 100%;
             height: 100%;
-            font-size: .8rem;
+            font-size: 14px;
             z-index: 0;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            overflow: visible;
+            font-family: 'Roboto Condensed', sans-serif;
 
-            &:not(.data-div-radio-check):not(.inline-editor) {
+            &:not(.data-div-radio-check) {
+                padding-top: 2px;
                 padding-left: 2px;
-                text-align: center;
+            }
+            &:not(.inline-editor) {
+                text-align: center !important;
             }
 
 
@@ -285,7 +293,7 @@
 
     .data-div.data-div-radio-check {
         cursor: pointer;
-        font-size: 1.6em;
+        font-size: 1.3em;
         font-weight: bold;
         background: rgb(250, 226, 203);
         //background: rgba($orange, .1);
@@ -295,12 +303,14 @@
         height: 15px;
 
         &.data-div-radio {
-            line-height: 30%;
-            padding-top: 1px;
+            line-height: 30% !important;
+            padding-top: 4px !important;
             border-radius: 50%;
         }
         &.data-div-checkbox {
-            line-height: 40%;
+            margin-left: 1px;
+            margin-top: 3px;
+            line-height: 40% !important;
         }
     }
 
@@ -333,10 +343,16 @@
     .user-field-div.highlight-div, .data-div.highlight {
         background: rgba($yellow, .3);
     }
-    .data-div.strikeout {
-        height: 4px;
+    .data-div.strikeout-html {
+        position: absolute !important;
+        top: 6px !important;
+        left: 0px !important;
+        width: 100% !important;
+        height: 4px !important;
+        background: black !important;
+        display: block !important;
     }
-    .strikeout-div {
+    /* .strikeout-div {
         padding-top: 7px;
     }
     .user-field-div.strikeout-div::after {
@@ -346,7 +362,7 @@
         background: black;
         display: block;
         position: relative;
-    }
+    } */
 
 
 

@@ -121,6 +121,7 @@ if (document.URL.match(/transaction_details/)) {
                 let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
                 doc_div.addClass('in-process').find('.check-document').prop('disabled', true);
                 doc_div.find('.in-process-icon').show();
+                doc_div.find('.document-title a').css({ opacity: '0.4' });
                 doc_div.find('.btn').prop('disabled', true);
                 $('#in_process_div').show();
             });
@@ -134,6 +135,7 @@ if (document.URL.match(/transaction_details/)) {
                     let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
                     doc_div.removeClass('in-process').find('.check-document').prop('disabled', false);
                     doc_div.find('.in-process-icon').hide();
+                    doc_div.find('.document-title a').css({ opacity: '1' });
                     doc_div.find('.btn').prop('disabled', false);
                 });
             }
@@ -1139,6 +1141,7 @@ if (document.URL.match(/transaction_details/)) {
 
             let file_data = {};
             file_data['file_id'] = $(this).data('file-id');
+            file_data['template_id'] = $(this).data('template-id');
             file_data['file_name'] = $(this).data('file-name');
             file_data['file_size'] = $(this).data('file-size');
             file_data['file_name_display'] = $(this).data('file-name-display');
@@ -1170,7 +1173,16 @@ if (document.URL.match(/transaction_details/)) {
                         let sortables = $('.document-div[data-folder-id="' + folder + '"]');
                         reorder_documents(sortables);
 
-                        $('#save_add_individual_template_button, #save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
+                        $('#save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
+                            if($('.checklist-template-form:checked').length > 0) {
+                                $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
+                                save_add_template_documents('checklist');
+                            } else {
+                                $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
+                            }
+                        });
+
+                        $('#save_add_individual_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
                             if($('.individual-template-form:checked').length > 0) {
                                 $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
                                 save_add_template_documents('individual');
@@ -1178,6 +1190,7 @@ if (document.URL.match(/transaction_details/)) {
                                 $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
                             }
                         });
+
                         global_loading_off();
                         toastr['success']('Documents Successfully Added');
 
@@ -1195,6 +1208,8 @@ if (document.URL.match(/transaction_details/)) {
     }
 
     window.file_progress = function(files) { // file_name_display and file_size
+
+        global_loading_off();
 
         let loading_html = ' \
         <div class="h5 text-white mb-3">Importing Documents...</div> \

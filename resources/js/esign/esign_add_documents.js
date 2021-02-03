@@ -2,6 +2,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
     $(function () {
 
+
         $('#esign_file_upload').off('change').on('change', upload_files);
 
         $(document).on('click', '.remove-upload-button', function() {
@@ -22,6 +23,11 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
         });
 
         data_table($('#templates_table'), [1, 'asc'], [0], false, true, true, true);
+
+        if($('#from_upload').val() == 'yes') {
+            create_envelope();
+            global_loading_on('', '<h4 class="text-white">Importing Documents...</h4>');
+        }
 
         ////////// functions //////////
 
@@ -58,6 +64,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
         function create_envelope() {
 
             let is_template = $('#is_template').val();
+            let from_upload = $('#from_upload').val();
             let template_name = '';
             if(is_template == 'yes') {
                 let form = $('.template-name-div');
@@ -84,6 +91,8 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
                 let data = {
                     'template_id': $(this).data('template-id') ?? 0,
+                    'upload_id': $(this).data('upload-id') ?? 0,
+                    'document_id': $(this).data('document-id') ?? 0,
                     'template_applied_id': $(this).data('template-applied-id') ?? 0,
                     'file_type': $(this).data('file-type'),
                     'file_name': $(this).data('file-name'),
@@ -99,6 +108,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
             let formData = new FormData();
             formData.append('is_template', is_template);
+            formData.append('from_upload', from_upload);
             formData.append('template_name', template_name);
             formData.append('Listing_ID', Listing_ID);
             formData.append('Contract_ID', Contract_ID);
@@ -107,6 +117,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
             formData.append('Agent_ID', Agent_ID);
             formData.append('User_ID', User_ID);
             formData.append('file_data', file_data);
+
 
             axios.post('/esign/esign_create_envelope', formData, axios_options)
             .then(function (response) {

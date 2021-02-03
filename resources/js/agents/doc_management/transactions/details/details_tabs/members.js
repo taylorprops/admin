@@ -76,7 +76,7 @@ if (document.URL.match(/transaction_details/)) {
             bank_trust_div.hide();
             member_entity_name_div.hide();
             company_div.show();
-            home_address_div.hide();
+            home_address_div.show();
             office_address_div.show();
             bright_mls_id_div.hide();
 

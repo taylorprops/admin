@@ -826,6 +826,12 @@ if (document.URL.match(/create\/add_fields/)) {
                 field_div.find('.custom-name-results').hide();
 
             }
+
+            $(document).on('mouseup', function (e) {
+                if ($(e.target).closest('.custom-name-results').length  === 0) {
+                    $('.custom-name-results').hide();
+                }
+            });
         }
 
         function delete_page() {

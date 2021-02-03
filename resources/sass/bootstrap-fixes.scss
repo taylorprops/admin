@@ -2,6 +2,7 @@
 .modal {
 
     .modal-lg, .modal-xl {
+        top: 25px;
 
         .modal-content {
             margin-bottom: 50px;
@@ -195,23 +196,38 @@ body.modal-open {
     }
 
     .dataTable {
-        &.table th {
-            //background: $blue-light;
-            padding: .6rem 0rem .6rem 0.4rem;
-            color: $blue;
-            vertical-align: middle;
-            font-size: .8rem;
-            border-top: 1px solid $border-color;
-            // border-left: none !important;
-            // border-right: none !important;
-            border-bottom: 1px solid $border-color;
 
-        }
-        &.table td {
-            padding: 0.4rem;
-            vertical-align: middle;
-            font-size: .8rem;
-            color: $text-gray;
+        &.table {
+            border-left: none !important;
+            border-right: none !important;
+
+            th {
+                //background: $blue-light;
+                padding: .6rem 0rem .6rem 0.4rem;
+                color: $blue;
+                vertical-align: middle;
+                font-size: .8rem;
+                border-top: none;
+                border-left: none;
+                border-bottom: 1px solid $border-color;
+                font-weight: normal;
+
+                &:last-child {
+                    border-right: none;
+                }
+
+            }
+            td {
+                padding: 0.4rem;
+                vertical-align: middle;
+                font-size: .8rem;
+                color: $text-gray;
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+
         }
 
         /* .sorting:before, .sorting_asc:before, .sorting_desc:before, .sorting_asc_disabled:before, .sorting_desc_disabled:before,
@@ -281,4 +297,8 @@ body.modal-open {
 /////////// pretty checkboxes and radios
 .pretty .state label:before, .pretty .state label:after {
     background: $white !important;
+}
+
+.pretty .state label {
+    margin-top: 1px !important;
 }

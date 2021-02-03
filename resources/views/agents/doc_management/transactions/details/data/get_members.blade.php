@@ -20,6 +20,9 @@
                                     $member_type = 'Renter Agent';
                                 }
                             }
+                            if($member_type == '') {
+                                $member_type = 'Other';
+                            }
                             @endphp
                             <a class="list-group-item list-group-item-action list-group-item-member @if($loop -> first) active @endif" id="member_{{ $member -> id }}_item" data-toggle="list" href="#member_{{ $member -> id }}_div" role="tab" data-member-type="{{ $member -> member_type }}">
                                 <div class="row">
@@ -66,6 +69,7 @@
                                                     @endphp
                                                     <option value="{{ $contact_type -> resource_id }}" @if($contact_type -> resource_id == $member -> member_type_id) selected @endif>{{ $member_type }}</option>
                                                 @endforeach
+                                                <option value="Other" @if($member -> member_type_id == 0) selected @endif>Other</option>
                                             </select>
                                         </div>
 

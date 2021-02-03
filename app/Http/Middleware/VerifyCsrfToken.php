@@ -24,12 +24,17 @@ class VerifyCsrfToken extends Middleware
         '/logout'
     ];
 
+    private $openRoutes = [
+        'esign_callback',
+        'login'
+    ];
+
     public function handle($request, Closure $next)
     {
 
-        if(basename(request() -> path()) != 'login') {
-            if (!auth() -> user()) {
-                return redirect('login');
+        foreach($this -> openRoutes as $route) {
+            if ($request -> is($route)) {
+                return $next($request);
             }
         }
         return $next($request);

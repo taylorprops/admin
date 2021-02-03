@@ -302,7 +302,7 @@ class FieldsController extends Controller
                 $clean_dir -> cleanDirectory('storage/'.$upload_dir . '/combined');
             }
 
-            $doc_root = $_SERVER['DOCUMENT_ROOT'];
+            $doc_root = base_path().'/public/';
             $full_path_dir = $doc_root . 'storage/'.$upload_dir;
 
             $pdf_output_dir = $doc_root . 'storage/'.$upload_dir.'/combined/';
@@ -325,7 +325,6 @@ class FieldsController extends Controller
                 $pdf -> addPage($request['page_'.$c]);
                 if (!$pdf -> saveAs($full_path_dir.'/layers/layer_'.$c.'.pdf')) {
                     $error = $pdf -> getError();
-                    dd($error);
                 }
 
                 // merge layers from pages folder and layers folder and dump in combined folder
@@ -335,7 +334,7 @@ class FieldsController extends Controller
                 }
                 $layer1 = $full_path_dir . '/pages/page_'.$page_number.'.pdf';
                 $layer2 = $full_path_dir . '/layers/layer_'.$c.'.pdf';
-                exec('convert -quality 100 -density 300 '.$layer2.' -transparent white -background none '.$layer2);
+                exec('convert -quality 100 -density 300 '.$layer2.' -transparent '.$layer2);
                 exec('pdftk '.$layer2.' background '.$layer1.' output '.$pdf_output_dir.'/'.date('YmdHis').'_combined_'.$c.'.pdf');
 
             }

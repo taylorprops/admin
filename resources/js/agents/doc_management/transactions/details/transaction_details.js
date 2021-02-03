@@ -8,7 +8,6 @@ if (document.URL.match(/transaction_details/)) {
         load_tabs('details');
 
         $(document).on('click', '.transaction-details-nav-link', function() {
-            console.log('clicked', $(this).data('tab'));
             load_tabs($(this).data('tab'));
         });
 
@@ -128,7 +127,7 @@ if (document.URL.match(/transaction_details/)) {
                         document_ids.push($(this).data('document-id'));
                     });
                     in_process(document_ids);
-                }, 3000);
+                }, 1000);
             }
 
         });

@@ -130,15 +130,32 @@
         z-index: 3;
         background: rgba($orange, .3);
         cursor: pointer;
+        overflow: visible;
+        white-space: nowrap;
 
 
         .field-html {
             position: absolute;
-            top: 0px;
             left: 0px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+
+            &:not(.text) {
+                top: 0px;
+                font-size: .8rem;
+                text-align: center;
+                height: 100%;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            &.text {
+                bottom: 0px;
+                font-size: 1rem;
+                text-align: left;
+                height: auto;
+                line-height: 100%;
+                padding-left: 2px;
+            }
 
             .field-div-details {
                 overflow: hidden;
@@ -164,7 +181,7 @@
             position: absolute;
             left: 0px;
             right: auto;
-            bottom: -140px;
+            top: 60px;
             width: 270px;
             background: $primary;
             color: $white;
@@ -271,6 +288,10 @@
             .field-options-holder, .select-signer-div, .field-handle {
                 display: block !important;
             }
+        }
+
+        &.required {
+            border: 2px solid $danger;
         }
 
     }

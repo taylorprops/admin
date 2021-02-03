@@ -14,6 +14,8 @@ if(document.URL.match(/esign_add_signers/)) {
             }
         });
 
+        $(document).on('click', '.quick-add', quick_add);
+
         $(document).on('click', '.save-add-user', function() {
             add_user($(this).data('type'));
         });
@@ -63,6 +65,47 @@ if(document.URL.match(/esign_add_signers/)) {
             }
         });
         reorder('recipient');
+
+        $('.collapse').on('shown.bs.collapse', function () {
+            $('#add_fields_button').prop('disabled', true);
+        });
+        $('.collapse').on('hidden.bs.collapse', function () {
+            $('#add_fields_button').prop('disabled', false);
+        });
+
+        function quick_add() {
+
+            let template_roles = ['Seller One', 'Seller Two', 'Buyer One', 'Buyer Two'];
+
+            template_roles.forEach(function(template_role) {
+
+                let role = template_role.match(/Seller/) ? 'Seller' : 'Buyer';
+
+                let user = ' \
+                <div class="list-group-item signer-item d-flex justify-content-between align-items-center text-gray w-100" data-name="" data-email="" data-role="'+role+'" data-template-role="'+template_role+'"> \
+                    <div class="row d-flex align-items-center w-100"> \
+                        <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
+                        <div class="col-1"><span class="signer-count font-11 text-orange"></span></div> \
+                        <div class="col-3 font-weight-bold hidden"></div> \
+                        <div class="col-2">'+template_role+'</div> \
+                        <div class="col-4 hidden"></div> \
+                    </div> \
+                    <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div> \
+                </div>';
+
+                $('.signers-container').append(user).sortable({
+                    handle: '.user-handle',
+                    stop: function() {
+                        reorder('signer');
+                    }
+                });
+
+            });
+
+            $('.next-div').removeClass('hidden');
+            reorder('signer');
+
+        }
 
 
         function save_signers() {
@@ -218,7 +261,7 @@ if(document.URL.match(/esign_add_signers/)) {
                     $('.next-div').addClass('hidden');
                 }
 
-            }, 800);
+            }, 400);
 
         }
 

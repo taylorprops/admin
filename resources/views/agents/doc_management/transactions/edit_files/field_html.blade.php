@@ -32,7 +32,7 @@ if($field_created_by == 'user') {
 
     if($field_category == 'user_text') {
 
-        $field_div_class = 'user-field-div textline-div standard';
+        $field_div_class = 'user-field-div textline-div';
         $data_div_classes .= 'inline w-100 h-100';
         $data_div_styles = 'font-family: Helvetica, Arial;';
         /* $field_html = '
@@ -43,13 +43,13 @@ if($field_created_by == 'user') {
 
     } else if($field_category == 'strikeout') {
 
-        $field_div_class = 'user-field-div strikeout-div standard';
+        $field_div_class = 'user-field-div strikeout-div';
         $data_div_classes .= '-html w-100';
         //$field_html = '<div class="data-div strikeout-html"></div>';
 
     } else if($field_category == 'highlight') {
 
-        $field_div_class = 'user-field-div highlight-div standard';
+        $field_div_class = 'user-field-div highlight-div';
         $data_div_classes .= '-html w-100 h-100';
         $handles = '
             <div class="field-handle ui-resizable-handle ui-resizable-nw"></div>
@@ -65,7 +65,7 @@ if($field_created_by == 'user') {
 
     $field_div_class = ' ' . $field_category;
 
-    $data_div_classes = '';
+    $data_div_classes = 'system-html';
     $data_div_styles = '';
 
     if($field_category == 'radio' || $field_category == 'checkbox') {
@@ -81,7 +81,7 @@ if($field_created_by == 'user') {
 
 ?>
 
-<div class="field-div-container animate__animated animate__fadeIn"
+<div class="field-div-container animate__animated animate__fadeIn {{ $field_type }}"
     style="position: absolute;
     top: {{ $top_perc }}%;
     left: {{ $left_perc }}%;
@@ -184,7 +184,7 @@ if($field_created_by == 'user') {
 
             @if($input)
 
-                <input type="hidden" class="field-input user-field-input" data-id="{{ $input -> id }}" data-group-id="{{ $group_id }}" data-field-type="{{ $field_type }}" data-number-type="{{ $user_field -> number_type }}" data-db-column="{{ $input -> db_column }}" value="{{ $input -> input_value }}">
+                <input type="hidden" class="field-input {{-- user-field-input --}}" data-id="{{ $input -> id }}" data-group-id="{{ $group_id }}" data-field-type="{{ $field_type }}" data-number-type="{{ $user_field -> number_type }}" data-db-column="{{ $input -> db_column }}" value="{{ $input -> input_value }}">
 
             @endif
 

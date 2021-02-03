@@ -250,6 +250,11 @@
 
     // esign
     Route::get('/esign', 'Esign\EsignController@esign') -> name('esign');
+    // esign after sending docs for signatures
+    Route::get('/esign_show_sent', 'Esign\EsignController@esign');
+
+    // callback url
+    Route::post('/esign_callback', 'Esign\EsignController@esign_callback');
 
     // save as draft
     Route::post('/esign/save_as_draft', 'Esign\EsignController@save_as_draft');
@@ -269,18 +274,27 @@
     // restore template
     Route::post('/esign/restore_template', 'Esign\EsignController@restore_template');
 
+    // delete system template
+    Route::post('/esign/delete_system_template', 'Esign\EsignController@delete_system_template');
+
+    // restore system template
+    Route::post('/esign/restore_system_template', 'Esign\EsignController@restore_system_template');
+
     // get esign dashboard tabs
     Route::get('/esign/get_drafts', 'Esign\EsignController@get_drafts');
     Route::get('/esign/get_deleted_drafts', 'Esign\EsignController@get_deleted_drafts');
-    Route::get('/esign/get_sent', 'Esign\EsignController@get_sent');
+    Route::get('/esign/get_in_process', 'Esign\EsignController@get_in_process');
     Route::get('/esign/get_completed', 'Esign\EsignController@get_completed');
     Route::get('/esign/get_templates', 'Esign\EsignController@get_templates');
     Route::get('/esign/get_deleted_templates', 'Esign\EsignController@get_deleted_templates');
+    Route::get('/esign/get_system_templates', 'Esign\EsignController@get_system_templates');
+    Route::get('/esign/get_deleted_system_templates', 'Esign\EsignController@get_deleted_system_templates');
 
 
 
     // add documents
     Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_documents');
+    Route::get('/esign/esign_add_documents_from_uploads/{document_id}/{is_template}', 'Esign\EsignController@esign_add_documents');
 
     Route::get('/esign/esign_add_template_documents/{template}', 'Esign\EsignController@esign_add_documents');
 
@@ -295,6 +309,7 @@
 
     // esign add fields
     Route::get('/esign/esign_add_fields/{envelope_id}/{is_template?}/{template_id?}', 'Esign\EsignController@esign_add_fields');
+    Route::get('/esign/esign_add_fields_from_draft/{envelope_id}/{is_draft?}', 'Esign\EsignController@esign_add_fields');
 
     // send for signatures
     Route::post('/esign/esign_send_for_signatures', 'Esign\EsignController@esign_send_for_signatures');

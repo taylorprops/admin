@@ -114,7 +114,7 @@ class ChecklistsController extends Controller
         $form_groups = $resource_items -> where('resource_type', 'form_groups') -> orderBy('resource_order') -> get();
         $checklist_groups = $resource_items -> where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/checklists/get_add_checklist_items_html', compact('checklist', 'checklist_items', 'form_groups', 'files', 'resource_items', 'checklist_groups', 'checklist_type', 'checklist_items_model', 'checklist_id'));
+        return view('/doc_management/checklists/get_add_checklist_items_html', compact('checklist', 'form_groups', 'files', 'resource_items', 'checklist_groups', 'checklist_items_model', 'checklist_id'));
     }
 
     public function checklists() {

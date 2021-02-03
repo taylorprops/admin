@@ -1,6 +1,13 @@
 import datepicker from 'js-datepicker';
 
 
+let perfEntries = performance.getEntriesByType('navigation');
+
+if (perfEntries[0].type === 'back_forward') {
+    window.location.reload();
+}
+
+
 // check for duplicate ids
 /* setTimeout(function() {
     $('[id]').each(function(){
@@ -14,7 +21,7 @@ import datepicker from 'js-datepicker';
 $(function() {
 
 
-
+    global_loading_off();
 
     /* global_page_transition(); */
 
@@ -34,7 +41,8 @@ $(function() {
         if(options.selector == '') {
             options.selector = '.text-editor';
         }
-        options.content_css = '/css/tinymce.css';
+        options.content_style = 'body { font-size: .9rem; }',
+        //options.content_css = '/css/tinymce.css';
         options.force_p_newlines = false;
         options.forced_root_block = '';
 
@@ -473,6 +481,8 @@ window.global_tooltip = function() {
 
 
 window.global_get_url_parameters = function(key) {
+    // usage
+    // let tab = global_get_url_parameters('tab');
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.has(key)) {

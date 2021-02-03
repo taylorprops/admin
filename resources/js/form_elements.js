@@ -95,7 +95,7 @@ window.form_elements = function () {
         .form-select-no-search | removes search option
         .form-select-no-cancel | removes cancel option
 
-        multiple select uses mdbootstrap checkboxes
+        multiple select uses pretty checkboxes
 
     */
 
@@ -349,7 +349,7 @@ window.form_elements = function () {
                         // hide search option if class form-select-no-search is set
                         if (element.hasClass('form-select-no-search')) {
 
-                            wrapper.find('.form-select-search-div').css({ 'opacity': '0', 'height': '0px' });
+                            wrapper.find('.form-select-search-div, .form-select-search-input').css({ 'opacity': '0', 'height': '0px'});
 
                         }
 

@@ -357,7 +357,7 @@ if (document.URL.match(/checklists/)) {
             $('#checklist_items_div').html(response.data);
 
             // add title to modal
-            $('#checklist_items_modal_title').html('Checklist Items | <span class="text-yellow-light">' + $('#checklist_header_val').val() + '</span>');
+            $('#checklist_items_modal_title').html('Checklist Items | ' + $('#checklist_header_val').val());
 
             // search forms
             $('.form-search').on('keyup', form_search);

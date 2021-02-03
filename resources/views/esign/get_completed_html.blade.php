@@ -4,7 +4,7 @@
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Completed" data-content="These are your completed envelopes. They have been sgined by all parties."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
-<div class="table-responsive text-nowrap mb-5">
+<div class="mb-5">
 
     <table id="completed_table" class="table table-hover table-bordered" width="100%">
 
@@ -13,7 +13,7 @@
                 <th class="wpx-100"></th>
                 <th>Name</th>
                 <th>Recipients</th>
-                <th>Created</th>
+                <th class="wpx-100">Created</th>
                 <th></th>
             </tr>
         </thead>
@@ -33,7 +33,7 @@
                     <td></td>
                     <td>{{ $envelope -> subject }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
-                    <td>{{ date('M jS, Y', strtotime($envelope -> created_at)) }}</td>
+                    <td data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
                     <td class="text-center"></td>
                 </tr>
             @endforeach

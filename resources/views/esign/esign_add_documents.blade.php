@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container-1200 mt-5 mx-auto page-container page-esign-add-documents">
+<div class="container-1200 mt-5 mx-auto page-container page-esign-add-documents @if($from_upload == 'yes') hidden @endif">
 
     <div class="h2 text-primary">E-Sign</div>
 
@@ -22,7 +22,7 @@
                             <div class="h5 text-orange">Enter A Name For Your Template</div>
 
                             <div class="template-name-div">
-                                <input type="text" class="custom-form-element form-input required" id="template_name" data-label="Template Name">
+                                <input type="text" class="custom-form-element form-input required" id="template_name" data-label="Template Name" @if($from_upload == 'yes') value="{{ $docs_to_display[0]['file_name_display'] }}" @endif>
                             </div>
 
                         </div>
@@ -60,8 +60,6 @@
     </div>
 
 
-
-
     <div class="row">
 
         <div class="col-12 col-sm-9">
@@ -76,7 +74,7 @@
 
                             @foreach($docs_to_display as $doc)
 
-                                <li class="list-group-item upload-li" data-file-location="{{ $doc['file_location'] }}" data-document-id="{{ $doc['document_id'] }}" data-file-type="{{ $doc['file_type'] }}" data-file-name="{{ $doc['file_name'] }}" data-template-id="" data-template-applied-id="{{ $doc['template_id'] }}">
+                                <li class="list-group-item upload-li" data-file-location="{{ $doc['file_location'] }}" data-document-id="{{ $doc['document_id'] }}" data-file-type="{{ $doc['file_type'] }}" data-file-name="{{ $doc['file_name'] }}" data-template-id="" data-template-applied-id="@if($is_template == 'no') {{ $doc['template_id'] }} @endif" data-upload-id="{{ $doc['data_upload_id'] }}">
 
                                     <div class="d-flex justify-content-between align-items-center">
 
@@ -94,12 +92,12 @@
 
                                         <div class="d-flex justify-content-end align-items-center">
                                             <div class="ml-3 mr-4 template-status">
-                                                @if($doc['file_type'] == 'user')
-                                                    <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a>
+                                                @if($doc['file_type'] == 'system' && $doc['template_id'] > 0)
+                                                <div class="no-wrap">
+                                                    <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span>
+                                                </div>
                                                 @else
-                                                    <div class="no-wrap">
-                                                        <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span>
-                                                    </div>
+                                                <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a>
                                                 @endif
                                             </div>
                                             <div>
@@ -129,6 +127,7 @@
 </div>
 
 <input type="hidden" id="is_template" value="{{ $is_template }}">
+<input type="hidden" id="from_upload" value="{{ $from_upload }}">
 <input type="hidden" id="Listing_ID" value="{{ $Listing_ID }}">
 <input type="hidden" id="Contract_ID" value="{{ $Contract_ID }}">
 <input type="hidden" id="Referral_ID" value="{{ $Referral_ID }}">

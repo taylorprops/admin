@@ -72,6 +72,10 @@ class ResourceItems extends Model
         $resource_id = ResourceItems::select('resource_id') -> where('resource_name', 'Title') -> first();
         return $resource_id -> resource_id;
     }
+    public function scopeBrokerResourceId() {
+        $resource_id = ResourceItems::select('resource_id') -> where('resource_name', 'Broker') -> first();
+        return $resource_id -> resource_id;
+    }
 
     public function getCountFormGroup($id) {
         $uploads = Upload::where('form_group_id', $id) -> get() -> count();

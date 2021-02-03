@@ -5,7 +5,7 @@
 </div>
 
 
-<div class="table-responsive text-nowrap mb-5">
+<div class="mb-5">
 
     <table id="drafts_table" class="table table-hover table-bordered" width="100%">
 
@@ -14,7 +14,7 @@
                 <th class="wpx-100"></th>
                 <th>Name</th>
                 <th>Recipients</th>
-                <th>Created</th>
+                <th class="wpx-100">Created</th>
                 <th class="wpx-50"></th>
             </tr>
         </thead>
@@ -31,10 +31,10 @@
                 }
                 @endphp
                 <tr>
-                    <td><a href="/esign/esign_add_fields/{{ $draft -> id }}" class="btn btn-primary" target="_blank">Open <i class="fal fa-arrow-right ml-2"></i></a></td>
+                    <td><a href="/esign/esign_add_fields_from_draft/{{ $draft -> id }}/yes" class="btn btn-primary" target="_blank">Open <i class="fal fa-arrow-right ml-2"></i></a></td>
                     <td>{{ $draft -> draft_name }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
-                    <td>{{ date('M jS, Y', strtotime($draft -> created_at)) }}</td>
+                    <td data-sort="{{ $draft -> created_at }}">{{ date('M jS, Y', strtotime($draft -> created_at)) }}<br>{{ date('g:i:s A', strtotime($draft -> created_at)) }}</td>
                     <td class="text-center"><a href="javascript:void(0)" class="btn btn-danger delete-draft-button" data-envelope-id="{{ $draft -> id }}"><i class="fal fa-times"></i></a></td>
                 </tr>
             @endforeach

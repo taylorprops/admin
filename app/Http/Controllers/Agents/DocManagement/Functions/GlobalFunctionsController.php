@@ -60,7 +60,6 @@ class GlobalFunctionsController extends Controller
                     'error' => 'yes',
                     'curl' => $err
                 ]);
-                die();
             }
 
             curl_close($curl);

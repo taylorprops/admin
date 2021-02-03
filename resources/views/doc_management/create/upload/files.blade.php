@@ -5,26 +5,26 @@
     <h2>Forms</h2>
     <div class="row">
         <div class="col-3">
-            <div class="">
-                <div class="list-group-container">
-                    <div class="list-group pr-1" role="tablist">
-                        @foreach ($form_groups as $form_group)
-                            @php
-                                $form_count = $upload -> GetFormCount($form_group -> resource_id);
-                            @endphp
-                            <a class="list-group-item form-group-item list-group-item-action @if ($loop -> first) active @endif @if($loop -> last) last @endif"
-                                id="list_{{ $form_group -> resource_id }}"
-                                data-toggle="list"
-                                href="#list_div_{{ $form_group -> resource_id }}"
-                                role="tab"
-                                data-id="{{ $form_group -> resource_id }}">
-                                {{ $form_group -> resource_name }}
-                                <span class="float-right badge bg-blue-med text-white py-1 px-2">{{ $form_count['form_count'] }}</span>
-                            </a>
-                        @endforeach
-                    </div>
+
+            <div class="list-group-container">
+                <div class="list-group pr-1" role="tablist">
+                    @foreach ($form_groups as $form_group)
+                        @php
+                            $form_count = $upload -> GetFormCount($form_group -> resource_id);
+                        @endphp
+                        <a class="list-group-item form-group-item list-group-item-action @if ($loop -> first) active @endif @if($loop -> last) last @endif"
+                            id="list_{{ $form_group -> resource_id }}"
+                            data-toggle="list"
+                            href="#list_div_{{ $form_group -> resource_id }}"
+                            role="tab"
+                            data-id="{{ $form_group -> resource_id }}">
+                            {{ $form_group -> resource_name }}
+                            <span class="float-right badge bg-blue-med text-white py-1 px-2">{{ $form_count['form_count'] }}</span>
+                        </a>
+                    @endforeach
                 </div>
             </div>
+
         </div>
         <div class="col-9">
             <div class="tab-content">
@@ -34,20 +34,23 @@
                         <div class="row">
                             <div class="col-7">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-3">
+                                        <input type="text" class="custom-form-element form-input form-search" data-label="Search">
+                                    </div>
+                                    <div class="col-3">
                                         <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-sort" data-label="Sort By">
                                             <option value="az" selected>A-Z</option>
                                             <option value="added">Recently Added</option>
                                         </select>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-published" data-label="Published">
                                             <option value="all">Show All</option>
                                             <option value="published">Published</option>
                                             <option value="notpublished">Not published</option>
                                         </select>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-active" data-label="Active">
                                             <option value="all">Show All</option>
                                             <option value="active" selected>Active</option>
@@ -115,7 +118,7 @@
             <div class="modal-content">
                 <form id="add_to_checklists_form">
                     <div class="modal-header draggable-handle">
-                        <h4 class="modal-title" id="add_to_checklists_modal_title">Add Form to Checklists <span class="text-yellow-light ml-3" id="add_to_checklists_form_name"></span></h4>
+                        <h4 class="modal-title" id="add_to_checklists_modal_title">Add Form to Checklists <span class="ml-3" id="add_to_checklists_form_name"></span></h4>
                         <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times mt-2"></i>
                         </button>

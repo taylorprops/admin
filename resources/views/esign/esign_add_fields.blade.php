@@ -2,6 +2,10 @@
 @section('title', 'Esign - Add Fields')
 
 @section('content')
+
+@if($error && $error == 'sent')
+<script>window.location = "/esign";</script>
+@endif
 <div class="container-1350 mx-auto page-esign-add-fields mt-1">
 
     <div class="row border-bottom">
@@ -33,21 +37,34 @@
                         <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_date_button" data-field-type="date"><i class="fad fa-calendar fa-lg"></i><br>Add Date</a>
                     </div>
 
+                    <div class="form-options-div border-right ">
+                        <a class="text-primary-dark fill-form-option edit-form-action" href="javascript: void(0)" id="add_text_button" data-field-type="text"><i class="fad fa-pencil fa-lg"></i><br>Add Text</a>
+                    </div>
+
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center">
 
-                    @if($is_template == 'no')
-                        <div class="mr-2">
-                            <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
+                    @if($is_template == 'yes')
+
+                        <div class="mr-3">
+                            <button class="btn btn-primary edit-signers-button" href="javascript:void(0)"><i class="fad fa-users mr-2"></i> Edit Signers</button>
+                        </div>
+
+                        <div class="mr-3">
+                            <button class="btn btn-success fill-form-option font-11" id="save_as_template_button">Save Template <i class="fad fa-save ml-2"></i></button>
+                        </div>
+                    @else
+                        <div class="mr-3">
+                            @if($is_draft == 'no')
+                                <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
+                            @else
+                                <button class="btn btn-primary fill-form-option" id="save_as_draft_button">Save Changes To Draft <i class="fad fa-save ml-2"></i></button>
+                            @endif
                         </div>
 
                         <div class="mr-3">
                             <button class="btn btn-success fill-form-option font-11" id="send_for_signatures_button">Send for Signatures <i class="fad fa-share-all ml-2"></i></button>
-                        </div>
-                    @else
-                        <div class="mr-3">
-                            <button class="btn btn-success fill-form-option font-11" id="save_as_template_button">Save Template <i class="fad fa-save ml-2"></i></button>
                         </div>
                     @endif
 
@@ -107,13 +124,21 @@
 
                                                 @php
                                                 // get signer from relationship
-                                                $field_signer = $field -> signer;
-
-                                                $signer_name = $field_signer -> signer_name;
-                                                if($is_template == 'yes') {
-                                                    $signer_name = $field_signer -> template_role;
-                                                }
                                                 $field_type = $field -> field_type;
+                                                $field_signer = '';
+                                                $signer_name = '';
+                                                $field_value = '';
+                                                $text_class = '';
+                                                if($field_type != 'text') {
+                                                    $field_signer = $field -> signer;
+                                                    $signer_name = $field_signer -> signer_name;
+                                                    if($is_template == 'yes') {
+                                                        $signer_name = $field_signer -> template_role;
+                                                    }
+                                                } else {
+                                                    $field_value = $field -> field_value;
+                                                }
+
 
                                                 if($field_type == 'signature') {
                                                     $field_div_html = '<div class="field-div-details"><i class="fad fa-signature mr-2"></i> <span class="field-div-name">'.$signer_name.'</span></div>';
@@ -124,40 +149,57 @@
                                                     $field_div_html = '<div class="field-div-details"><i class="fad fa-calendar mr-2"></i>  <span class="field-div-name">'.$signer_name.'</span></div>';
                                                 } else if($field_type == 'name') {
                                                     $field_div_html = '<div class="field-div-details"><span class="field-div-name">'.$signer_name.'</span></div>';
+                                                } else if($field_type == 'text') {
+                                                    $field_div_html = '<div class="field-div-details"><span class="field-div-name">'.$field_value.'</span></div>';
+                                                    $text_class = 'text';
                                                 }
 
                                                 @endphp
 
-                                                <div class="field-div" style="position: absolute; top: {{ $field -> top_perc }}%; left: {{ $field -> left_perc }}%; height: {{ $field -> height_perc }}%; width: {{ $field -> width_perc }}%;"
+                                                <div class="field-div @if($field -> required == 'yes') required @endif" style="position: absolute; top: {{ $field -> top_perc }}%; left: {{ $field -> left_perc }}%; height: {{ $field -> height_perc }}%; width: {{ $field -> width_perc }}%;"
                                                     id="field_{{ $field -> field_id }}"
                                                     data-field-id="{{ $field -> field_id }}"
                                                     data-field-type="{{ $field -> field_type }}"
                                                     data-page="{{ $field -> page }}"
                                                     data-document-id="{{ $field ->  document_id }}">
-                                                    <div class="field-html w-100 h-100 text-center text-primary small">{!! $field_div_html !!}</div>
+                                                    <div class="field-html {{ $text_class }} w-100 text-primary">{!! $field_div_html !!}</div>
                                                     <div class="field-options-holder">
                                                         <div class="d-flex justify-content-around">
                                                             <div class="btn-group" role="group" aria-label="Field Options">
-                                                                <a type="button" class="btn btn-primary field-handle ml-0"><i class="fal fa-arrows fa-lg"></i></a>
-                                                                <a type="button" class="btn btn-danger remove-field"><i class="fad fa-times-circle fa-lg"></i></a>
+                                                                <a type="button" class="btn btn-primary field-handle ml-0 pt-2"><i class="fal fa-arrows fa-lg"></i></a>
+                                                                <a type="button" class="btn btn-danger remove-field pt-2"><i class="fad fa-times-circle fa-lg"></i></a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="select-signer-div font-8 p-2">
-                                                        {{ ucwords($field -> field_type) }} for:
-                                                        <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer-select" data-connector-id="{{ $field -> field_id }}">
-                                                            @foreach($signers as $signer_option)
-                                                                <option class="signer-select-option"
-                                                                value="{{ $is_template == 'no' ? $signer_option -> signer_name : $signer_option -> template_role }}"
-                                                                data-role="{{ $signer_option -> signer_role }}"
-                                                                data-name="{{ $is_template == 'no' ? $signer_option -> signer_name : $signer_option -> template_role }}"
-                                                                data-signer-id="{{ $signer_option -> id }}"
-                                                                @if($signer_option -> id == $field_signer -> id) selected @endif
-                                                                >@if($is_template == 'no'){{ $signer_option -> signer_name }} - @endif{{ $signer_option -> template_role }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                        <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="yes" checked data-label="Required">
+                                                    <div class="select-signer-div p-2">
+
+                                                        <div class="font-10 text-yellow">{{ ucwords($field -> field_type) }}</div>
+
+                                                        @if($field -> field_type != 'text')
+                                                            <div class="font-9">
+                                                                <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="yes" @if($field -> required == 'yes') checked @endif data-label="Required">
+                                                            </div>
+
+                                                            <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer-select" data-connector-id="{{ $field -> field_id }}">
+                                                                @foreach($signers as $signer_option)
+                                                                    <option class="signer-select-option"
+                                                                    value="{{ $is_template == 'no' ? $signer_option -> signer_name : $signer_option -> template_role }}"
+                                                                    data-role="{{ $signer_option -> signer_role }}"
+                                                                    data-name="{{ $is_template == 'no' ? $signer_option -> signer_name : $signer_option -> template_role }}"
+                                                                    data-signer-id="{{ $signer_option -> id }}"
+                                                                    @if($signer_option -> id == $field_signer -> id) selected @endif
+                                                                    >@if($is_template == 'no'){{ $signer_option -> signer_name }} - @endif{{ $signer_option -> template_role }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
+                                                        @else
+
+                                                            <input type="hidden" class="signature-required" value="no">
+                                                            <input type="text" class="custom-form-element form-input text-input" value="{{ $field -> field_value }}" data-label="Enter Text">
+
+                                                        @endif
+
                                                     </div>
                                                     <div class="field-handle ui-resizable-handle ui-resizable-nw"></div>
                                                     <div class="field-handle ui-resizable-handle ui-resizable-ne"></div>
