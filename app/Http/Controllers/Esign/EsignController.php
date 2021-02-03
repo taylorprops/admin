@@ -271,8 +271,8 @@ class EsignController extends Controller {
 
                 exec('convert -density 200 -quality 100 '.$tmp_dir.'/'.$file_name.'[0] -flatten -fuzz 1%  '.$tmp_dir.'/'.$image_name);
 
-                $file_location = str_replace('/var/www/admin/storage/app/public', '/storage', $tmp_dir).'/' . $file_name;
-                $image_location = str_replace('/var/www/admin/storage/app/public', '/storage', $tmp_dir).'/' . $image_name;
+                $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $file_name;
+                $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $image_name;
 
                 $details = [
                     'document_id' => $file_id,
@@ -343,8 +343,8 @@ class EsignController extends Controller {
 
             exec('convert -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
 
-            $file_location = str_replace('/var/www/admin/storage/app/public', '/storage', $tmp_dir).'/' . $new_file_name;
-            $image_location = str_replace('/var/www/admin/storage/app/public', '/storage', $tmp_dir).'/' . $new_image_name;
+            $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $new_file_name;
+            $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $new_image_name;
 
             $details = [
                 'file_name' => $file_name_display,
