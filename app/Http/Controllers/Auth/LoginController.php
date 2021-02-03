@@ -66,8 +66,9 @@ class LoginController extends Controller
 
         }
 
+        $path = parse_url($this -> previous_url, PHP_URL_PATH);
         // redirect to page requested or dashboard
-        if($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === FALSE) {
+        if($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === FALSE && $path != '/') {
             $this -> redirectTo = $this -> previous_url;
         } else {
             $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;

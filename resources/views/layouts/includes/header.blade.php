@@ -15,14 +15,16 @@
         <div class="collapse navbar-collapse" id="main_nav_collapse">
             <ul class="navbar-nav mr-5 mt-4 mt-xl-auto">
 
-                @if(auth() -> user() -> group == 'admin')
+                @if(auth() -> user())
+                    @if(auth() -> user() -> group == 'admin')
 
-                @include('layouts.includes/menus/admin')
+                    @include('layouts.includes/menus/admin')
 
-                @elseif(auth() -> user() -> group == 'agent')
+                    @elseif(auth() -> user() -> group == 'agent')
 
-                @include('layouts.includes/menus/agent')
+                    @include('layouts.includes/menus/agent')
 
+                    @endif
                 @endif
 
             </ul>
@@ -40,7 +42,7 @@
                             <a class="nav-link text-white" href="javascript: void(0)"><i class="far fa-comments mr-2"></i> Support</a>
                         </div>
                         <div class="d-flex justify-content-around">
-                            <a class="nav-link text-white py-0" href="javascript: void(0)"><i class="fas fa-user mr-2"></i> {{ ucwords(auth() -> user() -> group).' - '.auth() -> user() -> name }}</a>
+                            <a class="nav-link text-white py-0" href="javascript: void(0)"><i class="fas fa-user mr-2"></i>@if(auth() -> user()) {{ ucwords(auth() -> user() -> group).' - '.auth() -> user() -> name }} @endif</a>
                             <a class="nav-link text-white py-0 float-right ml-3" href="/logout">Logout</a>
                         </div>
                     </div>

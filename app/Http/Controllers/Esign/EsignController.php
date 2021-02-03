@@ -401,6 +401,7 @@ class EsignController extends Controller {
             if(!$template) {
                 // Create template
                 $template = new EsignTemplates();
+                $template -> is_system_template = $from_upload;
                 $docs_added = 'no';
             }
 
@@ -433,6 +434,7 @@ class EsignController extends Controller {
                 }
 
                 $envelope -> is_template = $is_template;
+                $envelope -> is_system_template = $from_upload;
                 $envelope -> User_ID = $request -> User_ID;
                 $envelope -> template_id = $template_id;
                 $envelope -> save();
