@@ -160,7 +160,7 @@ if(auth() -> user() -> group == 'agent') {
 
             <div id="mls_match_container" class="property-container collapse mx-auto">
 
-                <a class="btn btn-floating btn-primary" data-toggle="collapse" href=".property-container" role="button" aria-expanded="false" aria-controls="#mls_match_container #address_container"><i class="fad fa-chevron-double-left"></i></a>
+                <a class="btn btn-floating btn-primary" data-toggle="collapse" href=".property-container" role="button" aria-expanded="false" aria-controls="#mls_match_container #address_container"><i class="fal fa-chevron-double-left"></i></a>
 
                 <div class="property-loading-div"></div>
 

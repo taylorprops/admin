@@ -192,7 +192,7 @@
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="form_manage_title">Manage Form</h4>
                     <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                        <i class="fal fa-times mt-2"></i>
+                        <i class="fal fa-times mt-2 fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">

@@ -97,8 +97,8 @@
                     </div>
 
                     <div class="scroll-arrows">
-                        <a href="javascript: void(0);" class="btn btn-primary" id="scroll_up"><i class="fad fa-chevron-double-up"></i></a>
-                        <a href="javascript: void(0);" class="btn btn-primary" id="scroll_down"><i class="fad fa-chevron-double-down"></i></a>
+                        <a href="javascript: void(0);" class="btn btn-primary" id="scroll_up"><i class="fal fa-chevron-double-up"></i></a>
+                        <a href="javascript: void(0);" class="btn btn-primary" id="scroll_down"><i class="fal fa-chevron-double-down"></i></a>
                     </div>
 
                     <div class="d-flex align-items-center">
@@ -108,7 +108,7 @@
                                     <a href="javascript: void(0);" class="btn btn-sm btn-primary email-agent-button"><i class="fad fa-envelope mr-2"></i> Email</a>
                                 </div>
                                 <div>
-                                    <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fad fa-chevron-double-right ml-2"></i></a>
+                                    <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fal fa-chevron-double-right ml-2"></i></a>
                                 </div>
                             </div>
                         </div>

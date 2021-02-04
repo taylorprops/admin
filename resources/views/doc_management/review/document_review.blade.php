@@ -211,8 +211,8 @@
 
                     <div class="sticky bg-white py-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="javascript: void(0);" id="close_checklist_button" class="btn btn-sm btn-primary"><i class="fad fa-chevron-double-left mr-2"></i> Back</a>
-                            <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fad fa-chevron-double-right ml-2"></i></a>
+                            <a href="javascript: void(0);" id="close_checklist_button" class="btn btn-sm btn-primary"><i class="fal fa-chevron-double-left mr-2"></i> Back</a>
+                            <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fal fa-chevron-double-right ml-2"></i></a>
                         </div>
                     </div>
 
