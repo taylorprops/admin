@@ -82,7 +82,7 @@ class DocumentReviewController extends Controller
         $referrals_with_notes = Referrals::whereIn('Referral_ID', $referral_checklist_item_notes_ids) -> get();
 
 
-        return view('/doc_management/review/document_review', compact('Contract_ID', 'listing_checklist_items', 'contract_checklist_items', 'referral_checklist_items', 'listings', 'contracts', 'referrals', 'checklist_items', 'members', 'checklist_item_docs', 'checklist_item_notes', 'listings_with_notes', 'contracts_with_notes', 'referrals_with_notes', 'cancel_requests'));
+        return view('/doc_management/review/document_review', compact('Contract_ID', 'listing_checklist_items', 'contract_checklist_items', 'referral_checklist_items', 'listings', 'contracts', 'referrals', 'members', 'checklist_item_docs', 'checklist_item_notes', 'listings_with_notes', 'contracts_with_notes', 'referrals_with_notes', 'cancel_requests'));
 
     }
 
