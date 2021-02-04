@@ -418,3 +418,8 @@
 .qs-datepicker .qs-overlay .qs-overlay-month {
     opacity: .8;
 }
+
+
+.pretty .state label:before, .pretty .state label:after {
+    border: 1px solid #ccc !important;
+}

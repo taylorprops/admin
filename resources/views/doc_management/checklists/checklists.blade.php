@@ -240,7 +240,7 @@
         <div class="modal-dialog modal-dialog-centered modal" role="document">
             <div class="modal-content">
                 <form id="confirm_delete_checklist_form">
-                    <div class="modal-header bg-danger draggable-handle">
+                    <div class="modal-header draggable-handle">
                         <h3 class="modal-title" id="confirm_delete_checklist_modal_title">Delete Checklist</h3>
                         <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
                             <i class="fal fa-times fa-2x"></i>
@@ -250,8 +250,8 @@
                         Are you sure you want to permanently delete this checklist?
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
-                        <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times"></i> Cancel</a>
-                        <a class="btn btn-primary modal-confirm-button" id="confirm_delete_checklist"><i class="fal fa-check"></i> Confirm</a>
+                        <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                        <a class="btn btn-primary modal-confirm-button" id="confirm_delete_checklist"><i class="fal fa-check mr-2"></i> Confirm</a>
                     </div>
                 </form>
             </div>

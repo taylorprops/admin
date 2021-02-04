@@ -588,7 +588,7 @@
                                         $checklist_form_required = $available_files -> where('file_id', $checklist_item_required -> checklist_form_id) -> first();
                                         @endphp
                                         @if($checklist_form_required && $checklist_form_required -> file_location != '')
-                                            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom">
+                                            <li class="list-group-item p-0 border-top-0 border-left-0 border-right-0 border-bottom">
                                                 <div class="d-flex justify-content-start align-items-center">
                                                     <div>
                                                         <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
@@ -601,7 +601,7 @@
                                                         data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
                                                         checked>
                                                     </div>
-                                                    <div class="ml-3">
+                                                    <div class="ml-3 mt-1">
                                                         <a href="javascript: void(0)">{{ $checklist_form_required -> file_name_display }}</a>
                                                     </div>
                                                 </div>

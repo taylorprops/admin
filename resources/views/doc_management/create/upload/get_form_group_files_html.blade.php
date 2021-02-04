@@ -80,7 +80,7 @@ foreach($category_color_ids as $color_id) {
                             @if($file -> active == 'yes')
                                 <div>
                                     <span {{-- data-toggle="tooltip" data-html="true" --}} title="Manage this form and its checklist relations">
-                                        <button class="manage-upload btn btn-sm btn-primary" data-id="{{ $file -> file_id }}" data-form-group-id="{{ $form_group_id }}"><i class="fad fa-bars mr-2"></i> Manage Form</button>
+                                        <button class="manage-upload btn btn-sm btn-primary" data-id="{{ $file -> file_id }}" data-form-group-id="{{ $form_group_id }}"><i class="fal fa-bars mr-2"></i> Manage Form</button>
                                     </span>
                                 </div>
                             @endif

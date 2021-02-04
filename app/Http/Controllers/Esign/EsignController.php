@@ -374,6 +374,7 @@ class EsignController extends Controller {
         $Agent_ID = $request -> Agent_ID ?? 0;
         $transaction_type = $request -> transaction_type ?? null;
         $document_id = $files[0]['upload_id'] ?? 0;
+        $transaction_document_id = $files[0]['document_id'] ?? 0;
 
         $envelope_id = 0;
         $template_id = 0;
@@ -450,6 +451,7 @@ class EsignController extends Controller {
                 $add_esign_doc = new EsignDocuments();
                 $add_esign_doc -> envelope_id = $envelope_id;
                 $add_esign_doc -> template_id = $template_id;
+                $add_esign_doc -> transaction_document_id = $transaction_document_id;
                 $add_esign_doc -> template_applied_id = $applied_template_id;
                 $add_esign_doc -> file_name = preg_replace('/[_]*[0-9]{14}[_]*/', '', $file['file_name']); // remove YmdHis from file name
                 $add_esign_doc -> save();

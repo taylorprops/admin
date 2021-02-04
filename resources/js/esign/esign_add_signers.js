@@ -183,7 +183,7 @@ if(document.URL.match(/esign_add_signers/)) {
 
                 form = $('.add-template-'+type+'-fields');
                 template_role = form.find('.add-'+type+'-role').val();
-                role = form.find('.add-'+type+'-role').val().replace(/\s(One|Two|Three|Four)/, '');
+                role = form.find('.add-'+type+'-role').val().replace(/\s(One|Two)/, '');
                 hidden = 'hidden';
                 display_role = template_role;
 
@@ -218,7 +218,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
                         <div class="col-1"><span class="'+type+'-count font-11 text-orange"></span></div> \
                         <div class="col-3 '+hidden+' font-weight-bold">'+name+'</div> \
-                        <div class="col-2">'+display_role+'</div> \
+                        <div class="col-3">'+display_role+'</div> \
                         <div class="col-4 '+hidden+'">'+email+'</div> \
                     </div> \
                     <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></a></div> \

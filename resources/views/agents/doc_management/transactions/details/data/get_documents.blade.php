@@ -241,7 +241,7 @@
 
                                     <div class="d-flex justify-content-start align-items-center">
                                         <div class="mr-2">
-                                            <a href="javascript:void(0)" class="document-handle text-blue"><i class="fad fa-bars fa-lg"></i></a>
+                                            <a href="javascript:void(0)" class="document-handle text-blue"><i class="fal fa-bars fa-lg"></i></a>
                                         </div>
                                         <div class="mx-2 mr-md-4">
                                             <input type="checkbox" class="custom-form-element form-checkbox check-document  {{ $assigned }}" data-document-id="{{ $document -> id }}">

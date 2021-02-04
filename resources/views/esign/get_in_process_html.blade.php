@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th class="wpx-100">Status</th>
-                <th>Name</th>
+                <th>Subject</th>
                 <th>Recipients</th>
                 <th class="wpx-100">Sent</th>
                 <th></th>

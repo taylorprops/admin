@@ -473,14 +473,14 @@ if (document.URL.match(/checklists/)) {
         }
         // this is the helper dragged and inserted in checklist items container
         let checklist_item = ' \
-            <li class="list-group-item checklist-item w-100 pt-1 pb-0 bg-orange-light" data-form-id="' + form_id + '" data-form-group-id="'+checklist_group_id+'"> \
+            <li class="list-group-item checklist-item w-100 pt-3 pb-2 bg-orange-light" data-form-id="' + form_id + '" data-form-group-id="'+checklist_group_id+'"> \
                 <div class="row"> \
                     <div class="col-8"> \
                         <div class="d-flex justify-content-start align-items-center"> \
                             <div> \
-                                <i class="fas fa-sort fa-lg mx-3 text-primary checklist-item-handle ui-sortable-handle"></i> \
+                                <i class="fal fa-bars mx-3 text-primary checklist-item-handle ui-sortable-handle"></i> \
                             </div> \
-                            <div class="h5 text-primary" title="' + text_orig + '"><a href="javascript: void(0)"> ' + text + '</a></div> \
+                            <div class="text-gray" title="' + text_orig + '"> ' + text + '</div> \
                         </div> \
                     </div> \
                     <div class="col-3"> \
@@ -600,7 +600,7 @@ if (document.URL.match(/checklists/)) {
     }
 
     function show_hide_options() {
-console.log('show_hide_options');
+
         let select_checklist_type = $('#checklist_type');
         let select_checklist_property_type = $('#checklist_property_type_id');
         let select_checklist_sale_rent = $('#checklist_sale_rent');

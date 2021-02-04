@@ -92,6 +92,10 @@
                                             <option value="Loan Officer">Loan Officer</option>
                                             <option value="Title Rep">Title Rep</option>
                                             <option value="Attorney">Attorney</option>
+                                            <option value="Referring Agent">Referring Agent</option>
+                                            <option value="Referring Broker">Referring Broker</option>
+                                            <option value="Receiving Agent">Receiving Agent</option>
+                                            <option value="Receiving Broker">Receiving Broker</option>
                                         </select>
                                     </div>
 
@@ -120,6 +124,10 @@
                                     <option value="Loan Officer">Loan Officer</option>
                                     <option value="Title Rep">Title Rep</option>
                                     <option value="Attorney">Attorney</option>
+                                    <option value="Referring Agent">Referring Agent</option>
+                                    <option value="Referring Broker">Referring Broker</option>
+                                    <option value="Receiving Agent">Receiving Agent</option>
+                                    <option value="Receiving Broker">Receiving Broker</option>
                                 </select>
                             </div>
 
@@ -141,6 +149,10 @@
                                     <option value="Loan Officer">Loan Officer</option>
                                     <option value="Title Rep">Title Rep</option>
                                     <option value="Attorney">Attorney</option>
+                                    <option value="Referring Agent">Referring Agent</option>
+                                    <option value="Referring Broker">Referring Broker</option>
+                                    <option value="Receiving Agent">Receiving Agent</option>
+                                    <option value="Receiving Broker">Receiving Broker</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
@@ -181,7 +193,7 @@
                             <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div>
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 @if($is_template == 'yes') hidden @endif font-weight-bold">{{ $signer -> signer_name }}</div>
-                            <div class="col-2">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
+                            <div class="col-3">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
                             <div class="col-4 @if($is_template == 'yes') hidden @endif">{{ $signer -> signer_email }}</div>
                         </div>
                         <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div>
@@ -334,7 +346,7 @@
                             <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div>
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 '+hidden+' font-weight-bold">{{ $recipient -> signer_name }}</div>
-                            <div class="col-2">{{ $recipient -> signer_role }}</div>
+                            <div class="col-3">{{ $recipient -> signer_role }}</div>
                             <div class="col-4 '+hidden+'">{{ $recipient -> signer_email }}</div>
                         </div>
                         <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div>

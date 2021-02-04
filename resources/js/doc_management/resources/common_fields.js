@@ -108,7 +108,7 @@ if(document.URL.match(/common_fields/)) {
             formData.append('field_name', field_name);
             formData.append('field_type', field_type);
             formData.append('group_id', group_id);
-            formData.append('sub_group_id', group_id);
+            formData.append('sub_group_id', sub_group_id);
             formData.append('db_column_name', db_column_name);
             axios.post('/doc_management/resources/save_add_common_field', formData, axios_options)
             .then(function (response) {

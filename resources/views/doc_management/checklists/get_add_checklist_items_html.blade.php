@@ -34,21 +34,22 @@ $location = $resource_items -> getLocation($checklist -> checklist_location_id);
                                 $form_name_orig = $form_name;
                                 $form_name = shorten_text($form_name, 85);
                             }
-                            $form_link = 'javascript:void(0)';
+                            /* $form_link = 'javascript:void(0)';
                             if($checklist_item -> file_location != '') {
                                 $form_link = '/'.$files -> getFormLocation($form_id);
-                            }
+                            } */
 
                             @endphp
 
-                            <li class="list-group-item checklist-item w-100 pt-1 pb-0" data-form-id="{{ $checklist_item -> checklist_form_id ?? null }}" data-form-group-id="{{ $checklist_group -> resource_id }}"">
+                            <li class="list-group-item checklist-item w-100 pt-3 pb-2" data-form-id="{{ $checklist_item -> checklist_form_id ?? null }}" data-form-group-id="{{ $checklist_group -> resource_id }}"">
                                 <div class="row">
                                     <div class="col-8">
                                         <div class="d-flex justify-content-start align-items-center">
                                             <div>
-                                                <i class="fas fa-sort fa-lg mx-3 text-primary checklist-item-handle ui-sortable-handle"></i>
+                                                <i class="fal fa-bars mx-3 text-primary checklist-item-handle ui-sortable-handle"></i>
                                             </div>
-                                            <div class="h5 text-primary" title="{{ $form_name_orig }}"><a href="{{ $form_link }}" target="_blank">{{ $form_name }}</a></div>
+                                            <div title="{{ $form_name_orig }}" class="text-gray">{{ $form_name }}</div>
+                                            {{-- <div title="{{ $form_name_orig }}"><a href="{{ $form_link }}" class="text-gray" target="_blank">{{ $form_name }}</a></div> --}}
                                         </div>
                                     </div>
                                     <div class="col-3">

@@ -14454,6 +14454,11 @@ body.modal-open {
   opacity: 0.8;
 }
 
+.pretty .state label:before,
+.pretty .state label:after {
+  border: 1px solid #ccc !important;
+}
+
 header .navbar-dark .navbar-nav .nav-link {
   color: #fff;
 }
@@ -16264,6 +16269,7 @@ header .main-search-input::placeholder {
 .page-checklists .checklist-items-selected {
   width: 100%;
   height: 70VH;
+  overflow: auto;
 }
 
 .page-checklists .checklist-items-selected .form-ele {
@@ -16274,11 +16280,6 @@ header .main-search-input::placeholder {
 .page-checklists .checklist-items-selected .btn-sm,
 .page-checklists .checklist-items-selected .btn-group-sm > .btn {
   margin: 0;
-}
-
-.page-checklists .checklist-items-selected {
-  width: 100%;
-  height: 68VH;
 }
 
 .page-checklists .form-groups-container {
@@ -16664,7 +16665,7 @@ header .main-search-input::placeholder {
 }
 
 .page-transaction-details .document-div .form-ele {
-  margin-top: 0.25rem;
+  margin-top: 0rem;
   margin-bottom: 0rem;
 }
 
@@ -17366,6 +17367,11 @@ header .main-search-input::placeholder {
   max-height: 150px;
 }
 
+.template-docs-div .form-ele {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 #files_queue {
   overflow-y: auto;
   min-height: 500px;
@@ -18003,7 +18009,7 @@ header .main-search-input::placeholder {
 }
 
 .page-esign-add-fields .field-div.required {
-  border: 2px solid #b64341;
+  border: 1px solid #b64341;
 }
 
 .page-document-review .bottom-line {

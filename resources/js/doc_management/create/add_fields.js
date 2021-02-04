@@ -807,7 +807,7 @@ if (document.URL.match(/create\/add_fields/)) {
 
                     field_div.find('.dropdown-results-div').html('');
                     response.data.custom_names.forEach(function (result) {
-                        field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item list-group-item-action field-name-result">'+result['field_name_display']+'</a>');
+                        field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item field-name-result">'+result['field_name_display']+'</a>');
                     });
                     field_div.find('.custom-name-results').show();
 

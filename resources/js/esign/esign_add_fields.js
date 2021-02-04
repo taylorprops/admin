@@ -350,7 +350,9 @@ if(document.URL.match(/esign_add_fields/)) {
                 axios.post('/esign/esign_send_for_signatures', formData, axios_options)
                 .then(function (response) {
                     if(!is_draft && !is_template) {
-                        window.location = '/esign_show_sent';
+                        setTimeout(function() {
+                            window.location = '/esign_show_sent';
+                        }, 1000);
                     }
                 })
                 .catch(function (error) {
@@ -397,7 +399,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
                 let field_date = '';
                 if(field_type == 'signature') {
-                    field_date = field_html(parseFloat(h_perc) - 1, 12, parseFloat(x_perc) + 18, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id, is_template);
+                    field_date = field_html(parseFloat(h_perc) - 1, 12, parseFloat(x_perc) + 19, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id, is_template);
                     container.append(field_date);
                 }
 
@@ -530,7 +532,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 }
             });
 
-            let max_height = 40;
+            let max_height = 50;
             let min_height = 25;
             let min_width = 30;
             if(field_type == 'date') {
@@ -627,7 +629,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
             $('#active_signer').val(orig_name);
 
-            $('.field-div.show').removeClass('show');
+            //$('.field-div.show').removeClass('show');
         }
 
         function set_and_get_field_coordinates(e, ele, existing, field_type) {
@@ -665,9 +667,11 @@ if(document.URL.match(/esign_add_fields/)) {
             //set heights
             let ele_h_perc = 2.7;
             let ele_w_perc = 15;
-            if(field_type == 'initials') {
+            if(field_type == 'signature') {
+                ele_w_perc = 18;
+            } else if(field_type == 'initials') {
                 ele_h_perc = 2;
-                ele_w_perc = 2.5;
+                ele_w_perc = 3;
             } else if(field_type == 'date') {
                 ele_h_perc = 1.8;
                 ele_w_perc = 12;
@@ -683,8 +687,8 @@ if(document.URL.match(/esign_add_fields/)) {
             }
 
             // set w and h for new field
-            h_perc = existing == 'no' ? ele_h_perc : ((ele.height() + 4) / ele.parent().height()) * 100;
-            w_perc = existing == 'no' ? ele_w_perc : ((ele.width() + 4) / ele.parent().width()) * 100;
+            h_perc = existing == 'no' ? ele_h_perc : ((ele.height() + 2) / ele.parent().height()) * 100;
+            w_perc = existing == 'no' ? ele_w_perc : ((ele.width() + 2) / ele.parent().width()) * 100;
             h_perc = parseFloat(h_perc).toFixed(2);
             w_perc = parseFloat(w_perc).toFixed(2);
 

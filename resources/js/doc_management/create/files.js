@@ -656,7 +656,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                 //form.find('select').val('');
                 $('#edit_form_name').text(file_name_orig);
                 $('#edit_file_name_display').val(file_name);
-                $('#edit_form_group_id').val(form_group_id).prop('disabled', disabled);
+                $('#edit_form_group_id').val(form_group_id).prop('disabled', disabled).data('form-group-id', form_group_id);
                 $('#edit_state').val(state).prop('disabled', disabled);
                 $('#edit_helper_text').val(helper_text);
                 $('#edit_form_tags').val(form_tags);
@@ -745,6 +745,7 @@ if (document.URL.match(/create\/upload\/files/)) {
         if (form_check == 'yes') {
 
             let form_group_id = $('#edit_form_group_id').val();
+            let prev_form_group_id = $('#edit_form_group_id').data('form-group-id');
             let order = $('#list_div_' + form_group_id).find('.uploads-filter-sort').val();
             let state = $('#edit_state').val();
 
@@ -756,6 +757,9 @@ if (document.URL.match(/create\/upload\/files/)) {
                 .then(function (response) {
                     $('#edit_file_modal').modal('hide');
                     get_forms(form_group_id, state, order);
+                    if(prev_form_group_id != '') {
+                        get_forms(prev_form_group_id, state, order);
+                    }
                     $('#save_edit_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Save Details');
                     toastr['success']('Upload Edited Successfully');
                 })
@@ -822,6 +826,11 @@ if (document.URL.match(/create\/upload\/files/)) {
                             $('.show-forms-button').show();
                             let title = $(this).closest('.title-option').find('input').val();
                             $('#file_name_display, #helper_text').val(title);
+                            $('#file_name_display').on('change', function() {
+                                if($('#helper_text').val() == title) {
+                                    $('#helper_text').val($('#file_name_display').val());
+                                }
+                            });
                             $('#form_names_div').collapse('hide');
                         });
 
@@ -870,6 +879,8 @@ if (document.URL.match(/create\/upload\/files/)) {
                     //select_refresh();
                     get_forms(form_group_id, state, order);
                     $('#upload_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
+                    $('#upload_preview').html('');
+                    $('#helper_text').val('');
                 })
                 .catch(function (error) {
                     //

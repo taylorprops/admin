@@ -38,20 +38,20 @@
                                         <input type="text" class="custom-form-element form-input form-search" data-label="Search">
                                     </div>
                                     <div class="col-3">
-                                        <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-sort" data-label="Sort By">
+                                        <select class="custom-form-element form-select form-select-no-search form-select-no-cancel uploads-filter-sort" data-label="Sort By">
                                             <option value="az" selected>A-Z</option>
                                             <option value="added">Recently Added</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
-                                        <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-published" data-label="Published">
+                                        <select class="custom-form-element form-select form-select-no-search form-select-no-cancel uploads-filter-published" data-label="Published">
                                             <option value="all">Show All</option>
                                             <option value="published">Published</option>
                                             <option value="notpublished">Not published</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
-                                        <select class="custom-form-element form-select form-select-no-search form-select-no-search uploads-filter-active" data-label="Active">
+                                        <select class="custom-form-element form-select form-select-no-search form-select-no-cancel uploads-filter-active" data-label="Active">
                                             <option value="all">Show All</option>
                                             <option value="active" selected>Active</option>
                                             <option value="notactive">Not Active</option>
@@ -234,7 +234,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <select name="edit_form_tags" id="edit_form_tags" class="custom-form-element form-select form-select-no-search form-select-no-search" data-label="Form Tags">
+                                    <select name="edit_form_tags" id="edit_form_tags" class="custom-form-element form-select form-select-no-search form-select-no-cancel" data-label="Form Tags">
                                         <option value=""></option>
                                         @foreach($resources -> where('resource_type', 'form_tags') as $resource)
                                             <option value="{{ $resource -> resource_id }}">{{ $resource -> resource_name }}</option>
@@ -244,7 +244,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <select name="edit_checklist_group_id" id="edit_checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-search required" data-label="Checklist Group">
+                                    <select name="edit_checklist_group_id" id="edit_checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-cancel required" data-label="Checklist Group">
                                         <option value=""></option>
                                         @foreach($checklist_groups as $checklist_group)
                                             <option value="{{ $checklist_group -> resource_id }}">{{ $checklist_group -> resource_name }}</option>
@@ -318,7 +318,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <select name="no_form_form_tags" id="no_form_form_tags" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-search" data-label="Form Tags">
+                                    <select name="no_form_form_tags" id="no_form_form_tags" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-cancel" data-label="Form Tags">
                                         <option value=""></option>
                                         @foreach($resources -> where('resource_type', 'form_tags') as $resource)
                                             <option value="{{ $resource -> resource_id }}">{{ $resource -> resource_name }}</option>
@@ -328,7 +328,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <select name="no_form_checklist_group_id" id="no_form_checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-search required" data-label="Checklist Group">
+                                    <select name="no_form_checklist_group_id" id="no_form_checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-cancel required" data-label="Checklist Group">
                                         <option value=""></option>
                                         @foreach($checklist_groups as $checklist_group)
                                             <option value="{{ $checklist_group -> resource_id }}">{{ $checklist_group -> resource_name }}</option>
@@ -433,7 +433,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-11">
-                                            <select name="form_tags" id="form_tags" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-search" data-label="Form Tags">
+                                            <select name="form_tags" id="form_tags" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-cancel" data-label="Form Tags">
                                                 <option value=""></option>
                                                 @foreach($resources -> where('resource_type', 'form_tags') as $resource)
                                                     <option value="{{ $resource -> resource_id }}">{{ $resource -> resource_name }}</option>
@@ -448,7 +448,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-11">
-                                            <select name="checklist_group_id" id="checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-search required" data-label="Checklist Group">
+                                            <select name="checklist_group_id" id="checklist_group_id" class="custom-form-element form-select form-select-no-cancel form-select-no-search form-select-no-cancel required" data-label="Checklist Group">
                                                 <option value=""></option>
                                                 @foreach($checklist_groups as $checklist_group)
                                                     <option value="{{ $checklist_group -> resource_id }}">{{ $checklist_group -> resource_name }}</option>

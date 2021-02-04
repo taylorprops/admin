@@ -48192,14 +48192,14 @@ if (document.URL.match(/checklists/)) {
 
 
     var checklist_item = ' \
-            <li class="list-group-item checklist-item w-100 pt-1 pb-0 bg-orange-light" data-form-id="' + form_id + '" data-form-group-id="' + checklist_group_id + '"> \
+            <li class="list-group-item checklist-item w-100 pt-3 pb-2 bg-orange-light" data-form-id="' + form_id + '" data-form-group-id="' + checklist_group_id + '"> \
                 <div class="row"> \
                     <div class="col-8"> \
                         <div class="d-flex justify-content-start align-items-center"> \
                             <div> \
-                                <i class="fas fa-sort fa-lg mx-3 text-primary checklist-item-handle ui-sortable-handle"></i> \
+                                <i class="fal fa-bars mx-3 text-primary checklist-item-handle ui-sortable-handle"></i> \
                             </div> \
-                            <div class="h5 text-primary" title="' + text_orig + '"><a href="javascript: void(0)"> ' + text + '</a></div> \
+                            <div class="text-gray" title="' + text_orig + '"> ' + text + '</div> \
                         </div> \
                     </div> \
                     <div class="col-3"> \
@@ -48292,7 +48292,6 @@ if (document.URL.match(/checklists/)) {
   };
 
   var show_hide_options = function show_hide_options() {
-    console.log('show_hide_options');
     var select_checklist_type = $('#checklist_type');
     var select_checklist_property_type = $('#checklist_property_type_id');
     var select_checklist_sale_rent = $('#checklist_sale_rent');
@@ -49475,7 +49474,7 @@ if (document.URL.match(/create\/add_fields/)) {
         }).then(function (response) {
           field_div.find('.dropdown-results-div').html('');
           response.data.custom_names.forEach(function (result) {
-            field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item list-group-item-action field-name-result">' + result['field_name_display'] + '</a>');
+            field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item field-name-result">' + result['field_name_display'] + '</a>');
           });
           field_div.find('.custom-name-results').show();
           $('.field-name-result').on('click', function () {
@@ -50172,7 +50171,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
       $('#edit_form_name').text(file_name_orig);
       $('#edit_file_name_display').val(file_name);
-      $('#edit_form_group_id').val(form_group_id).prop('disabled', disabled);
+      $('#edit_form_group_id').val(form_group_id).prop('disabled', disabled).data('form-group-id', form_group_id);
       $('#edit_state').val(state).prop('disabled', disabled);
       $('#edit_helper_text').val(helper_text);
       $('#edit_form_tags').val(form_tags);
@@ -50236,6 +50235,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
     if (form_check == 'yes') {
       var form_group_id = $('#edit_form_group_id').val();
+      var prev_form_group_id = $('#edit_form_group_id').data('form-group-id');
       var order = $('#list_div_' + form_group_id).find('.uploads-filter-sort').val();
       var state = $('#edit_state').val();
       $('#save_edit_file_button').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Saving');
@@ -50243,6 +50243,11 @@ if (document.URL.match(/create\/upload\/files/)) {
       axios.post('/doc_management/save_file_edit', formData).then(function (response) {
         $('#edit_file_modal').modal('hide');
         get_forms(form_group_id, state, order);
+
+        if (prev_form_group_id != '') {
+          get_forms(prev_form_group_id, state, order);
+        }
+
         $('#save_edit_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Save Details');
         toastr['success']('Upload Edited Successfully');
       })["catch"](function (error) {//
@@ -50289,6 +50294,11 @@ if (document.URL.match(/create\/upload\/files/)) {
               $('.show-forms-button').show();
               var title = $(this).closest('.title-option').find('input').val();
               $('#file_name_display, #helper_text').val(title);
+              $('#file_name_display').on('change', function () {
+                if ($('#helper_text').val() == title) {
+                  $('#helper_text').val($('#file_name_display').val());
+                }
+              });
               $('#form_names_div').collapse('hide');
             });
             global_loading_off();
@@ -50326,6 +50336,8 @@ if (document.URL.match(/create\/upload\/files/)) {
 
         get_forms(form_group_id, state, order);
         $('#upload_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
+        $('#upload_preview').html('');
+        $('#helper_text').val('');
       })["catch"](function (error) {//
       });
     }
@@ -51070,7 +51082,7 @@ if (document.URL.match(/common_fields/)) {
       formData.append('field_name', field_name);
       formData.append('field_type', field_type);
       formData.append('group_id', group_id);
-      formData.append('sub_group_id', group_id);
+      formData.append('sub_group_id', sub_group_id);
       formData.append('db_column_name', db_column_name);
       axios.post('/doc_management/resources/save_add_common_field', formData, axios_options).then(function (response) {
         toastr['success']('Field Successfully Added');
@@ -52710,7 +52722,9 @@ if (document.URL.match(/esign_add_fields/)) {
         formData.append('is_template', is_template);
         axios.post('/esign/esign_send_for_signatures', formData, axios_options).then(function (response) {
           if (!is_draft && !is_template) {
-            window.location = '/esign_show_sent';
+            setTimeout(function () {
+              window.location = '/esign_show_sent';
+            }, 1000);
           }
         })["catch"](function (error) {});
       }
@@ -52745,7 +52759,7 @@ if (document.URL.match(/esign_add_fields/)) {
         var field_date = '';
 
         if (field_type == 'signature') {
-          field_date = field_html(parseFloat(_h_perc) - 1, 12, parseFloat(x_perc) + 18, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id, is_template);
+          field_date = field_html(parseFloat(_h_perc) - 1, 12, parseFloat(x_perc) + 19, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id, is_template);
           container.append(field_date);
         }
 
@@ -52881,7 +52895,7 @@ if (document.URL.match(/esign_add_fields/)) {
           set_and_get_field_coordinates(null, dragged_ele, 'yes');
         }
       });
-      var max_height = 40;
+      var max_height = 50;
       var min_height = 25;
       var min_width = 30;
 
@@ -52975,8 +52989,7 @@ if (document.URL.match(/esign_add_fields/)) {
         $(this).val(orig_name);
         $(this).closest('.field-div').find('.field-div-name').text(name);
       });
-      $('#active_signer').val(orig_name);
-      $('.field-div.show').removeClass('show');
+      $('#active_signer').val(orig_name); //$('.field-div.show').removeClass('show');
     }
 
     function set_and_get_field_coordinates(e, ele, existing, field_type) {
@@ -53006,9 +53019,11 @@ if (document.URL.match(/esign_add_fields/)) {
       var ele_h_perc = 2.7;
       var ele_w_perc = 15;
 
-      if (field_type == 'initials') {
+      if (field_type == 'signature') {
+        ele_w_perc = 18;
+      } else if (field_type == 'initials') {
         ele_h_perc = 2;
-        ele_w_perc = 2.5;
+        ele_w_perc = 3;
       } else if (field_type == 'date') {
         ele_h_perc = 1.8;
         ele_w_perc = 12;
@@ -53024,8 +53039,8 @@ if (document.URL.match(/esign_add_fields/)) {
       } // set w and h for new field
 
 
-      h_perc = existing == 'no' ? ele_h_perc : (ele.height() + 4) / ele.parent().height() * 100;
-      w_perc = existing == 'no' ? ele_w_perc : (ele.width() + 4) / ele.parent().width() * 100;
+      h_perc = existing == 'no' ? ele_h_perc : (ele.height() + 2) / ele.parent().height() * 100;
+      w_perc = existing == 'no' ? ele_w_perc : (ele.width() + 2) / ele.parent().width() * 100;
       h_perc = parseFloat(h_perc).toFixed(2);
       w_perc = parseFloat(w_perc).toFixed(2); // field data percents
 
@@ -53239,7 +53254,7 @@ if (document.URL.match(/esign_add_signers/)) {
       if ($('#is_template').val() == 'yes') {
         form = $('.add-template-' + type + '-fields');
         template_role = form.find('.add-' + type + '-role').val();
-        role = form.find('.add-' + type + '-role').val().replace(/\s(One|Two|Three|Four)/, '');
+        role = form.find('.add-' + type + '-role').val().replace(/\s(One|Two)/, '');
         hidden = 'hidden';
         display_role = template_role;
       } else {
@@ -53268,7 +53283,7 @@ if (document.URL.match(/esign_add_signers/)) {
                         <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
                         <div class="col-1"><span class="' + type + '-count font-11 text-orange"></span></div> \
                         <div class="col-3 ' + hidden + ' font-weight-bold">' + name + '</div> \
-                        <div class="col-2">' + display_role + '</div> \
+                        <div class="col-3">' + display_role + '</div> \
                         <div class="col-4 ' + hidden + '">' + email + '</div> \
                     </div> \
                     <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="' + type + '"><i class="fal fa-times fa-lg"></i></a></div> \
@@ -53480,7 +53495,7 @@ window.form_elements = function () {
           element.addClass('custom-file-input');
           element.wrap('<div class="form-ele custom-file ' + small + '"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' ' + small + ' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
         } else if (form_type == 'form-checkbox') {
-          element.wrap('<div class="form-ele pretty p-default p-thick p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
+          element.wrap('<div class="form-ele"><div class="pretty p-svg p-smooth"></div></div>').parent('.pretty').append('<div class="state p-success"><svg class="svg svg-icon" viewBox="0 0 20 20"><path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path></svg><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
         } else if (form_type == 'form-radio') {
           element.wrap('<div class="form-ele pretty p-default p-thick p-round p-smooth"></div>').parent('.form-ele').append('<div class="state p-primary-o"><label for="' + id + '" class="form-check-label ' + form_type + '-label ' + active_label + '">' + label + '</label></div>');
         } else if (form_type == 'form-input-color') {
