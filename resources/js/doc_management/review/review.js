@@ -121,7 +121,7 @@ if(document.URL.match(/document_review/)) {
         .then(function (response) {
 
             $('.checklist-items-div').html(response.data);
-            $('.checklist-items-container').removeClass('fadeOut').show();
+            $('.checklist-items-container').removeClass('animate__fadeOut').show();
 
             $('.checklist-item-name').off('click').on('click', function(e) {
 
