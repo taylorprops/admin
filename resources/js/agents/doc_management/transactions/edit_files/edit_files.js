@@ -820,15 +820,21 @@ if (document.URL.match(/edit_files/)) {
 
             // set inline styles for PDF
             // system fields
+            let font_size = '14px';
+            let top = '0px';
+            if($('#page_size').val() == 'a4') {
+                font_size = '12px';
+                top = '3px';
+            }
             let font_family = "'Roboto Condensed', sans-serif";
             $('.data-div.system-html, .textline-html').css({
                 'position': 'absolute',
-                'top': '0px',
+                'top': top,
                 'left': '0px',
                 'width': '100%',
                 'overflow': 'visible',
                 'white-space': 'nowrap',
-                'font-size': '14px',
+                'font-size': font_size,
                 'color': 'black',
                 'line-height': '1',
                 'padding-top': '0px',
@@ -883,6 +889,7 @@ if (document.URL.match(/edit_files/)) {
 
 
             let file_id = $('#file_id').val();
+            let document_id = $('#document_id').val();
             let file_name = $('#file_name').val();
             let file_type = $('#file_type').val();
             let Listing_ID = $('#Listing_ID').val();
@@ -923,7 +930,6 @@ if (document.URL.match(/edit_files/)) {
                     page_html_top.find('.highlight').remove();
                     page_html_top = page_html_top.wrap('<div>').parent().html();
                     formData.append('page_html_top_' + c, page_html_top);
-                    console.log(page_html_top);
                 }
 
                 if(page_html_bottom_clone.find('.highlight').length > 0) {
@@ -937,6 +943,7 @@ if (document.URL.match(/edit_files/)) {
 
             formData.append('page_count', c);
             formData.append('file_id', file_id);
+            formData.append('document_id', document_id);
             formData.append('file_type', file_type);
             formData.append('file_name', file_name);
             formData.append('Listing_ID', Listing_ID);
@@ -955,7 +962,7 @@ if (document.URL.match(/edit_files/)) {
 
             }, 1000);
 
-            in_process([file_id]);
+            in_process([document_id]);
             $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
 
             axios_options['header'] = { 'content-type': 'multipart/form-data' };

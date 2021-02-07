@@ -24,12 +24,13 @@ class TransactionsEditFilesController extends Controller {
         $Referral_ID = $request -> Referral_ID ?? 0;
         $transaction_type = $request -> transaction_type;
         $file_id = $request -> file_id;
+        $document_id = $request -> document_id;
         $file_type = $request -> file_type;
 
 
         // add to in_process table
         $in_process = new InProcess();
-        $in_process -> document_id = $file_id;
+        $in_process -> document_id = $document_id;
         $in_process -> save();
 
         $path = [
@@ -94,17 +95,21 @@ class TransactionsEditFilesController extends Controller {
             $page_height = get_width_height($layer_pdf)['height'];
 
             // if not standard 612 by 792 get width and height and convert to mm
-            if($page_width != 612 || $page_height != 792) {
+            if($page_width == 612 && $page_height == 792) {
+
+                $options['page-size'] = 'Letter';
+
+            } else if($page_width == 595 && $page_height == 842) {
+
+                $options['page-size'] = 'a4';
+
+            } else {
 
                 $page_width = $page_width * 0.2745833333;
                 $page_height = $page_height * 0.2745833333;
 
                 $options['page-width'] = $page_width.'mm';
                 $options['page-height'] = $page_height.'mm';
-
-            } else {
-
-                $options['page-size'] = 'Letter';
 
             }
 
@@ -192,7 +197,7 @@ class TransactionsEditFilesController extends Controller {
         $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $file_id);
 
         // remove from in_process
-        $remove_in_process = InProcess::where('document_id', $file_id) -> delete();
+        $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
 
     }
 
@@ -207,11 +212,14 @@ class TransactionsEditFilesController extends Controller {
         $Referral_ID = $document -> Referral_ID ?? 0;
         $transaction_type = $document -> transaction_type;
         $Agent_ID = $document -> Agent_ID;
+        $page_width = $document -> page_width;
+        $page_height = $document -> page_height;
+        $page_size = $document -> page_size;
 
         $file = TransactionUpload::where('file_id', $file_id) -> first();
         $file_name = $file -> file_name_display;
 
-        return view('/agents/doc_management/transactions/edit_files/file', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'file_id', 'document_id', 'file_type'));
+        return view('/agents/doc_management/transactions/edit_files/file', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'file_id', 'document_id', 'file_type', 'page_width', 'page_height', 'page_size'));
 
     }
 
@@ -305,72 +313,6 @@ class TransactionsEditFilesController extends Controller {
         }
 
         return response() -> json(['status' => 'success']);
-
-/*
-$inputs = UserFieldsInputs::where('file_type', 'user')
--> where('input_db_column', '!=', '')
--> where('Agent_ID', $Agent_ID)
--> where('file_id', $file_id)
--> get();
-
-foreach($inputs as $input) {
-dump($input);
-} */
-
-        /* // delete all field input values for this file
-    $file_id = $request[0]['file_id'];
-    $file_type = $request[0]['file_type'];
-    $Listing_ID = $request[0]['Listing_ID'] ?? 0;
-    $Contract_ID = $request[0]['Contract_ID'] ?? 0;
-    $Referral_ID = $request[0]['Referral_ID'] ?? 0;
-    $transaction_type = $request[0]['transaction_type'];
-    $Agent_ID = $request[0]['Agent_ID'];
-
-    if($transaction_type == 'listing') {
-    $column = 'Listing_ID';
-    $id = $Listing_ID;
-    } else if($transaction_type == 'contract') {
-    $column = 'Contract_ID';
-    $id = $Contract_ID;
-    } else if($transaction_type == 'referral') {
-    $column = 'Referral_ID';
-    $id = $Referral_ID;
-    }
-
-    // ****************** UserFieldsValues is no more
-    $delete_filled_fields = UserFieldsValues::where('Agent_ID', $Agent_ID)
-    -> where('file_id', $file_id)
-    -> where($column, $id)
-    -> delete();
-
-    $fields = json_decode($request -> getContent(), true);
-
-    // ****************** UserFieldsValues is no more
-    foreach($fields as $field) {
-    $filled_fields = new UserFieldsValues();
-    $filled_fields -> file_id = $file_id;
-    $filled_fields -> file_type = $file_type;
-    $filled_fields -> common_name = $field['common_name'];
-    $filled_fields -> Agent_ID = $Agent_ID;
-    $filled_fields -> Listing_ID = $Listing_ID;
-    $filled_fields -> Contract_ID = $Contract_ID;
-    $filled_fields -> Referral_ID = $Referral_ID;
-    $filled_fields -> transaction_type = $transaction_type;
-    $filled_fields -> input_id = $field['input_id'];
-    $filled_fields -> input_value = $field['input_value'];
-    $filled_fields -> save();
-
-    if($field['common_name'] != '') {
-    // update all common fields
-    // ****************** UserFieldsValues is no more
-    $common_fields = UserFieldsValues::where('Agent_ID', $Agent_ID)
-    -> where($column, $id)
-    -> where('common_name', $field['common_name']) -> first();
-
-    $common_fields -> input_value = $field['input_value'];
-    $common_fields -> save();
-    }
-    } */
 
     }
 

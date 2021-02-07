@@ -14,7 +14,7 @@
                 <th>Subject</th>
                 <th>Recipients</th>
                 <th class="wpx-100">Sent</th>
-                <th></th>
+                <th class="wpx-125"></th>
             </tr>
         </thead>
 
@@ -25,11 +25,19 @@
                 @php
                 $signers = $envelope -> signers;
                 $callbacks = $envelope -> callbacks;
+                $property = null;
+                if($envelope -> listing) {
+                    $property = $envelope -> listing;
+                } else if($envelope -> contract) {
+                    $property = $envelope -> contract;
+                } else if($envelope -> referral) {
+                    $property = $envelope -> referral;
+                }
                 @endphp
 
                 <tr>
                     <td>{{ $envelope -> status }}</td>
-                    <td>{{ $envelope -> subject }}</td>
+                    <td>{{ $envelope -> subject }} @if($property) <br>Property: {{ $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode }} @endif</td>
                     <td>
                         @php
                         foreach($signers as $signer) {
@@ -40,21 +48,44 @@
                             dump($callback_signer);
                             echo '</pre>'; */
                             $signer_status = [
-                                'document_sent' => $signer -> signer_name.' - Sent',
-                                'document_signed' => $signer -> signer_name.' - Signed',
-                                'document_declined' => $signer -> signer_name.' - Declined',
-                                'signer_bounced' => $signer -> signer_name.' - Bounced',
-                                'document_expired' => $signer -> signer_name.' - Expired',
-                                'document_cancelled' => $signer -> signer_name.' - Cancelled'
-                            ][$event_type] ?? $signer -> signer_name;
+                                'document_sent' => '
+                                <div class="text-primary">'.$signer -> signer_name.'</div>
+                                <div>
+                                    <div class="d-flex justify-content-end align-items-center text-primary">
+                                        Sent <i class="fal fa-arrow-right ml-3"></i><br>
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-center text-primary">
+                                        <a href="javascript:void(0)" class="text-orange resend-envelope-button" data-envelope-id="'.$envelope -> id.'" data-signer-id="'.$signer -> id.'">Resend <i class="fal fa-redo ml-2"></i></a>
+                                    </div>
+                                </div>',
+                                'document_viewed' => '
+                                <div class="text-primary">'.$signer -> signer_name.'</div>
+                                <div>
+                                    <div class="d-flex justify-content-end align-items-center text-primary">
+                                        Viewed <i class="fal fa-eye ml-2"></i><br>
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-center text-primary">
+                                        <a href="javascript:void(0)" class="text-orange resend-envelope-button" data-envelope-id="'.$envelope -> id.'" data-signer-id="'.$signer -> id.'">Resend <i class="fal fa-redo ml-2"></i></a>
+                                    </div>
+                                </div>',
+                                'document_signed' => '<div class="text-success">'.$signer -> signer_name.'</div><div class="text-success"> Signed <i class="fal fa-check ml-2"></i></div>',
+                                'document_declined' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Declined <i class="fal fa-ban ml-2"></i></div>',
+                                'signer_bounced' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Bounced <i class="fal fa-ban ml-2"></i></div>',
+                                'document_expired' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Expired <i class="fad fa-hourglass-end ml-2"></i></div>',
+                                'document_cancelled' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Cancelled <i class="fal fa-ban ml-2"></i></div>'
+                            ][$event_type] ?? '<div>'.$signer -> signer_name.'</div>';
 
-                            echo '<div class="w-100">'.$signer_status.'</div>';
+                            echo '<div class="d-flex justify-content-between">'.$signer_status.'</div>';
 
                         }
                         @endphp
                     </td>
-                    <td data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
-                    <td class="text-center"></td>
+                    <td data-sort="{{ $envelope -> created_at }}">
+                        {{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-danger cancel-envelope-button" data-envelope-id={{ $envelope -> id }}"><i class="fal fa-times-circle mr-2"></i> Cancel</button>
+                    </td>
                 </tr>
 
             @endforeach

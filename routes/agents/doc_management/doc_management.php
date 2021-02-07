@@ -280,6 +280,12 @@
     // restore system template
     Route::post('/esign/restore_system_template', 'Esign\EsignController@restore_system_template');
 
+    // cancel envelope
+    Route::post('/esign/cancel_envelope', 'Esign\EsignController@cancel_envelope');
+
+    // resend envelope
+    Route::post('/esign/resend_envelope', 'Esign\EsignController@resend_envelope');
+
     // get esign dashboard tabs
     Route::get('/esign/get_drafts', 'Esign\EsignController@get_drafts');
     Route::get('/esign/get_deleted_drafts', 'Esign\EsignController@get_deleted_drafts');
@@ -289,6 +295,8 @@
     Route::get('/esign/get_deleted_templates', 'Esign\EsignController@get_deleted_templates');
     Route::get('/esign/get_system_templates', 'Esign\EsignController@get_system_templates');
     Route::get('/esign/get_deleted_system_templates', 'Esign\EsignController@get_deleted_system_templates');
+    Route::get('/esign/get_cancelled', 'Esign\EsignController@get_cancelled');
+
 
 
 

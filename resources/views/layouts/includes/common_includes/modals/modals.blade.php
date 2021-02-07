@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-success" id="modal_success_title"><i class="fad fa-check-circle mr-3"></i> Success</h5>
+                <h5 class="modal-title text-success" id="modal_success_title"><i class="fal fa-check-circle mr-3"></i> Success</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fal fa-times text-danger"></i>
                 </button>

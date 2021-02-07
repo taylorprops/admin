@@ -422,6 +422,16 @@ class UploadController extends Controller {
 
         if ($file) {
 
+            $page_width = get_width_height($file)['width'];
+            $page_height = get_width_height($file)['height'];
+
+            // if not standard 612 by 792 get width and height and convert to mm
+            if($page_width == 612 && $page_height == 792) {
+                $page_size = 'letter';
+            } else if($page_width == 595 && $page_height == 842) {
+                $page_size = 'a4';
+            }
+
             $file_name_orig = $file -> getClientOriginalName();
             $filename = $file_name_orig;
 
@@ -454,6 +464,9 @@ class UploadController extends Controller {
             $upload -> checklist_group_id = $checklist_group_id;
             $upload -> form_group_id = $form_group_id;
             $upload -> pages_total = $pages_total;
+            $upload -> page_width = $page_width;
+            $upload -> page_height = $page_height;
+            $upload -> page_size = $page_size;
             $upload -> save();
             $file_id = $upload -> file_id;
 

@@ -56,7 +56,7 @@ class EsignController extends Controller {
 
     public function get_deleted_drafts(Request $request) {
 
-        $deleted_drafts = EsignEnvelopes::where('is_draft', 'yes') -> onlyTrashed() -> with('signers') -> get();
+        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
 
@@ -64,7 +64,13 @@ class EsignController extends Controller {
 
     public function get_in_process(Request $request) {
 
-        $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Signed']) -> with('signers') -> with('callbacks') -> orderBy('created_at', 'desc') -> get();
+        $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Signed'])
+            -> with('signers')
+            -> with('callbacks')
+            -> with('listing')
+            -> with('contract')
+            -> with('referral')
+            -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
 
@@ -88,7 +94,13 @@ class EsignController extends Controller {
 
     public function get_deleted_templates(Request $request) {
 
-        $deleted_templates = EsignTemplates::where('upload_file_id', '0') -> orWhereNull('upload_file_id')  -> orWhere('upload_file_id', '') -> onlyTrashed() -> with('signers') -> get();
+        $deleted_templates = EsignTemplates::onlyTrashed()
+            -> where(function($query) {
+                $query -> where('upload_file_id', '0')
+                    -> orWhere('upload_file_id', '')
+                    -> orWhereNull('upload_file_id');
+            })
+            -> with('signers') -> get();
 
         return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
 
@@ -104,9 +116,46 @@ class EsignController extends Controller {
 
     public function get_deleted_system_templates(Request $request) {
 
-        $deleted_templates = EsignTemplates::where('upload_file_id', '>', '0') -> onlyTrashed() -> with('signers') -> get();
+        $deleted_templates = EsignTemplates::onlyTrashed() -> where('upload_file_id', '>', '0') -> with('signers') -> get();
 
         return view('/esign/get_deleted_system_templates_html', compact('deleted_templates'));
+
+    }
+
+    public function get_cancelled(Request $request) {
+
+        $envelopes = EsignEnvelopes::whereIn('status', ['Cancelled', 'Expired']) -> with('signers') -> get();
+
+        return view('/esign/get_cancelled_html', compact('envelopes'));
+
+    }
+
+    public function cancel_envelope(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
+        $envelope = EsignEnvelopes::find($envelope_id);
+
+        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+        $document = $client -> getDocumentByHash($envelope -> document_hash);
+        $client -> cancelDocument($document);
+
+    }
+
+    public function resend_envelope(Request $request) {
+
+        $signer_id = $request -> signer_id;
+        $envelope_id = $request -> envelope_id;
+        $envelope = EsignEnvelopes::find($envelope_id);
+
+        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+        $document = $client -> getDocumentByHash($envelope -> document_hash);
+        $signers = $document -> getSigners();
+        $signer = null;
+        foreach($signers as $signer) {
+            if($signer -> getStatus() == 'waiting_for_signature') {
+                $client -> sendReminderForDocument($document, $signer);
+            }
+        }
 
     }
 
@@ -341,7 +390,7 @@ class EsignController extends Controller {
 
             $new_image_name = str_replace('.pdf', '.jpg', $new_file_name);
 
-            exec('convert -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
+            exec('convert -flatten -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
 
             $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $new_file_name;
             $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/' . $new_image_name;
@@ -1275,6 +1324,7 @@ class EsignController extends Controller {
         //     echo 'error '.hash_hmac('sha256', $event_time . $event_type, config('esign.key')).' = '.$request -> event_hash;
         // }
 
+
         $status = [
             'document_sent' => 'Sent',
             'document_signed' => 'Signed',
@@ -1286,7 +1336,29 @@ class EsignController extends Controller {
         ][$event_type] ?? null;
 
         if($status) {
-            $update_envelope_status = EsignEnvelopes::where('document_hash', $related_document_hash) -> update(['status' => $status]);
+
+            $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> first();
+
+            $envelope -> status = $status;
+
+            if($status == 'Completed') {
+
+                $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+                $document = $client -> getDocumentByHash($related_document_hash);
+
+                $subject = sanitize($envelope -> subject);
+                $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
+                $file_location = $path.'/'.$subject.'.pdf';
+                $public_link = '/storage/esign/'.$envelope -> id.'/'.$subject.'.pdf';
+
+                $client -> downloadFinalDocumentToPath($document, $file_location, true);
+
+                $envelope -> file_location = $public_link;
+
+            }
+
+            $envelope -> save();
+
         }
 
         return true;

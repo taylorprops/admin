@@ -19,7 +19,7 @@
                                             {{-- TODO: this needs to be dynamic if MLS ID is changed --}}
                                             {{-- <div class="col-1">
                                                 @if($property -> MLS_Verified == 'yes')
-                                                    <i class="fad fa-check fa-2x text-success mls-verified" data-toggle="tooltip" title="MLS ID Verified"></i>
+                                                    <i class="fal fa-check fa-2x text-success mls-verified" data-toggle="tooltip" title="MLS ID Verified"></i>
                                                 @endif
                                             </div> --}}
                                             <div class="col-8 pr-0">
@@ -345,7 +345,7 @@
                                 </div>
                                 {{-- <div class="col-12 col-sm-6 col-xl-9">
                                     @if($property -> MLS_Verified && $disabled == null)
-                                        <div class="text-success mb-3"><i class="fad fa-check fa-lg mr-3 mls-verified"></i> Location Details were verified by BrightMLS <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="How To Change The Address" data-content="To change the address you must remove the MLS ID or enter a different MLS ID."><i class="fad fa-question-circle ml-2 fa-lg"></i></a></div>
+                                        <div class="text-success mb-3"><i class="fal fa-check fa-lg mr-3 mls-verified"></i> Location Details were verified by BrightMLS <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="How To Change The Address" data-content="To change the address you must remove the MLS ID or enter a different MLS ID."><i class="fad fa-question-circle ml-2 fa-lg"></i></a></div>
                                     @endif
                                 </div> --}}
                             </div>

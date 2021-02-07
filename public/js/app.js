@@ -44173,6 +44173,9 @@ if (document.URL.match(/transaction_details/)) {
       file_data['file_name_display'] = $(this).data('file-name-display');
       file_data['pages_total'] = $(this).data('pages-total');
       file_data['file_location'] = $(this).data('file-location');
+      file_data['page_width'] = $(this).data('page-width');
+      file_data['page_height'] = $(this).data('page-height');
+      file_data['page_size'] = $(this).data('page-size');
       file_data['order'] = c;
       files.push(file_data);
       c += 1;
@@ -46607,15 +46610,23 @@ if (document.URL.match(/edit_files/)) {
       }); // set inline styles for PDF
       // system fields
 
+      var font_size = '14px';
+      var top = '0px';
+
+      if ($('#page_size').val() == 'a4') {
+        font_size = '12px';
+        top = '3px';
+      }
+
       var font_family = "'Roboto Condensed', sans-serif";
       $('.data-div.system-html, .textline-html').css({
         'position': 'absolute',
-        'top': '0px',
+        'top': top,
         'left': '0px',
         'width': '100%',
         'overflow': 'visible',
         'white-space': 'nowrap',
-        'font-size': '14px',
+        'font-size': font_size,
         'color': 'black',
         'line-height': '1',
         'padding-top': '0px',
@@ -46667,6 +46678,7 @@ if (document.URL.match(/edit_files/)) {
       }); //$('.data-div.strikeout-html').css({ display: 'none' });
 
       var file_id = $('#file_id').val();
+      var document_id = $('#document_id').val();
       var file_name = $('#file_name').val();
       var file_type = $('#file_type').val();
       var Listing_ID = $('#Listing_ID').val();
@@ -46699,7 +46711,6 @@ if (document.URL.match(/edit_files/)) {
           page_html_top.find('.highlight').remove();
           page_html_top = page_html_top.wrap('<div>').parent().html();
           formData.append('page_html_top_' + c, page_html_top);
-          console.log(page_html_top);
         }
 
         if (page_html_bottom_clone.find('.highlight').length > 0) {
@@ -46711,6 +46722,7 @@ if (document.URL.match(/edit_files/)) {
       });
       formData.append('page_count', c);
       formData.append('file_id', file_id);
+      formData.append('document_id', document_id);
       formData.append('file_type', file_type);
       formData.append('file_name', file_name);
       formData.append('Listing_ID', Listing_ID);
@@ -46726,7 +46738,7 @@ if (document.URL.match(/edit_files/)) {
           });
         });
       }, 1000);
-      in_process([file_id]);
+      in_process([document_id]);
       $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
       axios_options['header'] = {
         'content-type': 'multipart/form-data'
@@ -49507,124 +49519,6 @@ if (document.URL.match(/create\/add_fields/)) {
         toastr['success']('Page Successfully Removed');
       })["catch"](function (error) {});
     }
-    /*
-    
-            // set field options on load
-            if ($('.field-div').length > 0) {
-    
-                $('.field-div').each(function () {
-    
-                    set_field_options
-    
-                    let group_id = $(this).data('group-id');
-                    let field_type = $(this).data('type');
-    
-                    $(this).find('.field-properties').data('field-type', field_type);
-    
-                    // add grouped class
-                    if ($('.group_' + group_id).length > 1) {
-                        $('.group_' + group_id).removeClass('standard').addClass('group');
-                    };
-                    // hide add item on all fields of group but last
-                    $('.group_' + group_id).find('.add-item-container').hide();
-                    $('.group_' + group_id).find('.add-item-container').last().show();
-    
-                    set_field_options(field_type, $(this));
-                    set_hwxy($(this), $(this).data('group-id'), field_type);
-    
-                });
-    
-                $('.focused').hide();
-    
-    
-                setTimeout(function () {
-    
-                    global_loading_off();
-                }, 10);
-    
-    
-            }
-    
-    
-    
-    
-    
-            function check_fields() {
-    
-                //console.log('running check_fields');
-    
-                // remove all error divs
-                $('.field-error-div').remove();
-                $('.field-error').removeClass('field-error');
-                $('.field-list-link').removeClass('text-danger');
-                let errors = 'no';
-    
-                $('.field-div').each(function () {
-    
-                    let field_div = $(this);
-                    let type = field_div.data('type');
-    
-                    if(type != 'checkbox') {
-    
-                        // add error divs
-                        $('<div class="list-group field-error-div"></div>').insertAfter(field_div.find('.form-div'));
-    
-                        let errors_found = 'no';
-    
-                        let field_name = null;
-                        field_div.find('.field-data-name').each(function () {
-                            if ($(this).val() != '') {
-                                field_name = $(this).val();
-                            }
-                        });
-                        if (field_name == null) {
-                            field_div.addClass('field-error');
-                            field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must name the field</div>');
-                            errors = 'yes';
-                            errors_found = 'yes';
-                        }
-    
-                        if (type == 'number') {
-                            if (field_div.find('select.field-data-number-type').val() == '') {
-                                field_div.addClass('field-error');
-                                field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the number type</div>');
-                                errors = 'yes';
-                                errors_found = 'yes';
-                            }
-                        }
-    
-                        if (type == 'address') {
-                            if (field_div.find('select.field-data-address-type').val() == '') {
-                                field_div.addClass('field-error');
-                                field_div.find('.field-error-div').append('<div class="field-error-item list-group-item list-group-item-danger"><i class="fad fa-exclamation-triangle mr-2"></i> You must enter the address type</div>');
-                                errors = 'yes';
-                                errors_found = 'yes';
-                            }
-                        }
-    
-                        if (errors_found == 'yes') {
-                            $('.field-list-link[data-group-id="' +field_div.data('group-id')+'"]').addClass('text-danger');
-                        } else {
-                            field_div.find('.field-error-div').remove();
-                        }
-    
-                    }
-    
-                });
-    
-    
-    
-                if (errors == 'yes') {
-                    return false;
-                }
-                return true;
-    
-            }
-    
-    
-    
-    */
-
   });
 }
 
@@ -52072,10 +51966,23 @@ if (document.URL.match(/document_review/)) {
 if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
   $(function () {
     // show successful send modal
-    if (document.URL.match(/esign_show_sent/)) {
-      $('#modal_success').modal().find('.modal-body').html('Your Documents Were Successfully Sent For Signatures');
+    if (document.URL.match(/esign_show_sent$/)) {
+      $('#modal_success').modal().find('.modal-body').html('Your Documents Were Successfully Sent For Signatures'); // remove esign_show_sent from url
+
+      history.pushState(null, null, '/esign');
+      var c = 0;
+      var load_in_process = setInterval(function () {
+        load_tab('in_process');
+
+        if (++c === 5) {
+          window.clearInterval(load_in_process);
+        }
+      }, 1000);
     }
 
+    setInterval(function () {
+      load_tab('in_process');
+    }, 5000);
     load_tab('in_process');
     $('#esign_tabs .nav-link').on('click', function () {
       load_tab($(this).data('tab'));
@@ -52124,6 +52031,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
           }, 200);
         } else if (tab == 'in_process') {
           data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+          $('.cancel-envelope-button').off('click').on('click', function () {
+            cancel_envelope($(this));
+          });
+          $('.resend-envelope-button').off('click').on('click', function () {
+            resend_envelope($(this));
+          });
         } else if (tab == 'completed') {
           data_table($('#completed_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
         } else if (tab == 'templates') {
@@ -52164,6 +52077,8 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
               $('#deleted_system_templates_div').collapse('hide');
             }
           }, 200);
+        } else if (tab == 'cancelled') {
+          data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -52248,6 +52163,47 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
         load_tab('system_templates');
       })["catch"](function (error) {
         console.log(error);
+      });
+    }
+
+    function cancel_envelope(ele) {
+      $('#confirm_cancel_modal').modal('show');
+      $('#confirm_cancel_button').off('click').on('click', function () {
+        envelope_id = ele.data('envelope-id');
+        ele.find('i').addClass('fa-spin');
+        var formData = new FormData();
+        formData.append('envelope_id', envelope_id);
+        axios.post('/esign/cancel_envelope', formData, axios_options).then(function (response) {
+          setTimeout(function () {
+            load_tab('in_process');
+            load_tab('cancelled');
+            $('#confirm_cancel_modal').modal('hide');
+          }, 1000);
+          toastr['success']('Signature Request Cancelled');
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      });
+    }
+
+    function resend_envelope(ele) {
+      $('#resend_envelope_modal').modal('show');
+      $('#resend_envelope_button').off('click').on('click', function () {
+        envelope_id = ele.data('envelope-id');
+        singer_id = ele.data('signer-id');
+        ele.find('i').addClass('fa-spin');
+        var formData = new FormData();
+        formData.append('envelope_id', envelope_id);
+        formData.append('singer_id', singer_id);
+        axios.post('/esign/resend_envelope', formData, axios_options).then(function (response) {
+          setTimeout(function () {
+            load_tab('in_process');
+            $('#resend_envelope_modal').modal('hide');
+          }, 1000);
+          toastr['success']('Signature Request Resent');
+        })["catch"](function (error) {
+          console.log(error);
+        });
       });
     }
   });
@@ -52547,38 +52503,6 @@ if (document.URL.match(/esign_add_fields/)) {
     var template_name = $('#saved_template_name').val();
     $('#template_name').val(template_name); ///////////////////// Functions //////////////////////
 
-    function show_send_for_signatures() {
-      if ($('.field-div').length > 0) {
-        $('#send_for_signatures_modal').modal('show');
-        var subject = $('#saved_draft_name').val();
-
-        if ($('#property_address').val() != '') {
-          subject = $('#property_address').val();
-        }
-
-        $('#envelope_subject').val(subject);
-        $('#save_send_for_signatures_button').off('click').on('click', function () {
-          //$(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
-          var form = $('#send_for_signatures_form');
-          var validate = validate_form(form);
-
-          if (validate == 'yes') {
-            send_for_signatures();
-            $('#send_for_signatures_modal').modal('hide');
-            global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
-            setTimeout(function () {
-              $('.loading-text').append('<br><br>Sending documents...');
-            }, 4000);
-            setTimeout(function () {
-              $('.loading-text').append('<br><br>Still working, please wait until done...');
-            }, 8000);
-          }
-        });
-      } else {
-        toastr['error']('You must add signature fields before sending');
-      }
-    }
-
     function add_text(ele) {
       var text = ele.val();
       var field_html = ele.closest('.field-div').find('.field-html.text');
@@ -52639,6 +52563,38 @@ if (document.URL.match(/esign_add_fields/)) {
           $('#modal_success').modal().find('.modal-body').html('Your draft was successfully saved. You can find your saved Drafts on your Esign Dashboard in the "Drafts" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To Esign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
           $('#draft_modal').modal('hide');
         })["catch"](function (error) {});
+      }
+    }
+
+    function show_send_for_signatures() {
+      if ($('.field-div').length > 0) {
+        $('#send_for_signatures_modal').modal('show');
+        var subject = $('#saved_draft_name').val();
+
+        if ($('#property_address').val() != '') {
+          subject = $('#property_address').val();
+        }
+
+        $('#envelope_subject').val(subject);
+        $('#save_send_for_signatures_button').off('click').on('click', function () {
+          //$(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
+          var form = $('#send_for_signatures_form');
+          var validate = validate_form(form);
+
+          if (validate == 'yes') {
+            send_for_signatures();
+            $('#send_for_signatures_modal').modal('hide');
+            global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
+            setTimeout(function () {
+              $('.loading-text').append('<br><br>Sending documents...');
+            }, 4000);
+            setTimeout(function () {
+              $('.loading-text').append('<br><br>Still working, please wait until done...');
+            }, 8000);
+          }
+        });
+      } else {
+        toastr['error']('You must add signature fields before sending');
       }
     }
 
@@ -52968,30 +52924,6 @@ if (document.URL.match(/esign_add_fields/)) {
       return field_html;
     }
 
-    function show_signer(ele) {
-      var container = ele.closest('.field-div');
-      var field_type = container.data('field-type');
-      var connector_id = ele.data('connector-id');
-      var orig_name = ele.find('option:selected').val();
-
-      if ($('#is_template').val() == 'yes') {
-        orig_name = ele.find('option:selected').data('name');
-      }
-
-      var name = orig_name;
-
-      if (field_type == 'initials') {
-        var initials_array = orig_name.match(/\b(\w)/g);
-        name = initials_array.join('');
-      }
-
-      $('[data-connector-id="' + connector_id + '"]').each(function () {
-        $(this).val(orig_name);
-        $(this).closest('.field-div').find('.field-div-name').text(name);
-      });
-      $('#active_signer').val(orig_name); //$('.field-div.show').removeClass('show');
-    }
-
     function set_and_get_field_coordinates(e, ele, existing, field_type) {
       var container, x, y; // if from dblclick to add field
 
@@ -53081,6 +53013,30 @@ if (document.URL.match(/esign_add_fields/)) {
         x_perc: x_perc,
         y_perc: y_perc
       };
+    }
+
+    function show_signer(ele) {
+      var container = ele.closest('.field-div');
+      var field_type = container.data('field-type');
+      var connector_id = ele.data('connector-id');
+      var orig_name = ele.find('option:selected').val();
+
+      if ($('#is_template').val() == 'yes') {
+        orig_name = ele.find('option:selected').data('name');
+      }
+
+      var name = orig_name;
+
+      if (field_type == 'initials') {
+        var initials_array = orig_name.match(/\b(\w)/g);
+        name = initials_array.join('');
+      }
+
+      $('[data-connector-id="' + connector_id + '"]').each(function () {
+        $(this).val(orig_name);
+        $(this).closest('.field-div').find('.field-div-name').text(name);
+      });
+      $('#active_signer').val(orig_name); //$('.field-div.show').removeClass('show');
     }
 
     function hide_active_field() {

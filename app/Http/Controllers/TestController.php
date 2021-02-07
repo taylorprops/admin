@@ -4,25 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\DocManagement\Create\Fields\Fields;
+use Illuminate\Support\Facades\Storage;
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 
 class TestController extends Controller
 {
     public function test(Request $request) {
 
-        $fields = Fields::get();
+        $upload = Upload::get();
 
-        foreach ($fields as $field) {
+        foreach ($upload as $upload) {
 
-            if(!ctype_upper(substr($field -> field_name, 0, 1)) && $field -> field_name != '') {
-                //echo $field -> field_name.' = '.$field -> field_name_display.'<br>';
-
-                $field -> field_name_display = ucwords($field -> field_name_display);
-                //$field -> field_name = str_replace(' ', '', ucwords($field -> field_name_display));
-                $field -> save();
+            $file_location = Storage::disk('public') -> path(str_replace('/storage/', '', $upload -> file_location));
+            $page_width = get_width_height($file_location)['width'];
+            $page_height = get_width_height($file_location)['height'];
+            $page_size = null;
+            if($page_width == 612 && $page_height == 792) {
+                $page_size = 'letter';
+            } else if($page_width == 595 && $page_height == 842) {
+                $page_size = 'a4';
             }
+            $upload -> page_width = $page_width;
+            $upload -> page_height = $page_height;
+            $upload -> page_size = $page_size;
+            $upload -> save();
+
+            $update_docs = TransactionDocuments::where('orig_file_id', $upload -> file_id) -> update(['page_width' => $page_width, 'page_height' => $page_height, 'page_size' => $page_size]);
+            //$update_docs = TransactionDocuments::where('orig_file_id', $upload -> file_id) -> get();
+
+            $update_uploads = TransactionUpload::where('orig_file_id', $upload -> file_id) -> update(['page_width' => $page_width, 'page_height' => $page_height, 'page_size' => $page_size]);
+            //$update_uploads = TransactionUpload::where('orig_file_id', $upload -> file_id) -> get();
+
         }
 
-        //return view('/tests/test', compact(''));
+        return view('/tests/test');
     }
 }

@@ -39,7 +39,7 @@
 
                         <form id="upload_form" enctype="multipart/form-data">
 
-                            <input type="file" class="custom-form-element form-input-file" id="esign_file_upload" name="esign_file_upload[]" multiple data-label="Select Documents">
+                            <input type="file" class="custom-form-element form-input-file" id="esign_file_upload" name="esign_file_upload[]" multiple accept="image/*,.pdf" data-label="Select Documents">
 
                         </form>
 

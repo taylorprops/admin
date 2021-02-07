@@ -3,9 +3,22 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
     $(function () {
 
         // show successful send modal
-        if(document.URL.match(/esign_show_sent/)) {
+        if(document.URL.match(/esign_show_sent$/)) {
             $('#modal_success').modal().find('.modal-body').html('Your Documents Were Successfully Sent For Signatures');
+            // remove esign_show_sent from url
+            history.pushState(null, null, '/esign');
+            let c = 0;
+            let load_in_process = setInterval(function() {
+                load_tab('in_process');
+                if (++c === 5) {
+                    window.clearInterval(load_in_process);
+                }
+            }, 1000);
         }
+
+        setInterval(function() {
+            load_tab('in_process');
+        }, 5000);
 
         load_tab('in_process');
 
@@ -70,6 +83,13 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                 } else if(tab == 'in_process') {
 
                     data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+                    $('.cancel-envelope-button').off('click').on('click', function() {
+                        cancel_envelope($(this));
+                    });
+
+                    $('.resend-envelope-button').off('click').on('click', function() {
+                        resend_envelope($(this));
+                    });
 
                 } else if(tab == 'completed') {
 
@@ -124,6 +144,10 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                             $('#deleted_system_templates_div').collapse('hide');
                         }
                     }, 200);
+
+                } else if(tab == 'cancelled') {
+
+                    data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
 
                 }
 
@@ -238,7 +262,60 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             });
         }
 
+        function cancel_envelope(ele) {
 
+            $('#confirm_cancel_modal').modal('show');
+            $('#confirm_cancel_button').off('click').on('click', function() {
+
+                envelope_id = ele.data('envelope-id');
+                ele.find('i').addClass('fa-spin');
+
+                let formData = new FormData();
+                formData.append('envelope_id', envelope_id);
+                axios.post('/esign/cancel_envelope', formData, axios_options)
+                .then(function (response) {
+                    setTimeout(function() {
+                        load_tab('in_process');
+                        load_tab('cancelled');
+                        $('#confirm_cancel_modal').modal('hide');
+                    }, 1000);
+                    toastr['success']('Signature Request Cancelled');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            });
+
+        }
+
+        function resend_envelope(ele) {
+
+            $('#resend_envelope_modal').modal('show');
+            $('#resend_envelope_button').off('click').on('click', function() {
+
+                envelope_id = ele.data('envelope-id');
+                singer_id = ele.data('signer-id');
+                ele.find('i').addClass('fa-spin');
+
+                let formData = new FormData();
+                formData.append('envelope_id', envelope_id);
+                formData.append('singer_id', singer_id);
+                axios.post('/esign/resend_envelope', formData, axios_options)
+                .then(function (response) {
+                    setTimeout(function() {
+                        load_tab('in_process');
+                        $('#resend_envelope_modal').modal('hide');
+                    }, 1000);
+                    toastr['success']('Signature Request Resent');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            });
+
+        }
 
     });
 

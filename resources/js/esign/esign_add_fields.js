@@ -137,50 +137,6 @@ if(document.URL.match(/esign_add_fields/)) {
 
         ///////////////////// Functions //////////////////////
 
-        function show_send_for_signatures() {
-
-            if ($('.field-div').length > 0) {
-
-                $('#send_for_signatures_modal').modal('show');
-
-                let subject = $('#saved_draft_name').val();
-                if($('#property_address').val() != '') {
-                    subject = $('#property_address').val();
-                }
-                $('#envelope_subject').val(subject);
-
-                $('#save_send_for_signatures_button').off('click').on('click', function() {
-                    //$(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
-                    let form = $('#send_for_signatures_form');
-                    let validate = validate_form(form);
-
-                    if(validate == 'yes') {
-
-                        send_for_signatures();
-
-                        $('#send_for_signatures_modal').modal('hide');
-
-                        global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
-
-                        setTimeout(function() {
-                            $('.loading-text').append('<br><br>Sending documents...');
-                        }, 4000);
-
-                        setTimeout(function() {
-                            $('.loading-text').append('<br><br>Still working, please wait until done...');
-                        }, 8000);
-                    }
-
-                });
-
-            } else {
-
-                toastr['error']('You must add signature fields before sending');
-
-            }
-
-        }
-
         function add_text(ele) {
             let text = ele.val();
             let field_html = ele.closest('.field-div').find('.field-html.text');
@@ -263,6 +219,50 @@ if(document.URL.match(/esign_add_fields/)) {
                 });
 
             }
+        }
+
+        function show_send_for_signatures() {
+
+            if ($('.field-div').length > 0) {
+
+                $('#send_for_signatures_modal').modal('show');
+
+                let subject = $('#saved_draft_name').val();
+                if($('#property_address').val() != '') {
+                    subject = $('#property_address').val();
+                }
+                $('#envelope_subject').val(subject);
+
+                $('#save_send_for_signatures_button').off('click').on('click', function() {
+                    //$(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
+                    let form = $('#send_for_signatures_form');
+                    let validate = validate_form(form);
+
+                    if(validate == 'yes') {
+
+                        send_for_signatures();
+
+                        $('#send_for_signatures_modal').modal('hide');
+
+                        global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
+
+                        setTimeout(function() {
+                            $('.loading-text').append('<br><br>Sending documents...');
+                        }, 4000);
+
+                        setTimeout(function() {
+                            $('.loading-text').append('<br><br>Still working, please wait until done...');
+                        }, 8000);
+                    }
+
+                });
+
+            } else {
+
+                toastr['error']('You must add signature fields before sending');
+
+            }
+
         }
 
         function send_for_signatures(is_draft = null, is_template = null) {
@@ -605,33 +605,6 @@ if(document.URL.match(/esign_add_fields/)) {
             return field_html;
         }
 
-        function show_signer(ele) {
-
-            let container = ele.closest('.field-div');
-            let field_type = container.data('field-type');
-            let connector_id = ele.data('connector-id');
-
-            let orig_name = ele.find('option:selected').val();
-            if($('#is_template').val() == 'yes') {
-                orig_name = ele.find('option:selected').data('name');
-            }
-            let name = orig_name;
-
-            if(field_type == 'initials') {
-                let initials_array = orig_name.match(/\b(\w)/g);
-                name = initials_array.join('');
-            }
-
-            $('[data-connector-id="'+connector_id+'"]').each(function() {
-                $(this).val(orig_name);
-                $(this).closest('.field-div').find('.field-div-name').text(name);
-            });
-
-            $('#active_signer').val(orig_name);
-
-            //$('.field-div.show').removeClass('show');
-        }
-
         function set_and_get_field_coordinates(e, ele, existing, field_type) {
 
             let container, x, y;
@@ -726,6 +699,33 @@ if(document.URL.match(/esign_add_fields/)) {
                 y_perc: y_perc
             }
 
+        }
+
+        function show_signer(ele) {
+
+            let container = ele.closest('.field-div');
+            let field_type = container.data('field-type');
+            let connector_id = ele.data('connector-id');
+
+            let orig_name = ele.find('option:selected').val();
+            if($('#is_template').val() == 'yes') {
+                orig_name = ele.find('option:selected').data('name');
+            }
+            let name = orig_name;
+
+            if(field_type == 'initials') {
+                let initials_array = orig_name.match(/\b(\w)/g);
+                name = initials_array.join('');
+            }
+
+            $('[data-connector-id="'+connector_id+'"]').each(function() {
+                $(this).val(orig_name);
+                $(this).closest('.field-div').find('.field-div-name').text(name);
+            });
+
+            $('#active_signer').val(orig_name);
+
+            //$('.field-div.show').removeClass('show');
         }
 
         function hide_active_field() {

@@ -7,7 +7,7 @@
         <thead>
             <tr>
                 <th class="wpx-100"></th>
-                <th>Name</th>
+                <th>Subject</th>
                 <th>Recipients</th>
                 <th class="wpx-100">Created</th>
             </tr>
@@ -21,14 +21,14 @@
                 $signers = $template -> signers;
                 $recipients = [];
                 foreach($signers as $signer) {
-                    $recipients[] = $signer -> signer_role;
+                    $recipients[] = $signer -> template_role;
                 }
                 @endphp
                 <tr>
                     <td><a href="javascript:void(0)" class="btn btn-primary restore-template-button" data-template-id="{{ $template -> id }}">Restore template <i class="fal fa-undo ml-2"></i></a></td>
                     <td>{{ $template -> template_name }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
-                    <td>{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>
+                    <td data-sort="{{ $template -> created_at }}">{{ date('M jS, Y', strtotime($template -> created_at)) }}<br>{{ date('g:i:s A', strtotime($template -> created_at)) }}</td>
                 </tr>
             @endforeach
 

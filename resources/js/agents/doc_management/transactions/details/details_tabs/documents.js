@@ -1147,6 +1147,9 @@ if (document.URL.match(/transaction_details/)) {
             file_data['file_name_display'] = $(this).data('file-name-display');
             file_data['pages_total'] = $(this).data('pages-total');
             file_data['file_location'] = $(this).data('file-location');
+            file_data['page_width'] = $(this).data('page-width');
+            file_data['page_height'] = $(this).data('page-height');
+            file_data['page_size'] = $(this).data('page-size');
             file_data['order'] = c;
             files.push(file_data);
 

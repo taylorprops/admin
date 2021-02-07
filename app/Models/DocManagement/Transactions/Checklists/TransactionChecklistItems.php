@@ -98,7 +98,7 @@ class TransactionChecklistItems extends Model {
                     $status = 'Complete';
                     $agent_classes = 'bg-success text-white';
                     $admin_classes = 'bg-success text-white';
-                    $fa = '<i class="fad fa-check fa-lg mr-2"></i>';
+                    $fa = '<i class="fal fa-check fa-lg mr-2"></i>';
                     $helper_text = 'The requirements for this checklist item have been met';
                     $badge_class = 'badge-success text-white';
                 } else if ($checklist_item -> checklist_item_status == 'rejected') {

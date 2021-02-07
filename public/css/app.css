@@ -15774,7 +15774,7 @@ header .main-search-input::placeholder {
   color: #4c9bdb;
   font-size: 0.7rem;
   padding-left: 2px;
-  line-height: 1.3rem;
+  padding-top: 3px;
   white-space: nowrap;
   overflow: hidden;
 }

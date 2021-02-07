@@ -75,6 +75,9 @@
 <input type="hidden" id="Referral_ID" value="{{ $Referral_ID }}">
 <input type="hidden" id="transaction_type" value="{{ $transaction_type }}">
 <input type="hidden" id="Agent_ID" value="{{ $Agent_ID }}">
+<input type="hidden" id="page_width" value="{{ $page_width }}">
+<input type="hidden" id="page_height" value="{{ $page_height }}">
+<input type="hidden" id="page_size" value="{{ $page_size }}">
 <input type="hidden" id="active_page" value="1">
 @endsection
 

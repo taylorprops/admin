@@ -5,6 +5,7 @@ namespace App\Models\Esign;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class EsignEnvelopes extends Model
 {
 
@@ -23,7 +24,8 @@ class EsignEnvelopes extends Model
                     $query -> where('User_ID', auth() -> user() -> id);
                 } else if(auth() -> user() -> group == 'admin') {
                     $query -> where('User_ID', auth() -> user() -> id)
-                        -> orWhere('is_system_template', 'yes');
+                        -> orWhere('is_system_template', 'yes')
+                        -> orWhere('is_admin_template', 'yes');
                 }
             }
         });
@@ -43,6 +45,24 @@ class EsignEnvelopes extends Model
 
     public function callbacks() {
         return $this -> hasMany('App\Models\Esign\EsignCallbacks', 'related_document_hash', 'document_hash');
+    }
+
+    public function listing() {
+
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Listings\Listings', 'Listing_ID', 'Listing_ID') -> where('Listing_ID', '>', 0);
+
+    }
+
+    public function contract() {
+
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID') -> where('Contract_ID', '>', 0);
+
+    }
+
+    public function referral() {
+
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Referrals\Referrals', 'Referral_ID', 'Referral_ID') -> where('Referral_ID', '>', 0);
+
     }
 
 }

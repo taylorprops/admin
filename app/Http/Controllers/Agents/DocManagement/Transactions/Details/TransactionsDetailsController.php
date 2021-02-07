@@ -1494,6 +1494,9 @@ class TransactionsDetailsController extends Controller {
             $add_documents -> file_name_display = $file['file_name_display'];
             $add_documents -> pages_total = $file['pages_total'];
             $add_documents -> file_location = $file['file_location'];
+            $add_documents -> page_width = $file['page_width'];
+            $add_documents -> page_height = $file['page_height'];
+            $add_documents -> page_size = $file['page_size'];
             $add_documents -> transaction_type = $transaction_type;
             $add_documents -> save();
 
@@ -1511,6 +1514,9 @@ class TransactionsDetailsController extends Controller {
             $upload_copy -> Listing_ID = $Listing_ID;
             $upload_copy -> Contract_ID = $Contract_ID;
             $upload_copy -> Referral_ID = $Referral_ID;
+            $upload_copy -> page_width = $file['page_width'];
+            $upload_copy -> page_height = $file['page_height'];
+            $upload_copy -> page_size = $file['page_size'];
             $upload_new = $upload_copy -> toArray();
             $upload_new = TransactionUpload::create($upload_new);
 

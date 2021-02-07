@@ -140,8 +140,7 @@ class FieldsController extends Controller
 
         $published = Upload::where('file_id', $file_id) -> first();
 
-        // TODO: change this back to if($published -> published == 'no') {
-        if($published -> published != '') {
+        if($published -> published == 'no') {
 
             if(isset($file_id)) {
 

@@ -455,6 +455,9 @@
                                                                 data-file-name-display="{{ $form -> file_name_display }}"
                                                                 data-pages-total="{{ $form -> pages_total }}"
                                                                 data-file-location="{{ $form -> file_location }}"
+                                                                data-page-width="{{ $form -> page_width }}"
+                                                                data-page-height="{{ $form -> page_height }}"
+                                                                data-page-size="{{ $form -> page_size }}"
                                                                 data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $form -> file_location)))) }}"
                                                                 >
 
@@ -598,6 +601,9 @@
                                                         data-file-name-display="{{ $checklist_form_required -> file_name_display }}"
                                                         data-pages-total="{{ $checklist_form_required -> pages_total }}"
                                                         data-file-location="{{ $checklist_form_required -> file_location }}"
+                                                        data-page-width="{{ $checklist_form_required -> page_width }}"
+                                                        data-page-height="{{ $checklist_form_required -> page_height }}"
+                                                        data-page-size="{{ $checklist_form_required -> page_size }}"
                                                         data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
                                                         checked>
                                                     </div>
@@ -695,7 +701,7 @@
 
                                     <div class="btn btn-primary btn-block mb-5">
                                         <span>Click to browse files</span>
-                                        <input type="file" title='Click to browse files' />
+                                        <input type="file" title="Click to browse files" accept="image/*,.pdf">
                                     </div>
                                 </div>
 

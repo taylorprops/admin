@@ -56,10 +56,10 @@
                         </div>
                     @else
                         <div class="mr-3">
-                            @if($is_draft == 'no')
-                                <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
-                            @else
+                            @if($is_draft == 'yes')
                                 <button class="btn btn-primary fill-form-option" id="save_as_draft_button">Save Changes To Draft <i class="fad fa-save ml-2"></i></button>
+                            @else
+                                <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
                             @endif
                         </div>
 
