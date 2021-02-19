@@ -21,8 +21,10 @@ class Listings extends Model
         parent::boot();
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
-                if(auth() -> user() -> group == 'agent') {
+                if(stristr(auth() -> user() -> group, 'agent')) {
                     $query -> where('Agent_ID', auth() -> user() -> user_id);
+                } else if(auth() -> user() -> group == 'transaction_coordinator') {
+                    $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
             }
         });
@@ -31,7 +33,13 @@ class Listings extends Model
     public function ScopeGetPropertyDetails($request, $transaction_type, $id) {
 
         if(is_array($id)) {
-            $id = max($id);
+            if($transaction_type == 'listing') {
+                $id = $id[0];
+            } else if($transaction_type == 'contract') {
+                $id = $id[1];
+            } else if($transaction_type == 'referral') {
+                $id = $id[2];
+            }
         }
 
         if($transaction_type == 'listing') {
@@ -41,6 +49,7 @@ class Listings extends Model
         } else if($transaction_type == 'referral') {
             $property = Referrals::find($id);
         }
+
         return $property;
     }
 

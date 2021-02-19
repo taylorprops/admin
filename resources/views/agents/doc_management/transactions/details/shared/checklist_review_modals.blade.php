@@ -83,7 +83,7 @@
                             <input type="text" class="custom-form-element form-input form-small" id="email_agent_subject" value="{{ $property -> FullStreetAddress }} {{ $property -> City }}, {{ $property -> StateOrProvince }} {{ $property -> PostalCode }}">
                         </div>
                     </div>
-
+                    @if(auth() -> user() -> group == 'admin')
                     <div class="row">
                         <div class="col-2">
                             <div class="h-100 d-flex justify-content-end align-items-top">
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-
+                    @endif
                     <div class="row">
                         <div class="col-12">
                             <div id="email_agent_checklist_details"></div>

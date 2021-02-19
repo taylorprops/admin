@@ -90,7 +90,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-2">'+template_role+'</div> \
                         <div class="col-4 hidden"></div> \
                     </div> \
-                    <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div> \
+                    <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';
 
                 $('.signers-container').append(user).sortable({
@@ -221,7 +221,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-3">'+display_role+'</div> \
                         <div class="col-4 '+hidden+'">'+email+'</div> \
                     </div> \
-                    <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></a></div> \
+                    <div><button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';
 
                 $('.'+type+'s-container').append(new_user).sortable({

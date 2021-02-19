@@ -21,6 +21,8 @@
 
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="documents"  data-target="#documents_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-folder-open mr-2 d-none d-md-inline-block"></i> Documents</a></li>
 
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="esign"  data-target="#esign_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-signature mr-2 d-none d-md-inline-block"></i> Esign</a></li>
+
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="checklist"  data-target="#checklist_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-tasks mr-2 d-none d-md-inline-block"></i> Checklist</a></li>
 
                 @if($transaction_type == 'listing')
@@ -32,10 +34,8 @@
                     @php
                     // agent and admin have different commission tabs
                     $commission = 'commission';
-                    if(auth() -> user() -> group == 'agent') {
+                    if(stristr(auth() -> user() -> group, 'agent')) {
                         $commission = 'agent_commission';
-                    } else if(auth() -> user() -> group == 'referral') {
-                        $commission = 'referral_commission';
                     }
                     @endphp
 
@@ -65,6 +65,11 @@
                         {!! config('global.vars.loader') !!}
                     </div>
                 </div>
+                <div id="esign_tab" class="tab-pane fade">
+                    <div class="w-100 my-5 text-center">
+                        {!! config('global.vars.loader') !!}
+                    </div>
+                </div>
                 <div id="checklist_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.vars.loader') !!}
@@ -86,14 +91,8 @@
                         {!! config('global.vars.loader') !!}
                     </div>
                 </div>
-                @elseif(auth() -> user() -> group == 'agent')
+                @elseif(stristr(auth() -> user() -> group, 'agent'))
                 <div id="agent_commission_tab" class="tab-pane fade">
-                    <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
-                    </div>
-                </div>
-                @elseif(auth() -> user() -> group == 'referral')
-                <div id="referral_commission_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.vars.loader') !!}
                     </div>
@@ -117,6 +116,58 @@
 </div>
 
 {{-- ******** Modals ******** --}}
+
+
+{{--  esign --}}
+
+<div class="modal fade draggable" id="confirm_cancel_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_cancel_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="confirm_cancel_title">Confirm Cancellation</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="d-flex justify-content-around align-items-center">
+                        Are you sure you want to cancel this signature request?
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-success modal-confirm-button" id="confirm_cancel_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade draggable" id="resend_envelope_modal" tabindex="-1" role="dialog" aria-labelledby="resend_envelope_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="resend_envelope_title">Resend Envelope</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="d-flex justify-content-around align-items-center">
+                        Are you sure you want to resend this signature request?
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-success modal-confirm-button" id="resend_envelope_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- details --}}
 {{-- import property data from mls --}}
@@ -989,6 +1040,51 @@
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-danger" data-dismiss="modal" id="cancel_matches_button"><i class="fal fa-times mr-2"></i> Do Not Add Them</a>
                 <a class="btn btn-primary modal-confirm-button" id="confirm_matches_button"><i class="fal fa-check mr-2"></i> Yes, Add Them!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable" id="add_address_modal" tabindex="-1" role="dialog" aria-labelledby="add_address_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="add_address_modal_title">Add Check Recipient Address</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="add_address_form">
+
+                    <div class="text-gray">Enter the address where the release check should be mailed to</div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="text" class="custom-form-element form-input required" id="release_to_street" name="release_to_street" data-label="Street Address">
+                        </div>
+                        <div class="col-12">
+                            <input type="text" class="custom-form-element form-input required" id="release_to_city" name="release_to_city" data-label="City">
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <select class="custom-form-element form-select form-select-no-cancel required" id="release_to_state" name="release_to_state" data-label="State">
+                                <option value=""></option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state -> state }}">{{ $state -> state }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <input type="text" class="custom-form-element form-input required" id="release_to_zip" name="release_to_zip" data-label="Zip Code">
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="save_add_address_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Address</a>
             </div>
         </div>
     </div>
@@ -1910,7 +2006,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around pb-3">
-                <a class="btn btn-primary btn-lg p-3" id="save_accept_contract_button"><i class="fad fa-save mr-2"></i> Save Contract Details</a>
+                <a class="btn btn-primary btn-lg p-3" id="save_accept_contract_button"><i class="fad fa-save mr-2"></i> Save {{ $for_sale ? 'Contract' : 'Lease' }} Details</a>
             </div>
         </div>
     </div>

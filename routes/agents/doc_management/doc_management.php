@@ -7,7 +7,9 @@
 
 
     // all transactions page
-    Route::get('/agents/doc_management/transactions', 'Agents\DocManagement\Transactions\TransactionsController@get_transactions');
+    Route::get('/agents/doc_management/transactions', 'Agents\DocManagement\Transactions\TransactionsController@transactions_all');
+    // get transactions
+    Route::get('/agents/doc_management/transactions/get_transactions', 'Agents\DocManagement\Transactions\TransactionsController@get_transactions');
 
     // Add new transaction
     Route::get('/agents/doc_management/transactions/add/{type}', 'Agents\DocManagement\Transactions\Add\TransactionsAddController@add_transaction');
@@ -26,7 +28,6 @@
 
 
 
-    // axios calls
     // save add listing
     Route::post('/agents/doc_management/transactions/save_add_transaction', 'Agents\DocManagement\Transactions\Add\TransactionsAddController@save_add_transaction');
     // save required details
@@ -45,8 +46,10 @@
     Route::get('/doc_management/get_notes', 'DocManagement\Review\DocumentReviewController@get_notes');
     Route::post('/doc_management/delete_note', 'DocManagement\Review\DocumentReviewController@delete_note');
     Route::get('/agents/doc_management/transactions/get_documents', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_documents');
+    Route::get('/agents/doc_management/transactions/get_esign', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_esign');
     Route::get('/agents/doc_management/transactions/get_contracts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_contracts');
     Route::post('/agents/doc_management/transactions/in_process', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@in_process');
+    Route::post('/agents/doc_management/transactions/in_process_esign', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@in_process_esign');
 
     // get mls details
     Route::get('/agents/doc_management/transactions/mls_search', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@mls_search');
@@ -75,6 +78,10 @@
     Route::post('/agents/doc_management/transactions/reorder_documents', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@reorder_documents');
     // get add document to checklist html
     Route::get('/agents/doc_management/transactions/add_document_to_checklist_item_html', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@add_document_to_checklist_item_html');
+    // check if address submitted for release
+    Route::post('/agents/doc_management/transactions/release_address_submitted', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@release_address_submitted');
+    // add address for release
+    Route::post('/agents/doc_management/transactions/add_release_address', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@add_release_address');
     // get documents for add document to checklist html
     Route::get('/agents/doc_management/transactions/get_add_document_to_checklist_documents_html', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_add_document_to_checklist_documents_html');
 
@@ -113,6 +120,33 @@
     // merge documents
     Route::post('/agents/doc_management/transactions/merge_documents', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@merge_documents');
 
+
+    // delete draft
+    Route::post('/agents/doc_management/transactions/esign/delete_draft', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@delete_draft');
+
+    // restore draft
+    Route::post('/agents/doc_management/transactions/esign/restore_draft', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@restore_draft');
+
+    // delete template
+    Route::post('/agents/doc_management/transactions/esign/delete_template', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@delete_template');
+
+    // restore template
+    Route::post('/agents/doc_management/transactions/esign/restore_template', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@restore_template');
+
+    // cancel envelope
+    Route::post('/agents/doc_management/transactions/esign/cancel_envelope', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@cancel_envelope');
+
+    // resend envelope
+    Route::post('/agents/doc_management/transactions/esign/resend_envelope', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@resend_envelope');
+
+    // get esign dashboard tabs
+    Route::get('/agents/doc_management/transactions/esign/get_drafts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_drafts');
+    Route::get('/agents/doc_management/transactions/esign/get_deleted_drafts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_deleted_drafts');
+    Route::get('/agents/doc_management/transactions/esign/get_in_process', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_in_process');
+    Route::get('/agents/doc_management/transactions/esign/get_completed', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_completed');
+    Route::get('/agents/doc_management/transactions/esign/get_cancelled', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_cancelled');
+
+
     // make sure all required fields are filled out before allowing adding documents to the checklist
     Route::post('/agents/doc_management/transactions/check_required_contract_fields', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@check_required_contract_fields');
     // save required fields
@@ -122,6 +156,8 @@
     /////// COMMISSION
     // get commission
     Route::get('/agents/doc_management/transactions/get_commission', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_commission');
+    // get agent commission
+    Route::get('/agents/doc_management/transactions/get_agent_commission', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_agent_commission');
     // get check details from pdf
     Route::post('/agents/doc_management/transactions/get_check_details', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_check_details');
 
@@ -130,6 +166,8 @@
 
     // save commission
     Route::post('/agents/doc_management/transactions/save_commission', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_commission');
+    // save commission agent
+    Route::post('/agents/doc_management/transactions/save_commission_agent', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_commission_agent');
 
     // get checks in
     Route::get('/agents/doc_management/transactions/get_checks_in', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_checks_in');

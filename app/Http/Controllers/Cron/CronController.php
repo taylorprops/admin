@@ -90,6 +90,9 @@ class CronController extends Controller {
             $add_user = new User();
             $add_user -> user_id = $agent -> id;
             $add_user -> group = 'agent';
+            if(stristr($agent -> company, 'referral')) {
+                $add_user -> group = 'agent_referral';
+            }
             $add_user -> name = $agent -> fullname;
             // TODO: remove test_
             $add_user -> email = 'test_'.$agent -> email1;

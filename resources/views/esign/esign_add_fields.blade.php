@@ -281,6 +281,7 @@
 
 <input type="hidden" id="is_template" value="{{ $is_template }}">
 <input type="hidden" id="saved_template_name" value="{{ $template_name }}">
+<input type="hidden" id="saved_draft_name" value="{{ $draft_name }}">
 <input type="hidden" id="template_id" value="{{ $template_id }}">
 <input type="hidden" id="envelope_id" value="{{ $envelope_id }}">
 <input type="hidden" id="active_page" value="1">
@@ -289,7 +290,7 @@
 @endphp
 <input type="hidden" id="active_signer" value="{{ $active_signer }}">
 <input type="hidden" id="property_address" value="{{ $property_address }}">
-<input type="hidden" id="saved_draft_name" value="{{ $draft_name }}">
+
 
 
 <div class="modal fade draggable" id="template_modal" tabindex="-1" role="dialog" aria-labelledby="template_modal_title" aria-hidden="true">

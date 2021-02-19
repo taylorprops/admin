@@ -20,8 +20,8 @@ class EsignEnvelopes extends Model
         parent::boot();
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
-                if(auth() -> user() -> group == 'agent') {
-                    $query -> where('User_ID', auth() -> user() -> id);
+                if(stristr(auth() -> user() -> group, 'agent')) {
+                    $query -> where('Agent_ID', auth() -> user() -> user_id);
                 } else if(auth() -> user() -> group == 'admin') {
                     $query -> where('User_ID', auth() -> user() -> id)
                         -> orWhere('is_system_template', 'yes')
@@ -29,6 +29,23 @@ class EsignEnvelopes extends Model
                 }
             }
         });
+    }
+
+    public function ScopeGetEsignDetails($request, $transaction_type, $id) {
+
+        if(is_array($id)) {
+            $id = max($id);
+        }
+        $esign = null;
+        if($transaction_type == 'listing') {
+            $esign = $this -> where('Listing_ID', $id) -> first();
+        } else if($transaction_type == 'contract') {
+            $esign = $this -> where('Contract_ID', $id) -> first();
+        } else if($transaction_type == 'referral') {
+            $esign = $this -> where('Referral_ID', $id) -> first();
+        }
+
+        return $esign;
     }
 
     public function documents() {

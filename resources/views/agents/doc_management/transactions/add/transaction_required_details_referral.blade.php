@@ -149,6 +149,12 @@
 
                     <div class="row">
                         <div class="col-12 col-sm-6">
+                            <input type="text" class="custom-form-element form-input datepicker required" id="CloseDate" name="CloseDate" data-label="Settlement Date">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
                             <input type="text" class="custom-form-element form-input numbers-only money-decimals required" id="CommissionAmount" name="CommissionAmount" data-label="Commission Amount">
                         </div>
                         <div class="col-12 col-sm-6">

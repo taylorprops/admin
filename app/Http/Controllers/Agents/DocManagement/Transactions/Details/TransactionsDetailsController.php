@@ -2,77 +2,109 @@
 
 namespace App\Http\Controllers\Agents\DocManagement\Transactions\Details;
 
-use App\Http\Controllers\Controller;
+use File;
+
+use Config;
+use App\User;
 
 use App\Mail\DefaultEmail;
-use App\Mail\DocManagement\Emails\Documents;
 
-use App\Models\Admin\Resources\ResourceItemsAdmin;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
-use App\Models\BrightMLS\AgentRoster;
+use thiagoalessio\TesseractOCR\TesseractOCR;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\CRM\CRMContacts;
 
-use App\Models\DocManagement\Checklists\Checklists;
-use App\Models\DocManagement\Checklists\ChecklistsItems;
-
-use App\Models\DocManagement\Create\Fields\Fields;
-use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
-use App\Models\DocManagement\Create\Fields\CommonFields;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Create\Upload\UploadImages;
-use App\Models\DocManagement\Create\Upload\UploadPages;
-
-use App\Models\DocManagement\Resources\ResourceItems;
-
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
-use App\Models\DocManagement\Transactions\Documents\InProcess;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
-use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Members\Members;
-use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
-use App\Models\DocManagement\Transactions\Data\ListingsData;
+use App\Models\BrightMLS\AgentRoster;
 
 use App\Models\Commission\Commission;
 use App\Models\Commission\CommissionChecksIn;
-use App\Models\Commission\CommissionChecksInQueue;
 use App\Models\Commission\CommissionChecksOut;
+use App\Models\Commission\CommissionBreakdowns;
+use App\Models\Commission\CommissionBreakdownsDeductions;
+use App\Models\Commission\CommissionChecksInQueue;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Commission\CommissionIncomeDeductions;
 use App\Models\Commission\CommissionCommissionDeductions;
 
-use App\Models\DocManagement\Earnest\Earnest;
-use App\Models\DocManagement\Earnest\EarnestChecks;
-use App\Models\DocManagement\Earnest\EarnestNotes;
-
-use App\Models\Employees\Agents;
-use App\Models\Employees\AgentsTeams;
 use App\Models\Employees\AgentsNotes;
+use App\Models\Employees\AgentsTeams;
+use App\Models\Employees\Agents;
 
 use App\Models\Resources\LocationData;
+use App\Models\Admin\Resources\ResourceItemsAdmin;
+use App\Models\DocManagement\Resources\ResourceItems;
 
-use App\User;
-use Config;
-use File;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
+use App\Mail\DocManagement\Emails\Documents;
 
-use thiagoalessio\TesseractOCR\TesseractOCR;
+use App\Models\DocManagement\Earnest\Earnest;
+use App\Models\DocManagement\Earnest\EarnestNotes;
+use App\Models\DocManagement\Earnest\EarnestChecks;
+
+use App\Models\DocManagement\Create\Fields\Fields;
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Create\Upload\UploadPages;
+use App\Models\DocManagement\Create\Fields\CommonFields;
+use App\Models\DocManagement\Create\Upload\UploadImages;
+
+use App\Models\DocManagement\Checklists\Checklists;
+use App\Models\DocManagement\Checklists\ChecklistsItems;
+
+use App\Models\DocManagement\Transactions\Members\Members;
+use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
+
+use App\Models\DocManagement\Transactions\Data\ListingsData;
+
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+
+use App\Models\DocManagement\Transactions\Documents\InProcess;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+
+
+use App\Models\DocManagement\Transactions\EditFiles\UserFields;
+use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
+
+use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
+
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
+
+
+/* use Eversign\File;
+use Eversign\Field; */
+use Eversign\Client;
+/* use Eversign\Signer;
+use Eversign\Document;
+use Eversign\Recipient; */
+/* use Eversign\InitialsField;
+use Eversign\SignatureField;
+use Eversign\TextField;
+use Eversign\DateSignedField; */
+
+use App\Models\Esign\EsignEnvelopes;
+use App\Models\Esign\EsignCallbacks;
+use App\Models\Esign\EsignFields;
+use App\Models\Esign\EsignSigners;
+use App\Models\Esign\EsignDocuments;
+use App\Models\Esign\EsignDocumentsImages;
+use App\Models\Esign\EsignTemplates;
+
 
 class TransactionsDetailsController extends Controller {
 
@@ -94,7 +126,7 @@ class TransactionsDetailsController extends Controller {
             $Listing_ID = $id;
             // if not all required details submitted require them
             if($property -> ExpirationDate == '' || $property -> ExpirationDate == '0000-00-00') {
-                return redirect('/agents/doc_management/transactions/add/transaction_required_details_listing/' . $id . '/listing');
+                return redirect('/agents/doc_management/transactions/add/transaction_required_details_listing/'.$id.'/listing');
             }
             $active_status_id = ResourceItems::GetResourceID('Active', 'contract_status');
             $contracts = Contracts::where('Listing_ID', $Listing_ID) -> where('Status', $active_status_id) -> pluck('Contract_ID');
@@ -113,7 +145,7 @@ class TransactionsDetailsController extends Controller {
             // if not all required details submitted require them
             if($property -> SaleRent != 'rental') {
                 if($property -> ContractDate == '' || $property -> ContractDate == '0000-00-00') {
-                    return redirect('/agents/doc_management/transactions/add/transaction_required_details_contract/' . $id . '/contract');
+                    return redirect('/agents/doc_management/transactions/add/transaction_required_details_contract/'.$id.'/contract');
                 }
             }
 
@@ -299,11 +331,11 @@ class TransactionsDetailsController extends Controller {
                 $contract_closed = true;
             }
 
-            $list_agent = $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName;
+            $list_agent = $property -> ListAgentFirstName.' '.$property -> ListAgentLastName;
 
             if($property -> Listing_ID > 0) {
                 $listing = Listings::find($property -> Listing_ID);
-                $list_agent = $listing -> ListAgentFirstName . ' ' . $listing -> ListAgentLastName;
+                $list_agent = $listing -> ListAgentFirstName.' '.$listing -> ListAgentLastName;
             }
 
         } else if($transaction_type == 'referral') {
@@ -379,7 +411,7 @@ class TransactionsDetailsController extends Controller {
 
         $represent = ($Listing_ID > 0 ? 'seller' : 'buyer');
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID]);
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, null]);
 
         $mls_search_details = bright_mls_search($MLS_ID);
         $mls_search_details = (object)$mls_search_details;
@@ -558,14 +590,14 @@ class TransactionsDetailsController extends Controller {
 
         if($request -> StreetNumber  != '') {
 
-            $FullStreetAddress = $request -> StreetNumber . ' ' . $request -> StreetName . ' ' . $request -> StreetSuffix;
+            $FullStreetAddress = $request -> StreetNumber.' '.$request -> StreetName.' '.$request -> StreetSuffix;
 
             if($request -> StreetDirSuffix) {
-                $FullStreetAddress .= ' ' . $request -> StreetDirSuffix;
+                $FullStreetAddress .= ' '.$request -> StreetDirSuffix;
             }
 
             if($request -> UnitNumber) {
-                $FullStreetAddress .= ' ' . $request -> UnitNumber;
+                $FullStreetAddress .= ' '.$request -> UnitNumber;
             }
 
             $request -> merge(['FullStreetAddress' => $FullStreetAddress]);
@@ -728,11 +760,21 @@ class TransactionsDetailsController extends Controller {
 
     public function save_member(Request $request) {
 
+        $new_member = null;
         if($request -> id && $request -> id != 'undefined') {
             $member = Members::find($request -> id);
         } else {
             $member = new Members();
+            $new_member = 'yes';
         }
+
+        if(!$new_member) {
+            // update emails in esign drafts
+            if($member -> email != $request -> email) {
+                $signer = EsignSigners::where('signer_email', $member -> email) -> update(['signer_email' => $request -> email]);
+            }
+        }
+
         $data = $request -> all();
 
         foreach ($data as $col => $val) {
@@ -985,7 +1027,10 @@ class TransactionsDetailsController extends Controller {
         } else {
 
             $folders = TransactionDocumentsFolders::where($field, $id) -> orderBy('folder_order') -> get();
-            $documents = TransactionDocuments::where($field, $id) -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
+            $documents = TransactionDocuments::where($field, $id)
+                -> orderBy('doc_order', 'ASC')
+                -> orderBy('created_at', 'DESC')
+                -> get();
 
         }
 
@@ -998,6 +1043,52 @@ class TransactionsDetailsController extends Controller {
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
         return view('/agents/doc_management/transactions/details/data/get_documents', compact('transaction_type', 'property', 'Agent_ID', 'Listing_ID', 'Contract_ID', 'checklist_id', 'documents', 'folders', 'available_files', 'property_email', 'for_sale'));
+    }
+
+    public function in_process_esign(Request $request) {
+
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+        $transaction_type = $request -> transaction_type;
+
+        $field = 'Listing_ID';
+        $id = $Listing_ID;
+        if($transaction_type == 'contract') {
+            $field = 'Contract_ID';
+            $id = $Contract_ID;
+        } else if($transaction_type == 'referral') {
+            $field = 'Referral_ID';
+            $id = $Referral_ID;
+        }
+
+        $documents = TransactionDocuments::where($field, $id)
+            -> with('esign_document')
+            -> orderBy('doc_order', 'ASC')
+            -> orderBy('created_at', 'DESC')
+            -> get();
+
+        $esign_documents['sent'] = [];
+        $esign_documents['completed'] = [];
+
+        foreach($documents as $document) {
+
+            $esign_document = $document -> esign_document -> last();
+
+            if($esign_document) {
+                $envelope = $esign_document -> envelope;
+                if($envelope) {
+                    if($envelope -> status == 'Sent') {
+                        $esign_documents['sent'][] = $esign_document -> transaction_document_id;
+                    } else if($envelope -> status == 'Completed') {
+                        $esign_documents['completed'][] = $esign_document -> transaction_document_id;
+                    }
+                }
+            }
+        }
+
+        return response() -> json(['esign_documents' => $esign_documents]);
+
     }
 
     public function in_process(Request $request) {
@@ -1211,39 +1302,39 @@ class TransactionsDetailsController extends Controller {
         $new_upload_id = $upload_copy -> file_id;
 
         if($transaction_type == 'contract') {
-            $path = 'contracts/' . $Contract_ID;
+            $path = 'contracts/'.$Contract_ID;
         } else if($transaction_type == 'listing') {
-            $path = 'listings/' . $Listing_ID;
+            $path = 'listings/'.$Listing_ID;
         } else if($transaction_type == 'referral') {
-            $path = 'referrals/' . $Referral_ID;
+            $path = 'referrals/'.$Referral_ID;
         }
 
-        $orig_uploads_path = 'doc_management/transactions/' . $path . '/' . $orig_upload_id . '_' . $file_type;
-        $new_uploads_path = 'doc_management/transactions/' . $path . '/' . $new_upload_id . '_' . $file_type;
+        $orig_uploads_path = 'doc_management/transactions/'.$path.'/'.$orig_upload_id.'_'.$file_type;
+        $new_uploads_path = 'doc_management/transactions/'.$path.'/'.$new_upload_id.'_'.$file_type;
 
         // copy original file
         File::copyDirectory(Storage::disk('public') -> path($orig_uploads_path), Storage::disk('public') -> path($new_uploads_path));
 
-        exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/' . $path));
+        exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
 
         // add file_location to upload
 
-        $upload_copy -> file_location = '/storage/' . $new_uploads_path . '/' . $upload -> file_name;
+        $upload_copy -> file_location = '/storage/'.$new_uploads_path.'/'.$upload -> file_name;
         $upload_copy -> save();
 
         // add file location to doc images
         $document_images = TransactionDocumentsImages::where('document_id', $new_document_id) -> get();
 
         foreach ($document_images as $document_image) {
-            $new_file_location = str_replace($orig_upload_id . '_' . $file_type, $new_upload_id . '_' . $file_type, $document_image -> file_location);
+            $new_file_location = str_replace($orig_upload_id.'_'.$file_type, $new_upload_id.'_'.$file_type, $document_image -> file_location);
             $document_image -> file_location = $new_file_location;
             $document_image -> save();
         }
 
         // add other details to docs
-        $document_copy -> file_location = '/storage/' . $new_uploads_path . '/' . $upload -> file_name;
-        $document_copy -> file_location_converted = '/storage/' . $new_uploads_path . '/converted/' . $upload -> file_name;
-        $document_copy -> file_name_display = $upload -> file_name_display . '-COPY';
+        $document_copy -> file_location = '/storage/'.$new_uploads_path.'/'.$upload -> file_name;
+        $document_copy -> file_location_converted = '/storage/'.$new_uploads_path.'/converted/'.$upload -> file_name;
+        $document_copy -> file_name_display = $upload -> file_name_display.'-COPY';
         $document_copy -> file_id = $new_upload_id;
         //$document_copy -> order = $document_copy -> order + 1;
         $document_copy -> assigned = 'no';
@@ -1263,7 +1354,7 @@ class TransactionsDetailsController extends Controller {
             foreach ($data_set as $row) {
                 $copy = $row -> replicate();
                 $copy -> file_id = $new_upload_id;
-                $path = str_replace('/' . $orig_upload_id . '/', '/' . $new_upload_id . '_' . $file_type . '/', $row -> file_location);
+                $path = str_replace('/'.$orig_upload_id.'/', '/'.$new_upload_id.'_'.$file_type.'/', $row -> file_location);
                 $copy -> file_location = $path;
                 $copy -> save();
             }
@@ -1385,7 +1476,7 @@ class TransactionsDetailsController extends Controller {
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
 
         // create filename for merged docs
-        $filename = sanitize($property -> FullStreetAddress) . '_' . date('YmdHis') . '.pdf';
+        $filename = sanitize($property -> FullStreetAddress).'_'.date('YmdHis').'.pdf';
 
         $document_ids = explode(',', $request -> document_ids);
         $documents = [];
@@ -1405,9 +1496,9 @@ class TransactionsDetailsController extends Controller {
         $docs = implode(' ', $docs_array);
 
         $tmp = Storage::disk('public') -> path('tmp');
-        exec('pdftk ' . $docs . ' cat output ' . $tmp . '/' . $filename);
+        exec('pdftk '.$docs.' cat output '.$tmp.'/'.$filename);
 
-        $file_location = '/storage/tmp/' . $filename;
+        $file_location = '/storage/tmp/'.$filename;
         return compact('file_location', 'filename', 'single_documents');
 
     }
@@ -1527,38 +1618,38 @@ class TransactionsDetailsController extends Controller {
             $add_documents -> save();
 
             $base_path = base_path();
-            $storage_path = $base_path . '/storage/app/public/';
+            $storage_path = $base_path.'/storage/app/public/';
 
             if($transaction_type == 'listing') {
-                $path = 'listings/' . $Listing_ID;
+                $path = 'listings/'.$Listing_ID;
             } else if($transaction_type == 'contract') {
-                $path = 'contracts/' . $Contract_ID;
+                $path = 'contracts/'.$Contract_ID;
             } else {
-                $path = 'referrals/' . $Referral_ID;
+                $path = 'referrals/'.$Referral_ID;
             }
 
-            $files_path = 'doc_management/transactions/' . $path . '/' . $new_file_id;
+            $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id;
 
-            $copy_from = $storage_path . 'doc_management/uploads/' . $file_id . '/*';
-            $copy_to = $storage_path . $files_path . '_system';
-            Storage::disk('public') -> makeDirectory($files_path . '_system/converted');
-            Storage::disk('public') -> makeDirectory($files_path . '_system/converted_images');
-            Storage::disk('public') -> makeDirectory($files_path . '_system/layers');
-            Storage::disk('public') -> makeDirectory($files_path . '_system/combined');
+            $copy_from = $storage_path.'doc_management/uploads/'.$file_id.'/*';
+            $copy_to = $storage_path . $files_path.'_system';
+            Storage::disk('public') -> makeDirectory($files_path.'_system/converted');
+            Storage::disk('public') -> makeDirectory($files_path.'_system/converted_images');
+            Storage::disk('public') -> makeDirectory($files_path.'_system/layers');
+            Storage::disk('public') -> makeDirectory($files_path.'_system/combined');
 
-            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/' . $path));
+            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
 
-            $copy = exec('cp -rp ' . $copy_from . ' ' . $copy_to);
-            $copy_converted = exec('cp ' . $storage_path . $files_path . '_system/' . $file['file_name'] . ' ' . $copy_to . '/converted/' . $file['file_name']);
+            $copy = exec('cp -rp '.$copy_from.' '.$copy_to);
+            $copy_converted = exec('cp '.$storage_path . $files_path.'_system/'.$file['file_name'].' '.$copy_to.'/converted/'.$file['file_name']);
 
             $filename = $file['file_name'];
             $image_filename = str_replace('.pdf', '.jpg', $file['file_name']);
-            $source = $copy_to . '/converted/' . $filename;
-            $destination = $copy_to . '/converted_images';
+            $source = $copy_to.'/converted/'.$filename;
+            $destination = $copy_to.'/converted_images';
             $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $new_document_id);
 
-            $add_documents -> file_location = '/storage/' . $files_path . '_system/' . $filename;
-            $add_documents -> file_location_converted = '/storage/' . $files_path . '_system/converted/' . $filename;
+            $add_documents -> file_location = '/storage/'.$files_path.'_system/'.$filename;
+            $add_documents -> file_location_converted = '/storage/'.$files_path.'_system/converted/'.$filename;
             $add_documents -> save();
 
             $upload_images = UploadImages::where('file_id', $file_id) -> get();
@@ -1567,7 +1658,7 @@ class TransactionsDetailsController extends Controller {
             foreach ($upload_images as $upload_image) {
                 $copy = $upload_image -> replicate();
                 $copy -> file_id = $new_file_id;
-                $new_path = str_replace('/uploads/' . $file_id . '/', '/transactions/' . $path . '/' . $new_file_id . '_system/', $upload_image -> file_location);
+                $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_system/', $upload_image -> file_location);
                 $copy -> file_location = $new_path;
                 $copy -> Agent_ID = $Agent_ID;
                 $copy -> Listing_ID = $Listing_ID;
@@ -1580,7 +1671,7 @@ class TransactionsDetailsController extends Controller {
             foreach ($upload_pages as $upload_page) {
                 $copy = $upload_page -> replicate();
                 $copy -> file_id = $new_file_id;
-                $new_path = str_replace('/uploads/' . $file_id . '/', '/transactions/' . $path . '/' . $new_file_id . '_user/', $upload_page -> file_location);
+                $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_user/', $upload_page -> file_location);
                 $copy -> file_location = $new_path;
                 $copy -> Agent_ID = $Agent_ID;
                 $copy -> Listing_ID = $Listing_ID;
@@ -1928,8 +2019,8 @@ class TransactionsDetailsController extends Controller {
         $document_id = $request -> document_id;
         $document = TransactionDocuments::where('id', $document_id) -> first();
 
-        $file_name = sanitize(str_replace('.pdf', '', $new_name)) . '.pdf';
-        $file_name_display = str_replace('.pdf', '', $new_name) . '.pdf';
+        $file_name = sanitize(str_replace('.pdf', '', $new_name)).'.pdf';
+        $file_name_display = str_replace('.pdf', '', $new_name).'.pdf';
         $file_location = str_replace($document -> file_name, $file_name, $document -> file_location);
         $file_location_converted = str_replace($document -> file_name, $file_name, $document -> file_location_converted);
 
@@ -2004,8 +2095,8 @@ class TransactionsDetailsController extends Controller {
 
         // if manually saving to documents
         if($document_name) {
-            $file_name = sanitize($document_name) . '.pdf';
-            $file_name_display = $document_name . '.pdf';
+            $file_name = sanitize($document_name).'.pdf';
+            $file_name_display = $document_name.'.pdf';
 
         // if adding to checklist item
         // assign to checklist item
@@ -2013,7 +2104,7 @@ class TransactionsDetailsController extends Controller {
             $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
             $checklist_form_id = $checklist_item -> checklist_form_id;
             $file_name_display = Upload::GetFormName($checklist_form_id);
-            $file_name = sanitize($file_name_display) . '.pdf';
+            $file_name = sanitize($file_name_display).'.pdf';
         }
 
         // add to docs_transaction_docs
@@ -2048,17 +2139,17 @@ class TransactionsDetailsController extends Controller {
         $add_document -> save();
 
         if($transaction_type == 'contract') {
-            $path = 'contracts/' . $Contract_ID;
+            $path = 'contracts/'.$Contract_ID;
         } else if($transaction_type == 'listing') {
-            $path = 'listings/' . $Listing_ID;
+            $path = 'listings/'.$Listing_ID;
         } else if($transaction_type == 'referral') {
-            $path = 'referral/' . $Referral_ID;
+            $path = 'referral/'.$Referral_ID;
         }
 
-        $files_path = 'doc_management/transactions/' . $path . '/' . $new_file_id . '_user';
+        $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id.'_user';
 
-        Storage::disk('public') -> makeDirectory($files_path . '/images');
-        Storage::disk('public') -> makeDirectory($files_path . '/pages');
+        Storage::disk('public') -> makeDirectory($files_path.'/images');
+        Storage::disk('public') -> makeDirectory($files_path.'/pages');
 
         // copy images and pages and create merged file
         // copy images
@@ -2066,9 +2157,9 @@ class TransactionsDetailsController extends Controller {
 
         foreach ($document_image_files as $image_file) {
             $image_file_name = basename($image_file['file_location']);
-            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/' . $path . '/' . $document_image_files[0]['file_id'] . '_' . $file_type . '/images/' . $image_file_name);
-            $new_file_loc = Storage::disk('public') -> path($files_path . '/images/' . $image_file_name);
-            exec('cp ' . $old_file_loc . ' ' . $new_file_loc);
+            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images/'.$image_file_name);
+            $new_file_loc = Storage::disk('public') -> path($files_path.'/images/'.$image_file_name);
+            exec('cp '.$old_file_loc.' '.$new_file_loc);
 
             $upload_images = new TransactionUploadImages();
             $upload_images -> file_id = $new_file_id;
@@ -2077,7 +2168,7 @@ class TransactionsDetailsController extends Controller {
             $upload_images -> Contract_ID = $Contract_ID;
             $upload_images -> Referral_ID = $Referral_ID;
             $upload_images -> file_name = $file_name;
-            $upload_images -> file_location = '/storage/' . $files_path . '_user/images/' . $image_file_name;
+            $upload_images -> file_location = '/storage/'.$files_path.'_user/images/'.$image_file_name;
             $upload_images -> pages_total = count($document_image_files);
             $upload_images -> page_number = $page_number;
             $upload_images -> save();
@@ -2124,9 +2215,9 @@ class TransactionsDetailsController extends Controller {
 
         foreach ($document_page_files as $page_file) {
             $page_file_name = basename($page_file['file_location']);
-            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/' . $path . '/' . $document_page_files[0]['file_id'] . '_' . $file_type . '/pages/' . $page_file_name);
-            $new_file_loc = Storage::disk('public') -> path($files_path . '/pages/' . $page_file_name);
-            exec('cp ' . $old_file_loc . ' ' . $new_file_loc);
+            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
+            $new_file_loc = Storage::disk('public') -> path($files_path.'/pages/'.$page_file_name);
+            exec('cp '.$old_file_loc.' '.$new_file_loc);
 
             $upload_pages = new TransactionUploadPages();
             $upload_pages -> file_id = $new_file_id;
@@ -2135,7 +2226,7 @@ class TransactionsDetailsController extends Controller {
             $upload_pages -> Contract_ID = $Contract_ID;
             $upload_pages -> Referral_ID = $Referral_ID;
             $upload_pages -> file_name = $file_name;
-            $upload_pages -> file_location = '/storage/' . $files_path . '/pages/' . $page_file_name;
+            $upload_pages -> file_location = '/storage/'.$files_path.'/pages/'.$page_file_name;
             $upload_pages -> pages_total = count($document_page_files);
             $upload_pages -> page_number = $page_number;
             $upload_pages -> save();
@@ -2143,37 +2234,37 @@ class TransactionsDetailsController extends Controller {
         }
 
         //merge pages into main file and move to converted
-        $main_file_location = $files_path . '/' . $file_name;
-        $converted_file_location = $files_path . '/converted/' . $file_name;
+        $main_file_location = $files_path.'/'.$file_name;
+        $converted_file_location = $files_path.'/converted/'.$file_name;
 
         $base_path = base_path();
-        exec('mkdir ' . $base_path . '/storage/app/public/' . $files_path . '/converted');
-        exec('mkdir ' . $base_path . '/storage/app/public/' . $files_path . '/converted_images');
+        exec('mkdir '.$base_path.'/storage/app/public/'.$files_path.'/converted');
+        exec('mkdir '.$base_path.'/storage/app/public/'.$files_path.'/converted_images');
 
         // merge all pages and add to main directory and converted directory
-        $pages = Storage::disk('public') -> path($files_path . '/pages');
-        exec('pdftk ' . $pages . '/*.pdf cat output ' . $base_path . '/storage/app/public/' . $main_file_location);
+        $pages = Storage::disk('public') -> path($files_path.'/pages');
+        exec('pdftk '.$pages.'/*.pdf cat output '.$base_path.'/storage/app/public/'.$main_file_location);
 
         //exec('cd '.$base_path.'/storage/app/public/ && cp '.$main_file_location.' '.$converted_file_location);
         // get split pages, merge and add to converted
-        $old_converted_location = Storage::disk('public') -> path('doc_management/transactions/' . $path . '/' . $file_id . '_' . $file_type . '/converted');
-        $new_converted_location = Storage::disk('public') -> path($files_path . '/converted');
-        $new_converted_images_location = Storage::disk('public') -> path($files_path . '/converted_images');
+        $old_converted_location = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type.'/converted');
+        $new_converted_location = Storage::disk('public') -> path($files_path.'/converted');
+        $new_converted_images_location = Storage::disk('public') -> path($files_path.'/converted_images');
 
-        exec('pdftk ' . $old_converted_location . '/*.pdf cat ' . implode(' ', $page_numbers) . ' output ' . $new_converted_location . '/' . $file_name);
+        exec('pdftk '.$old_converted_location.'/*.pdf cat '.implode(' ', $page_numbers).' output '.$new_converted_location.'/'.$file_name);
 
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
         $image_filename = str_replace('.pdf', '.jpg', $file_name);
-        $source = $new_converted_location . '/' . $file_name;
+        $source = $new_converted_location.'/'.$file_name;
         $destination = $new_converted_images_location;
         $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $Transaction_Docs_ID);
 
         // update file locations in docs_transaction and docs uploads
-        $add_document -> file_location = '/storage/' . $main_file_location;
-        $add_document -> file_location_converted = '/storage/' . $converted_file_location;
+        $add_document -> file_location = '/storage/'.$main_file_location;
+        $add_document -> file_location_converted = '/storage/'.$converted_file_location;
         $add_document -> save();
 
-        $upload -> file_location = '/storage/' . $main_file_location;
+        $upload -> file_location = '/storage/'.$main_file_location;
         $upload -> save();
 
         // add to checklist
@@ -2218,22 +2309,33 @@ class TransactionsDetailsController extends Controller {
             $file_name = $file -> getClientOriginalName();
 
 
-            $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.' . $ext . '/', '.' . $ext, $file_name);
+            $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $file_name);
             $file_name_remove_numbers = preg_replace('/^[0-9-_\s\.]+/', '', $file_name_remove_numbers);
             $file_name_display = preg_replace('/-/', ' ', $file_name_remove_numbers);
-            $file_name_no_ext = str_replace('.' . $ext, '', $file_name_remove_numbers);
+            $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
             $clean_file_name = sanitize($file_name_no_ext);
             $new_file_name = $clean_file_name.'_'.date('YmdHis').'.'.$ext;
 
             // convert to pdf if image
             if($ext != 'pdf') {
-                $new_file_name = date('YmdHis') . '_' . $clean_file_name . '.pdf';
-                $file_name_display = $file_name_no_ext . '.pdf';
-                $create_images = exec('convert -quality 80 -density 200 -page letter ' . $file . ' /tmp/' . $new_file_name, $output, $return);
-                $file = '/tmp/' . $new_file_name;
+                $new_file_name = date('YmdHis').'_'.$clean_file_name.'.pdf';
+                $file_name_display = $file_name_no_ext.'.pdf';
+                $create_images = exec('convert -quality 80 -density 200 -page letter '.$file.' /tmp/'.$new_file_name, $output, $return);
+                $file = '/tmp/'.$new_file_name;
             }
 
-            $pages_total = exec('pdftk ' . $file . ' dump_data | sed -n \'s/^NumberOfPages:\s//p\'');
+            $pages_total = exec('pdftk '.$file.' dump_data | sed -n \'s/^NumberOfPages:\s//p\'');
+
+            $page_width = get_width_height($file)['width'];
+            $page_height = get_width_height($file)['height'];
+
+            $page_size = '';
+            if($page_width == 612 && $page_height == 792) {
+                $page_size = 'letter';
+            } else if($page_width == 595 && $page_height == 842) {
+                $page_size = 'a4';
+            }
+
 
             // add to Documents
             $add_documents = new TransactionDocuments();
@@ -2247,6 +2349,9 @@ class TransactionsDetailsController extends Controller {
             $add_documents -> file_name = $new_file_name;
             $add_documents -> file_name_display = $file_name_display;
             $add_documents -> pages_total = $pages_total;
+            $add_documents -> page_width = $page_width;
+            $add_documents -> page_height = $page_height;
+            $add_documents -> page_size = $page_size;
             $add_documents -> doc_order = 0;
             $add_documents -> save();
             $Transaction_Docs_ID = $add_documents -> id;
@@ -2262,6 +2367,9 @@ class TransactionsDetailsController extends Controller {
             $upload -> file_name_display = $file_name_display;
             $upload -> file_type = 'user';
             $upload -> pages_total = $pages_total;
+            $upload -> page_width = $page_width;
+            $upload -> page_height = $page_height;
+            $upload -> page_size = $page_size;
             $upload -> save();
             $file_id = $upload -> file_id;
 
@@ -2269,84 +2377,92 @@ class TransactionsDetailsController extends Controller {
             $add_documents -> save();
 
             $base_path = base_path();
-            $storage_path = $base_path . '/storage/app/public';
+            $storage_path = $base_path.'/storage/app/public';
 
-            $path = 'contracts/' . $Contract_ID;
+            $path = 'contracts/'.$Contract_ID;
 
             if($transaction_type == 'listing') {
-                $path = 'listings/' . $Listing_ID;
+                $path = 'listings/'.$Listing_ID;
             } else if($transaction_type == 'referral') {
-                $path = 'referrals/' . $Referral_ID;
+                $path = 'referrals/'.$Referral_ID;
             }
 
-            $storage_dir = 'doc_management/transactions/' . $path . '/' . $file_id . '_user';
-            $storage_public_path = '/storage/' . $storage_dir;
-            $file_location = $storage_public_path . '/' . $new_file_name;
+            $storage_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_user';
+            $storage_public_path = '/storage/'.$storage_dir;
+            $file_location = $storage_public_path.'/'.$new_file_name;
 
-            if(!Storage::disk('public') -> put($storage_dir . '/' . $new_file_name, file_get_contents($file))) {
+            if(!Storage::disk('public') -> put($storage_dir.'/'.$new_file_name, file_get_contents($file))) {
                 $fail = json_encode(['fail' => 'File Not Uploaded']);
                 return ($fail);
             }
 
-            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/' . $path));
+            $storage_full_path = $storage_path.'/doc_management/transactions/'.$path.'/'.$file_id.'_user';
+            chmod($storage_full_path.'/'.$new_file_name, 0775);
 
-            Storage::disk('public') -> makeDirectory($storage_dir . '/converted');
+
+            // if size is not exactly letter but is close convert to letter or a4
+            if($page_size == '') {
+                $this -> convert_pdf_to_standard_size($page_width, $page_height, $storage_full_path, $new_file_name, $upload);
+            }
+
+            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+
+            Storage::disk('public') -> makeDirectory($storage_dir.'/converted');
 
 
-            $file_in = Storage::disk('public') -> path($storage_dir . '/' . $new_file_name);
-            $file_out = Storage::disk('public') -> path($storage_dir . '/temp_' . $new_file_name);
+            $file_in = Storage::disk('public') -> path($storage_dir.'/'.$new_file_name);
+            $file_out = Storage::disk('public') -> path($storage_dir.'/temp_'.$new_file_name);
 
             // flatten
-            exec('pdftk ' . $file_in . ' output ' . $file_out . ' flatten');
+            exec('pdftk '.$file_in.' output '.$file_out.' flatten');
             exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
             // compress
             /* exec('convert -compress Zip -density 150x150 '.$file_in.' '.$file_out);
             exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in); */
 
             // add to converted folder
-            exec('cp ' . Storage::disk('public') -> path($storage_dir . '/' . $new_file_name) . ' ' . Storage::disk('public') -> path($storage_dir . '/converted/' . $new_file_name));
+            exec('cp '.Storage::disk('public') -> path($storage_dir.'/'.$new_file_name).' '.Storage::disk('public') -> path($storage_dir.'/converted/'.$new_file_name));
 
-            if(!Storage::disk('public') -> exists($storage_dir . '/converted_images')) {
-                Storage::disk('public') -> makeDirectory($storage_dir . '/converted_images');
+            if(!Storage::disk('public') -> exists($storage_dir.'/converted_images')) {
+                Storage::disk('public') -> makeDirectory($storage_dir.'/converted_images');
             }
             $checklist_item_docs_model = new TransactionChecklistItemsDocs();
-            $source = $storage_path . '/' . $storage_dir . '/converted/' . $new_file_name;
+            $source = $storage_path.'/'.$storage_dir.'/converted/'.$new_file_name;
             $image_file_name = str_replace('.pdf', '.jpg', $new_file_name);
-            $destination = $storage_path . '/' . $storage_dir . '/converted_images';
+            $destination = $storage_path.'/'.$storage_dir.'/converted_images';
 
             $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_file_name, $Transaction_Docs_ID);
 
-            $storage_full_path = $storage_path . '/doc_management/transactions/' . $path . '/' . $file_id . '_user';
-            chmod($storage_full_path . '/' . $new_file_name, 0775);
+
 
             // update directory path in database
             $upload -> file_location = $file_location;
             $upload -> save();
 
             // create directories
-            $storage_dir_pages = $storage_dir . '/pages';
+            $storage_dir_pages = $storage_dir.'/pages';
             Storage::disk('public') -> makeDirectory($storage_dir_pages);
-            $storage_dir_images = $storage_dir . '/images';
+            $storage_dir_images = $storage_dir.'/images';
             Storage::disk('public') -> makeDirectory($storage_dir_images);
 
             // split pdf into pages and images
-            $input_file = $storage_full_path . '/' . $new_file_name;
-            $output_files = $storage_path . '/' . $storage_dir_pages . '/page_%02d.pdf';
+            $input_file = $storage_full_path.'/'.$new_file_name;
+            $output_files = $storage_path.'/'.$storage_dir_pages.'/page_%02d.pdf';
             $new_image_name = str_replace($ext, 'jpg', $new_file_name);
-            //$output_images = $storage_path . '/' . $storage_dir_images . '/' . $new_image_name;
+            //$output_images = $storage_path.'/'.$storage_dir_images.'/'.$new_image_name;
             $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
 
             // add individual pages to pages directory
-            $create_pages = exec('pdftk ' . $input_file . ' burst output ' . $output_files . ' flatten', $output, $return);
+            $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten', $output, $return);
             // remove data file
-            exec('rm ' . $storage_path . '/' . $storage_dir_pages . '/doc_data.txt');
+            exec('rm '.$storage_path.'/'.$storage_dir_pages.'/doc_data.txt');
 
             // add individual images to images directory
-            $create_images = exec('convert -density 200 -quality 80 ' . $input_file . ' -background white -alpha remove -strip ' . $output_images, $output, $return);
+            $create_images = exec('convert -density 200 -quality 80 '.$input_file.' -background white -alpha remove -strip '.$output_images, $output, $return);
 
             // get all image files images_storage_path to use as file location
-            $saved_images_directory = Storage::files('public/' . $storage_dir . '/images');
-            $images_public_path = $storage_public_path . '/images';
+            $saved_images_directory = Storage::files('public/'.$storage_dir.'/images');
+            $images_public_path = $storage_public_path.'/images';
 
             foreach ($saved_images_directory as $saved_image) {
                 // get just file_name
@@ -2368,15 +2484,15 @@ class TransactionsDetailsController extends Controller {
                 $upload_images -> Contract_ID = $Contract_ID;
                 $upload_images -> Referral_ID = $Referral_ID;
                 $upload_images -> file_name = $images_file_name;
-                $upload_images -> file_location = $images_public_path . '/' . $images_file_name;
+                $upload_images -> file_location = $images_public_path.'/'.$images_file_name;
                 $upload_images -> pages_total = $pages_total;
                 $upload_images -> page_number = $page_number;
                 $upload_images -> save();
 
             }
 
-            $saved_pages_directory = Storage::files('public/' . $storage_dir . '/pages');
-            $pages_public_path = $storage_public_path . '/pages';
+            $saved_pages_directory = Storage::files('public/'.$storage_dir.'/pages');
+            $pages_public_path = $storage_public_path.'/pages';
 
             $page_number = 1;
 
@@ -2389,7 +2505,7 @@ class TransactionsDetailsController extends Controller {
                 $upload_pages -> Referral_ID = $Referral_ID;
                 $upload_pages -> file_id = $file_id;
                 $upload_pages -> file_name = $pages_file_name;
-                $upload_pages -> file_location = $pages_public_path . '/' . $pages_file_name;
+                $upload_pages -> file_location = $pages_public_path.'/'.$pages_file_name;
                 $upload_pages -> pages_total = $pages_total;
                 $upload_pages -> page_number = $page_number;
                 $upload_pages -> save();
@@ -2399,22 +2515,213 @@ class TransactionsDetailsController extends Controller {
             }
 
             $add_documents -> file_location = $file_location;
-            $add_documents -> file_location_converted = $storage_public_path . '/converted/' . $new_file_name;
+            $add_documents -> file_location_converted = $storage_public_path.'/converted/'.$new_file_name;
             $add_documents -> save();
 
         }
 
     }
 
-    // TODO:: what is this?
-    public function copy_file($path, $newpath) {
-        $location = $this -> applyPathPrefix($path);
-        $destination = $this -> applyPathPrefix($newpath);
-        $this -> ensureDirectory(dirname($destination));
-        return copy($location, $destination);
+    public function convert_pdf_to_standard_size($page_width, $page_height, $folder, $file_name, $upload) {
+
+        // letter
+        // 612 +- 10 [592 622] | 792 +- 15 [787 807]
+        if(($page_height > 787 && $page_height < 807 && $page_width > 592 && $page_width < 622) ||
+        ($page_height <= 787 && $page_width <= 592)) {
+            $orig_file_loc = $folder.'/'.$file_name;
+            $temp_file_loc = $folder.'/temp_'.$file_name;
+
+            exec('gs \
+            -o '.$temp_file_loc.' \
+            -sDEVICE=pdfwrite \
+            -sPAPERSIZE=letter \
+            -dFIXEDMEDIA \
+            -dPDFFitPage \
+            -dCompatibilityLevel=1.4 \
+            '.$orig_file_loc);
+
+            exec('rm '.$orig_file_loc.' && mv '.$temp_file_loc.' '.$orig_file_loc);
+
+
+            $page_width = get_width_height($orig_file_loc)['width'];
+            $page_height = get_width_height($orig_file_loc)['height'];
+
+            $upload -> page_width = $page_width;
+            $upload -> page_height = $page_height;
+            $upload -> page_size = 'letter';
+            $upload -> save();
+
+
+        // a4
+        // 595 +- 15 [580 610] | 842 +- 15 [827 857]
+        } else if($page_height > 827 && $page_height < 857 && $page_width > 580 && $page_width < 610) {
+            $orig_file_loc = Storage::disk('public') -> path($storage_dir.'/'.$file_name);
+            $temp_file_loc = Storage::disk('public') -> path($storage_dir.'/temp_'.$file_name);
+
+            exec('gs \
+            -o '.$temp_file_loc.' \
+            -sDEVICE=pdfwrite \
+            -sPAPERSIZE=a4 \
+            -dFIXEDMEDIA \
+            -dPDFFitPage \
+            -dCompatibilityLevel=1.4 \
+            '.$orig_file_loc);
+
+            exec('rm '.$orig_file_loc.' && mv '.$temp_file_loc.' '.$orig_file_loc);
+
+
+            $page_width = get_width_height($orig_file_loc)['width'];
+            $page_height = get_width_height($orig_file_loc)['height'];
+
+            $upload -> page_width = $page_width;
+            $upload -> page_height = $page_height;
+            $upload -> page_size = 'letter';
+            $upload -> save();
+
+        }
+
+
+
     }
 
+
     // End Documents Tab
+
+    // Esign Tab
+
+    public function get_esign(Request $request) {
+
+        return view('/agents/doc_management/transactions/details/data/get_esign');
+
+    }
+
+    public function get_in_process(Request $request) {
+
+        $transaction_type = $request -> transaction_type;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+
+        $envelopes = EsignEnvelopes::where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> where('Referral_ID', $Referral_ID)
+            -> whereIn('status', ['Sent', 'Signed'])
+            -> with('signers')
+            -> with('callbacks')
+            -> orderBy('created_at', 'desc') -> get();
+
+        return view('/esign/get_in_process_html', compact('envelopes'));
+
+    }
+
+    public function get_completed(Request $request) {
+
+        $transaction_type = $request -> transaction_type;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+
+        $envelopes = EsignEnvelopes::where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> where('Referral_ID', $Referral_ID)
+            -> where('status', 'Completed')
+            -> with('signers')
+            -> get();
+
+        return view('/esign/get_completed_html', compact('envelopes'));
+
+    }
+
+    public function get_drafts(Request $request) {
+
+        $transaction_type = $request -> transaction_type;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+
+        $drafts = EsignEnvelopes::where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> where('Referral_ID', $Referral_ID)
+            -> where('is_draft', 'yes')
+            -> with('signers')
+            -> get();
+
+        return view('/esign/get_drafts_html', compact('drafts'));
+
+    }
+
+    public function get_deleted_drafts(Request $request) {
+
+        $transaction_type = $request -> transaction_type;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+
+        $deleted_drafts = EsignEnvelopes::onlyTrashed()
+            -> where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> where('Referral_ID', $Referral_ID)
+            -> where('is_draft', 'yes')
+            -> with('signers')
+            -> get();
+
+        return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
+
+    }
+
+    public function get_cancelled(Request $request) {
+
+        $transaction_type = $request -> transaction_type;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+
+        $envelopes = EsignEnvelopes::where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> where('Referral_ID', $Referral_ID)
+            -> whereIn('status', ['Cancelled', 'Expired'])
+            -> with('signers')
+            -> get();
+
+        return view('/esign/get_cancelled_html', compact('envelopes'));
+
+    }
+
+    public function cancel_envelope(Request $request) {
+
+        $envelope_id = $request -> envelope_id;
+        $envelope = EsignEnvelopes::find($envelope_id);
+
+        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+        $document = $client -> getDocumentByHash($envelope -> document_hash);
+        $client -> cancelDocument($document);
+
+    }
+
+    public function resend_envelope(Request $request) {
+
+        $signer_id = $request -> signer_id;
+        $envelope_id = $request -> envelope_id;
+        $envelope = EsignEnvelopes::find($envelope_id);
+
+        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+        $document = $client -> getDocumentByHash($envelope -> document_hash);
+        $signers = $document -> getSigners();
+        $signer = null;
+        foreach($signers as $signer) {
+            if($signer -> getStatus() == 'waiting_for_signature') {
+                $client -> sendReminderForDocument($document, $signer);
+            }
+        }
+
+    }
+
+    // End Esign Tab
 
 
     // Checklist Tab
@@ -2523,6 +2830,54 @@ class TransactionsDetailsController extends Controller {
         $documents_available = $documents_model -> where($field, $id) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
         return view('/agents/doc_management/transactions/details/data/get_add_document_to_checklist_documents_html', compact('documents_available', 'folders'));
+
+    }
+
+    public function release_address_submitted(Request $request) {
+
+        $checklist_item_ids = $request -> checklist_item_ids;
+        if(!is_array($checklist_item_ids)) {
+            if(stristr($checklist_item_ids, ',')) {
+                $checklist_item_ids = explode(',', $checklist_item_ids);
+            } else {
+                $checklist_item_ids = [$checklist_item_ids];
+            }
+        }
+
+        foreach($checklist_item_ids as $checklist_item_id) {
+
+            $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
+            $checklist_form_id = $checklist_item -> checklist_form_id;
+
+            // check if doc was a release doc
+            if(Upload::IsRelease($checklist_form_id)) {
+                // if a release check to see if we are holding earnest and if address submitted
+                $earnest = Earnest::where('Contract_ID', $checklist_item -> Contract_ID) -> first();
+                $earnest_id = $earnest -> id;
+                if($earnest) {
+                    if($earnest -> release_to_street == '') {
+                        return response() -> json(['status' => 'no_address', 'earnest_id' => $earnest_id]);
+                    }
+                }
+            }
+
+        }
+
+        return response() -> json(['status' => 'ok']);
+
+    }
+
+    public function add_release_address(Request $request) {
+
+        $earnest_id = $request -> earnest_id;
+        $release_to_street = $request -> release_to_street;
+        $release_to_city = $request -> release_to_city;
+        $release_to_state = $request -> release_to_state;
+        $release_to_zip = $request -> release_to_zip;
+
+        $update_earnest = Earnest::find($earnest_id) -> update(['release_to_street' => $release_to_street, 'release_to_city' => $release_to_city, 'release_to_state' => $release_to_state, 'release_to_zip' => $release_to_zip]);
+
+        return true;
 
     }
 
@@ -2655,7 +3010,7 @@ class TransactionsDetailsController extends Controller {
 
         $Agent_ID = 0;
 
-        if(auth() -> user() -> group == 'agent') {
+        if(stristr(auth() -> user() -> group, 'agent')) {
             $Agent_ID = $request -> Agent_ID;
         }
 
@@ -2836,7 +3191,7 @@ class TransactionsDetailsController extends Controller {
         $lease = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? 'no' : 'yes';
 
         if($note) {
-            $note = '<div><span class="text-danger"><i class="fad fa-exclamation-circle mr-2"></i> Checklist Item Rejected</span><br>' . $note . '</div>';
+            $note = '<div><span class="text-danger"><i class="fad fa-exclamation-circle mr-2"></i> Checklist Item Rejected</span><br>'.$note.'</div>';
         }
 
         $checklist_item = TransactionChecklistItems::find($checklist_item_id);
@@ -2903,7 +3258,7 @@ class TransactionsDetailsController extends Controller {
             $add_notes = new TransactionChecklistItemsNotes();
             $Agent_ID = 0;
 
-            if(auth() -> user() -> group == 'agent') {
+            if(stristr(auth() -> user() -> group, 'agent')) {
                 $Agent_ID = $request -> Agent_ID;
             }
 
@@ -3059,6 +3414,131 @@ class TransactionsDetailsController extends Controller {
 
     }
 
+    public function get_agent_commission(Request $request) {
+
+        $Contract_ID = $request -> Contract_ID;
+        $Referral_ID = $request -> Referral_ID;
+        $Agent_ID = $request -> Agent_ID;
+
+        $holding_earnest = null;
+        $earnest_amount = null;
+        $for_sale = null;
+        $is_rental = null;
+        $is_referral = 'yes';
+        $is_referral_company = null;
+        $from_rental_listing = null;
+        $referral_company_deduction = null;
+
+        $agent = Agents::find($Agent_ID);
+
+        if(stristr($agent -> company, 'referral')) {
+            $is_referral_company = 'yes';
+        }
+
+        if($Contract_ID > 0) {
+
+            $property = Contracts::find($Contract_ID);
+
+            if($property -> EarnestHeldBy == 'us') {
+                $holding_earnest = 'yes';
+                $earnest_amount = $property -> EarnestAmount;
+            }
+            if($property -> SaleRent != 'rental') {
+                $for_sale = 'yes';
+            } else {
+                $is_rental = 'yes';
+                if($property -> Listing_ID > 0) {
+                    $from_rental_listing = 'yes';
+                }
+            }
+
+            $is_referral = null;
+
+            $breakdown = CommissionBreakdowns::where('Contract_ID', $Contract_ID) -> first();
+
+        } else {
+
+            $property = Referrals::find($Referral_ID);
+
+            $breakdown = CommissionBreakdowns::where('Referral_ID', $Referral_ID) -> first();
+
+        }
+
+        $deductions = CommissionBreakdownsDeductions::where('commission_breakdown_id', $breakdown -> id) -> get();
+
+        $agent_commission_deduction_percent = 0;
+
+        if($agent -> commission_percent == '85') {
+            $agent_commission_deduction_percent = 15;
+        }
+
+
+        if($is_referral_company == 'yes') {
+            $admin_fee = '0';
+            $referral_company_deduction = number_format(($property -> AgentCommission * .15), 2);
+        } else {
+            if($is_referral) {
+                $admin_fee = '89';
+            }  else {
+                if($for_sale == 'yes') {
+                    $admin_fee = $agent -> admin_fee;
+                } else {
+                    $admin_fee = $agent -> admin_fee_rentals;
+                }
+            }
+        }
+
+        $states = LocationData::AllStates();
+
+        return view('/agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states'));
+
+    }
+
+    public function save_commission_agent(Request $request) {
+
+        $data = $request -> all();
+
+        $breakdown = CommissionBreakdowns::where('Commission_ID', $request -> Commission_ID) -> first();
+        foreach ($data as $key => $value) {
+
+            if($key != 'deduction_description' && $key != 'deduction_amount') {
+                if(preg_match('/\$/', $value)) {
+                    $value = preg_replace('/[\$,]+/', '', $value);
+                }
+                $breakdown -> $key = $value;
+            }
+
+        }
+
+        $breakdown -> save();
+        $commission_breakdown_id = $breakdown -> id;
+
+        $deduction_descriptions = $request -> deduction_description;
+        $deduction_amounts = $request -> deduction_amount;
+
+        // remove current deductions
+        $delete_deductions = CommissionBreakdownsDeductions::where('commission_breakdown_id', $commission_breakdown_id) -> delete();
+
+        if(count($deduction_descriptions) > 1) {
+
+            $c = 0;
+            foreach($deduction_descriptions as $deduction_description) {
+                if($deduction_description) {
+                    $add_deduction = new CommissionBreakdownsDeductions();
+                    $add_deduction -> commission_breakdown_id = $commission_breakdown_id;
+                    $add_deduction -> description = $deduction_description;
+                    $add_deduction -> amount = preg_replace('/[\$,]+/', '', $deduction_amounts[$c]);
+                    $add_deduction -> save();
+                }
+                $c += 1;
+            }
+
+        }
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
 
 
     // Checks
@@ -3167,9 +3647,9 @@ class TransactionsDetailsController extends Controller {
         $ext = $file -> getClientOriginalExtension();
         $file_name = $file -> getClientOriginalName();
 
-        $file_name_no_ext = str_replace('.' . $ext, '', $file_name);
+        $file_name_no_ext = str_replace('.'.$ext, '', $file_name);
         $clean_file_name = sanitize($file_name_no_ext);
-        $new_file_name = $clean_file_name . '.' . $ext;
+        $new_file_name = $clean_file_name.'.'.$ext;
 
         $agent_name = null;
         if($request -> check_in_agent_id != '') {
@@ -3310,9 +3790,9 @@ class TransactionsDetailsController extends Controller {
         $ext = $file -> getClientOriginalExtension();
         $file_name = $file -> getClientOriginalName();
 
-        $file_name_no_ext = str_replace('.' . $ext, '', $file_name);
+        $file_name_no_ext = str_replace('.'.$ext, '', $file_name);
         $clean_file_name = sanitize($file_name_no_ext);
-        $new_file_name = $clean_file_name . '.' . $ext;
+        $new_file_name = $clean_file_name.'.'.$ext;
 
         // create upload folder storage/commission/checks_out/commission_id/
         if(!Storage::disk('public') -> exists('commission/checks_out/'.$Commission_ID)) {
@@ -3651,9 +4131,9 @@ class TransactionsDetailsController extends Controller {
         $file = $request -> file('add_earnest_check_upload');
         $ext = $file -> getClientOriginalExtension();
         $file_name = $file -> getClientOriginalName();
-        $file_name_no_ext = str_replace('.' . $ext, '', $file_name);
+        $file_name_no_ext = str_replace('.'.$ext, '', $file_name);
         $clean_file_name = sanitize($file_name_no_ext);
-        $new_file_name = $clean_file_name . '.' . $ext;
+        $new_file_name = $clean_file_name.'.'.$ext;
 
         // create upload folder storage/earnest/checks_in/earnest_id/ or queue
         $path = 'earnest/checks_in/'.$Earnest_ID;
@@ -3856,7 +4336,7 @@ class TransactionsDetailsController extends Controller {
 
         $code = $Contract_ID.'C';
         $address = preg_replace(config('global.vars.bad_characters'), '', $FullStreetAddress);
-        $email = $address . '_' . $code . '@' . config('global.vars.property_email');
+        $email = $address.'_'.$code.'@'.config('global.vars.property_email');
 
         // add to commission and get commission id
         $commission = new Commission();
@@ -3864,6 +4344,12 @@ class TransactionsDetailsController extends Controller {
         $commission -> Agent_ID = $Agent_ID;
         $commission -> save();
         $Commission_ID = $commission -> id;
+
+        $commission_breakdown = new CommissionBreakdowns();
+        $commission_breakdown -> Commission_ID = $Commission_ID;
+        $commission_breakdown -> Contract_ID = $Contract_ID;
+        $commission_breakdown -> Agent_ID = $Agent_ID;
+        $commission_breakdown -> save();
 
         // add to earnest
         $add_earnest = new Earnest();
@@ -4103,11 +4589,11 @@ class TransactionsDetailsController extends Controller {
 
         $val = $request -> val;
 
-        $agents = AgentRoster::where('MemberLastName', 'like', '%' . $val . '%')
-            -> orWhere('MemberEmail', 'like', '%' . $val . '%')
-            -> orWhere('MemberMlsId', 'like', '%' . $val . '%')
-            -> orWhereRaw('CONCAT(MemberFirstName, " ", MemberLastName) like \'%' . $val . '%\'')
-            -> orWhereRaw('CONCAT(MemberNickname, " ", MemberLastName) like \'%' . $val . '%\'')
+        $agents = AgentRoster::where('MemberLastName', 'like', '%'.$val.'%')
+            -> orWhere('MemberEmail', 'like', '%'.$val.'%')
+            -> orWhere('MemberMlsId', 'like', '%'.$val.'%')
+            -> orWhereRaw('CONCAT(MemberFirstName, " ", MemberLastName) like \'%'.$val.'%\'')
+            -> orWhereRaw('CONCAT(MemberNickname, " ", MemberLastName) like \'%'.$val.'%\'')
             -> orderBy('MemberLastName')
             -> limit(50)
             -> get();

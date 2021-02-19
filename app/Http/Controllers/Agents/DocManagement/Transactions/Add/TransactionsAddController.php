@@ -31,6 +31,8 @@ use App\Models\BrightMLS\Offices;
 
 use App\Http\Controllers\Agents\DocManagement\Transactions\Details\TransactionsDetailsController;
 
+use App\Models\Commission\CommissionBreakdowns;
+
 
 class TransactionsAddController extends Controller {
 
@@ -282,6 +284,12 @@ class TransactionsAddController extends Controller {
         $commission -> save();
         $Commission_ID = $commission -> id;
 
+        $commission_breakdown = new CommissionBreakdowns();
+        $commission_breakdown -> Commission_ID = $Commission_ID;
+        $commission_breakdown -> Referral_ID = $Referral_ID;
+        $commission_breakdown -> Agent_ID = $request -> Agent_ID;
+        $commission_breakdown -> save();
+
         // add email address
         $address = preg_replace(config('global.vars.bad_characters'), '', $request -> street_number . ucwords(strtolower($request -> street_name)) . $request -> street_dir . $request -> unit_number);
         $email = $address.'_'.$Referral_ID.'R@'.config('global.vars.property_email');
@@ -427,7 +435,7 @@ class TransactionsAddController extends Controller {
         $statuses = ResourceItems::where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
         $contacts = [];
-        if(auth() -> user() -> group == 'agent') {
+        if(stristr(auth() -> user() -> group, 'agent')) {
             $contacts = CRMContacts::where('Agent_ID', auth() -> user() -> user_id) -> get();
         } else if(auth() -> user() -> group == 'admin') {
             $contacts = CRMContacts::get();
@@ -520,6 +528,13 @@ class TransactionsAddController extends Controller {
             $commission -> Agent_ID = $request -> Agent_ID;
             $commission -> save();
             $Commission_ID = $commission -> id;
+
+            $commission_breakdown = new CommissionBreakdowns();
+            $commission_breakdown -> Commission_ID = $Commission_ID;
+            $commission_breakdown -> Contract_ID = $new_transaction -> Contract_ID;
+            $commission_breakdown -> Referral_ID = $new_transaction -> Referral_ID;
+            $commission_breakdown -> Agent_ID = $request -> Agent_ID;
+            $commission_breakdown -> save();
 
             // add to earnest
             $add_earnest = new Earnest();
@@ -767,8 +782,10 @@ class TransactionsAddController extends Controller {
         for ($i = 0; $i < count($seller_first); $i++) {
 
             $sellers = null;
-            if($seller_email[$i] != '') {
-                $sellers = Members::where('email', $seller_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+            if($seller_email) {
+                if($seller_email[$i] != '') {
+                    $sellers = Members::where('email', $seller_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+                }
             }
             if(!$sellers) {
                 $sellers = new Members();
@@ -823,8 +840,10 @@ class TransactionsAddController extends Controller {
 
             for ($i = 0; $i < count($buyer_first); $i++) {
                 $buyers = null;
-                if($buyer_email[$i] != '') {
-                    $buyers = Members::where('email', $buyer_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+                if($buyer_email) {
+                    if($buyer_email[$i] != '') {
+                        $buyers = Members::where('email', $buyer_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+                    }
                 }
                 if(!$buyers) {
                     $buyers = new Members();

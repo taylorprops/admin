@@ -14,6 +14,25 @@ if (document.URL.match(/transaction_details/)) {
 
     //// functions
 
+    window.earnest_init = function() {
+
+        $('#save_earnest_button').off('click').on('click', function() {
+            save_earnest('yes');
+        });
+        $('.add-earnest-check-button').off('click').on('click', function() {
+            add_earnest_check($(this).data('check-type'));
+        });
+        $('#save_add_earnest_check_button').off('click').on('click', function() {
+            $(this).prop('disabled', true);
+            save_add_earnest_check();
+        });
+        get_earnest_check_info();
+        get_earnest_checks('in', false);
+        get_earnest_checks('out', false);
+        save_earnest('no');
+    }
+
+
     window.get_earnest_checks = function(check_type, save = true) {
 
         let Earnest_ID = $('#Earnest_ID').val();

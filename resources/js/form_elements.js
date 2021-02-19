@@ -169,13 +169,13 @@ window.form_elements = function () {
 
                     if (form_type == 'form-input' || form_type == 'form-textarea') {
 
-                        element.wrap('<div class="form-ele '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+'">' + label + '</label>');
+                        element.wrap('<div class="form-ele '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+label_view+'">' + label + '</label>');
 
                     } else if (form_type == 'form-input-file') {
 
                         element.addClass('custom-file-input');
 
-                        element.wrap('<div class="form-ele custom-file '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
+                        element.wrap('<div class="form-ele custom-file '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+label_view+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
 
 
                     } else if (form_type == 'form-checkbox') {

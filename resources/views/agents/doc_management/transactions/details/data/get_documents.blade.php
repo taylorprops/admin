@@ -69,7 +69,7 @@
                         <i class="fad fa-envelope-square fa-3x text-primary mb-2"></i>
                         <div class="h5 text-primary mb-3">Email Documents <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Emailing Documents" data-content="Email documents to the address below and they will show up in a queue below. Please allow a little time for the email to be processed. You do not need to refresh the screen, the emailed documents will appear when complete."><i class="fad fa-question-circle ml-2"></i></a></div>
                         <div class="w-100 overflow-hidden">
-                            <a href="mailto:{{ $property_email }}" target="_blank" class="d-block mt-1 mt-md-5">{{ $property_email }}</a>
+                            <a href="mailto:{{ $property_email }}" target="_blank" class="d-block mt-1 mt-md-5 font-8">{{ $property_email }}</a>
                         </div>
                     </div>
                 </div>
@@ -250,6 +250,8 @@
                                             <i class="fad fa-cog fa-spin fa-lg text-orange"></i>
                                         </div>
                                         <div class="text-gray document-title py-1 py-sm-2">
+                                            <div class="completed-info text-success"><i class="fal fa-signature mr-2"></i> Signatures Completed!</div>
+                                            <div class="sent-info text-orange"><i class="fal fa-hourglass-half mr-2"></i> Sent For Signatures</div>
                                             <a href="{{ $document -> file_location_converted }}?0293847" target="_blank">{{ $document -> file_name_display }}</a>
                                             <div class="d-flex justify-content-start flex-wrap">
                                                 <div>
@@ -291,12 +293,12 @@
                                                 $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
 
                                                 if($document -> pages_total > 1 && $document -> file_type == 'user') {
-                                                    $menu_options .= '<button type="button" class="dropdown-item text-primary doc-split-button" data-document-id="'.$document -> id.'" data-checklist-id="'.$checklist_id.'" data-file-name="'.$document -> file_name_display.'" data-file-type="'.$document -> file_type.'" data-folder="'.$folder -> id.'" title="Split Document"><i class="fad fa-page-break mr-1 "></i> Split</button>';
+                                                    $menu_options .= '<button type="button" class="dropdown-item text-primary doc-split-button disabled-completed" data-document-id="'.$document -> id.'" data-checklist-id="'.$checklist_id.'" data-file-name="'.$document -> file_name_display.'" data-file-type="'.$document -> file_type.'" data-folder="'.$folder -> id.'" title="Split Document"><i class="fad fa-page-break mr-1 "></i> Split</button>';
                                                 }
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-edit-button" onClick="window.open(\'/agents/doc_management/transactions/edit_files/'.$document -> id.'\')" data-document-id="'.$document -> id.'" title="Edit and Fill Fields"><i class="fad fa-edit mr-1 "></i> Edit/Fill</button>';
+                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-edit-button disabled-completed" onClick="window.open(\'/agents/doc_management/transactions/edit_files/'.$document -> id.'\')" data-document-id="'.$document -> id.'" title="Edit and Fill Fields"><i class="fad fa-edit mr-1 "></i> Edit/Fill</button>';
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-get-signed-button" data-document-id="'.$document -> id.'" title="Get Signed"><i class="fad fa-signature mr-1 "></i> Get Signed</button>';
+                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-get-signed-button disabled-completed" data-document-id="'.$document -> id.'" title="Get Signed"><i class="fad fa-signature mr-1 "></i> Get Signed</button>';
 
                                             }
 

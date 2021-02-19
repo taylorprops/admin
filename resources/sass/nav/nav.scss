@@ -8,7 +8,7 @@ header {
     }
 
     .header-logo {
-        max-height: 50px !important;
+        max-height: 40px !important;
         max-width: 190px !important;
     }
 
@@ -38,18 +38,20 @@ header {
         .header-logo-link {
             display: none;
         }
+    }
+
+    @media only screen and (max-width: 1200px) {
         .main-search-input.top {
             display: block;
         }
         .main-search-input.bottom {
             display: none;
         }
-
     }
 
     @media only screen and (max-width: 768px) {
         .main-search-input {
-            width: 150px;
+            width: 200px;
         }
     }
 

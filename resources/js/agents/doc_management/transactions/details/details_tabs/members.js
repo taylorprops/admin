@@ -35,6 +35,14 @@ if (document.URL.match(/transaction_details/)) {
 
     });
 
+    window.members_init = function() {
+
+        $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
+            show_hide_fields();
+        });
+
+    }
+
 
     window.show_hide_fields = function() {
 

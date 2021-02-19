@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between align-items-center mt-3 mb-5">
+<div class="d-flex justify-content-between align-items-center mt-3 mb-2">
     <div class="d-flex justify-content-start align-items-center">
         <div class="h4 text-orange mt-2">System Templates </div>
         <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Templates" data-content="System Templates are in-house templates used on forms we provide."><i class="fad fa-question-circle ml-2"></i></a>
@@ -7,7 +7,7 @@
 
 <div class="mb-5">
 
-    <table id="system_templates_table" class="table table-hover table-bordered" width="100%">
+    <table id="system_templates_table" class="table table-bordered" width="100%">
 
         <thead>
             <tr>

@@ -1,5 +1,5 @@
 
-<div class="d-flex justify-content-start align-items-center mt-3 mb-5">
+<div class="d-flex justify-content-start align-items-center mt-3 mb-2">
     <div class="h4 text-orange mt-2">Drafts </div>
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Drafts" data-content="Envelope Drafts are documents saved for later. You can completely prepare a document for signing and save it for a later date. Once a draft is sent for signatures it will be removed from drafts.<br><br>You will be given the option to save your evelope as a draft when creating an envelope."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
@@ -7,7 +7,7 @@
 
 <div class="mb-5">
 
-    <table id="drafts_table" class="table table-hover table-bordered" width="100%">
+    <table id="drafts_table" class="table table-bordered" width="100%">
 
         <thead>
             <tr>

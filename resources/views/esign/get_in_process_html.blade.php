@@ -1,12 +1,12 @@
 
-<div class="d-flex justify-content-start align-items-center mt-3 mb-5">
+<div class="d-flex justify-content-start align-items-center mt-3 mb-2">
     <div class="h4 text-orange mt-2">In Process </div>
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="In Process" data-content="These are your active envelopes. They have been sent for signatures but have not been signed by all parties yet."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
 <div class="mb-5">
 
-    <table id="in_process_table" class="table table-hover table-bordered" width="100%">
+    <table id="in_process_table" class="table table-bordered" width="100%">
 
         <thead>
             <tr>
@@ -25,19 +25,12 @@
                 @php
                 $signers = $envelope -> signers;
                 $callbacks = $envelope -> callbacks;
-                $property = null;
-                if($envelope -> listing) {
-                    $property = $envelope -> listing;
-                } else if($envelope -> contract) {
-                    $property = $envelope -> contract;
-                } else if($envelope -> referral) {
-                    $property = $envelope -> referral;
-                }
+
                 @endphp
 
                 <tr>
                     <td>{{ $envelope -> status }}</td>
-                    <td>{{ $envelope -> subject }} @if($property) <br>Property: {{ $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode }} @endif</td>
+                    <td>{{ $envelope -> subject }}</td>
                     <td>
                         @php
                         foreach($signers as $signer) {
@@ -84,7 +77,7 @@
                         {{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}
                     </td>
                     <td class="text-center">
-                        <button class="btn btn-danger cancel-envelope-button" data-envelope-id={{ $envelope -> id }}"><i class="fal fa-times-circle mr-2"></i> Cancel</button>
+                        <button class="btn btn-danger cancel-envelope-button" data-envelope-id="{{ $envelope -> id }}"><i class="fal fa-times-circle mr-2"></i> Cancel</button>
                     </td>
                 </tr>
 

@@ -74,8 +74,67 @@ if (document.URL.match(/transaction_details/)) {
         $(document).on('change', '.check-document', show_bulk_options);
 
 
-
     });
+
+    window.documents_init = function(reorder) {
+
+        setTimeout(function () {
+
+            $('.check-all').next('label').css({ transform: 'scale(1.2)' });
+            select_form_group();
+            $('#add_documents_div').on('show.bs.collapse', function () {
+                $('#bulk_options_div').collapse('hide');
+                $('.check-document, .check-all').prop('checked', false).closest('.document-div').removeClass('bg-blue-light');
+            });
+            sortable_documents();
+
+            $('.dropdown-submenu .dropdown-item').on('click', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $(this).next('.dropdown-menu').toggle();
+            });
+
+            $('.form-in-use').each(function () {
+                $(this).find('.individual-template-form').prop('disabled', true);
+            });
+
+
+            $('.add-to-checklist-button').off('click').on('click', show_add_to_checklist);
+
+            $('.documents-container').find('modal').appendTo('body');
+
+            if(reorder) {
+                reorder_documents('yes');
+            }
+
+            get_emailed_documents();
+
+            setTimeout(function() {
+                let document_ids = [];
+                $('.document-div').each(function() {
+                    document_ids.push($(this).data('document-id'));
+                });
+                in_process(document_ids);
+                in_process_esign();
+            }, 1000);
+
+
+        }, 100);
+
+    }
+
+    function sortable_documents() {
+        $('.sortable-documents').sortable({
+            connectWith: '.sortable-documents',
+            placeholder: 'bg-sortable',
+            handle: '.document-handle',
+            stop: function (event, ui) {
+                reorder_documents('no');
+            }
+
+        });
+        $('.sortable-documents').disableSelection();
+    }
 
     window.get_signed = function(ele) {
 
@@ -97,6 +156,45 @@ if (document.URL.match(/transaction_details/)) {
         document_ids = document_ids.join(',');
 
         window.open('/esign/esign_add_documents/'+User_ID+'/'+document_ids+'/'+Agent_ID+'/'+Listing_ID+'/'+Contract_ID+'/'+Referral_ID+'/'+transaction_type, '_blank');
+
+    }
+
+    window.in_process_esign = function() {
+
+        let Listing_ID = $('#Listing_ID').val();
+        let Contract_ID = $('#Contract_ID').val();
+        let Referral_ID = $('#Referral_ID').val();
+        let transaction_type = $('#transaction_type').val();
+
+        let formData = new FormData();
+        formData.append('Listing_ID', Listing_ID);
+        formData.append('Contract_ID', Contract_ID);
+        formData.append('Referral_ID', Referral_ID);
+        formData.append('transaction_type', transaction_type);
+
+        axios.post('/agents/doc_management/transactions/in_process_esign', formData, axios_options)
+        .then(function (response) {
+
+            $('.document-div.sent, .document-div.completed').removeClass('sent completed').find('button').prop('disabled', false);
+            $('.sent-info, .completed-info').hide();
+
+            response.data.esign_documents.sent.forEach(function(id) {
+                $('.document-div[data-document-id="'+id+'"]').addClass('sent');
+            });
+            response.data.esign_documents.completed.forEach(function(id) {
+                $('.document-div[data-document-id="'+id+'"]').addClass('completed');
+            });
+
+            $('.document-div.sent').find('button').prop('disabled', true);
+            $('.document-div.sent').find('.sent-info').show();
+
+            $('.document-div.completed').find('button.disabled-completed').prop('disabled', true);
+            $('.document-div.completed').find('.completed-info').show();
+
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 
     }
 
@@ -365,7 +463,7 @@ if (document.URL.match(/transaction_details/)) {
         let document_ids = [];
         if(docs_type) {
             $('.check-document:checked').each(function () {
-                document_ids.push(ele.data('document-id'));
+                document_ids.push($(this).data('document-id'));
             });
         } else {
             document_ids.push(ele.data('document-id'));
@@ -610,7 +708,7 @@ if (document.URL.match(/transaction_details/)) {
                         //load_checklist_on_tab_click();
                     });
                     // change status and count of checklist items
-                    ele.parent().next().html('<span class="badge checklist-item-badge bg-blue-light text-primary p-1" title="We have received your document for this item. It is in the review process"><span class="d-none d-sm-inline-block"><i class="fad fa-stopwatch fa-lg mr-1"></i> </span>Pending</span>');
+                    ele.parent().next().html('<span class="badge checklist-item-badge bg-blue-light text-primary p-1" title="We have received your document for this item. It is in the review process"><span class="d-none d-sm-inline-block"><i class="fal fa-stopwatch fa-lg mr-1"></i> </span>Pending</span>');
                     let count = ele.closest('.list-group-item').find('.docs-count-badge').text();
                     count = parseInt(count);
                     ele.closest('.list-group-item').find('.docs-count-badge').text(count + 1);
@@ -962,6 +1060,7 @@ if (document.URL.match(/transaction_details/)) {
 
 
         let checklist_items = [];
+        let checklist_item_ids = [];
         $('.added-document').each(function () {
 
             let checklist_id = $(this).data('checklist-id');
@@ -973,8 +1072,63 @@ if (document.URL.match(/transaction_details/)) {
                 checklist_item_id: checklist_item_id,
                 document_id: document_id
             });
+            checklist_item_ids.push(checklist_item_id);
 
         });
+
+
+        // check to see if release and if send to address has already been submitted
+        let formData = new FormData();
+        formData.append('checklist_item_ids', checklist_item_ids);
+
+        axios.post('/agents/doc_management/transactions/release_address_submitted', formData, axios_options)
+        .then(function (response) {
+
+            if(response.data.status == 'no_address') {
+
+                $('#add_address_modal').modal('show');
+
+                $('#save_add_address_button').on('click', function() {
+
+                    let form = $('#add_address_form');
+                    let validate = validate_form(form);
+                    let earnest_id = response.data.earnest_id;
+
+                    if(validate == 'yes') {
+
+                        let form = $('#add_address_form');
+                        let formData = new FormData(form[0]);
+                        formData.append('earnest_id', earnest_id);
+
+                        axios.post('/agents/doc_management/transactions/add_release_address', formData, axios_options)
+                        .then(function (response) {
+                            $('#add_address_modal').modal('hide');
+                            save_assign_documents_to_checklist(checklist_items);
+                            $('#save_add_to_checklist_button').show();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                    }
+
+                });
+
+            } else {
+                // if address has been submitted
+                save_assign_documents_to_checklist(checklist_items);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+
+
+    }
+
+    window.save_assign_documents_to_checklist = function(checklist_items) {
 
         let formData = new FormData();
 

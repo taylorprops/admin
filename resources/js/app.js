@@ -38,10 +38,12 @@ require('./agents/doc_management/transactions/transactions.js');
 require('./agents/doc_management/transactions/details/details_tabs/details.js');
 require('./agents/doc_management/transactions/details/details_tabs/members.js');
 require('./agents/doc_management/transactions/details/details_tabs/documents.js');
+require('./agents/doc_management/transactions/details/details_tabs/esign.js');
 require('./agents/doc_management/transactions/details/details_tabs/checklist.js');
 require('./agents/doc_management/transactions/details/details_tabs/contracts.js');
 require('./agents/doc_management/transactions/details/details_tabs/commission.js');
 require('./agents/doc_management/transactions/details/details_tabs/commission_other.js');
+require('./agents/doc_management/transactions/details/details_tabs/agent_commission.js');
 require('./agents/doc_management/transactions/details/details_tabs/earnest.js');
 require('./agents/doc_management/transactions/upload/upload.js');
 

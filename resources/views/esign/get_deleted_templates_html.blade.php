@@ -2,7 +2,7 @@
 
 <div class="">
 
-    <table id="deleted_templates_table" class="table table-hover table-bordered" width="100%">
+    <table id="deleted_templates_table" class="table table-bordered" width="100%">
 
         <thead>
             <tr>

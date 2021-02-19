@@ -267,6 +267,8 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             $('#confirm_cancel_modal').modal('show');
             $('#confirm_cancel_button').off('click').on('click', function() {
 
+                $('#confirm_cancel_button').html('<span class="spinner-border spinner-border-sm mr-2"></span> Cancelling');
+
                 envelope_id = ele.data('envelope-id');
                 ele.find('i').addClass('fa-spin');
 
@@ -294,6 +296,8 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             $('#resend_envelope_modal').modal('show');
             $('#resend_envelope_button').off('click').on('click', function() {
 
+                $('#resend_envelope_button').html('<span class="spinner-border spinner-border-sm mr-2"></span> Resending');
+
                 envelope_id = ele.data('envelope-id');
                 singer_id = ele.data('signer-id');
                 ele.find('i').addClass('fa-spin');
@@ -306,6 +310,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                     setTimeout(function() {
                         load_tab('in_process');
                         $('#resend_envelope_modal').modal('hide');
+                        $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
                     }, 1000);
                     toastr['success']('Signature Request Resent');
                 })

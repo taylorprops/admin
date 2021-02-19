@@ -137,6 +137,7 @@ if (document.URL.match(/transaction_required_details/)) {
                         }
                     });
 
+
                 })
                 .catch(function (error) {
                     if (axios.isCancel(error)) {
@@ -156,14 +157,9 @@ if (document.URL.match(/transaction_required_details/)) {
 
         }
 
-        $('.agent-search').on('keyup', search_bright_agents);
+        $(document).on('keyup', '.agent-search', search_bright_agents);
 
-        $(document).on('mouseup', function (e) {
-            var container = $('.search-results-container');
-            if (!container.is(e.target) && container.has(e.target).length === 0) {
-                container.hide();
-            }
-        });
+
 
         $('#UsingHeritage').on('change', function() {
             if($(this).val() == 'no') {
@@ -256,7 +252,7 @@ if (document.URL.match(/transaction_required_details/)) {
         //}
         //select_refresh();
 
-        $('.search-results').fadeOut('slow');
+        $('.search-results-container').fadeOut('slow');
         $('#receiving_agent_search_div, #referring_agent_search_div').collapse('hide');
     }
 
@@ -289,14 +285,17 @@ if (document.URL.match(/transaction_required_details/)) {
     }
 
     function show_bank_trust() {
+
         let member = $(this).data('member');
         let field = $(this).closest('.form-ele').next('div').find('.bank-trust-row');
+
         if($(this).is(':checked')) {
             $(this).closest('.form-ele').next('div').find('[name^='+member+'_]').not('[name^='+member+'_crm]').removeClass('required').parent().find('.required-div').hide();
-            field.removeClass('hidden').find('input').addClass('required').parent().find('.required-div').show();
+            console.log(field);
+            field.removeClass('hide').find('input').addClass('required').parent().find('.required-div').show();
         } else {
             $(this).closest('.form-ele').next('div').find('[name^='+member+'_]').not('[name^='+member+'_crm]').addClass('required').parent().find('.required-div').show();
-            field.addClass('hidden').find('input').removeClass('required').parent().find('.required-div').hide();
+            field.addClass('hide').find('input').removeClass('required').parent().find('.required-div').hide();
         }
     }
 
@@ -380,7 +379,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 <div class="h5 text-orange '+member+'-header"></div> \
                 <div class="d-flex justify-content-between"> \
                     <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 import-from-contacts-button" data-member="'+member+'" data-member-id="' + member_id + '"><i class="fad fa-user-friends mr-2"></i> Import from Contacts</a> \
-                    <div><a href="javascript: void(0)" class="member-delete text-danger" data-member="'+member+'"><i class="fal fa-times fa-2x"></i></a></div> \
+                    <div><a href="javascript: void(0)" class="member-delete btn btn-sm btn-danger" data-member="'+member+'"><i class="fal fa-trash mr-2"></i> Remove</a></div> \
                 </div> \
             ';
         } else {
@@ -388,7 +387,7 @@ if (document.URL.match(/transaction_required_details/)) {
             <div class="'+member+'-div mb-3"> \
                 <div class="d-flex justify-content-between"> \
                     <div class="h5 text-orange '+member+'-header"></div> \
-                    <div><a href="javascript: void(0)" class="member-delete text-danger" data-member="'+member+'"><i class="fal fa-times fa-2x"></i></a></div> \
+                    <div><a href="javascript: void(0)" class="member-delete btn btn-sm btn-danger" data-member="'+member+'"><i class="fal fa-trash mr-2"></i> Remove</a></div> \
                 </div> \
             ';
         }

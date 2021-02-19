@@ -8,6 +8,84 @@ if (document.URL.match(/transaction_details/)) {
 
     });
 
+    window.checklist_init = function() {
+
+        setTimeout(function() {
+            $('.save-notes-button').off().on('click', save_add_notes);
+
+            $('.add-document-button').off('click').on('click', show_add_document);
+
+            $('.view-docs-button').off('click').on('click', toggle_view_docs_button);
+
+            $('.view-notes-button').off('click').on('click', toggle_view_notes_button);
+
+            $('.delete-doc-button').off('click').on('click', show_delete_doc);
+
+            $('.mark-read-button').off('click').on('click', mark_note_read);
+
+            $('#change_checklist_button').off('click').on('click', confirm_change_checklist);
+
+            $('.accept-checklist-item-button').off('click').on('click', function() {
+                checklist_item_review_status($(this), 'accepted', null);
+            });
+            $('.reject-checklist-item-button').off('click').on('click', function() {
+                show_checklist_item_review_status($(this), 'rejected');
+            });
+
+            $('.undo-accepted, .undo-rejected').off('click').on('click', function() {
+                checklist_item_review_status($(this), 'not_reviewed', null);
+            });
+
+            $('.mark-required').off('click').on('click', function() {
+                mark_required($(this), $(this).data('checklist-item-id'), $(this).data('required'));
+            });
+
+            $('.remove-checklist-item').off('click').on('click', function() {
+                show_remove_checklist_item($(this), $(this).data('checklist-item-id'));
+            });
+
+            $('.add-checklist-item-button').off('click').on('click', show_add_checklist_item);
+
+            $('.email-agent-button').off('click').on('click', function() {
+                reset_email();
+
+                show_email_agent();
+
+            });
+
+            $('.notes-div').each(function() {
+                get_notes($(this).data('checklist-item-id'));
+            });
+
+
+        }, 1);
+
+        $('.notes-collapse').on('show.bs.collapse', function () {
+            $('.documents-collapse.show').collapse('hide');
+            //$('.checklist-item-div').removeClass('bg-blue-light');
+            $(this).closest('.checklist-item-div').addClass('bg-blue-light');
+        });
+        $('.documents-collapse').on('show.bs.collapse', function () {
+            $('.notes-collapse.show').collapse('hide');
+            //$('.checklist-item-div').removeClass('bg-blue-light');
+            $(this).closest('.checklist-item-div').addClass('bg-blue-light');
+        });
+
+        $('.collapse').on('hide.bs.collapse', function () {
+            $(this).closest('.checklist-item-div').removeClass('bg-blue-light');
+        });
+
+        $('.transaction-option-trigger').off('change').on('change', listing_options);
+
+        listing_options();
+
+        // search forms
+        $('.form-search').on('keyup', function() {
+            form_search($(this))
+        });
+
+    }
+
     window.confirm_change_checklist = function() {
 
         let checklist_id = $(this).data('checklist-id');
@@ -186,10 +264,60 @@ if (document.URL.match(/transaction_details/)) {
             }
         })
         .then(function (response) {
+
             $('#add_document_modal').modal();
             $('#documents_available_div').html(response.data);
-            $('.select-document-button').off('click').on('click', function( ){
-                save_add_document($(this).data('document-id'));
+            // selecting documents from list
+            $('.select-document-button').off('click').on('click', function() {
+
+                let checklist_item_ids = $('#add_document_checklist_item_id').val();
+                let document_id = $(this).data('document-id');
+
+                // check to see if release and if send to address has already been submitted
+                let formData = new FormData();
+                formData.append('checklist_item_ids', checklist_item_ids);
+
+                axios.post('/agents/doc_management/transactions/release_address_submitted', formData, axios_options)
+                .then(function (response) {
+
+                    if(response.data.status == 'no_address') {
+
+                        $('#add_address_modal').modal('show');
+
+                        $('#save_add_address_button').on('click', function() {
+
+                            let form = $('#add_address_form');
+                            let validate = validate_form(form);
+                            let earnest_id = response.data.earnest_id;
+
+                            if(validate == 'yes') {
+
+                                let form = $('#add_address_form');
+                                let formData = new FormData(form[0]);
+                                formData.append('earnest_id', earnest_id);
+
+                                axios.post('/agents/doc_management/transactions/add_release_address', formData, axios_options)
+                                .then(function (response) {
+                                    $('#add_address_modal').modal('hide');
+                                    save_add_document(document_id);
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                            }
+
+                        });
+
+                    } else {
+                        // if address has been submitted
+                        save_add_document(document_id);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
             });
         })
         .catch(function (error) {

@@ -48,7 +48,7 @@ class LoginController extends Controller
                 session(['super_user' => true]);
             }
 
-        } else if(auth() -> user() -> group == 'agent') {
+        } else if(stristr(auth() -> user() -> group, 'agent')) {
 
             $user_id = auth() -> user() -> user_id;
 

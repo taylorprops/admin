@@ -1,5 +1,8 @@
 <div class="container commission-container mx-auto p-1 pb-5 mb-5">
-
+{{-- TODO:
+    hide fields when rental/referral
+    add referral commission deduction for referral company agents
+    --}}
     @php
 
     $divider = '
@@ -87,7 +90,15 @@
                             <div class="pr-4">
                                 <select class="custom-form-element form-select form-select-no-search form-value" id="both_sides" name="both_sides">
                                     <option value=""></option>
-                                    <option value="yes" @if($commission -> both_sides == 'yes') selected @endif>Yes</option>
+                                    <option value="yes"
+                                    @if($commission -> both_sides != '')
+                                        @if($commission -> both_sides == 'yes')
+                                            selected
+                                        @endif
+                                    @else
+                                        selected
+                                    @endif
+                                    >Yes</option>
                                     <option value="no" @if($commission -> both_sides == 'no') selected @endif>No</option>
                                 </select>
                             </div>
@@ -98,47 +109,54 @@
                     <input type="hidden" class="form-value" id="both_sides" name="both_sides" value="no">
                     @endif
 
-                    {{-- Using Heritage Title --}}
-                    <div class="row">
+                    @if($for_sale == 'yes')
 
-                        <div class="col-5">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div class="text-gray">Using Heritage Title</div>
-                                <div>
-                                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Using Heritage Title" data-content="Did the property sale settle at Heritage Title?"><i class="fad fa-question-circle ml-2"></i></a>
+                        {{-- Using Heritage Title --}}
+                        <div class="row">
+
+                            <div class="col-5">
+                                <div class="h-100 d-flex justify-content-end align-items-center">
+                                    <div class="text-gray">Using Heritage Title</div>
+                                    <div>
+                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Using Heritage Title" data-content="Did the property sale settle at Heritage Title?"><i class="fad fa-question-circle ml-2"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="pr-4">
-                                <select class="custom-form-element form-select form-select-no-search form-value" id="using_heritage" name="using_heritage">
-                                    <option value=""></option>
-                                    <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
-                                    <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {{-- Title Company --}}
-                    <div class="row" id="title_company_row">
-
-                        <div class="col-5">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div class="text-gray">Title Company</div>
-                                <div>
-                                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Title Company" data-content="Enter the Title Company used"><i class="fad fa-question-circle ml-2"></i></a>
+                            <div class="col-7">
+                                <div class="pr-4">
+                                    <select class="custom-form-element form-select form-select-no-search form-value" id="using_heritage" name="using_heritage">
+                                        <option value=""></option>
+                                        <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
+                                        <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="pr-4">
-                                <input type="text" class="custom-form-element form-input form-value" id="title_company" name="title_company" data-label="Title Company" value="{{ $property -> TitleCompany }}">
-                            </div>
+
                         </div>
 
-                    </div>
+                        {{-- Title Company --}}
+                        <div class="row" id="title_company_row">
+
+                            <div class="col-5">
+                                <div class="h-100 d-flex justify-content-end align-items-center">
+                                    <div class="text-gray">Title Company</div>
+                                    <div>
+                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Title Company" data-content="Enter the Title Company used"><i class="fad fa-question-circle ml-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="pr-4">
+                                    <input type="text" class="custom-form-element form-input form-value" id="title_company" name="title_company" data-label="Title Company" value="{{ $property -> TitleCompany }}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    @else
+                        <input type="hidden" class="form-value" id="using_heritage" name="using_heritage" value="no">
+                        <input type="hidden" class="form-value" id="title_company" name="title_company" value="">
+                    @endif
 
                 @elseif($type == 'referral')
 
@@ -568,7 +586,7 @@
                                         <option value="{{ $percent }}" @if($percent == $agent_details -> commission_percent) selected @endif>{{ $percent }}</option>
                                         @endforeach
                                     </select>
-                                    <i class="fad fa-percentage text-primary ml-1"></i>
+                                    <i class="fal fa-percentage text-primary ml-1"></i>
                                 </div>
                                 <div class="d-none d-xl-block mx-5"></div>
                                 <div class="w-100">
@@ -600,7 +618,7 @@
 
                     <div class="agent-info-container ml-5">
 
-                        <div class="p-2 text-gray agent-info-toggle">
+                        <div class="p-2 text-gray agent-info-toggle w-100">
 
                             <ul class="nav nav-tabs" id="billing_details_tab" role="tablist">
                                 <li class="nav-item">

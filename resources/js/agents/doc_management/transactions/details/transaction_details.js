@@ -111,7 +111,7 @@ if (document.URL.match(/transaction_details/)) {
 
         $('#agent_search').on('keyup', search_bright_agents);
 
-        $(document).on('click', '.nav-link[data-tab]', function() {
+        $(document).on('click', '.details-list-group .nav-link[data-tab]', function() {
 
             if(window.get_emailed_docs_interval) {
                 clearInterval(get_emailed_docs_interval);
@@ -119,15 +119,33 @@ if (document.URL.match(/transaction_details/)) {
             if(window.in_process_interval) {
                 clearInterval(in_process_interval);
             }
+            if(window.in_process_esign_interval) {
+                clearInterval(in_process_esign_interval);
+            }
+            if(window.load_esign_in_process_tab) {
+                clearInterval(load_esign_in_process_tab);
+            }
+
             if($(this).data('tab') == 'documents') {
+
                 window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
+
+                window.in_process_esign_interval = setInterval(in_process_esign, 5000);
+
                 window.in_process_interval = setInterval(function(){
                     let document_ids = [];
                     $('.document-div').each(function() {
                         document_ids.push($(this).data('document-id'));
                     });
                     in_process(document_ids);
-                }, 1000);
+                }, 2000);
+
+            } else if($(this).data('tab') == 'esign') {
+
+                window.load_esign_in_process_tab = setInterval(function(){
+                    load_tab('in_process');
+                }, 10000);
+
             }
 
         });
@@ -657,269 +675,41 @@ if (document.URL.match(/transaction_details/)) {
 
                 if (tab == 'details') {
 
-                    // update counties when state is changed
-                    $('#StateOrProvince').on('change', update_county_select);
-
-                    $('#search_mls_button').off('click').on('click', search_mls);
-
-                    $('.save-details-button').off('click').on('click', save_details);
-
-                    if($('#UsingHeritage').val() == 'no') {
-                        $('.not-using-heritage').show();
-                    }
-
-                    $('#UsingHeritage').on('change', function() {
-                        if($(this).val() == 'yes') {
-                            $('.not-using-heritage').hide();
-                            $('#TitleCompany').val('');
-                        } else {
-                            $('.not-using-heritage').show();
-                        }
-                    });
+                    details_init();
 
                 } else if (tab == 'members') {
 
-                    $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
-                        show_hide_fields();
-                    });
-
+                    members_init();
 
                 } else if (tab == 'documents') {
 
-                    setTimeout(function () {
+                    documents_init(reorder);
 
-                        $('.check-all').next('label').css({ transform: 'scale(1.2)' });
-                        select_form_group();
-                        $('#add_documents_div').on('show.bs.collapse', function () {
-                            $('#bulk_options_div').collapse('hide');
-                            $('.check-document, .check-all').prop('checked', false).closest('.document-div').removeClass('bg-blue-light');
-                        });
-                        sortable_documents();
+                } else if(tab == 'esign') {
 
-                        $('.dropdown-submenu .dropdown-item').on('click', function (e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            $(this).next('.dropdown-menu').toggle();
-                        });
-
-                        $('.form-in-use').each(function () {
-                            $(this).find('.individual-template-form').prop('disabled', true);
-                        });
-
-
-                        $('.add-to-checklist-button').off('click').on('click', show_add_to_checklist);
-
-                        $('.documents-container').find('modal').appendTo('body');
-
-                        if(reorder) {
-                            reorder_documents('yes');
-                        }
-
-                        get_emailed_documents();
-
-                        setTimeout(function() {
-                            let document_ids = [];
-                            $('.document-div').each(function() {
-                                document_ids.push($(this).data('document-id'));
-                            });
-                            in_process(document_ids);
-                        }, 1000);
-
-                    }, 100);
+                    esign_init();
 
                 } else if (tab == 'checklist') {
 
-                    setTimeout(function() {
-                        $('.save-notes-button').off().on('click', save_add_notes);
-
-                        $('.add-document-button').off('click').on('click', show_add_document);
-
-                        $('.view-docs-button').off('click').on('click', toggle_view_docs_button);
-
-                        $('.view-notes-button').off('click').on('click', toggle_view_notes_button);
-
-                        $('.delete-doc-button').off('click').on('click', show_delete_doc);
-
-                        $('.mark-read-button').off('click').on('click', mark_note_read);
-
-                        $('#change_checklist_button').off('click').on('click', confirm_change_checklist);
-
-                        $('.accept-checklist-item-button').off('click').on('click', function() {
-                            checklist_item_review_status($(this), 'accepted', null);
-                        });
-                        $('.reject-checklist-item-button').off('click').on('click', function() {
-                            show_checklist_item_review_status($(this), 'rejected');
-                        });
-
-                        $('.undo-accepted, .undo-rejected').off('click').on('click', function() {
-                            checklist_item_review_status($(this), 'not_reviewed', null);
-                        });
-
-                        $('.mark-required').off('click').on('click', function() {
-                            mark_required($(this), $(this).data('checklist-item-id'), $(this).data('required'));
-                        });
-
-                        $('.remove-checklist-item').off('click').on('click', function() {
-                            show_remove_checklist_item($(this), $(this).data('checklist-item-id'));
-                        });
-
-                        $('.add-checklist-item-button').off('click').on('click', show_add_checklist_item);
-
-                        $('.email-agent-button').off('click').on('click', function() {
-                            reset_email();
-
-                            show_email_agent();
-
-                        });
-
-                        $('.notes-div').each(function() {
-                            get_notes($(this).data('checklist-item-id'));
-                        });
-
-                        /* $('.notes-collapse').on('show.bs.collapse', function () {
-                            let textarea_id = $(this).find('.form-textarea').prop('id');
-                            setTimeout(function() {
-                                let screen_height = window.innerHeight;
-                                let to_scroll = screen_height/3;
-                                document.getElementById(textarea_id).scrollIntoView(false);
-                                window.scrollBy(0,to_scroll);
-                                $('#'+textarea_id).focus();
-                            }, 500);
-                        }); */
-
-                        /* text-editor */
-
-
-                    }, 1);
-
-
-                    $('.notes-collapse').on('show.bs.collapse', function () {
-                        $('.documents-collapse.show').collapse('hide');
-                        //$('.checklist-item-div').removeClass('bg-blue-light');
-                        $(this).closest('.checklist-item-div').addClass('bg-blue-light');
-                    });
-                    $('.documents-collapse').on('show.bs.collapse', function () {
-                        $('.notes-collapse.show').collapse('hide');
-                        //$('.checklist-item-div').removeClass('bg-blue-light');
-                        $(this).closest('.checklist-item-div').addClass('bg-blue-light');
-                    });
-
-                    $('.collapse').on('hide.bs.collapse', function () {
-                        $(this).closest('.checklist-item-div').removeClass('bg-blue-light');
-                    });
-
-                    $('.transaction-option-trigger').off('change').on('change', listing_options);
-
-                    listing_options();
-
-
-
-                    // search forms
-                    $('.form-search').on('keyup', function() {
-                        form_search($(this))
-                    });
-
+                    checklist_init();
 
                 } else if (tab == 'contracts') {
 
-                    $('.contract-div').on('mouseenter', function () {
-                        $(this).addClass('z-depth-3').removeClass('shadow');
-                    });
-                    $('.contract-div').on('mouseleave', function () {
-                        $(this).removeClass('z-depth-3').addClass('shadow');
-                    });
+                    contracts_init();
 
                 } else if(tab == 'commission') {
 
-                    $('.popout').eq(0).show();
-                    get_checks_in(Commission_ID);
-                    get_checks_out(Commission_ID);
-                    get_commission_notes(Commission_ID);
-                    get_income_deductions(Commission_ID);
-                    get_commission_deductions(Commission_ID);
-                    get_agent_details(Agent_ID);
-                    save_commission('no');
+                    commission_init(Commission_ID, Agent_ID);
 
-                    show_title();
-                    // $('#using_heritage').on('change', function() {
-                    //     show_title();
-                    // });
+                } else if(tab == 'agent_commission') {
 
-                    $('.add-check-in-button').off('click').on('click', show_add_check_in);
-                    $('.add-check-out-button').off('click').on('click', show_add_check_out);
-
-                    $('#save_add_check_in_button').off('click').on('click', save_add_check_in);
-                    $('#save_add_check_out_button').off('click').on('click', save_add_check_out);
-
-                    $('#save_add_income_deduction_button').off('click').on('click', function() {
-                        save_add_income_deduction();
-                    });
-
-                    $('#add_income_deduction_div').on('hidden.bs.collapse', function () {
-                        $('#income_deduction_description, #income_deduction_amount').val('');
-                    });
-
-                    $('#save_add_commission_deduction_button').off('click').on('click', function() {
-                        save_add_commission_deduction();
-                    });
-
-                    $('#add_commission_deduction_div').on('hidden.bs.collapse', function () {
-                        $('#commission_deduction_description, #commission_deduction_amount').val('');
-                    });
-
-                    $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
-
-                    $('.total').each(function() {
-                        if($(this).val() == '') {
-                            $(this).val('0');
-                        }
-                        // $(this).on('focus', function () {
-                        //     $(this).select();
-                        // });
-                    });
-
-
+                    agent_commission_init();
 
                 } else if(tab == 'earnest') {
 
-                    $('#save_earnest_button').off('click').on('click', function() {
-                        save_earnest('yes');
-                    });
-                    $('.add-earnest-check-button').off('click').on('click', function() {
-                        add_earnest_check($(this).data('check-type'));
-                    });
-                    $('#save_add_earnest_check_button').off('click').on('click', function() {
-                        $(this).prop('disabled', true);
-                        save_add_earnest_check();
-                    });
-                    get_earnest_check_info();
-                    get_earnest_checks('in', false);
-                    get_earnest_checks('out', false);
-                    save_earnest('no');
+                    earnest_init();
 
                 }
-
-
-                /* $(document).on('click', '.nav-link[data-tab]', function() {
-
-                    if(window.get_emailed_docs_interval) {
-                        clearInterval(get_emailed_docs_interval);
-                    }
-                    if(window.in_process_interval) {
-                        clearInterval(in_process_interval);
-                    }
-                    if($(this).data('tab') == 'documents') {
-                        window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
-                        window.in_process_interval = setInterval(function(){
-                            let document_ids = [];
-                            $('.document-div').each(function() {
-                                document_ids.push($(this).data('document-id'));
-                            });
-                            in_process(document_ids);
-                        }, 3000);
-                    }
-
-                }); */
 
                 $('.draggable').draggable({
                     handle: '.draggable-handle'
@@ -959,18 +749,7 @@ if (document.URL.match(/transaction_details/)) {
 
     }
 
-    function sortable_documents() {
-        $('.sortable-documents').sortable({
-            connectWith: '.sortable-documents',
-            placeholder: 'bg-sortable',
-            handle: '.document-handle',
-            stop: function (event, ui) {
-                reorder_documents('no');
-            }
 
-        });
-        $('.sortable-documents').disableSelection();
-    }
 
     window.reorder_documents = function (on_load) {
 

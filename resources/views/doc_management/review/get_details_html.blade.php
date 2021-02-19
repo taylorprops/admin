@@ -31,10 +31,17 @@
             @endif
         </div>
 
-        <div class="details-content">
+        <div class="details-content p-2">
 
             @if($transaction_type == 'referral')
-                <span class="text-gray">Agent:</span> <span class="font-weight-bold pl-2">{{ $agent_details -> first_name. ' ' . $agent_details -> last_name }}</span>
+                <div class="divider"></div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <span class="text-gray">Agent:</span>
+                        <span class="font-weight-bold pl-2">{{ $agent_details -> first_name. ' ' . $agent_details -> last_name }}</span>
+                    </div>
+                </div>
+                <div class="divider"></div>
             @else
 
                 <div class="row">
@@ -79,10 +86,10 @@
                             <td class="font-weight-bold pl-2">{{ $co_agent_details -> first_name. ' ' . $co_agent_details -> last_name }}</td>
                         </tr>
                         @endif
-                        @if($property -> TransCoordinator_ID > 0)
+                        @if($property -> TransactionCoordinator_ID > 0)
                         <tr>
                             <td class="text-gray text-right">Trans Coord.</td>
-                            <td class="font-weight-bold pl-2">{{ $property -> TransCoordinator_ID }}</td>
+                            <td class="font-weight-bold pl-2">{{ $property -> TransactionCoordinator_ID }}</td>
                         </tr>
                         @endif
                         @if($property -> Team_ID > 0)

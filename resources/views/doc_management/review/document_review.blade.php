@@ -43,7 +43,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -63,7 +63,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -83,7 +83,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $comments_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -112,7 +112,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -141,7 +141,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -170,7 +170,7 @@
                                             {{ $address }}
                                         </div>
                                         <div>
-                                            <span class="badge bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
+                                            <span class="p-2 bg-primary rounded text-white todo-count">{{ $docs_to_review_count }}</span>
                                         </div>
                                     </div>
                                 </a>

@@ -186,10 +186,10 @@
 
                                 <div class="row">
                                     <div class="col-12 col-sm-6 col-md-12 col-lg-6">
-                                        <select class="custom-form-element form-select" data-label="Transaction Coordinator" name="TransCoordinator_ID" id="TransCoordinator_ID">
+                                        <select class="custom-form-element form-select" data-label="Transaction Coordinator" name="TransactionCoordinator_ID" id="TransactionCoordinator_ID">
                                             <option value=""></option>
                                             @foreach($trans_coords as $trans_coord)
-                                            <option value="{{ $trans_coord -> id }}" @if($property -> TransCoordinator_ID == $trans_coord -> id) selected @endif>{{ $trans_coord -> last_name . ', ' . $trans_coord -> first_name }}</option>
+                                            <option value="{{ $trans_coord -> id }}" @if($property -> TransactionCoordinator_ID == $trans_coord -> id) selected @endif>{{ $trans_coord -> last_name . ', ' . $trans_coord -> first_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -314,7 +314,7 @@
                                             </div>
                                             <div class="col-12 col-sm-8 col-md-12 col-lg-9">
                                                 <div class="not-using-heritage">
-                                                    <input type="text" class="custom-form-element form-input" name="TitleCompany" id="TitleCompany" value="{{ $property -> TitleCompany }}" data-label="Title Company">
+                                                    <input type="text" class="custom-form-element form-input" name="TitleCompany" id="TitleCompany" value="@if($property -> TitleCompany != 'null'){{ $property -> TitleCompany }}@endif" data-label="Title Company">
                                                 </div>
                                             </div>
                                         </div>

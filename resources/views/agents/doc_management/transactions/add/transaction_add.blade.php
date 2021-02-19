@@ -7,7 +7,7 @@
 @section('content')
 @php
 $Agent_ID = null;
-if(auth() -> user() -> group == 'agent') {
+if(stristr(auth() -> user() -> group, 'agent')) {
     $Agent_ID = auth() -> user() -> user_id;
 }
 @endphp

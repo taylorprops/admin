@@ -48,7 +48,7 @@
                             <div class="mr-4">
                                 <i class="fad fa-cog fa-spin fa-lg"></i>
                             </div>
-                            <div>
+                            <div class="font-8">
                                 Saving disabled unitl the current save process completes in the background. You can continue to edit the fields or close the page. This process takes about 5 seconds per page.
                             </div>
                         </div>

@@ -20,7 +20,65 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
 
 
+
     });
+
+    window.commission_init = function(Commission_ID, Agent_ID) {
+
+        $('.popout').eq(0).show();
+        get_checks_in(Commission_ID);
+        get_checks_out(Commission_ID);
+        get_commission_notes(Commission_ID);
+        get_income_deductions(Commission_ID);
+        get_commission_deductions(Commission_ID);
+        get_agent_details(Agent_ID);
+        save_commission('no');
+
+        show_title();
+        // $('#using_heritage').on('change', function() {
+        //     show_title();
+        // });
+
+        $('.add-check-in-button').off('click').on('click', show_add_check_in);
+        $('.add-check-out-button').off('click').on('click', show_add_check_out);
+
+        $('#save_add_check_in_button').off('click').on('click', save_add_check_in);
+        $('#save_add_check_out_button').off('click').on('click', save_add_check_out);
+
+        $('#save_add_income_deduction_button').off('click').on('click', function() {
+            save_add_income_deduction();
+        });
+
+        $('#add_income_deduction_div').on('hidden.bs.collapse', function () {
+            $('#income_deduction_description, #income_deduction_amount').val('');
+        });
+
+        $('#save_add_commission_deduction_button').off('click').on('click', function() {
+            save_add_commission_deduction();
+        });
+
+        $('#add_commission_deduction_div').on('hidden.bs.collapse', function () {
+            $('#commission_deduction_description, #commission_deduction_amount').val('');
+        });
+
+        $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
+
+
+        numbers_only();
+
+    }
+
+    window.numbers_only = function() {
+        $('.numbers-only').on('focus', function () {
+            $(this).select();
+        });
+
+        $('.numbers-only').on('change', function() {
+            if($(this).val() == '') {
+                $(this).val('$0.00');
+            }
+        });
+    }
 
     window.get_agent_details = function(Agent_ID) {
         axios.get('/agents/doc_management/transactions/details/data/get_agent_details', {
@@ -49,6 +107,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         let button = $(this);
         let check_id = button.data('check-id');
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
 
         let formData = new FormData();
         formData.append('Commission_ID', Commission_ID);
@@ -142,6 +203,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         let Contract_ID = $('#Contract_ID').val();
         let form = $('#commission_form');
+        let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
 
         let formData = new FormData();
 
@@ -150,8 +215,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             formData.append($(this).attr('id'), val);
         });
 
+
+
         formData.append('Contract_ID', Contract_ID);
-        formData.append('Commission_ID', $('#Commission_ID').val());
+        formData.append('Commission_ID', Commission_ID);
         axios.post('/agents/doc_management/transactions/save_commission', formData, axios_options)
         .then(function (response) {
             if(show_toastr_commission == 'yes') {
@@ -195,7 +262,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                         <div>'+deduction['description']+'</div> \
                         <div class="d-flex justify-content-end align-items-center"> \
                             <div class="pr-5">'+global_format_number_with_decimals(deduction['amount'])+'</div> \
-                            <div><a href="javascript: void(0)" class="btn btn-sm btn-danger delete-income-deduction-button" data-deduction-id="'+deduction['id']+'"><i class="fal fa-times"></i></a></div> \
+                            <div><a href="javascript: void(0)" class="btn btn-sm btn-danger delete-income-deduction-button" data-deduction-id="'+deduction['id']+'"><i class="fal fa-trash"></i></a></div> \
                         </div> \
                     </div> \
                     ';
@@ -221,6 +288,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.delete_income_deduction = function() {
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let button = $(this);
         let deduction_id = button.data('deduction-id');
         let formData = new FormData();
@@ -246,6 +316,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         if(validate == 'yes') {
 
             let Commission_ID = $('#Commission_ID').val();
+            if($('#Commission_Other_ID').length > 0) {
+                Commission_ID = $('#Commission_Other_ID').val();
+            }
             let description = $('#income_deduction_description').val();
             let amount = $('#income_deduction_amount').val();
 
@@ -300,7 +373,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                         <div>'+deduction['description']+'</div> \
                         <div class="d-flex justify-content-end align-items-center"> \
                             <div class="pr-5">'+global_format_number_with_decimals(deduction['amount'])+'</div> \
-                            <div><a href="javascript: void(0)" class="btn btn-sm btn-danger delete-commission-deduction-button" data-deduction-id="'+deduction['id']+'"><i class="fal fa-times"></i></a></div> \
+                            <div><a href="javascript: void(0)" class="btn btn-sm btn-danger delete-commission-deduction-button" data-deduction-id="'+deduction['id']+'"><i class="fal fa-trash"></i></a></div> \
                         </div> \
                     </div> \
                     ';
@@ -326,6 +399,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.delete_commission_deduction = function() {
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let button = $(this);
         let deduction_id = button.data('deduction-id');
         let formData = new FormData();
@@ -351,6 +427,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         if(validate == 'yes') {
 
             let Commission_ID = $('#Commission_ID').val();
+            if($('#Commission_Other_ID').length > 0) {
+                Commission_ID = $('#Commission_Other_ID').val();
+            }
             let description = $('#commission_deduction_description').val();
             let amount = $('#commission_deduction_amount').val();
 
@@ -478,6 +557,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.save_edit_check_in = function() {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let form = $('#edit_check_in_form');
         let formData = new FormData(form[0]);
 
@@ -507,6 +589,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.save_delete_check_in = function(check_id, type) {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let formData = new FormData();
         formData.append('check_id', check_id);
         formData.append('type', type);
@@ -527,6 +612,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.undo_delete_check_in = function() {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let check_id = $(this).data('check-id');
         let formData = new FormData();
         formData.append('check_id', check_id);
@@ -548,6 +636,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         let check_id = $(this).data('check-id');
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
 
         let formData = new FormData();
         formData.append('check_id', check_id);
@@ -673,6 +764,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             $('#save_add_check_out_button').prop('disabled', true).html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Check...');
             let formData = new FormData(form[0]);
             let Commission_ID = $('#Commission_ID').val();
+            if($('#Commission_Other_ID').length > 0) {
+                Commission_ID = $('#Commission_Other_ID').val();
+            }
             formData.append('Commission_ID', Commission_ID);
 
             axios.post('/agents/doc_management/transactions/save_add_check_out', formData, axios_options)
@@ -763,6 +857,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.save_edit_check_out = function() {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let form = $('#edit_check_out_form');
         let formData = new FormData(form[0]);
 
@@ -791,6 +888,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.save_delete_check_out = function(check_id) {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let formData = new FormData();
         formData.append('check_id', check_id);
         axios.post('/agents/doc_management/transactions/save_delete_check_out', formData, axios_options)
@@ -810,6 +910,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.undo_delete_check_out = function() {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let check_id = $(this).data('check-id');
         let formData = new FormData();
         formData.append('check_id', check_id);
@@ -836,6 +939,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     // Notes
     window.get_commission_notes = function() {
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         axios.get('/agents/doc_management/transactions/get_commission_notes', {
             params: {
                 Commission_ID: Commission_ID
@@ -857,6 +963,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     window.add_commission_notes = function() {
 
         let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
         let notes = $('.commission-notes-input').val();
 
         let formData = new FormData();

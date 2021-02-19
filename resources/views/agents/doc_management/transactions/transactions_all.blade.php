@@ -2,6 +2,67 @@
 @section('title', 'Transactions')
 
 @section('content')
+<div class="container page-container page-transactions pt-5">
+
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="h2 text-orange mb-5">Transactions</div>
+
+            <ul class="nav nav-tabs" id="transactions_tabs" role="tablist">
+
+                @if(!$agent_referral)
+                <li class="nav-item">
+                    <a class="nav-link font-11 active" id="listings_tab" data-tab="listings" data-toggle="tab" href="#listings_content" role="tab" aria-controls="listings_content" aria-selected="true">Listings</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link font-11" id="contracts_tab" data-tab="contracts" data-toggle="tab" href="#contracts_content" role="tab" aria-controls="contracts_content" aria-selected="false">Contracts</a>
+                </li>
+                @endif
+                <li class="nav-item font-11 @if($agent_referral) active @endif">
+                    <a class="nav-link" id="referrals_tab" data-tab="referrals" data-toggle="tab" href="#referrals_content" role="tab" aria-controls="referrals_content" aria-selected="false">Referrals</a>
+                </li>
+
+            </ul>
+
+            <div class="tab-content mt-4" id="transactions_tabs_content">
+
+                @if(!$agent_referral)
+                <div class="tab-pane fade show active" id="listings_content" role="tabpanel" aria-labelledby="listings_tab">
+
+                    <div id="listings_div"></div>
+
+                </div>
+
+                <div class="tab-pane fade" id="contracts_content" role="tabpanel" aria-labelledby="contracts_tab">
+
+                    <div id="contracts_div"></div>
+
+                </div>
+                @endif
+                <div class="tab-pane fade @if($agent_referral) show active @endif" id="referrals_content" role="tabpanel" aria-labelledby="referrals_tab">
+
+                    <div id="referrals_div"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<input type="hidden" id="agent_referral" value="{{ $agent_referral }}">
+
+@endsection
+
+
+{{--
+@section('content')
 <div class="container page-container page-transactions">
     <div class="row my-3">
 
@@ -16,7 +77,8 @@
 
                     <div class="row">
 
-                        @foreach($listings as $listing)
+
+
 
                             <div class="col-12 col-md-6">
                                 <a href="/agents/doc_management/transactions/transaction_details/{{ $listing -> Listing_ID }}/listing">
@@ -222,3 +284,4 @@
     </div>
 </div>
 @endsection
+--}}

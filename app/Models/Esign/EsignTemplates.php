@@ -19,7 +19,7 @@ class EsignTemplates extends Model
         parent::boot();
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
-                if(auth() -> user() -> group == 'agent') {
+                if(stristr(auth() -> user() -> group, 'agent')) {
                     $query -> where('User_ID', auth() -> user() -> id);
                 } else if(auth() -> user() -> group == 'admin') {
                     $query -> where('User_ID', auth() -> user() -> id)

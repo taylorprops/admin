@@ -1,5 +1,29 @@
 if (document.URL.match(/transaction_details/)) {
 
+    window.details_init = function() {
+
+        // update counties when state is changed
+        $('#StateOrProvince').on('change', update_county_select);
+
+        $('#search_mls_button').off('click').on('click', search_mls);
+
+        $('.save-details-button').off('click').on('click', save_details);
+
+        if($('#UsingHeritage').val() == 'no') {
+            $('.not-using-heritage').show();
+        }
+
+        $('#UsingHeritage').on('change', function() {
+            if($(this).val() == 'yes') {
+                $('.not-using-heritage').hide();
+                $('#TitleCompany').val('');
+            } else {
+                $('.not-using-heritage').show();
+            }
+        });
+
+    }
+
     window.save_details = function() {
 
         if($('#MLSListDate').val() > $('#ExpirationDate').val()) {

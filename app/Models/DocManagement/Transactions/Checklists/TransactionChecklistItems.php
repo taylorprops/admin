@@ -65,7 +65,7 @@ class TransactionChecklistItems extends Model {
             $status = 'Pending';
             $agent_classes = 'bg-blue-light text-primary';
             $admin_classes = 'bg-danger text-white';
-            $fa = '<i class="fad fa-stopwatch fa-lg mr-2"></i>';
+            $fa = '<i class="fal fa-stopwatch fa-lg mr-2"></i>';
             $helper_text = 'We have received your document for this item. It is in the review process';
             $badge_class = 'badge-blue-light text-primary';
 

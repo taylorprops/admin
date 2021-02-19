@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard_admin', 'Dashboard\DashboardAdminController@dashboard_admin');
 Route::get('/dashboard_agent', 'Dashboard\DashboardAgentController@dashboard_agent');
+Route::get('/dashboard_agent_referral', 'Dashboard\DashboardAgentReferralController@dashboard_agent_referral');
 
 
 Auth::routes();

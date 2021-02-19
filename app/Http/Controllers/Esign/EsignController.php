@@ -275,6 +275,7 @@ class EsignController extends Controller {
                 $document_ids = explode(',', $request -> document_ids);
             }
 
+
             // need documents to be in order of checked docs
             $documents = collect();
             $tmp_folder = date('YmdHis');
@@ -300,14 +301,14 @@ class EsignController extends Controller {
 
                 } else {
 
-                    $doc = TransactionDocuments::where('file_id', $document_id) -> with('images_converted') -> first();
+                    $doc = TransactionDocuments::where('id', $document_id) -> with('images_converted') -> first();
                     $documents = $documents -> merge($doc);
                     $doc_template_id = $doc -> template_id;
 
                     $file_name = $doc -> file_name;
                     $file_name_display = $doc -> file_name_display;
                     $file_location = $doc -> file_location;
-                    $file_id = $doc -> file_id;
+                    $file_id = $doc -> id;
                     $file_type = $doc -> file_type;
                     $data_upload_id = '';
 
@@ -423,7 +424,7 @@ class EsignController extends Controller {
         $Agent_ID = $request -> Agent_ID ?? 0;
         $transaction_type = $request -> transaction_type ?? null;
         $document_id = $files[0]['upload_id'] ?? 0;
-        $transaction_document_id = $files[0]['document_id'] ?? 0;
+
 
         $envelope_id = 0;
         $template_id = 0;
@@ -496,6 +497,7 @@ class EsignController extends Controller {
 
             if($docs_added == 'no') {
 
+                $transaction_document_id = $file['document_id'] ?? 0;
                 // add doc
                 $add_esign_doc = new EsignDocuments();
                 $add_esign_doc -> envelope_id = $envelope_id;
@@ -648,8 +650,7 @@ class EsignController extends Controller {
                 if($file['document_id'] > 0) {
 
                     // transfer files and images from transactions docs
-                    $doc = TransactionDocuments::where('file_id', $file['document_id']) -> with('images_converted') -> first();
-
+                    $doc = TransactionDocuments::where('id', $file['document_id']) -> with('images_converted') -> first();
                     // copy document
                     $doc_from_location = Storage::disk('public') -> path(str_replace('/storage/', '', $doc -> file_location_converted));
                     exec('cp -p '.$doc_from_location.' '.$doc_to_location);
@@ -692,7 +693,7 @@ class EsignController extends Controller {
                         $add_esign_image = new EsignDocumentsImages();
                         $add_esign_image -> image_location = $add_esign_image_file_location;
                         $add_esign_image -> envelope_id = $envelope_id;
-                        $add_esign_image -> document_id = $add_esign_document_id;
+                        $add_esign_image -> document_id = $transaction_document_id;
                         $add_esign_image -> page_number = $image -> page_number;
                         $add_esign_image -> width = $doc_width;
                         $add_esign_image -> height = $doc_height;
@@ -1210,14 +1211,14 @@ class EsignController extends Controller {
 
                         $document_field = new SignatureField();
                         $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setRequired($field -> required == 'yes' ? 1 : 0);
+                        $document_field -> setRequired($field -> required);
                         $document_field -> setY($y + 3);
 
                     } else if($field -> field_type == 'initials') {
 
                         $document_field = new InitialsField();
                         $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setRequired($field -> required == 'yes' ? 1 : 0);
+                        $document_field -> setRequired($field -> required);
                         $document_field -> setY($y);
 
                     } else if($field -> field_type == 'date') {
@@ -1235,6 +1236,7 @@ class EsignController extends Controller {
                         $document_field -> setValue($field -> signer);
                         $document_field -> setTextSize(9);
                         $document_field -> setY($y + 3);
+                        $document_field -> setRequired(0);
 
                     } else if($field -> field_type == 'text') {
 
@@ -1244,6 +1246,7 @@ class EsignController extends Controller {
                         $document_field -> setValue($field -> field_value);
                         $document_field -> setTextSize(9);
                         $document_field -> setY($y + 3);
+                        $document_field -> setRequired(0);
 
                     }
 
@@ -1337,7 +1340,7 @@ class EsignController extends Controller {
 
         if($status) {
 
-            $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> first();
+            $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> with('documents') -> first();
 
             $envelope -> status = $status;
 
@@ -1354,6 +1357,14 @@ class EsignController extends Controller {
                 $client -> downloadFinalDocumentToPath($document, $file_location, true);
 
                 $envelope -> file_location = $public_link;
+
+                // update transaction docs with completed link and set status to signed
+                $documents = $envelope -> documents;
+                if($documents) {
+                    foreach($documents as $document) {
+                        $update_transaction_docs = TransactionDocuments::where('id', $document -> transaction_document_id) -> update(['signed' => 'yes', 'file_location_converted' => $public_link]);
+                    }
+                }
 
             }
 

@@ -28,7 +28,9 @@
         "thiagoalessio/tesseract_ocr": "^2.9",
         "troydavisson/phrets": "2.6.2",
         "understand/understand-laravel": "^2.3",
-        "unisharp/laravel-filemanager": "~1.8"
+        "unisharp/laravel-filemanager": "~1.8",
+        "yajra/laravel-datatables": "^1.5",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

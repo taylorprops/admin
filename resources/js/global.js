@@ -92,8 +92,8 @@ $(function() {
 
 
 
-    $(document).on('focus', '.numbers-only', function () {
-        $(this).select();
+    $(document).on('focus', '.numbers-only', function (e) {
+        e.target.focus().select();
     });
 
     $('.draggable').draggable({
@@ -135,7 +135,7 @@ $(function() {
 
     setInterval(function() {
         datepicker_custom();
-        global_tooltip();
+        //global_tooltip();
     }, 1000);
 
 
@@ -259,7 +259,7 @@ $(function() {
         }, 0);
         // make all but modal-xl draggable
         if(!$(this).find('modal-dialog').hasClass('modal-xl')) {
-            $(this).addClass('draggable');
+            $(this).addClass('draggable').find('.modal-header').addClass('draggable-handle');
         }
 
         // modal-open gets stuck in the body class so have to remove it manually
@@ -474,7 +474,7 @@ window.global_loading_off = function() {
 }
 
 window.global_tooltip = function() {
-    $('[data-toggle="tooltip"]').tooltip({ html: true });
+    $('[data-toggle="tooltip"]').tooltip({ html: true, trigger : 'hover' });
     $('[data-toggle="popover"]').popover({ html: true });
 }
 

@@ -13,7 +13,7 @@ class UserController extends Controller {
         $this -> middleware('auth');
     }
 
-    public function dashboard(Request $request) {
+    /* public function dashboard(Request $request) {
 
         if (Auth::check()) {
 
@@ -43,6 +43,6 @@ class UserController extends Controller {
         return redirect('/');
     }
 
-    public function dashboard_agent(Request $request) {}
+    public function dashboard_agent(Request $request) {} */
 
 }

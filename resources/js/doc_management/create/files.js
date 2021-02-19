@@ -12,6 +12,11 @@ if (document.URL.match(/create\/upload\/files/)) {
             form_search($(this));
         });
 
+        $(document).on('click', '.show-checklist-items-collapsible', function() {
+            let input = $(this).closest('td').prev('td').find('input');
+            show_options(input);
+        });
+
     });
 
     function init() {
@@ -286,7 +291,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
         let append_to = ele.closest('td').next('td').find('.checklist-items-collapsible');
         let button = ele.closest('td').next('td').find('.show-checklist-items-collapsible');
-
+        console.log(append_to.length, button.length, append_to.find('li').length);
         if(append_to.find('li').length == 0) {
             let checklist_id = button.data('checklist-id');
             let file_id = button.data('file-id');

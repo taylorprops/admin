@@ -196,7 +196,7 @@
                             <div class="col-3">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
                             <div class="col-4 @if($is_template == 'yes') hidden @endif">{{ $signer -> signer_email }}</div>
                         </div>
-                        <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div>
+                        <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
 
                 @endforeach
@@ -349,7 +349,7 @@
                             <div class="col-3">{{ $recipient -> signer_role }}</div>
                             <div class="col-4 '+hidden+'">{{ $recipient -> signer_email }}</div>
                         </div>
-                        <div><a href="javascript: void(0)"class="text-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></a></div>
+                        <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
 
                 @endforeach

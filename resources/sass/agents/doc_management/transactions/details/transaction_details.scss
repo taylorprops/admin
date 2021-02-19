@@ -159,6 +159,10 @@
             line-height: 1.3rem;
         }
 
+        .sent-info, .completed-info {
+            display: none;
+        }
+
         .btn {
             padding: .2rem .5rem;
         }
@@ -656,6 +660,11 @@
         }
     }
 
+}
+
+.invalid-border {
+    border: 1px solid $danger !important;
+    box-shadow: 0 0 5px $danger !important;
 }
 
 #loading_div {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class TransactionDocuments extends Model {
+
     use SoftDeletes;
 
     public $table = 'docs_transactions_docs';
@@ -23,8 +24,14 @@ class TransactionDocuments extends Model {
     }
 
     public function images_converted() {
-        return $this -> hasMany('App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages', 'document_id', 'file_id') -> orderBy('page_number');
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages', 'document_id', 'id') -> orderBy('page_number');
     }
+
+    public function esign_document() {
+        return $this -> hasMany('App\Models\Esign\EsignDocuments', 'transaction_document_id', 'id') -> with('envelope');
+    }
+
+
 
 
 }

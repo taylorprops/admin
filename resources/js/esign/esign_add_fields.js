@@ -292,10 +292,10 @@ if(document.URL.match(/esign_add_fields/)) {
                     let signer = field_div.find('.signer-select').val();
                     let field_value = field_div.find('.text-input').val() ?? null;
                     let required_input = field_div.find('.signature-required');
-                    let required = 'no';
+                    let required = '0';
                     if(field_type != 'text') {
                         if(required_input.is(':checked')) {
-                            required = 'yes';
+                            required = '1';
                         }
                     } else {
                         if(field_value == '') {
