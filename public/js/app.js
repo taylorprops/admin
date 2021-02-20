@@ -48579,13 +48579,21 @@ if (document.URL.match(/transaction_details/)) {
       });
 
       if (complete == 'yes') {
-        var final_notification = ' \
-                <div class="text-yellow w-100 p-1 almost-complete"> \
-                    <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+        var first_notification = ' \
+                <div class="text-white font-10 w-100 p-1 almost-complete"> \
+                    Adding inputs and signature fields to forms... \
                 </div> \
                 ';
-        $('#loading_div').append(final_notification);
+        $('#loading_div').append(first_notification);
         clearInterval(almost_complete_interval);
+        setTimeout(function () {
+          var final_notification = ' \
+                    <div class="text-yellow w-100 p-1 almost-complete"> \
+                        <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+                    </div> \
+                    ';
+          $('#loading_div').append(final_notification);
+        }, 10000);
       }
     }, 1000);
   };
@@ -59230,8 +59238,8 @@ window.nl2br = function (str, replaceMode, isXhtml) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/admin/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/admin/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/taylor-properties.net/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/taylor-properties.net/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

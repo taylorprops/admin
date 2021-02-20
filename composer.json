@@ -8,9 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "docusign/esign-client": "^5.7",
-        "enlightn/enlightn": "^1.5",
-        "enlightn/enlightnpro": "^1.3",
+        "php": ">=7.4",
         "eversign/eversign-php-sdk": "^1.18",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",

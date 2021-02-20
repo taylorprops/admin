@@ -1558,9 +1558,11 @@ class TransactionsDetailsController extends Controller {
         $transaction_type = $request -> transaction_type;
         $folder = $request -> folder;
 
-        $checklist_item_docs_model = new TransactionChecklistItemsDocs();
-
         $files = json_decode($request['files'], true);
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
+        $checklist_item_docs_model = new TransactionChecklistItemsDocs();
 
         foreach ($files as $file) {
 
@@ -1686,7 +1688,7 @@ class TransactionsDetailsController extends Controller {
 
             foreach ($fields as $field) {
 
-                $this -> add_field_and_inputs($field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
+                $this -> add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
 
             }
 
@@ -1694,7 +1696,7 @@ class TransactionsDetailsController extends Controller {
 
     }
 
-    public function add_field_and_inputs($field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_type) {
+    public function add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_type) {
 
         $field_type = $field -> field_type;
         $field_category = $field -> field_category;
@@ -1741,7 +1743,6 @@ class TransactionsDetailsController extends Controller {
         $new_field_id = $new_field -> id;
 
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? 'yes' : 'no';
 
         // add inputs
