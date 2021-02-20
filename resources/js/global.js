@@ -110,8 +110,10 @@ $(function() {
 
     let format_phone = setInterval(function() {
         $('.phone').not('.formatted').each(function() {
-            global_format_phone(this);
-            $(this).attr('maxlength', 14).addClass('formatted');
+            if($(this).val() != '') {
+                global_format_phone(this);
+                $(this).attr('maxlength', 14).addClass('formatted');
+            }
         });
     }, 1000);
 
