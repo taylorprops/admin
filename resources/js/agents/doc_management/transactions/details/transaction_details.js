@@ -438,7 +438,10 @@ if (document.URL.match(/transaction_details/)) {
 
     function show_accept_contract() {
         $('#accept_contract_modal').modal();
-        $('#save_accept_contract_button').off('click').on('click', save_accept_contract);
+        $('#save_accept_contract_button').off('click').on('click', function() {
+            $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Saving Details...');
+            save_accept_contract();
+        });
         $('.our-agent-div').hide();
         $('#agent_search_div').on('show.bs.collapse', function () {
             setTimeout(function () {
@@ -541,6 +544,11 @@ if (document.URL.match(/transaction_details/)) {
         let form = $('#accept_contract_form');
         let validate = validate_form(form);
 
+        let type = 'Contract';
+        if($('#for_sale').val() == 'no') {
+            type = 'Lease';
+        }
+
         if (validate == 'yes') {
 
             let agent_first = $('#accept_contract_buyer_agent_first').val();
@@ -602,16 +610,16 @@ if (document.URL.match(/transaction_details/)) {
                     load_tabs('contracts');
                     load_details_header();
                     let Contract_ID = response.data.Contract_ID;
-                    let type = 'Contract';
-                    if($('#for_sale').val() == 'no') {
-                        type = 'Lease';
-                    }
+
+                    $('#save_accept_contract_button').html('<i class="fad fa-save mr-2"></i> Save '+type+' Details');
                     $('#modal_info').modal().find('.modal-body').html('<div class="w-100 text-center">Your '+type+' was successfully added. You will find it in the "'+type+'s" tab<br><br><a class="btn btn-primary" href="/agents/doc_management/transactions/transaction_details/' + Contract_ID + '/contract">View '+type+'</a></div>');
                 })
                 .catch(function (error) {
 
                 });
 
+        } else {
+            $('#save_accept_contract_button').html('<i class="fad fa-save mr-2"></i> Save '+type+' Details');
         }
     }
 

@@ -300,7 +300,7 @@
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="h5 text-orange mb-3">Are the Buyer's using Heritage Title?</div>
+                                        <div class="h5 text-orange mb-3">Are the Buyers using Heritage Title?</div>
 
                                         <div class="row">
                                             <div class="col-12 col-sm-4 col-md-12 col-lg-3">

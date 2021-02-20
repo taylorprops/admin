@@ -1927,7 +1927,7 @@
                                 <div class="col-12">
                                     <div class="d-flex justify-content-start flex-wrap align-items-center">
                                         <div class="text-primary mr-2">
-                                            Are the Buyer's using Heritage Title?
+                                            Are the Buyers using Heritage Title?
                                         </div>
                                         <div class="mr-2 using-heritage">
                                             <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="accept_contract_using_heritage" data-label="Using Heritage">
@@ -2159,7 +2159,7 @@
 
                             <div class="row">
                                 <div class="col-12">
-                                    Are the Buyer's using Heritage Title?
+                                    Are the Buyers using Heritage Title?
                                     <br>
                                     <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="required_fields_using_heritage" name="required_fields_using_heritage" data-label="Using Heritage">
                                         <option value=""></option>

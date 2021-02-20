@@ -264,7 +264,7 @@ if($property -> Owner2 != '') {
 
                                 <div class="p-3">
 
-                                    <div class="h5 text-orange mb-3">Are the Buyer's using Heritage Title?</div>
+                                    <div class="h5 text-orange mb-3">Are the Buyers using Heritage Title?</div>
                                     <div class="mr-2 using-heritage">
                                         <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" name="UsingHeritage" id="UsingHeritage" data-label="Using Heritage">
                                             <option value=""></option>
