@@ -1353,6 +1353,7 @@ if (document.URL.match(/transaction_details/)) {
 
                         $('.progress-bar').css({ width: '0%' });
                         $('.individual-template-form').prop('checked', false);
+                        $('.almost-complete').remove();
 
                     }, 200);
 
@@ -1414,7 +1415,7 @@ if (document.URL.match(/transaction_details/)) {
 
         });
 
-        setInterval(function() {
+        let almost_complete_interval = setInterval(function() {
 
             let complete = 'yes';
             $('.progress-bar').each(function() {
@@ -1424,11 +1425,12 @@ if (document.URL.match(/transaction_details/)) {
             });
             if(complete == 'yes') {
                 let final_notification = ' \
-                <div class="text-yellow w-100 p-1"> \
-                <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+                <div class="text-yellow w-100 p-1 almost-complete"> \
+                    <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
                 </div> \
                 ';
                 $('#loading_div').append(final_notification);
+                clearInterval(almost_complete_interval);
             }
 
         }, 1000);

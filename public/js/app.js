@@ -48516,6 +48516,7 @@ if (document.URL.match(/transaction_details/)) {
             width: '0%'
           });
           $('.individual-template-form').prop('checked', false);
+          $('.almost-complete').remove();
         }, 200);
       })["catch"](function (error) {});
     }
@@ -48569,7 +48570,7 @@ if (document.URL.match(/transaction_details/)) {
         document.getElementById('progress_' + index).scrollIntoView();
       }, index * 1000);
     });
-    setInterval(function () {
+    var almost_complete_interval = setInterval(function () {
       var complete = 'yes';
       $('.progress-bar').each(function () {
         if ($(this).attr('aria-valuenow') != '100') {
@@ -48579,11 +48580,12 @@ if (document.URL.match(/transaction_details/)) {
 
       if (complete == 'yes') {
         var final_notification = ' \
-                <div class="text-yellow w-100 p-1"> \
-                <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+                <div class="text-yellow w-100 p-1 almost-complete"> \
+                    <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
                 </div> \
                 ';
         $('#loading_div').append(final_notification);
+        clearInterval(almost_complete_interval);
       }
     }, 1000);
   };
