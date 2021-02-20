@@ -117,11 +117,17 @@ if($field_created_by == 'user') {
     $user_field_inputs = $user_field -> user_field_inputs;
 
     $value = '';
+
     $input = null;
     if(count($user_field_inputs) == 1) {
         $input = $user_field_inputs -> first();
         $value = $input -> input_value;
     }
+
+    if($value == '0000-00-00') {
+        $value = '';
+    }
+
     /* if($user_field -> id == 8659) {
         dd($value);
     } */

@@ -48533,7 +48533,7 @@ if (document.URL.match(/transaction_details/)) {
     global_loading_on('', loading_html);
     files.forEach(function (file, index) {
       // bigger the interval longer it takes
-      var multiplier = 900;
+      var multiplier = 1000;
 
       if (file['pages_total']) {
         multiplier = 300;
@@ -52572,9 +52572,11 @@ if (document.URL.match(/checklists/)) {
     $('#confirm_remove_file_modal').modal();
     $('#confirm_remove_file').on('click', function () {
       button.closest('li').remove();
-      forms_status();
-      fill_empty_groups();
       $('#confirm_remove_file_modal').modal('hide');
+      setTimeout(function () {
+        forms_status();
+        fill_empty_groups();
+      }, 100);
     });
   };
 
@@ -53158,7 +53160,7 @@ if (document.URL.match(/create\/add_fields/)) {
       $(this).addClass('active');
       var id = $(this).data('id');
       $('#active_page').val(id);
-      window.location = '#page_' + id; //document.getElementById('page_' + id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      window.location = '#page_' + id; //document.getElementById('page_'+id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }); // change highlighted thumb on scroll when doc is over half way in view
 
     $('#file_viewer').on('scroll', function () {
@@ -53295,7 +53297,7 @@ if (document.URL.match(/create\/add_fields/)) {
       var field_category = ele.find('.field-div').data('field-category');
       var container = ele.closest('.field-container');
 
-      if (field_category != 'checkbox') {
+      if (field_category != 'checkbox' && field_category != 'radio') {
         get_edit_properties_html(ele.find('.field-div'));
       }
 
@@ -53347,6 +53349,23 @@ if (document.URL.match(/create\/add_fields/)) {
       });
     }
 
+    function hexToRgbA(hex, opacity) {
+      var c;
+
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split('');
+
+        if (c.length == 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+
+        c = '0x' + c.join('');
+        return 'rgba(' + [c >> 16 & 255, c >> 8 & 255, c & 255].join(',') + ', ' + opacity + ')';
+      }
+
+      throw new Error('Bad Hex');
+    }
+
     function field_html(h_perc, w_perc, x_perc, y_perc, field_id, group_id, page, field_category) {
       //console.log('running field_html');
       var handles = ' \
@@ -53356,6 +53375,7 @@ if (document.URL.match(/create\/add_fields/)) {
       var field_class = '';
       var field_data = '';
       var hide_add_option = '';
+      var group_bg_style = '';
       var position = x_perc > 50 ? 'right' : '';
       var field_div_properties = ' \
             <div class="field-div-properties bg-white border shadow pt-0 pb-2 px-2  ' + position + '"> \
@@ -53369,7 +53389,15 @@ if (document.URL.match(/create\/add_fields/)) {
       } else if (field_category == 'radio') {
         handles = '';
         field_class = 'radio-div standard';
-        field_data = '<div class="radio-html"></div>';
+        field_data = '<div class="radio-html"></div>'; //hex = group_id.toString().split('').reverse().join('');
+
+        var hex = (group_id / 1.2348).toFixed(6);
+        hex = hex.slice(-6);
+        hex = '#' + hex.replace(/1/, 'f').replace(/7/, 'b').replace(/4/, 'd').replace(/9/, 'a');
+        var rgba = hexToRgbA(hex, '0.4');
+        console.log(rgba);
+        group_bg_style = 'background: ' + rgba + '; border-radius: 50%; border: 1px solid ' + hex + ';';
+        field_div_properties = '';
       } else if (field_category == 'checkbox') {
         handles = '';
         field_class = 'checkbox-div standard';
@@ -53382,7 +53410,7 @@ if (document.URL.match(/create\/add_fields/)) {
       }
 
       var field_div_html = ' \
-            <div class="field-div-container show" id="field_container_' + field_id + '" style="position: absolute; top: ' + y_perc + '%; left: ' + x_perc + '%; height: ' + h_perc + '%; width: ' + w_perc + '%;"> \
+            <div class="field-div-container show" id="field_container_' + field_id + '" style="position: absolute; top: ' + y_perc + '%; left: ' + x_perc + '%; height: ' + h_perc + '%; width: ' + w_perc + '%; ' + group_bg_style + '"> \
                 <div class="field-div ' + field_class + ' group_' + group_id + '" id="field_' + field_id + '" data-field-id="' + field_id + '" data-group-id="' + group_id + '" data-field-category="' + field_category + '" data-page="' + page + '"> \
                     <div class="field-name-display-div"></div> \
                 </div> \
@@ -53407,8 +53435,8 @@ if (document.URL.match(/create\/add_fields/)) {
       //console.log('running get_edit_properties_html');
       var field_id = ele.data('field-id');
       var group_id = ele.data('group-id');
-      var field_category = ele.data('field-category'); //let common_name = $('.group_' + group_id).data('commonname');
-      //let custom_name = $('.group_' + group_id).data('customname');
+      var field_category = ele.data('field-category'); //let common_name = $('.group_'+group_id).data('commonname');
+      //let custom_name = $('.group_'+group_id).data('customname');
 
       axios.get('/doc_management/get_edit_properties_html', {
         params: {
@@ -53522,26 +53550,26 @@ if (document.URL.match(/create\/add_fields/)) {
 
       var common_field_id = field_div_container.find('.common-field-id').val();
       var common_field_type = field_div_container.find('.common-field-type').val();
-      var common_field_sub_group_id = field_div_container.find('.common-field-sub-group-id').val();
+      var common_field_sub_group_id = field_div_container.find('.common-field-sub-group-id').val(); // radio change // if (field_category != 'checkbox') {
 
-      if (field_category != 'checkbox') {
+      if (field_category != 'checkbox' && field_category != 'radio') {
         // set default values of field
-        field_div_container.find('input').not('[type=radio]').each(function () {
+        // radio change // field_div_container.find('input').not('[type=radio]').each(function () {
+        field_div_container.find('input').each(function () {
           $(this).data('default-value', $(this).val());
         }); // set values and default values of any other fields in group.
 
         $('.group_' + group_id).each(function () {
           $(this).data('commonname', common_name).data('customname', custom_name).removeClass('error');
           var group_div_container = $(this).closest('.field-div-container'); // radio will always be a custom name
+          // radio change // if (field_category != 'radio') {
+          // add field name to display
 
-          if (field_category != 'radio') {
-            // add field name to display
-            group_div_container.find('.field-name-display-div').text(custom_name + common_name);
-            group_div_container.find('.common-field-name-input, .common-field-name').val(common_name).data('default-value', common_name);
-            group_div_container.find('.common-field-id').val(common_field_id).data('default-value', common_field_id);
-            group_div_container.find('.common-field-type').val(common_field_type).data('default-value', common_field_type);
-            group_div_container.find('.common-field-sub-group-id').val(common_field_sub_group_id).data('default-value', common_field_sub_group_id);
-          }
+          group_div_container.find('.field-name-display-div').text(custom_name + common_name);
+          group_div_container.find('.common-field-name-input, .common-field-name').val(common_name).data('default-value', common_name);
+          group_div_container.find('.common-field-id').val(common_field_id).data('default-value', common_field_id);
+          group_div_container.find('.common-field-type').val(common_field_type).data('default-value', common_field_type);
+          group_div_container.find('.common-field-sub-group-id').val(common_field_sub_group_id).data('default-value', common_field_sub_group_id); // radio change // }
 
           group_div_container.find('.custom-field-name').val(custom_name).data('default-value', custom_name);
         });
@@ -53578,9 +53606,9 @@ if (document.URL.match(/create\/add_fields/)) {
 
       var group_id = ele.find('.field-div').data('group-id'); // get original field input values
 
-      var common_name, common_field_id, common_field_type, common_field_sub_group_id, custom_name, number_type;
+      var common_name, common_field_id, common_field_type, common_field_sub_group_id, custom_name, number_type; // radio change // if (field_category != 'radio') {
 
-      if (field_category != 'radio') {
+      if (field_category != 'radio' && field_category != 'checkbox') {
         common_name = ele.find('.common-field-name').val();
         common_field_id = ele.find('.common-field-id').val();
         common_field_type = ele.find('.common-field-type').val();

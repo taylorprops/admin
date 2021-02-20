@@ -180,56 +180,6 @@ class FieldsController extends Controller
 
             }
 
-            /* // add new fields
-            if(isset($file_id)) {
-
-                // delete all fields for this document
-                $delete_docs = Fields::where('file_id', $file_id) -> delete();
-                $delete_inputs = FieldInputs::where('file_id', $file_id) -> delete();
-
-                if(!empty($data[0]['field_id'])) {
-
-                    // remove input fields, they are added next
-                    $ignore_fields = ['field_data_input', 'field_data_input_id'];
-                    // add fields
-                    foreach($data as $field) {
-                        $fields = new Fields;
-                        foreach($field as $key => $val) {
-                            if(!in_array($key, $ignore_fields)) {
-                                // keep field name in readable format and as name/id
-                                if($key == 'field_name') {
-                                    $fields -> field_name_display = $val;
-                                    $val = trim(preg_replace('/\s/', '', $val));
-                                }
-                                $fields -> $key = $val;
-                            }
-                        }
-                        $fields -> save();
-                    }
-
-                    // add field inputs
-                    foreach($data as $field) {
-
-                        $field_id = $field['field_id'];
-                        $input_ids = $field['field_data_input_id'];
-                        $input_names = $field['field_data_input'];
-                        $field_type = $field['field_name_type'] ?? 'custom';
-
-                        for($i = 0; $i < count($input_names); $i++) {
-                            $field_inputs = new FieldInputs;
-                            $field_inputs -> input_id = $input_ids[$i];
-                            $field_inputs -> input_name = $input_names[$i];
-                            $field_inputs -> file_id = $file_id;
-                            $field_inputs -> field_id = $field_id;
-                            $field_inputs -> field_type = $field_type;
-                            $field_inputs -> save();
-                        }
-
-                    }
-
-                }
-
-            } */
 
             return true;
 

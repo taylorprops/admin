@@ -17,15 +17,28 @@ $field_div_properties = '
 $field_class = '';
 $field_data = '';
 $field_name_display = $common_name.$custom_name;
+$group_bg_style = '';
+
+$hex = substr((strrev(substr($field -> group_id, -6))) / 1.3455, -6);
+$find = ['/1/', '/4/', '/6/', '/9/'];
+$replace = ['a', 'b', 'f', 'd'];
+$hex = preg_replace($find, $replace, $hex);
+$r = hexdec(substr($hex,0,2));
+$g = hexdec(substr($hex,2,2));
+$b = hexdec(substr($hex,4,2));
+$rgba = 'rgba('.$r.', '.$g.', '.$b.', 0.5)';
 
 if ($field -> field_category == 'textline' || $field -> field_category == 'number') {
     $field_class = 'textline-div standard';
     $field_data = '<div class="textline-html"></div>';
+    $group_bg_style = '';
 } else if ($field -> field_category == 'radio') {
     $handles = '';
     $field_class = 'radio-div standard';
     $field_data = '<div class="radio-html"></div>';
     $field_name_display = '';
+    $field_div_properties = '';
+    $group_bg_style = 'background: '.$rgba.'; border-radius: 50%; border: 1px solid #'.$hex.';';
 } else if ($field -> field_category == 'checkbox') {
     $handles = '';
     $field_class = 'checkbox-div standard';
@@ -39,7 +52,7 @@ if ($field -> field_category == 'textline' || $field -> field_category == 'numbe
 
 ?>
 
-<div class="field-div-container" id="field_container_{{ $field -> field_id }}" style="position: absolute; top: {{ $field -> top_perc }}%; left: {{ $field -> left_perc }}%; height: {{ $field -> height_perc }}%; width: {{ $field -> width_perc }}%;">
+<div class="field-div-container" id="field_container_{{ $field -> field_id }}" style="position: absolute; top: {{ $field -> top_perc }}%; left: {{ $field -> left_perc }}%; height: {{ $field -> height_perc }}%; width: {{ $field -> width_perc }}%; {{ $group_bg_style }}">
 
     <div class="field-div {{ $field_class }} group_{{ $field -> group_id }}"
         id="field_{{ $field -> field_id }}"

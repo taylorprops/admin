@@ -12,7 +12,7 @@ if (document.URL.match(/create\/add_fields/)) {
     delete docs_transactions_field_inputs_values table
     remove UserFieldsValues model
     */
-    $(function() {
+    $(function () {
 
         // set field options on load
         if ($('.field-div').length > 0) {
@@ -22,7 +22,7 @@ if (document.URL.match(/create\/add_fields/)) {
             });
             $('.field-div').each(function () {
                 let group_id = $(this).data('group-id');
-                if($('.group_' + group_id).length > 1) {
+                if ($('.group_' + group_id).length > 1) {
                     $('.group_' + group_id).removeClass('standard').addClass('group');
                 }
             });
@@ -37,18 +37,18 @@ if (document.URL.match(/create\/add_fields/)) {
         });
 
         // open field when clicked
-        $(document).on('click', '.field-div', function() {
+        $(document).on('click', '.field-div', function () {
             hide_active_field();
             $(this).closest('.field-div-container').addClass('show').find('.field-div-options').show();
         });
 
         // remove field
-        $(document).on('click', '.remove-field', function() {
+        $(document).on('click', '.remove-field', function () {
             $(this).closest('.field-div-container').remove();
         });
 
         // hide all active fields when page clicked
-        $('.field-select-container div, .file-image').on('click', function() {
+        $('.field-select-container div, .file-image').on('click', function () {
             hide_active_field();
         });
 
@@ -63,7 +63,7 @@ if (document.URL.match(/create\/add_fields/)) {
             let id = $(this).data('id');
             $('#active_page').val(id);
             window.location = '#page_' + id;
-            //document.getElementById('page_' + id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            //document.getElementById('page_'+id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 
         });
 
@@ -141,7 +141,7 @@ if (document.URL.match(/create\/add_fields/)) {
 
             //console.log('running save_add_fields');
 
-            if($('.field-div.error').length > 0) {
+            if ($('.field-div.error').length > 0) {
 
                 let field_div = $('.field-div.error:first');
                 let field_div_id = field_div.prop('id');
@@ -211,7 +211,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 url: '/doc_management/save_add_fields',
                 data: { data: JSON.stringify(data) },
                 success: function (response) {
-                    if(response.error == 'published') {
+                    if (response.error == 'published') {
                         $('#modal_danger').modal('show').find('.modal-body').html('This form has already been published. It can no longer be edited');
                     } else {
                         toastr['success']('Fields Successfully Saved');
@@ -228,7 +228,7 @@ if (document.URL.match(/create\/add_fields/)) {
             let field_category = ele.find('.field-div').data('field-category');
             let container = ele.closest('.field-container');
 
-            if(field_category != 'checkbox') {
+            if (field_category != 'checkbox' && field_category != 'radio') {
                 get_edit_properties_html(ele.find('.field-div'));
             }
 
@@ -282,6 +282,19 @@ if (document.URL.match(/create\/add_fields/)) {
 
         }
 
+        function hexToRgbA(hex, opacity){
+            var c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c= hex.substring(1).split('');
+                if(c.length== 3){
+                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c= '0x'+c.join('');
+                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+', '+opacity+')';
+            }
+            throw new Error('Bad Hex');
+        }
+
         function field_html(h_perc, w_perc, x_perc, y_perc, field_id, group_id, page, field_category) {
 
             //console.log('running field_html');
@@ -293,10 +306,11 @@ if (document.URL.match(/create\/add_fields/)) {
             let field_class = '';
             let field_data = '';
             let hide_add_option = '';
+            let group_bg_style = '';
 
             let position = x_perc > 50 ? 'right' : '';
             let field_div_properties = ' \
-            <div class="field-div-properties bg-white border shadow pt-0 pb-2 px-2  '+position+'"> \
+            <div class="field-div-properties bg-white border shadow pt-0 pb-2 px-2  '+ position + '"> \
                 <div class="field-div-properties-html"></div> \
             </div> \
             ';
@@ -308,6 +322,14 @@ if (document.URL.match(/create\/add_fields/)) {
                 handles = '';
                 field_class = 'radio-div standard';
                 field_data = '<div class="radio-html"></div>';
+                //hex = group_id.toString().split('').reverse().join('');
+                let hex = (group_id / 1.2348).toFixed(6);
+                hex = hex.slice(-6);
+                hex = '#'+hex.replace(/1/, 'f').replace(/7/, 'b').replace(/4/, 'd').replace(/9/, 'a');
+                let rgba = hexToRgbA(hex, '0.4');
+                console.log(rgba);
+                group_bg_style = 'background: ' + rgba + '; border-radius: 50%; border: 1px solid '+hex+';';
+                field_div_properties = '';
             } else if (field_category == 'checkbox') {
                 handles = '';
                 field_class = 'checkbox-div standard';
@@ -320,22 +342,22 @@ if (document.URL.match(/create\/add_fields/)) {
             }
 
             let field_div_html = ' \
-            <div class="field-div-container show" id="field_container_' + field_id + '" style="position: absolute; top: ' + y_perc + '%; left: ' + x_perc + '%; height: ' + h_perc + '%; width: ' + w_perc + '%;"> \
+            <div class="field-div-container show" id="field_container_'+ field_id + '" style="position: absolute; top: ' + y_perc + '%; left: ' + x_perc + '%; height: ' + h_perc + '%; width: ' + w_perc + '%; ' + group_bg_style + '"> \
                 <div class="field-div '+ field_class + ' group_' + group_id + '" id="field_' + field_id + '" data-field-id="' + field_id + '" data-group-id="' + group_id + '" data-field-category="' + field_category + '" data-page="' + page + '"> \
                     <div class="field-name-display-div"></div> \
                 </div> \
                 <div class="field-div-options"> \
-                    <a type="button" href="javascript: void(0)" class="btn btn-danger mx-0 remove-field '+position+'"><i class="fal fa-ban fa-lg mr-1"></i> Delete</a> \
-                    <div class="d-flex justify-content-start field-div-controls '+position+'"> \
+                    <a type="button" href="javascript: void(0)" class="btn btn-danger mx-0 remove-field '+ position + '"><i class="fal fa-ban fa-lg mr-1"></i> Delete</a> \
+                    <div class="d-flex justify-content-start field-div-controls '+ position + '"> \
                         <a type="button" href="javascript: void(0)" class="btn btn-primary ml-0 mr-1 field-handle"><i class="fal fa-arrows fa-lg"></i></a> \
                         <a type="button" href="javascript: void(0)" class="btn btn-primary ml-0 mr-1 mini-slider-option" data-direction="up"><i class="fal fa-arrow-up fa-lg"></i></a> \
                         <a type="button" href="javascript: void(0)" class="btn btn-primary ml-0 mr-1 mini-slider-option" data-direction="down"><i class="fal fa-arrow-down fa-lg"></i></a> \
-                        <a type="button" href="javascript: void(0)" class="btn btn-primary mx-0 add-field-button '+hide_add_option+'"><i class="fal fa-plus fa-lg"></i></a> \
+                        <a type="button" href="javascript: void(0)" class="btn btn-primary mx-0 add-field-button '+ hide_add_option + '"><i class="fal fa-plus fa-lg"></i></a> \
                     </div> \
-                    '+field_div_properties+' \
+                    '+ field_div_properties + ' \
                 </div> \
-                '+handles+' \
-                '+field_data+' \
+                '+ handles + ' \
+                '+ field_data + ' \
             </div> \
             ';
 
@@ -350,8 +372,8 @@ if (document.URL.match(/create\/add_fields/)) {
             let group_id = ele.data('group-id');
             let field_category = ele.data('field-category');
 
-            //let common_name = $('.group_' + group_id).data('commonname');
-            //let custom_name = $('.group_' + group_id).data('customname');
+            //let common_name = $('.group_'+group_id).data('commonname');
+            //let custom_name = $('.group_'+group_id).data('customname');
 
             axios.get('/doc_management/get_edit_properties_html', {
                 params: {
@@ -366,96 +388,96 @@ if (document.URL.match(/create\/add_fields/)) {
                     'Content-Type': 'text/html'
                 }
             })
-            .then(function (response) {
+                .then(function (response) {
 
-                let edit_properties_html = response.data;
-                let field_div_container = $('#field_container_'+field_id);
-                field_div_container.find('.field-div-properties-html').html(edit_properties_html);
+                    let edit_properties_html = response.data;
+                    let field_div_container = $('#field_container_' + field_id);
+                    field_div_container.find('.field-div-properties-html').html(edit_properties_html);
 
-                // clear field-error from field-div
-                field_div_container.find('.field-div').removeClass('error');
+                    // clear field-error from field-div
+                    field_div_container.find('.field-div').removeClass('error');
 
-                // dropdowns for common fields
-                field_div_container.find('.dropdown').not('.dropdown-input').on('mouseenter', function() {
-                    $(this).addClass('show').find('.dropdown-menu').first().addClass('show');
+                    // dropdowns for common fields
+                    field_div_container.find('.dropdown').not('.dropdown-input').on('mouseenter', function () {
+                        $(this).addClass('show').find('.dropdown-menu').first().addClass('show');
+                    })
+                        .on('mouseleave', function () {
+                            $(this).removeClass('show').find('.dropdown-menu').first().removeClass('show');
+                        });
+                    field_div_container.find('.dropdown-input').on('click', function (e) {
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                        $(this).addClass('show').find('.dropdown-menu').first().addClass('show');
+                    }).on('mouseleave', function () {
+                        $(this).removeClass('show').find('.dropdown-menu').first().removeClass('show');
+                    });
+
+                    $('.save-field-properties-button').on('click', function () {
+                        save_edit_properties($(this));
+                    });
+
+                    // when the common field name is clicked add to input and add ID to hidden input
+                    field_div_container.find('.field-name').on('click', function () {
+
+                        let field_name = $(this).text();
+                        let field_id = $(this).data('field-id');
+                        let field_type = $(this).data('field-type');
+                        let field_sub_group_id = $(this).data('field-sub-group-id');
+
+                        // clear custom name value
+                        field_div_container.find('.custom-field-name').val('');
+                        // add common field values
+                        field_div_container.find('.common-field-name-input, .common-field-name').val(field_name);
+                        field_div_container.find('.common-field-id').val(field_id);
+                        field_div_container.find('.common-field-type').val(field_type);
+                        field_div_container.find('.common-field-sub-group-id').val(field_sub_group_id);
+                        // hide dropdown
+                        setTimeout(function () {
+                            $('.dropdown-input, .dropdown-menu').removeClass('show');
+                        }, 100);
+
+                    });
+
+                    // clear common name if custom name entered
+                    field_div_container.find('.custom-field-name').on('change', function () {
+                        if ($(this).val() != '') {
+                            field_div_container.find('.common-field-name-input, .common-field-name').val('');
+                            field_div_container.find('.common-field-id').val('');
+                            field_div_container.find('.common-field-type').val('');
+                            field_div_container.find('.common-field-sub-group-id').val('');
+                        }
+                    });
+
+                    // show list of custom names already added
+                    field_div_container.find('.field-data-name').on('keyup', show_custom_names);
+
+                    // clear button on dropdown to remove value from input
+                    $('.clear-common-field-name').on('click', function () {
+                        $(this).closest('.edit-properties-div').find('.common-field-name-input, .common-field-name').val('');
+                        setTimeout(function () {
+                            $('.dropdown-input, .dropdown-menu').removeClass('show');
+                        }, 200);
+                    });
+
+                    // close field options button
+                    $('.close-field-options').on('click', function () {
+                        hide_active_field();
+                    });
+
+                    // capitalize all first letters
+                    $('.custom-field-name').on('keyup', function () {
+                        $(this).val(ucwords($(this).val()));
+                    });
+
+                    //ele.find('.form-select.field-data-name').val(common_name).data('default-value', common_name);
+                    //ele.find('.form-input.field-data-name').val(custom_name).data('default-value', custom_name);
+
+                    //form_elements();
+
                 })
-                .on('mouseleave', function() {
-                    $(this).removeClass('show').find('.dropdown-menu').first().removeClass('show');
-                });
-                field_div_container.find('.dropdown-input').on('click', function(e) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    $(this).addClass('show').find('.dropdown-menu').first().addClass('show');
-                }).on('mouseleave', function() {
-                    $(this).removeClass('show').find('.dropdown-menu').first().removeClass('show');
-                });
-
-                $('.save-field-properties-button').on('click', function() {
-                    save_edit_properties($(this));
-                });
-
-                // when the common field name is clicked add to input and add ID to hidden input
-                field_div_container.find('.field-name').on('click', function() {
-
-                    let field_name = $(this).text();
-                    let field_id = $(this).data('field-id');
-                    let field_type = $(this).data('field-type');
-                    let field_sub_group_id = $(this).data('field-sub-group-id');
-
-                    // clear custom name value
-                    field_div_container.find('.custom-field-name').val('');
-                    // add common field values
-                    field_div_container.find('.common-field-name-input, .common-field-name').val(field_name);
-                    field_div_container.find('.common-field-id').val(field_id);
-                    field_div_container.find('.common-field-type').val(field_type);
-                    field_div_container.find('.common-field-sub-group-id').val(field_sub_group_id);
-                    // hide dropdown
-                    setTimeout(function() {
-                        $('.dropdown-input, .dropdown-menu').removeClass('show');
-                    }, 100);
+                .catch(function (error) {
 
                 });
-
-                // clear common name if custom name entered
-                field_div_container.find('.custom-field-name').on('change', function() {
-                    if($(this).val() != '') {
-                        field_div_container.find('.common-field-name-input, .common-field-name').val('');
-                        field_div_container.find('.common-field-id').val('');
-                        field_div_container.find('.common-field-type').val('');
-                        field_div_container.find('.common-field-sub-group-id').val('');
-                    }
-                });
-
-                // show list of custom names already added
-                field_div_container.find('.field-data-name').on('keyup', show_custom_names);
-
-                // clear button on dropdown to remove value from input
-                $('.clear-common-field-name').on('click', function() {
-                    $(this).closest('.edit-properties-div').find('.common-field-name-input, .common-field-name').val('');
-                    setTimeout(function() {
-                        $('.dropdown-input, .dropdown-menu').removeClass('show');
-                    }, 200);
-                });
-
-                // close field options button
-                $('.close-field-options').on('click', function() {
-                    hide_active_field();
-                });
-
-                // capitalize all first letters
-                $('.custom-field-name').on('keyup', function() {
-                    $(this).val(ucwords($(this).val()));
-                });
-
-                //ele.find('.form-select.field-data-name').val(common_name).data('default-value', common_name);
-                //ele.find('.form-input.field-data-name').val(custom_name).data('default-value', custom_name);
-
-                //form_elements();
-
-            })
-            .catch(function (error) {
-
-            });
         }
 
         function save_edit_properties(button) {
@@ -470,18 +492,18 @@ if (document.URL.match(/create\/add_fields/)) {
             let common_name = field_div_container.find('.common-field-name').val();
             let custom_name = field_div_container.find('.custom-field-name').val();
 
-            if(common_name == '' && custom_name == '') {
+            if (common_name == '' && custom_name == '') {
                 field_div_container.find('.alert.alert-danger').removeClass('hide').addClass('show').find('.error-message').html('You must enter either the<br>Shared Field Name or Custom Name');
-                field_div_container.find('input').on('change', function() {
+                field_div_container.find('input').on('change', function () {
                     field_div_container.find('.alert.alert-danger').removeClass('show').addClass('hide');
                 });
                 return false;
             }
 
-            if(field_category == 'number') {
-                if(field_div_container.find('.number-type:checked').length == 0) {
+            if (field_category == 'number') {
+                if (field_div_container.find('.number-type:checked').length == 0) {
                     field_div_container.find('.alert.alert-danger').removeClass('hide').addClass('show').find('.error-message').html('You must select either<br>Written or Numeric');
-                    field_div_container.find('input').on('change', function() {
+                    field_div_container.find('input').on('change', function () {
                         field_div_container.find('.alert.alert-danger').removeClass('show').addClass('hide');
                     });
                     return false;
@@ -493,10 +515,12 @@ if (document.URL.match(/create\/add_fields/)) {
             let common_field_sub_group_id = field_div_container.find('.common-field-sub-group-id').val();
 
 
-            if (field_category != 'checkbox') {
+            // radio change // if (field_category != 'checkbox') {
+            if (field_category != 'checkbox' && field_category != 'radio') {
 
                 // set default values of field
-                field_div_container.find('input').not('[type=radio]').each(function () {
+                // radio change // field_div_container.find('input').not('[type=radio]').each(function () {
+                field_div_container.find('input').each(function () {
                     $(this).data('default-value', $(this).val());
                 });
 
@@ -507,19 +531,19 @@ if (document.URL.match(/create\/add_fields/)) {
 
                     let group_div_container = $(this).closest('.field-div-container');
                     // radio will always be a custom name
-                    if (field_category != 'radio') {
-                        // add field name to display
-                        group_div_container.find('.field-name-display-div').text(custom_name+common_name);
-                        group_div_container.find('.common-field-name-input, .common-field-name').val(common_name).data('default-value', common_name);
-                        group_div_container.find('.common-field-id').val(common_field_id).data('default-value', common_field_id);
-                        group_div_container.find('.common-field-type').val(common_field_type).data('default-value', common_field_type);
-                        group_div_container.find('.common-field-sub-group-id').val(common_field_sub_group_id).data('default-value', common_field_sub_group_id);
-                    }
+                    // radio change // if (field_category != 'radio') {
+                    // add field name to display
+                    group_div_container.find('.field-name-display-div').text(custom_name + common_name);
+                    group_div_container.find('.common-field-name-input, .common-field-name').val(common_name).data('default-value', common_name);
+                    group_div_container.find('.common-field-id').val(common_field_id).data('default-value', common_field_id);
+                    group_div_container.find('.common-field-type').val(common_field_type).data('default-value', common_field_type);
+                    group_div_container.find('.common-field-sub-group-id').val(common_field_sub_group_id).data('default-value', common_field_sub_group_id);
+                    // radio change // }
                     group_div_container.find('.custom-field-name').val(custom_name).data('default-value', custom_name);
 
                 });
 
-                if(field_category == 'number') {
+                if (field_category == 'number') {
                     // set default values for number inputs
                     let number_type_radio = field_div_container.find('.number-type');
                     number_type_radio.data('default-value', '');
@@ -528,8 +552,8 @@ if (document.URL.match(/create\/add_fields/)) {
 
                     // update other number types to written if this is numeric. There will be one numeric and possibly multiple written
                     if (number_type == 'numeric') {
-                        $('.group_' + group_id).each(function() {
-                            if($(this).prop('id') != 'field_'+field_id) {
+                        $('.group_' + group_id).each(function () {
+                            if ($(this).prop('id') != 'field_' + field_id) {
                                 // uncheck all and clear default value
                                 $(this).closest('.field-div-container').find('.number-type').prop('checked', false).data('default-value', '');
                                 // set written field as checked and update default value
@@ -543,7 +567,7 @@ if (document.URL.match(/create\/add_fields/)) {
             }
 
             field_div_container.find('.alert.alert-success').removeClass('hide').addClass('show');
-            field_div_container.find('input').on('change', function() {
+            field_div_container.find('input').on('change', function () {
                 field_div_container.find('.alert.alert-success').removeClass('show').addClass('hide');
             });
 
@@ -561,7 +585,8 @@ if (document.URL.match(/create\/add_fields/)) {
             // get original field input values
             let common_name, common_field_id, common_field_type, common_field_sub_group_id, custom_name, number_type;
 
-            if (field_category != 'radio') {
+            // radio change // if (field_category != 'radio') {
+            if (field_category != 'radio' && field_category != 'checkbox') {
                 common_name = ele.find('.common-field-name').val();
                 common_field_id = ele.find('.common-field-id').val();
                 common_field_type = ele.find('.common-field-type').val();
@@ -569,7 +594,7 @@ if (document.URL.match(/create\/add_fields/)) {
             }
             custom_name = ele.find('.custom-field-name').val();
 
-            if(field_category == 'number') {
+            if (field_category == 'number') {
                 number_type = ele.find('.number-type:checked').val();
             }
 
@@ -599,7 +624,7 @@ if (document.URL.match(/create\/add_fields/)) {
 
             if (field_category != 'checkbox') {
 
-                setTimeout(function() {
+                setTimeout(function () {
                     // assign group field_id to new field
                     new_ele.find('.field-div').data('group-id', group_id).addClass('group_' + group_id);
                     $('.group_' + group_id).removeClass('standard').addClass('group');
@@ -607,7 +632,7 @@ if (document.URL.match(/create\/add_fields/)) {
                     // add field values and default data values from other fields in group
                     if (field_category != 'radio') {
                         // add field name to display
-                        new_ele.find('.field-name-display-div').text(custom_name+common_name);
+                        new_ele.find('.field-name-display-div').text(custom_name + common_name);
                         new_ele.find('.common-field-name-input, .common-field-name').val(common_name).data('default-value', common_name);
                         new_ele.find('.common-field-id').val(common_field_id).data('default-value', common_field_id);
                         new_ele.find('.common-field-type').val(common_field_type).data('default-value', common_field_type);
@@ -615,13 +640,13 @@ if (document.URL.match(/create\/add_fields/)) {
                     }
                     new_ele.find('.custom-field-name').val(custom_name).data('default-value', custom_name);
 
-                    if(field_category == 'number') {
-                        if(number_type == 'numeric') {
+                    if (field_category == 'number') {
+                        if (number_type == 'numeric') {
                             // if a number and previous field is numeric this has to be written
                             new_ele.find('.number-type[value=written]').prop('checked', true).data('default-value', 'checked');
                         } else {
                             // if one in the group is numeric this will be written
-                            if($('.group_' + group_id).closest('.field-div-container').find('.number-type[value=numeric]:checked').length > 0) {
+                            if ($('.group_' + group_id).closest('.field-div-container').find('.number-type[value=numeric]:checked').length > 0) {
                                 new_ele.find('.number-type[value=written]').prop('checked', true).data('default-value', 'checked');
                             }
                         }
@@ -643,7 +668,7 @@ if (document.URL.match(/create\/add_fields/)) {
             let field_category = field_div.data('field-category');
             field_div_container.css({ top: operator + '=.05%' });
             // set new h,w,x,y after moving up and down
-            setTimeout(function() {
+            setTimeout(function () {
                 set_and_get_field_coordinates(null, field_div_container, field_category, 'yes');
             }, 10);
 
@@ -654,7 +679,7 @@ if (document.URL.match(/create\/add_fields/)) {
             let container, x, y;
 
             // if from dblclick to add field
-            if(e) {
+            if (e) {
 
                 // get container
                 container = $(e.target.parentNode);
@@ -668,7 +693,7 @@ if (document.URL.match(/create\/add_fields/)) {
                 x = parseInt(Math.round(e.clientX - target_boundaries.left));
                 y = parseInt(Math.round(e.clientY - target_boundaries.top));
 
-            // coordinates of existing field
+                // coordinates of existing field
             } else {
 
                 container = ele.parent();
@@ -686,7 +711,7 @@ if (document.URL.match(/create\/add_fields/)) {
             if (field_category == 'radio' || field_category == 'checkbox') {
                 ele_h_perc = 1.1;
             }
-            if(e) {
+            if (e) {
                 // remove element height from top position
                 y_perc = y_perc - ele_h_perc;
             }
@@ -724,9 +749,9 @@ if (document.URL.match(/create\/add_fields/)) {
                 ele.animate({ top: '0%' }).find('field-div').data('yp', '0');
             }
 
-            setTimeout(function() {
+            setTimeout(function () {
                 ele.find('.remove-field, .dropdown, .field-div-properties, .field-div-controls').removeClass('right');
-                if(x_perc > 50) {
+                if (x_perc > 50) {
                     ele.find('.remove-field, .dropdown, .field-div-properties, .field-div-controls').addClass('right');
                 }
             }, 300);
@@ -747,13 +772,13 @@ if (document.URL.match(/create\/add_fields/)) {
             let field_div = field_div_container.find('.field-div');
             let field_category = field_div_container.find('.field-div').data('field-category');
 
-            field_div_container.find('input[type="text"], input[type="hidden"]').each(function() {
+            field_div_container.find('input[type="text"], input[type="hidden"]').each(function () {
                 $(this).val($(this).data('default-value'));
             });
 
-            if(field_category == 'number') {
-                field_div_container.find('input[type="radio"]').each(function() {
-                    if($(this).data('default-value') == 'checked') {
+            if (field_category == 'number') {
+                field_div_container.find('input[type="radio"]').each(function () {
+                    if ($(this).data('default-value') == 'checked') {
                         $(this).prop('checked', true);
                     }
                 });
@@ -767,18 +792,18 @@ if (document.URL.match(/create\/add_fields/)) {
             let common_name = field_div_container.find('.common-field-name').val();
             let custom_name = field_div_container.find('.custom-field-name').val();
 
-            if(common_name == '' && custom_name == '') {
+            if (common_name == '' && custom_name == '') {
                 errors = 'yes';
             }
 
-            if(field_category == 'number') {
-                if(field_div_container.find('.number-type:checked').length == 0) {
+            if (field_category == 'number') {
+                if (field_div_container.find('.number-type:checked').length == 0) {
                     errors = 'yes';
                 }
             }
 
             field_div.removeClass('error');
-            if(errors == 'yes') {
+            if (errors == 'yes') {
                 field_div.addClass('error');
             }
 
@@ -796,31 +821,31 @@ if (document.URL.match(/create\/add_fields/)) {
             let input = $(this);
             let field_div = input.closest('.field-div-container');
 
-            if(input.val() != '') {
+            if (input.val() != '') {
 
                 axios.get('/doc_management/get_custom_names', {
                     params: {
                         val: input.val()
                     }
                 })
-                .then(function (response) {
+                    .then(function (response) {
 
-                    field_div.find('.dropdown-results-div').html('');
-                    response.data.custom_names.forEach(function (result) {
-                        field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item field-name-result">'+result['field_name_display']+'</a>');
+                        field_div.find('.dropdown-results-div').html('');
+                        response.data.custom_names.forEach(function (result) {
+                            field_div.find('.dropdown-results-div').append('<a href="javascript: void(0)" class="list-group-item field-name-result">' + result['field_name_display'] + '</a>');
+                        });
+                        field_div.find('.custom-name-results').show();
+
+                        $('.field-name-result').on('click', function () {
+                            let edit_div = $(this).closest('.field-div-container').find('.edit-properties-div');
+                            edit_div.find('.form-input.field-data-name').val($(this).text());
+                            edit_div.find('.custom-name-results').hide();
+                        });
+
+                    })
+                    .catch(function (error) {
+
                     });
-                    field_div.find('.custom-name-results').show();
-
-                    $('.field-name-result').on('click', function() {
-                        let edit_div = $(this).closest('.field-div-container').find('.edit-properties-div');
-                        edit_div.find('.form-input.field-data-name').val($(this).text());
-                        edit_div.find('.custom-name-results').hide();
-                    });
-
-                })
-                .catch(function (error) {
-
-                });
 
             } else {
                 field_div.find('.custom-name-results').hide();
@@ -828,7 +853,7 @@ if (document.URL.match(/create\/add_fields/)) {
             }
 
             $(document).on('mouseup', function (e) {
-                if ($(e.target).closest('.custom-name-results').length  === 0) {
+                if ($(e.target).closest('.custom-name-results').length === 0) {
                     $('.custom-name-results').hide();
                 }
             });
@@ -841,19 +866,19 @@ if (document.URL.match(/create\/add_fields/)) {
             let page = $(this).data('page-number');
             let file_id = $(this).data('file-id');
 
-            $('#page_div_'+page).next('.file-view-page-info').fadeOut('slow').remove();
-            $('#page_'+page+', #page_div_'+page+', #thumb_'+page).fadeOut('slow').remove();
+            $('#page_div_' + page).next('.file-view-page-info').fadeOut('slow').remove();
+            $('#page_' + page + ', #page_div_' + page + ', #thumb_' + page).fadeOut('slow').remove();
 
             let formData = new FormData();
             formData.append('page', page);
             formData.append('file_id', file_id);
             axios.post('/doc_management/delete_page', formData, axios_options)
-            .then(function (response) {
-                toastr['success']('Page Successfully Removed')
-            })
-            .catch(function (error) {
+                .then(function (response) {
+                    toastr['success']('Page Successfully Removed')
+                })
+                .catch(function (error) {
 
-            });
+                });
         }
 
 

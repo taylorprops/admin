@@ -15846,7 +15846,10 @@ header .main-search-input::placeholder {
 .page-add-fields .field-div-container .radio-html {
   height: 100%;
   width: 100%;
-  border: 4px solid #4c9bdb;
+}
+
+.page-add-fields .field-div-container .checkbox-html {
+  border: 1px solid #4c9bdb;
 }
 
 .page-add-fields .field-div-container .radio-html {
@@ -17667,7 +17670,7 @@ header .main-search-input::placeholder {
 }
 
 .page-fill-fields .field-div-container .data-div:not(.data-div-radio-check) {
-  padding-top: 2px;
+  padding-top: 4px;
   padding-left: 2px;
 }
 

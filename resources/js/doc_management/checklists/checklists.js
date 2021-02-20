@@ -523,9 +523,11 @@ if (document.URL.match(/checklists/)) {
         $('#confirm_remove_file_modal').modal();
         $('#confirm_remove_file').on('click', function () {
             button.closest('li').remove();
-            forms_status();
-            fill_empty_groups();
             $('#confirm_remove_file_modal').modal('hide');
+            setTimeout(function() {
+                forms_status();
+                fill_empty_groups();
+            }, 100);
         });
     }
 
