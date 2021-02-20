@@ -1414,6 +1414,25 @@ if (document.URL.match(/transaction_details/)) {
 
         });
 
+        setInterval(function() {
+
+            let complete = 'yes';
+            $('.progress-bar').each(function() {
+                if($(this).attr('aria-valuenow') != '100') {
+                    complete = 'no';
+                }
+            });
+            if(complete == 'yes') {
+                let final_notification = ' \
+                <div class="text-yellow w-100 p-1"> \
+                <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+                </div> \
+                ';
+                $('#loading_div').append(final_notification);
+            }
+
+        }, 1000);
+
     }
 
     window.show_add_individual_template = function() {
