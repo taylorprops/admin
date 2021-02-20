@@ -59238,8 +59238,8 @@ window.nl2br = function (str, replaceMode, isXhtml) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/taylor-properties.net/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/taylor-properties.net/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/admin/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/admin/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

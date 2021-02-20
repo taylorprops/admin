@@ -85,17 +85,7 @@ use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
 
-
-/* use Eversign\File;
-use Eversign\Field; */
 use Eversign\Client;
-/* use Eversign\Signer;
-use Eversign\Document;
-use Eversign\Recipient; */
-/* use Eversign\InitialsField;
-use Eversign\SignatureField;
-use Eversign\TextField;
-use Eversign\DateSignedField; */
 
 use App\Models\Esign\EsignEnvelopes;
 use App\Models\Esign\EsignCallbacks;
@@ -104,6 +94,9 @@ use App\Models\Esign\EsignSigners;
 use App\Models\Esign\EsignDocuments;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Models\Esign\EsignTemplates;
+
+
+use App\Jobs\AddFieldAndInputs;
 
 
 class TransactionsDetailsController extends Controller {
@@ -1560,8 +1553,6 @@ class TransactionsDetailsController extends Controller {
 
         $files = json_decode($request['files'], true);
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
-
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
 
         foreach ($files as $file) {
@@ -1683,14 +1674,18 @@ class TransactionsDetailsController extends Controller {
                 TransactionUploadPages::create($new);
             }
 
+            AddFieldAndInputs::dispatch($file_id, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
 
-            $fields = Fields::where('file_id', $file_id) -> with('common_field') -> get();
+
+            /* $fields = Fields::where('file_id', $file_id) -> with('common_field') -> get();
 
             foreach ($fields as $field) {
 
-                $this -> add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
+                AddFieldAndInputs::dispatch($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
 
-            }
+                //$this -> add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
+
+            } */
 
         }
 
@@ -1832,82 +1827,55 @@ class TransactionsDetailsController extends Controller {
                     $db_type = str_replace('Property', '', $sub_group_title);
                 }
 
-                /*
-                if(preg_match('/Both/', $sub_group_title)) {
+                $input_address_one_display = $name_type.' Street Address';
+                $input_address_one_db_column = $db_type.'FullStreetAddress';
+                $input_address_two_display = $name_type.' City';
+                $input_address_two_db_column = $db_type.'City';
+                $input_address_three_display = $name_type.' State';
+                $input_address_three_db_column = $db_type.'StateOrProvince';
+                $input_address_four_display = $name_type.' Zip';
+                $input_address_four_db_column = $db_type.'PostalCode';
+                if($sub_group_title == 'Property') {
+                    $input_address_five_display = 'Property County';
+                    $input_address_five_db_column = $db_type.'County';
+                }
 
-                    $input_address_display = $db_name.' Full Address';
-                    $input_address_db_column = $db_name.'OneFullAddress';
+                $input_one = new UserFieldsInputs();
+                $input_one -> file_id = $new_field -> file_id;
+                $input_one -> group_id = $new_field -> group_id;
+                $input_one -> file_type = $new_field -> file_type;
+                $input_one -> field_type = $new_field -> field_type;
+                $input_one -> transaction_field_id = $new_field -> id;
+                $input_one -> input_name_display = $input_address_one_display;
+                $input_one -> input_db_column = $input_address_one_db_column;
+                $input_one -> Agent_ID = $new_field -> Agent_ID;
+                $input_one -> Listing_ID = $new_field -> Listing_ID;
+                $input_one -> Contract_ID = $new_field -> Contract_ID;
+                $input_one -> Referral_ID = $new_field -> Referral_ID;
+                $input_one -> transaction_type = $new_field -> transaction_type;
+                $input_one -> save();
 
+                $input_two = $input_one -> replicate();
+                $input_two -> input_name_display = $input_address_two_display;
+                $input_two -> input_db_column = $input_address_two_db_column;
+                $input_two -> save();
 
+                $input_three = $input_one -> replicate();
+                $input_three -> input_name_display = $input_address_three_display;
+                $input_three -> input_db_column = $input_address_three_db_column;
+                $input_three -> save();
 
-                    $input_one = new UserFieldsInputs();
-                    $input_one -> file_id = $new_field -> file_id;
-                    $input_one -> group_id = $new_field -> group_id;
-                    $input_one -> file_type = $new_field -> file_type;
-                    $input_one -> field_type = $new_field -> field_type;
-                    $input_one -> transaction_field_id = $new_field -> id;
-                    $input_one -> input_name_display = $input_address_display;
-                    $input_one -> input_db_column = $input_address_db_column;
-                    $input_one -> Agent_ID = $new_field -> Agent_ID;
-                    $input_one -> Listing_ID = $new_field -> Listing_ID;
-                    $input_one -> Contract_ID = $new_field -> Contract_ID;
-                    $input_one -> Referral_ID = $new_field -> Referral_ID;
-                    $input_one -> transaction_type = $new_field -> transaction_type;
-                    $input_one -> save();
+                $input_four = $input_one -> replicate();
+                $input_four -> input_name_display = $input_address_four_display;
+                $input_four -> input_db_column = $input_address_four_db_column;
+                $input_four -> save();
 
-                } else { */
-
-                    $input_address_one_display = $name_type.' Street Address';
-                    $input_address_one_db_column = $db_type.'FullStreetAddress';
-                    $input_address_two_display = $name_type.' City';
-                    $input_address_two_db_column = $db_type.'City';
-                    $input_address_three_display = $name_type.' State';
-                    $input_address_three_db_column = $db_type.'StateOrProvince';
-                    $input_address_four_display = $name_type.' Zip';
-                    $input_address_four_db_column = $db_type.'PostalCode';
-                    if($sub_group_title == 'Property') {
-                        $input_address_five_display = 'Property County';
-                        $input_address_five_db_column = $db_type.'County';
-                    }
-
-                    $input_one = new UserFieldsInputs();
-                    $input_one -> file_id = $new_field -> file_id;
-                    $input_one -> group_id = $new_field -> group_id;
-                    $input_one -> file_type = $new_field -> file_type;
-                    $input_one -> field_type = $new_field -> field_type;
-                    $input_one -> transaction_field_id = $new_field -> id;
-                    $input_one -> input_name_display = $input_address_one_display;
-                    $input_one -> input_db_column = $input_address_one_db_column;
-                    $input_one -> Agent_ID = $new_field -> Agent_ID;
-                    $input_one -> Listing_ID = $new_field -> Listing_ID;
-                    $input_one -> Contract_ID = $new_field -> Contract_ID;
-                    $input_one -> Referral_ID = $new_field -> Referral_ID;
-                    $input_one -> transaction_type = $new_field -> transaction_type;
-                    $input_one -> save();
-
-                    $input_two = $input_one -> replicate();
-                    $input_two -> input_name_display = $input_address_two_display;
-                    $input_two -> input_db_column = $input_address_two_db_column;
-                    $input_two -> save();
-
-                    $input_three = $input_one -> replicate();
-                    $input_three -> input_name_display = $input_address_three_display;
-                    $input_three -> input_db_column = $input_address_three_db_column;
-                    $input_three -> save();
-
-                    $input_four = $input_one -> replicate();
-                    $input_four -> input_name_display = $input_address_four_display;
-                    $input_four -> input_db_column = $input_address_four_db_column;
-                    $input_four -> save();
-
-                    if($sub_group_title == 'Property') {
-                        $input_five = $input_one -> replicate();
-                        $input_five -> input_name_display = $input_address_five_display;
-                        $input_five -> input_db_column = $input_address_five_db_column;
-                        $input_five -> save();
-                    }
-
-                //}
+                if($sub_group_title == 'Property') {
+                    $input_five = $input_one -> replicate();
+                    $input_five -> input_name_display = $input_address_five_display;
+                    $input_five -> input_db_column = $input_address_five_db_column;
+                    $input_five -> save();
+                }
 
             }
 
@@ -1945,6 +1913,8 @@ class TransactionsDetailsController extends Controller {
             $input -> input_value = $value;
             $input -> save();
         }
+
+        return response() -> json(['status' => 'success']);
 
     }
 
