@@ -643,25 +643,21 @@
                                         @endphp
                                         @if($checklist_form_required && $checklist_form_required -> file_location != '')
                                             <li class="list-group-item p-0 border-top-0 border-left-0 border-right-0 border-bottom">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                    <div>
-                                                        <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
-                                                        data-file-id="{{ $checklist_form_required -> file_id }}"
-                                                        data-template-id="{{ $checklist_form_required -> template_id }}"
-                                                        data-file-name="{{ $checklist_form_required -> file_name }}"
-                                                        data-file-name-display="{{ $checklist_form_required -> file_name_display }}"
-                                                        data-pages-total="{{ $checklist_form_required -> pages_total }}"
-                                                        data-file-location="{{ $checklist_form_required -> file_location }}"
-                                                        data-page-width="{{ $checklist_form_required -> page_width }}"
-                                                        data-page-height="{{ $checklist_form_required -> page_height }}"
-                                                        data-page-size="{{ $checklist_form_required -> page_size }}"
-                                                        data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
-                                                        checked>
-                                                    </div>
-                                                    <div class="ml-3 mt-1">
-                                                        <a href="javascript: void(0)">{{ $checklist_form_required -> file_name_display }}</a>
-                                                    </div>
-                                                </div>
+
+                                                <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
+                                                data-file-id="{{ $checklist_form_required -> file_id }}"
+                                                data-template-id="{{ $checklist_form_required -> template_id }}"
+                                                data-file-name="{{ $checklist_form_required -> file_name }}"
+                                                data-file-name-display="{{ $checklist_form_required -> file_name_display }}"
+                                                data-pages-total="{{ $checklist_form_required -> pages_total }}"
+                                                data-file-location="{{ $checklist_form_required -> file_location }}"
+                                                data-page-width="{{ $checklist_form_required -> page_width }}"
+                                                data-page-height="{{ $checklist_form_required -> page_height }}"
+                                                data-page-size="{{ $checklist_form_required -> page_size }}"
+                                                data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
+                                                data-label="{{ $checklist_form_required -> file_name_display }}"
+                                                checked>
+
                                             </li>
                                         @endif
                                     @endforeach

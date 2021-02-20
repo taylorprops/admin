@@ -493,14 +493,16 @@ window.global_get_url_parameters = function(key) {
 
 // Format Phone
 window.global_format_phone = function (obj) {
-    let numbers = obj.value.replace(/\D/g, ''),
-        char = { 0: '(', 3: ') ', 6: '-' };
-    obj.value = '';
-    for (let i = 0; i < numbers.length; i++) {
-        if (i > 13) {
-            return false;
+    if(obj) {
+        let numbers = obj.value.replace(/\D/g, ''),
+            char = { 0: '(', 3: ') ', 6: '-' };
+        obj.value = '';
+        for (let i = 0; i < numbers.length; i++) {
+            if (i > 13) {
+                return false;
+            }
+            obj.value += (char[i] || '') + numbers[i];
         }
-        obj.value += (char[i] || '') + numbers[i];
     }
 }
 

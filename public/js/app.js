@@ -48533,10 +48533,10 @@ if (document.URL.match(/transaction_details/)) {
     global_loading_on('', loading_html);
     files.forEach(function (file, index) {
       // bigger the interval longer it takes
-      var multiplier = 1000;
+      var multiplier = 800;
 
       if (file['pages_total']) {
-        multiplier = 300;
+        multiplier = 600;
       }
 
       var interval = file['file_size'] * multiplier;
@@ -58942,20 +58942,22 @@ window.global_get_url_parameters = function (key) {
 
 
 window.global_format_phone = function (obj) {
-  var numbers = obj.value.replace(/\D/g, ''),
-      _char = {
-    0: '(',
-    3: ') ',
-    6: '-'
-  };
-  obj.value = '';
+  if (obj) {
+    var numbers = obj.value.replace(/\D/g, ''),
+        _char = {
+      0: '(',
+      3: ') ',
+      6: '-'
+    };
+    obj.value = '';
 
-  for (var i = 0; i < numbers.length; i++) {
-    if (i > 13) {
-      return false;
+    for (var i = 0; i < numbers.length; i++) {
+      if (i > 13) {
+        return false;
+      }
+
+      obj.value += (_char[i] || '') + numbers[i];
     }
-
-    obj.value += (_char[i] || '') + numbers[i];
   }
 }; // FORMAT SOCIAL SECURITY
 
