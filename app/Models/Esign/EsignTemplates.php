@@ -15,7 +15,7 @@ class EsignTemplates extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public static function boot() {
+    /* public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
@@ -31,7 +31,7 @@ class EsignTemplates extends Model
                 }
             }
         });
-    }
+    } */
 
     public function envelopes() {
         return $this -> hasMany('App\Models\Esign\EsignEnvelopes', 'template_id', 'id') -> with('documents') -> with('signers');
