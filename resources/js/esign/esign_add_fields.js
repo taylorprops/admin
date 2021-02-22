@@ -347,17 +347,20 @@ if(document.URL.match(/esign_add_fields/)) {
                 formData.append('fields', fields);
                 formData.append('is_draft', is_draft);
                 formData.append('is_template', is_template);
+
                 axios.post('/esign/esign_send_for_signatures', formData, axios_options)
                 .then(function (response) {
-                    if(!is_draft && !is_template) {
-                        setTimeout(function() {
-                            window.location = '/esign_show_sent';
-                        }, 1000);
-                    }
+
                 })
                 .catch(function (error) {
 
                 });
+
+                if(!is_draft && !is_template) {
+                    setTimeout(function() {
+                        window.location = '/esign_show_sent';
+                    }, 1000);
+                }
 
 
 

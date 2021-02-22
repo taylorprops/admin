@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Esign;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 /* use Eversign\File;
 use Eversign\Field;
@@ -1087,6 +1088,8 @@ class EsignController extends Controller {
 
         $subject = $request -> subject;
         $message = $request -> message;
+        $user_name = auth() -> user() -> name;
+        $user_email = auth() -> user() -> email;
 
         $fields = json_decode($request -> fields, true);
         $fields = collect($fields) -> map(function ($fields) {
@@ -1126,7 +1129,7 @@ class EsignController extends Controller {
             return response() -> json(['status' => 'template saved']);
         }
 
-        SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields);
+        SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields, $user_name, $user_email);
 
         /* // update esign_envelope table with subject and message
         $envelope = EsignEnvelopes::find($envelope_id) -> update([

@@ -3,6 +3,7 @@
 namespace App\Jobs\Esign;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 use Eversign\File;
 use Eversign\Field;
@@ -33,13 +34,15 @@ class SendForSignatures implements ShouldQueue {
     protected $subject;
     protected $message;
     protected $fields;
+    protected $user_name;
+    protected $user_email;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($envelope_id, $template_id, $document_ids, $subject, $message, $fields) {
+    public function __construct($envelope_id, $template_id, $document_ids, $subject, $message, $fields, $user_name, $user_email) {
 
         $this -> envelope_id = $envelope_id;
         $this -> template_id = $template_id;
@@ -47,6 +50,8 @@ class SendForSignatures implements ShouldQueue {
         $this -> subject = $subject;
         $this -> message = $message;
         $this -> fields = $fields;
+        $this -> user_name = $user_name;
+        $this -> user_email = $user_email;
 
     }
 
@@ -56,6 +61,15 @@ class SendForSignatures implements ShouldQueue {
      * @return void
      */
     public function handle() {
+
+        $envelope_id = $this -> envelope_id;
+        $template_id = $this -> template_id;
+        $document_ids = $this -> document_ids;
+        $subject = $this -> subject;
+        $message = $this -> message;
+        $fields = $this -> fields;
+        $user_name = $this -> user_name;
+        $user_email = $this -> user_email;
 
         // update esign_envelope table with subject and message
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
@@ -76,11 +90,13 @@ class SendForSignatures implements ShouldQueue {
         $file_to_sign -> setUseHiddenTags(true);
         $file_to_sign -> setRequireAllSigners(true);
         $file_to_sign -> setUseSignerOrder(true);
-        $file_to_sign -> setCustomRequesterName(auth() -> user() -> name);
-        $file_to_sign -> setCustomRequesterEmail(auth() -> user() -> email);
+        $file_to_sign -> setCustomRequesterName($user_name);
+        $file_to_sign -> setCustomRequesterEmail($user_email);
         if(App::environment() != 'local') {
             $site_address = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].'/esign_callback';
             $file_to_sign -> setRedirect($site_address);
+        } else {
+            $file_to_sign -> setRedirect('http://7df8fc134185.ngrok.io');
         }
 
         $days = config('global.vars.app_stage') == 'development' ? 'P1D' : 'P7D';
@@ -129,7 +145,7 @@ class SendForSignatures implements ShouldQueue {
                 //Add a File to the Document
                 $file = new File();
                 $file -> setName($document -> file_name);
-                $file -> setFilePath(getcwd().$document -> file_location);
+                $file -> setFilePath(Storage::disk('public') -> path(str_replace('/storage/', '', $document -> file_location)));
                 $file_to_sign -> appendFile($file);
 
                 $c = 0;
