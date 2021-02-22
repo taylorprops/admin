@@ -48527,6 +48527,7 @@ if (document.URL.match(/transaction_details/)) {
     global_loading_off();
     var loading_html = ' \
         <div class="h5 text-white mb-3">Importing Documents...</div> \
+        <div class="font-10 text-yellow mb-3">After the import is complete inputs and signature fields will be added in the background. Some forms might require an additional 10 seconds before you can edit them.</div> \
         <div class="w-100 text-left document-loading-container"> \
             <div id="loading_div"></div> \
         </div> \

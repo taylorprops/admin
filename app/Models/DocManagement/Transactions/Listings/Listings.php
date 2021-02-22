@@ -30,7 +30,7 @@ class Listings extends Model
         });
     }
 
-    public function ScopeGetPropertyDetails($request, $transaction_type, $id) {
+    public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null) {
 
         if(is_array($id)) {
             if($transaction_type == 'listing') {
@@ -48,6 +48,9 @@ class Listings extends Model
             $property = Contracts::find($id);
         } else if($transaction_type == 'referral') {
             $property = Referrals::find($id);
+        }
+        if($select) {
+            $property = $property -> select($select);
         }
 
         return $property;

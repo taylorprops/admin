@@ -7,96 +7,103 @@ use File;
 use Config;
 use App\User;
 
-use App\Mail\DefaultEmail;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-
-use thiagoalessio\TesseractOCR\TesseractOCR;
-
-use App\Http\Controllers\Controller;
-
-use App\Models\CRM\CRMContacts;
-
-use App\Models\BrightMLS\AgentRoster;
-
-use App\Models\Commission\Commission;
-use App\Models\Commission\CommissionChecksIn;
-use App\Models\Commission\CommissionChecksOut;
-use App\Models\Commission\CommissionBreakdowns;
-use App\Models\Commission\CommissionBreakdownsDeductions;
-use App\Models\Commission\CommissionChecksInQueue;
-use App\Models\Commission\CommissionNotes;
-use App\Models\Commission\CommissionIncomeDeductions;
-use App\Models\Commission\CommissionCommissionDeductions;
-
-use App\Models\Employees\AgentsNotes;
-use App\Models\Employees\AgentsTeams;
-use App\Models\Employees\Agents;
-
-use App\Models\Resources\LocationData;
-use App\Models\Admin\Resources\ResourceItemsAdmin;
-use App\Models\DocManagement\Resources\ResourceItems;
-
-use App\Mail\DocManagement\Emails\Documents;
-
-use App\Models\DocManagement\Earnest\Earnest;
-use App\Models\DocManagement\Earnest\EarnestNotes;
-use App\Models\DocManagement\Earnest\EarnestChecks;
-
-use App\Models\DocManagement\Create\Fields\Fields;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Create\Upload\UploadPages;
-use App\Models\DocManagement\Create\Fields\CommonFields;
-use App\Models\DocManagement\Create\Upload\UploadImages;
-
-use App\Models\DocManagement\Checklists\Checklists;
-use App\Models\DocManagement\Checklists\ChecklistsItems;
-
-use App\Models\DocManagement\Transactions\Members\Members;
-use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
-
-use App\Models\DocManagement\Transactions\Data\ListingsData;
-
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
-
-use App\Models\DocManagement\Transactions\Documents\InProcess;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
-
-
-use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
-
-use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
-
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
+use Illuminate\Support\Facades\Artisan;
 
 use Eversign\Client;
 
-use App\Models\Esign\EsignEnvelopes;
-use App\Models\Esign\EsignCallbacks;
-use App\Models\Esign\EsignFields;
-use App\Models\Esign\EsignSigners;
-use App\Models\Esign\EsignDocuments;
-use App\Models\Esign\EsignDocumentsImages;
-use App\Models\Esign\EsignTemplates;
-
+use App\Mail\DefaultEmail;
+use Illuminate\Http\Request;
 
 use App\Jobs\AddFieldAndInputs;
+use App\Models\Jobs\Jobs;
+
+use App\Models\CRM\CRMContacts;
+
+use App\Models\Employees\Agents;
+
+use App\Models\Esign\EsignFields;
+
+use Illuminate\Http\UploadedFile;
+
+use App\Models\Esign\EsignSigners;
+
+use App\Http\Controllers\Controller;
+use App\Models\Esign\EsignCallbacks;
+use App\Models\Esign\EsignDocuments;
+use App\Models\Esign\EsignEnvelopes;
+use App\Models\Esign\EsignTemplates;
+use Illuminate\Support\Facades\Mail;
+use App\Models\BrightMLS\AgentRoster;
+use App\Models\Commission\Commission;
+use App\Models\Employees\AgentsNotes;
+
+use App\Models\Employees\AgentsTeams;
+use App\Models\Resources\LocationData;
+
+
+use Illuminate\Support\Facades\Storage;
+use App\Models\Commission\CommissionNotes;
+use App\Models\Esign\EsignDocumentsImages;
+
+use App\Mail\DocManagement\Emails\Documents;
+
+use thiagoalessio\TesseractOCR\TesseractOCR;
+use App\Models\Commission\CommissionChecksIn;
+use App\Models\DocManagement\Earnest\Earnest;
+
+use App\Models\Commission\CommissionChecksOut;
+use App\Models\Commission\CommissionBreakdowns;
+use App\Models\Admin\Resources\ResourceItemsAdmin;
+use App\Models\Commission\CommissionChecksInQueue;
+use App\Models\DocManagement\Create\Fields\Fields;
+
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Earnest\EarnestNotes;
+
+use App\Models\DocManagement\Checklists\Checklists;
+use App\Models\DocManagement\Earnest\EarnestChecks;
+
+use App\Models\Commission\CommissionIncomeDeductions;
+
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Create\Upload\UploadPages;
+use App\Models\DocManagement\Checklists\ChecklistsItems;
+
+use App\Models\DocManagement\Create\Fields\CommonFields;
+use App\Models\DocManagement\Create\Upload\UploadImages;
+use App\Models\Commission\CommissionBreakdownsDeductions;
+use App\Models\Commission\CommissionCommissionDeductions;
+use App\Models\DocManagement\Transactions\Members\Members;
+
+
+use App\Models\DocManagement\Transactions\Data\ListingsData;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+
+use App\Models\DocManagement\Transactions\Documents\InProcess;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use App\Models\DocManagement\Transactions\EditFiles\UserFields;
+
+use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
+
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
+
+
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
+
 
 
 class TransactionsDetailsController extends Controller {
@@ -1555,6 +1562,8 @@ class TransactionsDetailsController extends Controller {
 
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
 
+        //$queue_name = 'add_field_and_inputs_'.$Agent_ID.'_'.$Listing_ID.'_'.$Contract_ID.'_'.$Referral_ID;
+
         foreach ($files as $file) {
 
             $file_id = $file['file_id'];
@@ -1674,24 +1683,25 @@ class TransactionsDetailsController extends Controller {
                 TransactionUploadPages::create($new);
             }
 
-            AddFieldAndInputs::dispatch($file_id, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
+            $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
 
+            AddFieldAndInputs::dispatch($file_id, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $property, 'system');
 
-            /* $fields = Fields::where('file_id', $file_id) -> with('common_field') -> get();
-
-            foreach ($fields as $field) {
-
-                AddFieldAndInputs::dispatch($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
-
-                //$this -> add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, 'system');
-
-            } */
+            // get queue id
+            /* $job = Jobs::where('queue', $queue_name) -> where('payload', 'like', '%i:'.$new_document_id.'%') -> first();
+            $queue_id = $job -> id;
+            $add_documents -> queue_id = $queue_id;
+            $add_documents -> save(); */
 
         }
 
+        //Artisan::call('queue:work --queue='.$queue_name);
+
+        return true;
+
     }
 
-    public function add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_type) {
+    /* public function add_field_and_inputs($property, $field, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_type) {
 
         $field_type = $field -> field_type;
         $field_category = $field -> field_category;
@@ -1916,7 +1926,7 @@ class TransactionsDetailsController extends Controller {
 
         return response() -> json(['status' => 'success']);
 
-    }
+    } */
 
     public function save_assign_documents_to_checklist(Request $request) {
 
