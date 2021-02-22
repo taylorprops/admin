@@ -24,6 +24,11 @@ if(document.URL.match(/esign_add_signers/)) {
             remove_user($(this));
         });
 
+        $(document).on('keyup', '.signer-email', function() {
+            let type = $(this).data('type');
+            $(this).closest('.'+type+'-item').data('email', $(this).val());
+        });
+
 
         $(document).on('click', '#add_fields_button', save_signers);
 
@@ -90,7 +95,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-2">'+template_role+'</div> \
                         <div class="col-4 hidden"></div> \
                     </div> \
-                    <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div> \
+                    <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';
 
                 $('.signers-container').append(user).sortable({
@@ -110,63 +115,70 @@ if(document.URL.match(/esign_add_signers/)) {
 
         function save_signers() {
 
-            $('#add_fields_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
+            let form = $('.page-esign-add-signers');
+            let validate = validate_form(form);
 
-            let envelope_id = $('#envelope_id').val();
-            let template_id = $('#template_id').val();
-            let is_template = $('#is_template').val();
+            if(validate == 'yes') {
 
-            let signers_data = [];
+                $('#add_fields_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
 
-            let c = 0;
-            $('.signer-item').each(function () {
-                let data = {
-                    'order': c,
-                    'id': $(this).data('id') ?? null,
-                    'name': $(this).data('name'),
-                    'email': $(this).data('email'),
-                    'role': $(this).data('role'),
-                    'template_role': $(this).data('template-role')
-                }
-                signers_data.push(data);
-                c += 1;
-            });
+                let envelope_id = $('#envelope_id').val();
+                let template_id = $('#template_id').val();
+                let is_template = $('#is_template').val();
 
-            signers_data = JSON.stringify(signers_data);
+                let signers_data = [];
 
-            let recipients_data = [];
+                let c = 0;
+                $('.signer-item').each(function () {
+                    let data = {
+                        'order': c,
+                        'id': $(this).data('id') ?? null,
+                        'name': $(this).data('name'),
+                        'email': $(this).data('email'),
+                        'role': $(this).data('role'),
+                        'template_role': $(this).data('template-role')
+                    }
+                    signers_data.push(data);
+                    c += 1;
+                });
 
-            c = 0;
-            $('.recipient-item').each(function () {
-                let data = {
-                    'order': c,
-                    'id': $(this).data('id') ?? null,
-                    'name': $(this).data('name'),
-                    'email': $(this).data('email'),
-                    'role': $(this).data('role'),
-                    'template_role': $(this).data('template-role')
-                }
-                recipients_data.push(data);
-                c += 1;
-            });
+                signers_data = JSON.stringify(signers_data);
 
-            recipients_data = JSON.stringify(recipients_data);
+                let recipients_data = [];
+
+                c = 0;
+                $('.recipient-item').each(function () {
+                    let data = {
+                        'order': c,
+                        'id': $(this).data('id') ?? null,
+                        'name': $(this).data('name'),
+                        'email': $(this).data('email'),
+                        'role': $(this).data('role'),
+                        'template_role': $(this).data('template-role')
+                    }
+                    recipients_data.push(data);
+                    c += 1;
+                });
+
+                recipients_data = JSON.stringify(recipients_data);
 
 
-            let formData = new FormData();
-            formData.append('is_template', is_template);
-            formData.append('envelope_id', envelope_id);
-            formData.append('template_id', template_id);
-            formData.append('signers_data', signers_data);
-            formData.append('recipients_data', recipients_data);
+                let formData = new FormData();
+                formData.append('is_template', is_template);
+                formData.append('envelope_id', envelope_id);
+                formData.append('template_id', template_id);
+                formData.append('signers_data', signers_data);
+                formData.append('recipients_data', recipients_data);
 
-            axios.post('/esign/esign_add_signers_to_envelope', formData, axios_options)
-            .then(function (response) {
-                window.location = '/esign/esign_add_fields/'+response.data.envelope_id+'/'+is_template+'/'+template_id;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                axios.post('/esign/esign_add_signers_to_envelope', formData, axios_options)
+                .then(function (response) {
+                    window.location = '/esign/esign_add_fields/'+response.data.envelope_id+'/'+is_template+'/'+template_id;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            }
 
         }
 
@@ -201,6 +213,9 @@ if(document.URL.match(/esign_add_signers/)) {
                 form.find('.add-'+type+'-field').addClass('required');
                 name = form.find('.add-'+type+'-name').val();
                 email = form.find('.add-'+type+'-email').val();
+                if(email.length > 25) {
+                    email = email.substring(0, 25)+'...';
+                }
                 role = form.find('.add-'+type+'-role').val();
                 display_role = role;
 
@@ -219,9 +234,9 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-1"><span class="'+type+'-count font-11 text-orange"></span></div> \
                         <div class="col-3 '+hidden+' font-weight-bold">'+name+'</div> \
                         <div class="col-3">'+display_role+'</div> \
-                        <div class="col-4 '+hidden+'">'+email+'</div> \
+                        <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email required" data-type="'+type+'" value="'+email+'" data-label="Email"></div> \
                     </div> \
-                    <div><button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button></div> \
+                    <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';
 
                 $('.'+type+'s-container').append(new_user).sortable({

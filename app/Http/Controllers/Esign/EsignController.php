@@ -525,14 +525,14 @@ class EsignController extends Controller {
 
                     if($transaction_type == 'listing') {
 
-                        $members = Members::where('Listing_ID', $Listing_ID) -> whereNotNull('email') -> get();
+                        $members = Members::where('Listing_ID', $Listing_ID) -> get();
 
                     } else if($transaction_type == 'contract') {
 
-                        $members = Members::where('Contract_ID', $Contract_ID) -> whereNotNull('email')
+                        $members = Members::where('Contract_ID', $Contract_ID)
                             -> orWhere(function($query) use ($Listing_ID) {
                                 if($Listing_ID > 0) {
-                                    $query -> where('Listing_ID', $Listing_ID) -> whereNotNull('email');
+                                    $query -> where('Listing_ID', $Listing_ID);
                                 }
                             }) -> get();
 
@@ -791,14 +791,14 @@ class EsignController extends Controller {
 
         if($transaction_type == 'listing') {
 
-            $members = Members::where('Listing_ID', $Listing_ID) -> whereNotNull('email') -> get();
+            $members = Members::where('Listing_ID', $Listing_ID) -> get();
 
         } else if($transaction_type == 'contract') {
 
-            $members = Members::where('Contract_ID', $Contract_ID) -> whereNotNull('email')
+            $members = Members::where('Contract_ID', $Contract_ID)
                 -> orWhere(function($query) use ($Listing_ID) {
                     if($Listing_ID > 0) {
-                        $query -> where('Listing_ID', $Listing_ID) -> whereNotNull('email');
+                        $query -> where('Listing_ID', $Listing_ID);
                     }
                 }) -> get();
 

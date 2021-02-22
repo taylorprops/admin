@@ -13,13 +13,21 @@
 
     <div class="row mt-3">
 
-        <div class="col-12 col-sm-10">
+        <div class="col-12">
 
             <div class="d-flex justify-content-between align-items-center">
-                <div class="h5 text-gray">Select Signers and Order To Sign</div>
-                <div class="text-gray font-10 mt-3">
-                    Use the handles <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+
+                <div>
+                    <div class="h5 text-gray">Select Signers and Order To Sign</div>
+                    <div class="text-gray font-10 mt-3">
+                        Use the handles <i class="fal fa-bars text-primary fa-lg mx-2"></i> to reorder
+                    </div>
                 </div>
+
+                <div class="next-div @if(!count($signers) > 0) hidden @endif">
+                    <button class="btn btn-primary btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></button>
+                </div>
+
             </div>
 
 
@@ -194,9 +202,9 @@
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 @if($is_template == 'yes') hidden @endif font-weight-bold">{{ $signer -> signer_name }}</div>
                             <div class="col-3">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
-                            <div class="col-4 @if($is_template == 'yes') hidden @endif">{{ $signer -> signer_email }}</div>
+                            <div class="col-4 @if($is_template == 'yes') hidden @endif"><input type="text" class="custom-form-element form-input signer-email required" data-type="signer" value="{{ $signer -> signer_email }}" data-label="Email"></div>
                         </div>
-                        <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
+                        <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
 
                 @endforeach
@@ -347,9 +355,9 @@
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 '+hidden+' font-weight-bold">{{ $recipient -> signer_name }}</div>
                             <div class="col-3">{{ $recipient -> signer_role }}</div>
-                            <div class="col-4 '+hidden+'">{{ $recipient -> signer_email }}</div>
+                            <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email required" value="{{ $recipient -> signer_email }}" data-type="recipient" data-label="Email"></div>
                         </div>
-                        <div><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
+                        <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="recipient"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
 
                 @endforeach
@@ -358,13 +366,6 @@
 
         </div>
 
-        <div class="col-12 col-sm-2">
-
-            <div class="mt-4 pt-4 next-div @if(!count($signers) > 0) hidden @endif">
-                <button class="btn btn-primary btn-lg p-3" id="add_fields_button">Next <i class="fal fa-arrow-right ml-2"></i></button>
-            </div>
-
-        </div>
 
     </div>
 

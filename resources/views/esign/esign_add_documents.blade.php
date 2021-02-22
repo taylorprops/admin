@@ -3,13 +3,23 @@
 
 @section('content')
 
-<div class="container-1200 mt-5 mx-auto page-container page-esign-add-documents @if($from_upload == 'yes') hidden @endif">
+<div class="container-1000 mt-5 mx-auto page-container page-esign-add-documents @if($from_upload == 'yes') hidden @endif">
 
     <div class="h2 text-primary">E-Sign</div>
 
     <div class="row">
+        <div class="col-12">
 
-        <div class="col-9">
+            <div class="d-flex justify-content-end next-div @if(!$docs_to_display) hidden @endif">
+                <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
 
             <div class="mt-5">
 
@@ -51,18 +61,13 @@
 
         </div>
 
-        <div class="col-12 col-sm-3">
-            <div class="mt-4 next-div @if(!$docs_to_display) hidden @endif">
-                <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
-            </div>
-        </div>
 
     </div>
 
 
     <div class="row">
 
-        <div class="col-12 col-sm-9">
+        <div class="col-12">
 
             <div id="uploads_container" class="@if(!$docs_to_display) hidden @endif">
 

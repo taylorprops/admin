@@ -107,7 +107,7 @@
                                         <div>
                                             {{ $document -> file_name }}
                                         </div>
-                                        <div>
+                                        <div class="ml-5 no-wrap">
                                             Page <?php echo $c.' of '.$total_pages; ?>
                                         </div>
                                     </div>
