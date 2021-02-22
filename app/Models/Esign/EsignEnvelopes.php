@@ -25,7 +25,8 @@ class EsignEnvelopes extends Model
                 } else if(auth() -> user() -> group == 'admin') {
                     $query -> where('User_ID', auth() -> user() -> id)
                         -> orWhere('is_system_template', 'yes')
-                        -> orWhere('is_admin_template', 'yes');
+                        -> orWhere('is_system_template', 'yes')
+                        -> orWhere('Agent_ID', '>', '0');
                 }
             }
         });
