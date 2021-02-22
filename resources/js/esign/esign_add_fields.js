@@ -351,7 +351,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 .then(function (response) {
                     if(!is_draft && !is_template) {
                         setTimeout(function() {
-                            //window.location = '/esign_show_sent';
+                            window.location = '/esign_show_sent';
                         }, 1000);
                     }
                 })
