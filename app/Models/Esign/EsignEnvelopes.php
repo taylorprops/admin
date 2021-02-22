@@ -21,12 +21,14 @@ class EsignEnvelopes extends Model
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
                 if(stristr(auth() -> user() -> group, 'agent')) {
-                    $query -> where('Agent_ID', auth() -> user() -> user_id);
+                    $query -> where(function($query) {
+                        $query -> where('Agent_ID', auth() -> user() -> user_id)
+                        -> orWhere('User_ID', auth() -> user() -> id);
+                    });
                 } else if(auth() -> user() -> group == 'admin') {
                     $query -> where('User_ID', auth() -> user() -> id)
                         -> orWhere('is_system_template', 'yes')
-                        -> orWhere('is_system_template', 'yes')
-                        -> orWhere('Agent_ID', '>', '0');
+                        -> orWhere('is_system_template', 'yes');
                 }
             }
         });
