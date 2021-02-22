@@ -57074,8 +57074,7 @@ if (document.URL.match(/esign_add_fields/)) {
         formData.append('is_template', is_template);
         axios.post('/esign/esign_send_for_signatures', formData, axios_options).then(function (response) {
           if (!is_draft && !is_template) {
-            setTimeout(function () {
-              window.location = '/esign_show_sent';
+            setTimeout(function () {//window.location = '/esign_show_sent';
             }, 1000);
           }
         })["catch"](function (error) {});

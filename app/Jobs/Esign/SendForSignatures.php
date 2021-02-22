@@ -2,6 +2,8 @@
 
 namespace App\Jobs\Esign;
 
+use Illuminate\Support\Facades\App;
+
 use Eversign\File;
 use Eversign\Field;
 use Eversign\Client;
@@ -76,6 +78,10 @@ class SendForSignatures implements ShouldQueue {
         $file_to_sign -> setUseSignerOrder(true);
         $file_to_sign -> setCustomRequesterName(auth() -> user() -> name);
         $file_to_sign -> setCustomRequesterEmail(auth() -> user() -> email);
+        if(App::environment() != 'local') {
+            $site_address = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].'/esign_callback';
+            $file_to_sign -> setRedirect($site_address);
+        }
 
         $days = config('global.vars.app_stage') == 'development' ? 'P1D' : 'P7D';
         $date = new \DateTime();
