@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container-1000 page-container mt-5 mx-auto page-esign">
+<div class="container-1200 page-container mt-5 mx-auto page-esign">
 
     <div class="d-flex justify-content-between align-items-center">
 

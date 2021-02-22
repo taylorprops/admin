@@ -14,6 +14,7 @@
                 <th class="wpx-100"></th>
                 <th>Subject</th>
                 <th>Recipients</th>
+                <th>Documents</th>
                 <th class="wpx-100">Created</th>
                 <th class="wpx-50"></th>
             </tr>
@@ -29,11 +30,18 @@
                 foreach($signers as $signer) {
                     $recipients[] = $signer -> signer_name;
                 }
+                $documents = $envelope -> documents;
                 @endphp
                 <tr>
                     <td><a href="/esign/esign_add_fields_from_draft/{{ $draft -> id }}/yes" class="btn btn-primary" target="_blank">Open <i class="fal fa-arrow-right ml-2"></i></a></td>
                     <td>{{ $draft -> draft_name }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
+                    <td>
+                        @foreach($documents as $document)
+                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 60) }}</a>
+                            @if(!$loop -> last)<br> @endif
+                        @endforeach
+                    </td>
                     <td data-sort="{{ $draft -> created_at }}">{{ date('M jS, Y', strtotime($draft -> created_at)) }}<br>{{ date('g:i:s A', strtotime($draft -> created_at)) }}</td>
                     <td class="text-center"><a href="javascript:void(0)" class="btn btn-danger delete-draft-button" data-envelope-id="{{ $draft -> id }}"><i class="fal fa-times"></i></a></td>
                 </tr>

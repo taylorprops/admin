@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-use Eversign\File;
+/* use Eversign\File;
 use Eversign\Field;
 use Eversign\Client;
 use Eversign\Signer;
@@ -15,7 +15,9 @@ use Eversign\Recipient;
 use Eversign\InitialsField;
 use Eversign\SignatureField;
 use Eversign\TextField;
-use Eversign\DateSignedField;
+use Eversign\DateSignedField; */
+
+use App\Jobs\Esign\SendForSignatures;
 
 use App\Models\Esign\EsignCallbacks;
 use App\Models\Esign\EsignFields;
@@ -48,7 +50,7 @@ class EsignController extends Controller {
 
     public function get_drafts(Request $request) {
 
-        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> get();
+        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_drafts_html', compact('drafts'));
 
@@ -56,7 +58,7 @@ class EsignController extends Controller {
 
     public function get_deleted_drafts(Request $request) {
 
-        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> get();
+        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
 
@@ -70,6 +72,7 @@ class EsignController extends Controller {
             -> with('listing')
             -> with('contract')
             -> with('referral')
+            -> with('documents')
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
@@ -78,7 +81,7 @@ class EsignController extends Controller {
 
     public function get_completed(Request $request) {
 
-        $envelopes = EsignEnvelopes::where('status', 'completed') -> with('signers') -> get();
+        $envelopes = EsignEnvelopes::where('status', 'completed') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_completed_html', compact('envelopes'));
 
@@ -124,7 +127,7 @@ class EsignController extends Controller {
 
     public function get_cancelled(Request $request) {
 
-        $envelopes = EsignEnvelopes::whereIn('status', ['Cancelled', 'Expired']) -> with('signers') -> get();
+        $envelopes = EsignEnvelopes::whereIn('status', ['Cancelled', 'Expired']) -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_cancelled_html', compact('envelopes'));
 
@@ -1078,9 +1081,12 @@ class EsignController extends Controller {
 
     public function esign_send_for_signatures(Request $request) {
 
-        $envelope_id = $request -> envelope_id;
-        $template_id = $request -> template_id;
+        $envelope_id = $request -> envelope_id ?? 0;
+        $template_id = $request -> template_id ?? 0;
         $document_ids = explode(',', $request -> document_ids);
+
+        $subject = $request -> subject;
+        $message = $request -> message;
 
         $fields = json_decode($request -> fields, true);
         $fields = collect($fields) -> map(function ($fields) {
@@ -1120,10 +1126,9 @@ class EsignController extends Controller {
             return response() -> json(['status' => 'template saved']);
         }
 
-        $subject = $request -> subject;
-        $message = $request -> message;
+        SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields);
 
-        // update esign_envelope table with subject and message
+        /* // update esign_envelope table with subject and message
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
             'subject' => $subject,
             'message' => $message,
@@ -1278,7 +1283,7 @@ class EsignController extends Controller {
         // update esign_envelope table with new hash
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
             'document_hash' => $hash
-        ]);
+        ]); */
 
         return response() -> json(['status' => 'sent']);
 

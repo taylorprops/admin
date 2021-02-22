@@ -13,6 +13,7 @@
                 <th class="wpx-100">Status</th>
                 <th>Subject</th>
                 <th>Recipients</th>
+                <th>Documents</th>
                 <th class="wpx-100">Sent</th>
                 <th class="wpx-125"></th>
             </tr>
@@ -25,7 +26,7 @@
                 @php
                 $signers = $envelope -> signers;
                 $callbacks = $envelope -> callbacks;
-
+                $documents = $envelope -> documents;
                 @endphp
 
                 <tr>
@@ -72,6 +73,12 @@
 
                         }
                         @endphp
+                    </td>
+                    <td>
+                        @foreach($documents as $document)
+                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 60) }}</a>
+                            @if(!$loop -> last)<br> @endif
+                        @endforeach
                     </td>
                     <td data-sort="{{ $envelope -> created_at }}">
                         {{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}

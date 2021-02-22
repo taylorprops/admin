@@ -2590,6 +2590,7 @@ class TransactionsDetailsController extends Controller {
             -> whereIn('status', ['Sent', 'Signed'])
             -> with('signers')
             -> with('callbacks')
+            -> with('documents')
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));

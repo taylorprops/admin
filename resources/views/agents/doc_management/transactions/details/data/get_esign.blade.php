@@ -1,4 +1,4 @@
-<div class="container-1000 mx-auto">
+<div class="container-1200 mx-auto">
 
     <div class="row mt-3">
 
