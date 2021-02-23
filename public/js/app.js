@@ -56643,7 +56643,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
     function show_apply_template(ele) {
       var li = ele.closest('.upload-li');
       $('#add_template_modal').modal('show');
-      $('.apply-template-button').off('click').on('click', function () {
+      $(document).on('click', '.apply-template-button', function () {
         var template_id = $(this).data('template-id');
         li.data('template-applied-id', template_id);
         $('#add_template_modal').modal('hide');
@@ -56734,7 +56734,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
 
             if ($('#is_template').val() == 'no') {
               add_template = ' \
-                            <div class="mr-4 template-status"> \
+                            <div class="ml-sm-3 mr-4 template-status"> \
                                 <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a> \
                             </div> \
                             ';
@@ -56742,19 +56742,19 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
 
             var upload_li = ' \
                         <li class="list-group-item upload-li" data-file-location="' + file_location + '" data-file-type="user" data-file-name="' + file_name + '" data-template-id="" data-template-applied-id=""> \
-                            <div class="d-flex justify-content-between align-items-center"> \
+                            <div class="d-sm-flex justify-content-between align-items-center"> \
                                 <div class="d-flex justify-content-start align-items-center"> \
                                     <div class="file-preview mr-4 file-handle"> \
                                         <i class="fal fa-bars text-primary fa-lg"></i> \
                                     </div> \
-                                    <div class="file-preview mr-2 file-handle"> \
+                                    <div class="file-preview mr-2 file-handle d-none d-sm-inline-block"> \
                                         <img src="' + image_location + '" style="height: 60px"> \
                                     </div> \
                                     <div> \
-                                        <a href="' + file_location + '" target="_blank">' + file_name + '</a> \
+                                        <a href="' + file_location + '" target="_blank">' + shorten_text(file_name, 35) + '</a> \
                                     </div> \
                                 </div> \
-                                <div class="d-flex justify-content-end align-items-center"> \
+                                <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0"> \
                                     ' + add_template + ' \
                                     <div> \
                                         <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a> \
@@ -58539,6 +58539,8 @@ window.reset_select = function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var js_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! js-datepicker */ "./node_modules/js-datepicker/dist/datepicker.min.js");
 /* harmony import */ var js_datepicker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(js_datepicker__WEBPACK_IMPORTED_MODULE_0__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 var perfEntries = performance.getEntriesByType('navigation');
 
@@ -58649,6 +58651,14 @@ $(function () {
     }).join(' ');
   };
 
+  window.shorten_text = function (text, max) {
+    if (text.length > max) {
+      return text.substring(0, max) + '...';
+    }
+
+    return text;
+  };
+
   $(document).on('keyup change', '.phone', function () {
     global_format_phone(this);
     $(this).attr('maxlength', 14);
@@ -58656,14 +58666,18 @@ $(function () {
   setInterval(function () {
     datepicker_custom(); //global_tooltip();
   }, 1000);
-  window.datatable_settings = {
+  window.datatable_settings = _defineProperty({
     bAutoWidth: true,
     "destroy": true,
     "language": {
       search: '',
       searchPlaceholder: 'Search'
     }
-  };
+  }, "language", {
+    "info": "_START_ to _END_ of _TOTAL_",
+    "lengthMenu": "Show _MENU_",
+    "search": ""
+  });
 
   window.data_table = function (table, sort_by, no_sort_cols, show_buttons, show_search, show_info, show_paging) {
     var hide_cols = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : true;
@@ -58736,6 +58750,13 @@ $(function () {
 
     datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"' + search + length + buttons + '>rt<"d-flex justify-content-between align-items-center text-gray"' + info + paging + '>';
     table.DataTable(datatable_settings); //$('.dt-buttons .btn-secondary span').css({ color: 'white' });
+
+    $('.dataTables_filter [type="search"]').attr('placeholder', 'Search');
+    /* $('.dataTables_filter [type="search"]').addClass('custom-form-element form-input datatable-search').data('label', 'Search');
+    setTimeout(function() {
+        $('.datatable-search').siblings('label').css({ left: '10px' });
+    }, 500); */
+    //$('.dataTables_length').find('select').addClass('custom-form-element form-select form-select-no-search form-select-no-cancel').data('label', 'Results');
   };
 
   window.format_date = function (date) {

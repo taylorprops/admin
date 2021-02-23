@@ -13185,6 +13185,11 @@ ul {
   max-width: 600px !important;
 }
 
+div[class*=container-] {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
 .wpx-50 {
   width: 50px;
 }
@@ -13686,8 +13691,28 @@ body.modal-open {
       font-size: 1rem;
   } */
 
-  .modal-xl {
+  .modal {
+    padding-right: 0px !important;
+  }
+
+  .modal .modal-xl {
     max-width: 100% !important;
+  }
+
+  .modal .modal-dialog {
+    top: 0px;
+  }
+
+  .modal .modal-dialog .modal-content {
+    height: 100VH;
+    margin-bottom: 0px;
+    overflow: hidden;
+  }
+
+  .modal .modal-dialog .modal-content .modal-body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 5px;
   }
 }
 
@@ -17787,6 +17812,10 @@ header .main-search-input::placeholder {
 
 .page-esign-add-documents .file-image {
   max-height: 50px;
+}
+
+#add_template_modal .modal-body {
+  height: 80VH;
 }
 
 .page-esign-add-fields {

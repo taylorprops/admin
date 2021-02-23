@@ -71,7 +71,7 @@
 
             <div id="uploads_container" class="@if(!$docs_to_display) hidden @endif">
 
-                <div class="p-2 border mt-4">
+                <div class="p-0 p-sm-2 border-sm mt-4">
 
                     <ul class="list-group" id="uploads_div">
 
@@ -81,22 +81,23 @@
 
                                 <li class="list-group-item upload-li" data-file-location="{{ $doc['file_location'] }}" data-document-id="{{ $doc['document_id'] }}" data-file-type="{{ $doc['file_type'] }}" data-file-name="{{ $doc['file_name'] }}" data-template-id="" data-template-applied-id="@if($is_template == 'no') {{ $doc['template_id'] }} @endif" data-upload-id="{{ $doc['data_upload_id'] }}">
 
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-sm-flex justify-content-between align-items-center">
 
                                         <div class="d-flex justify-content-start align-items-center">
                                             <div class="file-preview mr-4 file-handle">
                                                 <i class="fal fa-bars text-primary fa-lg"></i>
                                             </div>
-                                            <div class="file-preview mr-2 file-handle">
+                                            <div class="file-preview mr-2 file-handle d-none d-sm-inline-block">
                                                 <img class="file-image" src="{{ $doc['image_location'] }}">
                                             </div>
                                             <div>
-                                                <a href="{{ $doc['file_location'] }}" target="_blank">{{ $doc['file_name'] }}</a>
+                                                <a href="{{ $doc['file_location'] }}" class="d-block d-sm-none" target="_blank">{{ shorten_text($doc['file_name'], 35) }}</a>
+                                                <a href="{{ $doc['file_location'] }}" class="d-none d-sm-block" target="_blank">{{ $doc['file_name'] }}</a>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-end align-items-center">
-                                            <div class="ml-3 mr-4 template-status">
+                                        <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0 ml-sm-3">
+                                            <div class="mr-4 template-status">
                                                 @if($doc['file_type'] == 'system' && $doc['template_id'] > 0)
                                                 <div class="no-wrap">
                                                     <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span>
@@ -154,7 +155,7 @@
                 <div class="row">
                     <div class="col-12">
 
-                        <div class="h5 text-gray mb-3">Select the Template you want to apply</div>
+                        <div class="font-10 text-gray my-3">Select the Template you want to apply</div>
 
                         <div class="table-responsive text-nowrap">
 
@@ -181,7 +182,7 @@
                                         }
                                         @endphp
                                         <tr>
-                                            <td><button type="button" class="btn btn-sm btn-primary apply-template-button" data-template-id="{{ $template -> id }}"><i class="fa fa-plus mr-2"></i> Apply</button></td>
+                                            <td><button type="button" class="btn btn-sm btn-primary apply-template-button" data-template-id="{{ $template -> id }}"><i class="fa fa-plus mr-sm-2"></i> <span class="d-none d-sm-inline-block">Apply</span></button></td>
                                             <td>{{ $template -> template_name }}</td>
                                             <td>{!! implode(', ', $recipients) !!}</td>
                                             <td>{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>

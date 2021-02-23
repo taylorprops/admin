@@ -87,16 +87,16 @@ class SendForSignatures implements ShouldQueue {
         $file_to_sign -> setMessage($message);
         //$file_to_sign -> setEmbeddedSigningEnabled(true);
         //$file_to_sign -> setFlexibleSigning(false); // remove all fields to try this
-        $file_to_sign -> setUseHiddenTags(true);
+        //$file_to_sign -> setUseHiddenTags(true);
         $file_to_sign -> setRequireAllSigners(true);
         $file_to_sign -> setUseSignerOrder(true);
         $file_to_sign -> setCustomRequesterName($user_name);
         $file_to_sign -> setCustomRequesterEmail($user_email);
-        if(App::environment() != 'local') {
+        if(config('global.vars.app_stage') != 'development') {
             $site_address = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].'/esign_callback';
             $file_to_sign -> setRedirect($site_address);
         } else {
-            $file_to_sign -> setRedirect('http://7df8fc134185.ngrok.io');
+            $file_to_sign -> setRedirect('http://b55341a35986.ngrok.io/esign_callback');
         }
 
         $days = config('global.vars.app_stage') == 'development' ? 'P1D' : 'P7D';

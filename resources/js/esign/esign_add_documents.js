@@ -38,7 +38,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
             $('#add_template_modal').modal('show');
 
-            $('.apply-template-button').off('click').on('click', function() {
+            $(document).on('click', '.apply-template-button', function() {
 
                 let template_id = $(this).data('template-id');
                 li.data('template-applied-id', template_id);
@@ -153,7 +153,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
                         let add_template = '';
                         if($('#is_template').val() == 'no') {
                             add_template = ' \
-                            <div class="mr-4 template-status"> \
+                            <div class="ml-sm-3 mr-4 template-status"> \
                                 <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a> \
                             </div> \
                             ';
@@ -161,19 +161,19 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
                         let upload_li = ' \
                         <li class="list-group-item upload-li" data-file-location="'+file_location+'" data-file-type="user" data-file-name="'+file_name+'" data-template-id="" data-template-applied-id=""> \
-                            <div class="d-flex justify-content-between align-items-center"> \
+                            <div class="d-sm-flex justify-content-between align-items-center"> \
                                 <div class="d-flex justify-content-start align-items-center"> \
                                     <div class="file-preview mr-4 file-handle"> \
                                         <i class="fal fa-bars text-primary fa-lg"></i> \
                                     </div> \
-                                    <div class="file-preview mr-2 file-handle"> \
+                                    <div class="file-preview mr-2 file-handle d-none d-sm-inline-block"> \
                                         <img src="'+image_location+'" style="height: 60px"> \
                                     </div> \
                                     <div> \
-                                        <a href="'+file_location+'" target="_blank">'+file_name+'</a> \
+                                        <a href="'+file_location+'" target="_blank">'+shorten_text(file_name, 35)+'</a> \
                                     </div> \
                                 </div> \
-                                <div class="d-flex justify-content-end align-items-center"> \
+                                <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0"> \
                                     '+add_template+' \
                                     <div> \
                                         <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a> \

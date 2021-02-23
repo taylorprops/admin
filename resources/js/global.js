@@ -130,6 +130,13 @@ $(function() {
             .join(' ');
     }
 
+    window.shorten_text = function(text, max) {
+        if(text.length > max) {
+            return text.substring(0, max)+'...';
+        }
+        return text;
+    }
+
     $(document).on('keyup change', '.phone', function () {
         global_format_phone(this);
         $(this).attr('maxlength', 14);
@@ -147,6 +154,11 @@ $(function() {
         "language": {
             search: '',
             searchPlaceholder: 'Search'
+        },
+        "language": {
+            "info": "_START_ to _END_ of _TOTAL_",
+            "lengthMenu": "Show _MENU_",
+            "search": ""
         }
     }
 
@@ -225,6 +237,14 @@ $(function() {
         table.DataTable(datatable_settings);
 
         //$('.dt-buttons .btn-secondary span').css({ color: 'white' });
+
+        $('.dataTables_filter [type="search"]').attr('placeholder', 'Search');
+        /* $('.dataTables_filter [type="search"]').addClass('custom-form-element form-input datatable-search').data('label', 'Search');
+        setTimeout(function() {
+            $('.datatable-search').siblings('label').css({ left: '10px' });
+        }, 500); */
+
+        //$('.dataTables_length').find('select').addClass('custom-form-element form-select form-select-no-search form-select-no-cancel').data('label', 'Results');
 
     }
 

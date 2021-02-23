@@ -188,6 +188,11 @@ ul {
     max-width: 600px !important;
 }
 
+div[class*='container-'] {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
 .wpx-50 {
     width: 50px;
 }
