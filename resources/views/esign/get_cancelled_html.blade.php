@@ -36,11 +36,11 @@
                     <td>{!! implode(', ', $recipients) !!}</td>
                     <td>
                         @foreach($documents as $document)
-                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 60) }}</a>
+                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 45) }}</a>
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>
-                    <td data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
+                    <td class="no-wrap" data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
                 </tr>
             @endforeach
 

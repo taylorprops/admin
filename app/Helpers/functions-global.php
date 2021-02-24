@@ -56,6 +56,10 @@ function format_phone($phone) {
     return "(".substr($phone, 0, 3).") ".substr($phone, 3, 3)."-".substr($phone,6);
 }
 
+function date_mdy($date) {
+    return date('n/j/Y', strtotime($date));
+}
+
 function get_mb($size) {
     return sprintf("%4.2f", $size/1048576);
 }

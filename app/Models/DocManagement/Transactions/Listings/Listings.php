@@ -22,13 +22,26 @@ class Listings extends Model
         static::addGlobalScope(function ($query) {
             if(auth() -> user()) {
                 if(stristr(auth() -> user() -> group, 'agent')) {
-                    $query -> where('Agent_ID', auth() -> user() -> user_id);
+                    $query -> where(function($query) {
+                        $query -> where('Agent_ID', auth() -> user() -> user_id)
+                        -> orWhere('CoAgent_ID', auth() -> user() -> user_id);
+                    });
                 } else if(auth() -> user() -> group == 'transaction_coordinator') {
                     $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
             }
         });
     }
+
+    public function status() {
+        return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
+    }
+
+    public function contract() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
+    }
+
+
 
     public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null) {
 

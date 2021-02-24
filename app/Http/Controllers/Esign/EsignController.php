@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\App;
 
 /* use Eversign\File;
 use Eversign\Field;
-use Eversign\Client;
+
 use Eversign\Signer;
 use Eversign\Document;
 use Eversign\Recipient;
@@ -17,6 +17,8 @@ use Eversign\InitialsField;
 use Eversign\SignatureField;
 use Eversign\TextField;
 use Eversign\DateSignedField; */
+
+use Eversign\Client;
 
 use App\Jobs\Esign\SendForSignatures;
 
@@ -1381,6 +1383,10 @@ class EsignController extends Controller {
         }
 
         return true;
+
+    }
+
+    public function oauth_callback(Request $request) {
 
     }
 }

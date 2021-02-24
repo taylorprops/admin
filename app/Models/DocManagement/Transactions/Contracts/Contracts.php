@@ -27,6 +27,10 @@ class Contracts extends Model
         });
     }
 
+    public function status() {
+        return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
+    }
+
     public function ScopeContractColumnsNotInListings() {
         $listing_columns = Schema::getColumnListing('docs_transactions_listings');
         $contract_columns = Schema::getColumnListing('docs_transactions_contracts');

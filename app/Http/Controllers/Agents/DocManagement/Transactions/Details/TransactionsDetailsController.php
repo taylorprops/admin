@@ -4313,6 +4313,10 @@ class TransactionsDetailsController extends Controller {
         $new_contract = Contracts::create($contract_data);
         $Contract_ID = $new_contract -> Contract_ID;
 
+        // update Contract_ID on listings
+        $listing -> Contract_ID = $Contract_ID;
+        $listing -> save();
+
         // add email address
         $new_transaction = Contracts::find($Contract_ID);
 

@@ -13031,7 +13031,7 @@ html {
 
 @media (max-width: 767.98px) {
   body {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -13639,7 +13639,7 @@ body.modal-open {
   padding: 0.6rem 0rem 0.6rem 0.4rem;
   color: #4c9bdb;
   vertical-align: middle;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   border-top: none;
   border-left: none;
   border-bottom: 1px solid #dee2e6;
@@ -13653,7 +13653,7 @@ body.modal-open {
 .dataTables_wrapper .dataTable.table td {
   padding: 0.4rem;
   vertical-align: middle;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #7a7979;
 }
 

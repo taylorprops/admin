@@ -2,10 +2,9 @@
 
 namespace App\Jobs\Esign;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
-
+use config;
 use Eversign\File;
+
 use Eversign\Field;
 use Eversign\Client;
 use Eversign\Signer;
@@ -17,9 +16,11 @@ use Eversign\SignatureField;
 use Eversign\DateSignedField;
 use Illuminate\Bus\Queueable;
 use App\Models\Esign\EsignSigners;
+use Illuminate\Support\Facades\App;
 use App\Models\Esign\EsignDocuments;
 use App\Models\Esign\EsignEnvelopes;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -92,12 +93,6 @@ class SendForSignatures implements ShouldQueue {
         $file_to_sign -> setUseSignerOrder(true);
         $file_to_sign -> setCustomRequesterName($user_name);
         $file_to_sign -> setCustomRequesterEmail($user_email);
-        if(config('global.vars.app_stage') != 'development') {
-            $site_address = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].'/esign_callback';
-            $file_to_sign -> setRedirect($site_address);
-        } else {
-            $file_to_sign -> setRedirect('http://b55341a35986.ngrok.io/esign_callback');
-        }
 
         $days = config('global.vars.app_stage') == 'development' ? 'P1D' : 'P7D';
         $date = new \DateTime();
@@ -224,6 +219,7 @@ class SendForSignatures implements ShouldQueue {
             }
 
         }
+
 
         //Saving the created file_to_sign to the API.
         $newlyCreatedDocument = $client -> createDocument($file_to_sign);

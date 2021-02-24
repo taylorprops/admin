@@ -293,6 +293,7 @@
 
     // callback url
     Route::post('/esign_callback', 'Esign\EsignController@esign_callback');
+    Route::post('/oauth_callback', 'Esign\EsignController@oauth_callback');
 
     // save as draft
     Route::post('/esign/save_as_draft', 'Esign\EsignController@save_as_draft');

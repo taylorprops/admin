@@ -20,4 +20,8 @@ class Referrals extends Model
         });
     }
 
+    public function status() {
+        return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
+    }
+
 }

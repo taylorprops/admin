@@ -42,7 +42,7 @@
                             $documents = $envelope -> documents;
                             @endphp
                             @foreach($documents as $document)
-                                <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 60) }}</a>
+                                <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 45) }}</a>
                                 @if(!$loop -> last)<br> @endif
                             @endforeach
                         @endforeach

@@ -43,8 +43,8 @@
                             echo '</pre>'; */
                             $signer_status = [
                                 'document_sent' => '
-                                <div class="text-primary">'.$signer -> signer_name.'</div>
-                                <div>
+                                <div class="text-primary no-wrap">'.$signer -> signer_name.'</div>
+                                <div class="no-wrap">
                                     <div class="d-flex justify-content-end align-items-center text-primary">
                                         Sent <i class="fal fa-arrow-right ml-3"></i><br>
                                     </div>
@@ -53,8 +53,8 @@
                                     </div>
                                 </div>',
                                 'document_viewed' => '
-                                <div class="text-primary">'.$signer -> signer_name.'</div>
-                                <div>
+                                <div class="text-primary no-wrap">'.$signer -> signer_name.'</div>
+                                <div class="no-wrap">
                                     <div class="d-flex justify-content-end align-items-center text-primary">
                                         Viewed <i class="fal fa-eye ml-2"></i><br>
                                     </div>
@@ -62,11 +62,11 @@
                                         <a href="javascript:void(0)" class="text-orange resend-envelope-button" data-envelope-id="'.$envelope -> id.'" data-signer-id="'.$signer -> id.'">Resend <i class="fal fa-redo ml-2"></i></a>
                                     </div>
                                 </div>',
-                                'document_signed' => '<div class="text-success">'.$signer -> signer_name.'</div><div class="text-success"> Signed <i class="fal fa-check ml-2"></i></div>',
-                                'document_declined' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Declined <i class="fal fa-ban ml-2"></i></div>',
-                                'signer_bounced' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Bounced <i class="fal fa-ban ml-2"></i></div>',
-                                'document_expired' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Expired <i class="fad fa-hourglass-end ml-2"></i></div>',
-                                'document_cancelled' => '<div class="text-danger">'.$signer -> signer_name.'</div><div class="text-danger"> Cancelled <i class="fal fa-ban ml-2"></i></div>'
+                                'document_signed' => '<div class="text-success no-wrap">'.$signer -> signer_name.'</div><div class="text-success"> Signed <i class="fal fa-check ml-2"></i></div>',
+                                'document_declined' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Declined <i class="fal fa-ban ml-2"></i></div>',
+                                'signer_bounced' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Bounced <i class="fal fa-ban ml-2"></i></div>',
+                                'document_expired' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Expired <i class="fad fa-hourglass-end ml-2"></i></div>',
+                                'document_cancelled' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Cancelled <i class="fal fa-ban ml-2"></i></div>'
                             ][$event_type] ?? '<div>'.$signer -> signer_name.'</div>';
 
                             echo '<div class="d-flex justify-content-between">'.$signer_status.'</div>';
@@ -76,11 +76,11 @@
                     </td>
                     <td>
                         @foreach($documents as $document)
-                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 60) }}</a>
+                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 45) }}</a>
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>
-                    <td data-sort="{{ $envelope -> created_at }}">
+                    <td class="no-wrap" data-sort="{{ $envelope -> created_at }}">
                         {{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}
                     </td>
                     <td class="text-center">

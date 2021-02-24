@@ -29,18 +29,50 @@ class TransactionsController extends Controller
 
         $type = $request -> type;
 
+        $select_listings = [
+            'City',
+            'Contract_ID',
+            'ExpirationDate',
+            'FullStreetAddress',
+            'Listing_ID',
+            'ListPictureURL',
+            'MlsListDate',
+            'PostalCode',
+            'SellerOneFullName',
+            'SellerTwoFullName',
+            'StateOrProvince',
+            'Status'
+        ];
+
+        $select_contracts = [
+            'BuyerOneFullName',
+            'BuyerTwoFullName',
+            'City',
+            'Contract_ID',
+            'FullStreetAddress',
+            'PostalCode',
+            'StateOrProvince',
+            'Status'
+        ];
+
+        $select_referrals = [
+            'City',
+            'FullStreetAddress',
+            'PostalCode',
+            'Referral_ID',
+            'StateOrProvince',
+            'Status'
+        ];
+
 
         if($type == 'listings') {
-            $select = ['Listing_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'SellerOneFullName'];
-            $transactions = Listings::select($select);
+            $transactions = Listings::select($select_listings) -> with('contract:Contract_ID,CloseDate');
         } else if($type == 'contracts') {
-            $select = ['Contract_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'BuyerOneFullName'];
-            $transactions = Contracts::select($select);
+            $transactions = Contracts::select($select_contracts);
         } else if($type == 'referrals') {
-            $select = ['Referral_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode'];
-            $transactions = Referrals::select($select);
+            $transactions = Referrals::select($select_referrals);
         }
-        $transactions = $transactions -> orderBy('Status') -> get();
+        $transactions = $transactions -> with('status') -> orderBy('Status') -> get();
 
         return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions'));
 

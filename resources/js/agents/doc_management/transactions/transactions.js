@@ -23,6 +23,7 @@ if (document.URL.match(/transactions$/)) {
         })
         .then(function (response) {
             $('#'+type+'_div').html(response.data);
+            data_table($('#'+type+'_div table'), [1, 'asc'], [0], true, true, true, true);
         })
         .catch(function (error) {
             console.log(error);
