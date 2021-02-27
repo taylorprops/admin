@@ -15,7 +15,7 @@ return [
     'middlewares' => ['web', 'auth'],
 
     // The url to this package. Change it if necessary.
-    'url_prefix' => 'laravel-filemanager',
+    'url_prefix' => 'filemanager',
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
 
     // permissions to be set on file upload.
     'create_file_mode' => 0644,
-    
+
     // If true, it will attempt to chmod the file after upload
     'should_change_file_mode' => true,
 
