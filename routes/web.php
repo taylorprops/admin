@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('/auth/login');
-}) -> name('login');
+}) -> name('login'); */
+
+Route::view('/', '/auth/login') -> name('login');
 
 
 Route::get('/dashboard_admin', 'Dashboard\DashboardAdminController@dashboard_admin');
