@@ -217,6 +217,8 @@
     Route::post('/agents/doc_management/transactions/add_commission_notes', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@add_commission_notes');
     // get agent details
     Route::get('/agents/doc_management/transactions/details/data/get_agent_details', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_agent_details');
+    // get agent commission details
+    Route::get('/agents/doc_management/transactions/details/data/get_agent_commission_details', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_agent_commission_details');
 
 
     /////// Earnest ////////////////
@@ -253,6 +255,21 @@
     Route::get('/agents/doc_management/transactions/check_docs_submitted_and_accepted', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@check_docs_submitted_and_accepted');
     // cancel listing
     Route::post('/agents/doc_management/transactions/cancel_listing', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@cancel_listing');
+
+    // cancel referral
+    Route::post('/agents/doc_management/transactions/cancel_referral', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@cancel_referral');
+    // UNDO cancel referral
+    Route::post('/agents/doc_management/transactions/undo_cancel_referral', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@undo_cancel_referral');
+
+    // merge listing with contract
+    Route::get('/agents/doc_management/transactions/merge_listing_and_contract', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@merge_listing_and_contract');
+
+    // save merge listing with contract
+    Route::post('/agents/doc_management/transactions/save_merge_listing_and_contract', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_merge_listing_and_contract');
+
+    // save undo merge listing with contract
+    Route::post('/agents/doc_management/transactions/save_undo_merge_listing_and_contract', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_undo_merge_listing_and_contract');
+
     // update contract status
     Route::post('/agents/doc_management/transactions/update_contract_status', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@update_contract_status');
 

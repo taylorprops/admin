@@ -254,6 +254,7 @@ class TransactionsAddController extends Controller {
 
     public function transaction_add_details_referral(Request $request) {
 
+        $status = ResourceItems::GetResourceID('Active', 'referral_status');
         $property_details = [
             'FullStreetAddress' => $request -> street_number . ' ' . ucwords(strtolower($request -> street_name)) . ' ' . $request -> street_dir . ' ' . $request -> unit_number,
             'StreetNumber' => $request -> street_number,
@@ -264,7 +265,8 @@ class TransactionsAddController extends Controller {
             'StateOrProvince' => $request -> state,
             'PostalCode' => $request -> zip,
             'County' => ucwords(strtolower($request -> county)),
-            'Agent_ID' => $request -> Agent_ID
+            'Agent_ID' => $request -> Agent_ID,
+            'Status' => $status
         ];
 
         $property_details = (object)$property_details;
@@ -671,7 +673,7 @@ class TransactionsAddController extends Controller {
             $listing_agent -> address_office_zip = $request -> ListAgentOfficeZip;
             $listing_agent -> Contract_ID = $Contract_ID;
             $listing_agent -> member_type_id = ResourceItems::ListingAgentResourceId();
-
+            $listing_agent -> transaction_type = 'contract';
 
             $listing_agent -> save();
 
@@ -689,6 +691,7 @@ class TransactionsAddController extends Controller {
             $buyers_agent -> Contract_ID = $Contract_ID;
             $buyers_agent -> Agent_ID = $Agent_ID;
             $buyers_agent -> member_type_id = ResourceItems::BuyerAgentResourceId();
+            $buyers_agent -> transaction_type = 'contract';
             $buyers_agent -> disabled = true;
             $buyers_agent -> save();
 
@@ -712,6 +715,7 @@ class TransactionsAddController extends Controller {
                 $add_heritage_to_members -> address_office_zip = '21401';
                 $add_heritage_to_members -> Contract_ID = $Contract_ID;
                 $add_heritage_to_members -> Agent_ID = $Agent_ID;
+                $add_heritage_to_members -> transaction_type = 'contract';
                 $add_heritage_to_members -> save();
             }
 
@@ -732,6 +736,7 @@ class TransactionsAddController extends Controller {
             $listing_agent -> Listing_ID = $Listing_ID;
             $listing_agent -> Agent_ID = $Agent_ID;
             $listing_agent -> member_type_id = ResourceItems::ListingAgentResourceId();
+            $listing_agent -> transaction_type = 'listing';
             $listing_agent -> disabled = true;
             $listing_agent -> save();
 
@@ -803,6 +808,7 @@ class TransactionsAddController extends Controller {
             $sellers -> address_home_zip = $seller_address_zip[$i] ?? null;
             $sellers -> CRMContact_ID = $seller_crm_contact_id[$i] ?? 0;
             $sellers -> member_type_id = ResourceItems::SellerResourceId();
+            $sellers -> transaction_type = 'listing';
             $sellers -> Agent_ID = $Agent_ID;
             $sellers -> Listing_ID = $Listing_ID;
             $sellers -> Contract_ID = $Contract_ID;
@@ -861,6 +867,7 @@ class TransactionsAddController extends Controller {
                 $buyers -> address_home_zip = $buyer_address_zip[$i] ?? null;
                 $buyers -> CRMContact_ID = $buyer_crm_contact_id[$i] ?? 0;
                 $buyers -> member_type_id = ResourceItems::BuyerResourceId();
+                $buyers -> transaction_type = 'contract';
                 $buyers -> Agent_ID = $Agent_ID;
                 $buyers -> Listing_ID = $Listing_ID;
                 $buyers -> Contract_ID = $Contract_ID;

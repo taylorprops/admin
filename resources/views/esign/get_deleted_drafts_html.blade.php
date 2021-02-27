@@ -36,7 +36,7 @@
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>
-                    <td data-sort="{{ $draft -> created_at }}">{{ date('M jS, Y', strtotime($draft -> created_at)) }}<br>{{ date('g:i:s A', strtotime($draft -> created_at)) }}</td>
+                    <td class="no-wrap small" data-sort="{{ $draft -> created_at }}">{{ date('M jS, Y', strtotime($draft -> created_at)) }}<br>{{ date('g:i:s A', strtotime($draft -> created_at)) }}</td>
                 </tr>
             @endforeach
 

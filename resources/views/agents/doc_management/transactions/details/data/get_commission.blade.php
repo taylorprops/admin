@@ -248,44 +248,126 @@
 
             </div>
 
-            <div class="col-7">
+            <div class="col-7 relative">
 
-                <div class="ml-5 mt-2 p-2">
+                <div class="commission-details-tabs pl-md-5">
 
-                    <ul class="nav nav-tabs" id="options_tab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link options-tab active" id="agent_details_tab" data-toggle="tab" href="#agent_details_div" role="tab" aria-controls="agent_details_div" aria-selected="true">Agent Details</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link options-tab" id="notes_tab" data-toggle="tab" href="#notes_div" role="tab" aria-controls="notes_div" aria-selected="false">Notes</a>
-                        </li>
-                    </ul>
+                    <div class="ml-5 p-3">
 
-                    <div class="tab-content border-left border-bottom border-right p-3" id="options_tab_content">
+                        <ul class="nav nav-tabs" id="options_tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link options-tab active" id="agent_commission_tab" data-toggle="tab" href="#agent_commission_div" role="tab" aria-controls="agent_commission_div" aria-selected="true">Agent Commission Breakdown</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link options-tab" id="agent_details_tab" data-toggle="tab" href="#agent_details_div" role="tab" aria-controls="agent_details_div" aria-selected="true">Agent Details</a>
+                            </li>
+                            @if(!stristr($agent_details -> company, 'referral'))
+                            <li class="nav-item">
+                                <a class="nav-link options-tab" id="agent_billing_details_tab" data-toggle="tab" href="#agent_billing_details_div" role="tab" aria-controls="agent_billing_details_div" aria-selected="true">Agent Billing Details</a>
+                            </li>
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link options-tab" id="notes_tab" data-toggle="tab" href="#notes_div" role="tab" aria-controls="notes_div" aria-selected="false">Notes</a>
+                            </li>
+                        </ul>
 
-                        <div class="tab-pane fade show active" id="agent_details_div" role="tabpanel" aria-labelledby="agent_details_tab">
+                        <div class="tab-content border-left border-bottom border-right p-3" id="options_tab_content">
 
-                            <div class="agent-details-div">  </div>
+                            <div class="tab-pane fade show active" id="agent_commission_div" role="tabpanel" aria-labelledby="agent_commission_tab">
 
-                        </div>
+                                <div class="agent-commission-div mx-auto">  </div>
 
-                        <div class="tab-pane fade" id="notes_div" role="tabpanel" aria-labelledby="notes_tab">
+                            </div>
 
-                            <div class="px-5">
+                            <div class="tab-pane fade" id="agent_details_div" role="tabpanel" aria-labelledby="agent_details_tab">
 
-                                <div class="commission-notes-div border-bottom">
-                                    <ul class="list-group notes-list-group"></ul>
+                                <div class="agent-details-div">  </div>
+
+                            </div>
+
+                            @if(!stristr($agent_details -> company, 'referral'))
+
+                                <div class="tab-pane fade" id="agent_billing_details_div" role="tabpanel" aria-labelledby="agent_billing_details_tab">
+
+                                    <div class="agent-billing-details-div">
+
+                                        <div class="row">
+
+                                            <div class="col-12 col-md-6">
+
+                                                @if($type == 'sale' || $type == 'referral')
+                                                    <div class="d-flex justify-content-between">
+                                                        <div>Admin Fee Amount</div>
+                                                        <div>${{ $for_sale ? $agent_details -> admin_fee : $agent_details -> admin_fee_rentals }}</div>
+                                                    </div>
+                                                @endif
+
+                                                <div class="d-flex justify-content-between @if($agent_details -> balance > 0) text-danger @endif">
+                                                    <div>Balance Dues</div>
+                                                    <div>${{ number_format($agent_details -> balance, 2) ?? '0.00' }}</div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between @if($agent_details -> balance_eno > 0) text-danger @endif">
+                                                    <div>Balance E&O</div>
+                                                    <div>${{ number_format($agent_details -> balance_eno, 2) ?? '0.00' }}</div>
+                                                </div>
+
+                                                @if($agent_details -> office_rent_amount > 0 || $agent_details -> balance_rent != 0)
+                                                    <div class="d-flex justify-content-between @if($agent_details -> balance_rent > 0) text-danger @endif">
+                                                        <div>Balance Rent</div>
+                                                        <div>${{ number_format($agent_details -> balance_rent, 2) ?? '0.00' }}</div>
+                                                    </div>
+                                                @endif
+
+                                                <hr class="my-1">
+
+                                                <div class="d-flex justify-content-between">
+                                                    <div>Auto Billed</div>
+                                                    <div>{{ $agent_details -> auto_bill == 'on' ? 'Yes' : 'No' }}</div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <div>Commission</div>
+                                                    <div>{{ ucwords($agent_details -> commission_percent) }}% - Plan {{ ucwords($agent_details -> commission_plan) }}</div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+
+                                                @if($agent_details -> owe_other == 'yes')
+                                                    <div class="wage-garnishments p-1 mt-1 bg-orange-light text-danger rounded">{!! nl2br($agent_details -> owe_other_notes) !!}</div>
+                                                @endif
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
-                                <div class="row no-gutters bg-blue-light d-flex align-items-center py-2 px-4 mt-3 rounded">
-                                    <div class="col-11">
-                                        <div>
-                                            <input type="text" class="custom-form-element form-input commission-notes-input" data-label="Add Notes"></textarea>
+                            @endif
+
+                            <div class="tab-pane fade" id="notes_div" role="tabpanel" aria-labelledby="notes_tab">
+
+                                <div class="px-5">
+
+                                    <div class="commission-notes-div border-bottom">
+                                        <ul class="list-group notes-list-group"></ul>
+                                    </div>
+
+                                    <div class="row no-gutters bg-blue-light d-flex align-items-center py-2 px-4 mt-3 rounded">
+                                        <div class="col-11">
+                                            <div>
+                                                <input type="text" class="custom-form-element form-input commission-notes-input" data-label="Add Notes"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-1">
+                                            <a href="javascript: void(0)" class="btn btn-primary save-commission-notes-button ml-2"><i class="fad fa-save"></i></a>
                                         </div>
                                     </div>
-                                    <div class="col-1">
-                                        <a href="javascript: void(0)" class="btn btn-primary save-commission-notes-button ml-2"><i class="fad fa-save"></i></a>
-                                    </div>
+
                                 </div>
 
                             </div>
@@ -295,7 +377,6 @@
                     </div>
 
                 </div>
-
 
             </div>
 
@@ -332,7 +413,7 @@
                     </div>
 
                     <div class="col-7">
-                        <div class="popout-action pr-1 pr-lg-4 py-2 bg-blue-light">
+                        <div class="popout-action pr-1 pr-lg-4 py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="javascript: void(0)" class="btn btn-primary show-view-add-button">View/Add <i class="fal fa-plus ml-2"></i></a>
@@ -355,7 +436,7 @@
 
                     <div class="popout-div mr-3">
 
-                        <div class="popout top animate__animated animate__fast animate__flipInX w-100 bg-blue-light active">
+                        <div class="popout top animate__animated animate__fast animate__lightSpeedInRight w-100 bg-blue-light">
 
                             <div class="px-3 py-1">
 
@@ -456,7 +537,7 @@
 
                     <div class="popout-div mr-3">
 
-                        <div class="popout top animate__animated animate__fast animate__flipInX w-100">
+                        <div class="popout top animate__animated animate__fast animate__lightSpeedInRight w-100">
 
                             <div class="px-1 px-sm-3 pb-3 pt-1">
 
@@ -614,80 +695,6 @@
             </div>
             <div class="col-7">
 
-                @if(!stristr($agent_details -> company, 'referral'))
-
-                    <div class="agent-info-container ml-5">
-
-                        <div class="p-2 text-gray agent-info-toggle w-100">
-
-                            <ul class="nav nav-tabs" id="billing_details_tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link options-tab active" id="billing_details_sub_tab" data-toggle="tab" href="#billing_details_div" role="tab" aria-controls="billing_details_div" aria-selected="true">Agent Billing Details</a>
-                                </li>
-                            </ul>
-
-                            <div class="tab-content border-left border-bottom border-right p-3" id="billing_details_div">
-
-                                <div class="row">
-
-                                    <div class="col-12 col-md-6">
-
-                                        @if($type == 'sale' || $type == 'referral')
-                                            <div class="d-flex justify-content-between">
-                                                <div>Admin Fee Amount</div>
-                                                <div>${{ $for_sale ? $agent_details -> admin_fee : $agent_details -> admin_fee_rentals }}</div>
-                                            </div>
-                                        @endif
-
-                                        <div class="d-flex justify-content-between @if($agent_details -> balance > 0) text-danger @endif">
-                                            <div>Balance Dues</div>
-                                            <div>${{ number_format($agent_details -> balance, 2) ?? '0.00' }}</div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between @if($agent_details -> balance_eno > 0) text-danger @endif">
-                                            <div>Balance E&O</div>
-                                            <div>${{ number_format($agent_details -> balance_eno, 2) ?? '0.00' }}</div>
-                                        </div>
-
-                                        @if($agent_details -> office_rent_amount > 0 || $agent_details -> balance_rent != 0)
-                                            <div class="d-flex justify-content-between @if($agent_details -> balance_rent > 0) text-danger @endif">
-                                                <div>Balance Rent</div>
-                                                <div>${{ number_format($agent_details -> balance_rent, 2) ?? '0.00' }}</div>
-                                            </div>
-                                        @endif
-
-                                        <hr class="my-1">
-
-                                        <div class="d-flex justify-content-between">
-                                            <div>Auto Billed</div>
-                                            <div>{{ $agent_details -> auto_bill == 'on' ? 'Yes' : 'No' }}</div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-between">
-                                            <div>Commission</div>
-                                            <div>{{ ucwords($agent_details -> commission_percent) }}% - Plan {{ ucwords($agent_details -> commission_plan) }}</div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-
-                                        @if($agent_details -> owe_other == 'yes')
-                                            <div class="wage-garnishments p-1 mt-1 bg-orange-light text-danger rounded">{!! nl2br($agent_details -> owe_other_notes) !!}</div>
-                                        @endif
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                @endif
-
             </div>
         </div>
 
@@ -763,7 +770,7 @@
 
                     <div class="popout-div mr-3 h-100">
 
-                        <div class="popout top animate__animated animate__fast animate__flipInX w-100">
+                        <div class="popout top animate__animated animate__fast animate__lightSpeedInRight w-100">
 
                             <div class="px-1 px-sm-3 pb-3 pt-1">
 
@@ -907,7 +914,7 @@
                             </div>
                             <div class="col-7">
                                 <div class="d-flex justify-content-end">
-                                    <div class="mr-1 text-success">
+                                    <div class="mr-1 text-success font-11">
                                         <span id="total_commission_to_agent_display"></span>
                                         <input type="hidden" class="form-value" id="total_commission_to_agent" name="total_commission_to_agent">
                                     </div>
@@ -989,7 +996,7 @@
 
                     <div class="popout-div mr-3">
 
-                        <div class="popout bottom animate__animated animate__fast animate__flipInX w-100">
+                        <div class="popout middle animate__animated animate__fast animate__lightSpeedInRight w-100">
 
                             <div class="px-3 pb-3 pt-1">
 

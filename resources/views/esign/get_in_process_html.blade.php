@@ -56,7 +56,7 @@
                                 <div class="text-primary no-wrap">'.$signer -> signer_name.'</div>
                                 <div class="no-wrap">
                                     <div class="d-flex justify-content-end align-items-center text-primary">
-                                        Viewed <i class="fal fa-eye ml-2"></i><br>
+                                        Viewed <i class="fad fa-hourglass-half ml-2"></i><br>
                                     </div>
                                     <div class="d-flex justify-content-end align-items-center text-primary">
                                         <a href="javascript:void(0)" class="text-orange resend-envelope-button" data-envelope-id="'.$envelope -> id.'" data-signer-id="'.$signer -> id.'">Resend <i class="fal fa-redo ml-2"></i></a>
@@ -80,7 +80,7 @@
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>
-                    <td class="no-wrap" data-sort="{{ $envelope -> created_at }}">
+                    <td class="no-wrap small" data-sort="{{ $envelope -> created_at }}">
                         {{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}
                     </td>
                     <td class="text-center">

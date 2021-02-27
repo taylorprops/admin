@@ -42,7 +42,7 @@
                         @endforeach
 
                     </td>
-                    <td>{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>
+                    <td class="no-wrap small">{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>
                 </tr>
             @endforeach
 

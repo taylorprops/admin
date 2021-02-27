@@ -117,9 +117,6 @@
         display: none;
     }
 
-    /* #add_member_div .form-check {
-        padding-left: 0px;
-    } */
 
     .transaction-details-div {
         width: 100%;
@@ -128,6 +125,17 @@
         border: 1px solid $border-color;
     }
 
+    .commission-details-tabs {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 95%;
+    }
+
+    /* #options_tab_content {
+        max-height: 700px;
+        overflow: auto;
+    } */
 
 
     .folder-header {
@@ -544,6 +552,12 @@
 
 }
 
+// merge listing
+.matching-listings-list-group {
+    max-height:  400px;
+    overflow: auto;
+}
+
 // bright mls agent search
 .buyer-agent-details, .our-agent-div {
     display: none;
@@ -603,10 +617,11 @@
         }
 
         .view-add-div {
-            max-height: 400px;
+            max-height: 800px;
             overflow-y: auto;
             overflow-x: hidden;
         }
+
 
         .check-image-container.inactive .check-image-div, .check-image-container.inactive .list-group {
             opacity: 0.5;
@@ -635,6 +650,10 @@
         border-bottom-left-radius: 8px;
     }
 
+    .agent-commission-div {
+        max-width: 400px;
+    }
+
     .show-view-add-button {
         cursor: pointer;
     }
@@ -648,11 +667,11 @@
     }
 
     .notes-container {
-        height: 220px;
+        height: 500px;
         overflow: auto;
     }
     .commission-notes-div {
-        max-height: 220px;
+        max-height: 500px;
         overflow: auto;
 
         .list-group-item + .list-group-item {

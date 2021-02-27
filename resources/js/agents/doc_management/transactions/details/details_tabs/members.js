@@ -4,7 +4,7 @@ if (document.URL.match(/transaction_details/)) {
 
         dt_contacts = setInterval(function() {
             if($('#contacts_table').length == 1) {
-                let contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], false, true, true, true, true);
+                let contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
                 clearInterval(dt_contacts);
             }
         }, 500)

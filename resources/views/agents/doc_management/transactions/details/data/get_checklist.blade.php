@@ -114,12 +114,15 @@
                                 $item_review_status = $checklist_item -> checklist_item_status;
 
                                 $text_color = 'text-primary';
+                                $rejected = '';
                                 if($status != 'Required' && $status != 'Rejected') {
                                     $text_color = 'text-gray';
+                                } else if($status == 'Rejected') {
+                                    $rejected = 'rejected';
                                 }
                                 @endphp
 
-                                <div class="checklist-item-div p-1 border-bottom">
+                                <div class="checklist-item-div p-1 border-bottom {{ $rejected }}">
 
                                     <div class="row">
 

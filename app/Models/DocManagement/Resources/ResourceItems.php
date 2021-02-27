@@ -153,4 +153,9 @@ class ResourceItems extends Model
         $ids = $this -> where('resource_type', 'contract_status') -> whereIn('resource_name', ['Active', 'Closed']) -> pluck('resource_id');
         return $ids;
     }
+
+    public function scopeGetActiveReferralStatuses() {
+        $ids = $this -> where('resource_type', 'referral_status') -> where('resource_name', 'Active') -> pluck('resource_id');
+        return $ids;
+    }
 }

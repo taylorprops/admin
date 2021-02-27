@@ -17,6 +17,15 @@ class TransactionChecklistItems extends Model {
     protected $guarded = [];
 
 
+    public function docs() {
+        return $this -> hasMany('App\Models\DocManagement\Checklists\ChecklistsItemsDocs', 'checklist_id', 'id');
+    }
+
+    public function notes() {
+        return $this -> hasMany('App\Models\DocManagement\Checklists\ChecklistsItemsNotes', 'checklist_id', 'id');
+    }
+
+
     public function ScopeMakeClosingDocsRequired($query, $checklist_id) {
         $checklist_items = TransactionChecklistItems::where('checklist_id', $checklist_id) -> get();
         foreach($checklist_items as $checklist_item) {
@@ -26,18 +35,33 @@ class TransactionChecklistItems extends Model {
         }
     }
 
-    public function ScopeChecklistComplete($query, $checklist_id) {
+    public function ScopeChecklistComplete($query, $checklist_id, $include_closing_docs = null) {
 
         $complete = true;
+        $items_completed = 0;
         $checklist_items = TransactionChecklistItems::where('checklist_id', $checklist_id) -> where('checklist_item_required', 'yes') -> get();
         foreach($checklist_items as $checklist_item) {
-            if(Upload::IsClosingDoc($checklist_item -> checklist_form_id) == false && Upload::IsRelease($checklist_item -> checklist_form_id) == false && Upload::IsWithdraw($checklist_item -> checklist_form_id) == false) {
-                if($checklist_item -> checklist_item_status == 'not_reviewed') {
+            // if not a pending release or closing docs
+            if(!$include_closing_docs) {
+                if(Upload::IsClosingDoc($checklist_item -> checklist_form_id) == false && Upload::IsRelease($checklist_item -> checklist_form_id) == false && Upload::IsWithdraw($checklist_item -> checklist_form_id) == false) {
+                    if($checklist_item -> checklist_item_status == 'not_reviewed' || $checklist_item -> checklist_item_status == 'rejected') {
+                        $complete = false;
+                    } else {
+                        $items_completed += 1;
+                    }
+                }
+            } else {
+                if($checklist_item -> checklist_item_status == 'not_reviewed' || $checklist_item -> checklist_item_status == 'rejected') {
                     $complete = false;
+                } else {
+                    $items_completed += 1;
                 }
             }
         }
-        return $complete;
+        return [
+            'complete' => $complete,
+            'items_completed' => $items_completed
+        ];
 
     }
 

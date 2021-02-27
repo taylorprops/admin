@@ -37,8 +37,11 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => ['daily', 'single', 'larabug'],
             'ignore_exceptions' => false,
+        ],
+        'larabug' => [
+            'driver' => 'larabug',
         ],
 
         'single' => [

@@ -27,7 +27,21 @@
 
             </ul>
 
-            <div class="tab-content mt-4" id="transactions_tabs_content">
+            <div class="tab-content pt-4" id="transactions_tabs_content">
+
+                <div class="filters-div mb-3">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link view-option active" data-status="active" href="javascript:void(0)">Active Only</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link view-option" data-status="closed" href="javascript:void(0)">Closed</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link view-option" data-status="all" href="javascript:void(0)">Show All</a>
+                        </li>
+                    </ul>
+                </div>
 
                 @if(!$agent_referral)
                 <div class="tab-pane fade show active" id="listings_content" role="tabpanel" aria-labelledby="listings_tab">

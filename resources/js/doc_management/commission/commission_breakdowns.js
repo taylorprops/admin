@@ -30,7 +30,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
             $(document).on('click', '#save_edit_queue_check_button', save_edit_queue_check);
 
-            data_table($('#deleted_checks_table'), [1, 'desc'], [0, 8], false, false, false, false);
+            data_table($('#deleted_checks_table'), [1, 'desc'], [0, 8], [], false, false, false, false);
 
         }
 
@@ -50,7 +50,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
         .then(function (response) {
 
             $('.commissions-pending').html(response.data);
-            data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], true, true, true, true);
+            data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], [], true, true, true, true);
         })
         .catch(function (error) {
 
@@ -70,8 +70,8 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
             $('.commission-checks-queue').html(response.data);
 
-            data_table($('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], true, true, true, true);
-            data_table($('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], true, true, true, true);
+            data_table($('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], [], true, true, true, true);
+            data_table($('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], [], true, true, true, true);
 
             $('.edit-queue-check-button').off('click').on('click', show_edit_queue_check);
             $('.delete-check-button').off('click').on('click', show_delete_queue_check);

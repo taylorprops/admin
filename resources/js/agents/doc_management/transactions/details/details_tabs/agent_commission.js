@@ -180,7 +180,8 @@ if (document.URL.match(/transaction_details/)) {
                 $('#save_agent_commission_button').prop('disabled', false).html('<i class="fad fa-save mr-2"></i> Save Details');
                 $('.disabled').prop('disabled', true);
                 $('html, body').animate({ scrollTop: 0 }, 'slow');
-                $('#modal_success').modal().find('.modal-body').html('Your Commission Breakdown was successfully submitted!<br><br>You may edit any details until it is reviewed by our staff.');
+                $('#modal_success').modal().find('.modal-body').html('Your Commission Breakdown was successfully submitted!<br><br>You may edit any details until the review process is completed by our staff.');
+
             })
             .catch(function (error) {
                 console.log(error);

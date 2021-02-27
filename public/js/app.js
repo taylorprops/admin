@@ -45971,7 +45971,7 @@ if (document.URL.match(/transaction_details/)) {
         $('html, body').animate({
           scrollTop: 0
         }, 'slow');
-        $('#modal_success').modal().find('.modal-body').html('Your Commission Breakdown was successfully submitted!<br><br>You may edit any details until it is reviewed by our staff.');
+        $('#modal_success').modal().find('.modal-body').html('Your Commission Breakdown was successfully submitted!<br><br>You may edit any details until the review process is completed by our staff.');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -46374,6 +46374,12 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     }
   };
 
+  var clear_add_check_form = function clear_add_check_form() {
+    $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('');
+    $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
+  }; // Notes
+
+
   var page = 'other';
 
   if (document.URL.match(/transaction_details/)) {
@@ -46389,16 +46395,28 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     $(document).on('change', '#using_heritage', function () {
       show_title();
     });
+    $(document).on('mouseup', function (e) {
+      var container = $('.popout-row');
+
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
+        $('.popout').hide();
+        $('.commission-details-tabs').animate({
+          opacity: '1'
+        });
+      }
+    });
   });
 
   window.commission_init = function (Commission_ID, Agent_ID) {
-    $('.popout').eq(0).show();
+    //$('.popout').eq(0).show();
     get_checks_in(Commission_ID);
     get_checks_out(Commission_ID);
     get_commission_notes(Commission_ID);
     get_income_deductions(Commission_ID);
     get_commission_deductions(Commission_ID);
     get_agent_details(Agent_ID);
+    get_agent_commission_details(Commission_ID);
     save_commission('no');
     show_title(); // $('#using_heritage').on('change', function() {
     //     show_title();
@@ -46433,6 +46451,21 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         $(this).val('$0.00');
       }
     });
+  };
+
+  window.get_agent_commission_details = function (Commission_ID) {
+    axios.get('/agents/doc_management/transactions/details/data/get_agent_commission_details', {
+      params: {
+        Commission_ID: Commission_ID
+      },
+      headers: {
+        'Accept-Version': 1,
+        'Accept': 'text/html',
+        'Content-Type': 'text/html'
+      }
+    }).then(function (response) {
+      $('.agent-commission-div').html(response.data);
+    })["catch"](function (error) {});
   };
 
   window.get_agent_details = function (Agent_ID) {
@@ -46760,8 +46793,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
   };
 
   window.show_add_check_in = function () {
-    $('#add_check_in_modal').modal('show');
-    $('#add_check_in_modal').on('hidden.bs.modal', clear_add_check_form); // shared with commission js
+    clear_add_check_form();
+    $('#add_check_in_modal').modal('show'); // shared with commission js
 
     get_check_info();
     $('#check_in_agent_id').val($('#Agent_ID').val());
@@ -46781,6 +46814,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
   };
 
   window.show_edit_check_in = function () {
+    clear_add_check_form();
     $('#edit_check_in_modal').modal();
     $('.edit-check-in-preview-div').html('<div class="border border-primary mt-2 check-preview"><img src="' + $(this).data('image-location') + '" class="w-100"></div>');
     $('#edit_check_in_id').val($(this).data('check-id'));
@@ -46886,8 +46920,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
   };
 
   window.show_add_check_out = function () {
+    clear_add_check_form();
     $('#add_check_out_modal').modal('show');
-    $('#add_check_out_modal').on('hidden.bs.modal', clear_add_check_form);
     $('#check_out_upload').off('change').on('change', function () {
       if ($(this).val() != '') {
         //$(this).closest('.form-ele').find('label').addClass('active');
@@ -46953,8 +46987,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
   };
 
   window.show_edit_check_out = function () {
-    $('#edit_check_out_modal').modal(); //$('#edit_check_out_modal').on('hidden.bs.modal', clear_add_check_form);
-
+    clear_add_check_form();
+    $('#edit_check_out_modal').modal();
     var button = $(this);
     setTimeout(function () {
       $('.edit-check-out-preview-div').html('<div class="border border-primary mt-2 check-preview"><img src="' + button.data('image-location') + '" class="w-100"></div>');
@@ -47065,12 +47099,6 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     })["catch"](function (error) {});
   };
 
-  clear_add_check_form = function clear_add_check_form() {
-    $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('');
-    $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
-  }; // Notes
-
-
   window.get_commission_notes = function () {
     var Commission_ID = $('#Commission_ID').val();
 
@@ -47120,10 +47148,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     var popout_row = $(this).closest('.popout-row');
     var popout_action = popout_row.find('.popout-action');
     var popout = popout_row.find('.popout');
+    var anime_in = 'lightSpeedInRight';
+    var anime_out = 'lightSpeedOutRight';
 
     if (!popout_action.hasClass('bg-blue-light')) {
-      var anime_in = 'flipInX';
-      var anime_out = 'flipOutX';
       $('.popout-action, .popout').removeClass('active bg-blue-light ' + anime_in + ' ' + anime_out);
       popout_action.addClass('bg-blue-light');
       $('.popout').not(popout).addClass(anime_out).hide();
@@ -47134,6 +47162,25 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
           top: '-' + (popout.height() / 2 - 30) + 'px'
         });
       }
+    } else {
+      $('.popout-action, .popout').removeClass('active bg-blue-light ' + anime_in + ' ' + anime_out);
+      popout.addClass(anime_out).hide();
+    }
+
+    if (!$(this).is('.show-view-add-button:last')) {
+      if ($('.popout.active').length > 0) {
+        $('.commission-details-tabs').animate({
+          opacity: '0.3'
+        });
+      } else {
+        $('.commission-details-tabs').animate({
+          opacity: '1'
+        });
+      }
+    } else {
+      $('.commission-details-tabs').animate({
+        opacity: '1'
+      });
     }
   };
 }
@@ -49194,12 +49241,12 @@ if (document.URL.match(/transaction_details/)) {
       $('#' + tab + '_esign_div').html(response.data);
 
       if (tab == 'drafts') {
-        data_table($('#drafts_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+        data_table($('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
         $(document).on('click', '.delete-draft-button', function () {
           delete_draft($(this));
         });
       } else if (tab == 'deleted_drafts') {
-        data_table($('#deleted_drafts_table'), [3, 'desc'], [0], false, true, true, true, true);
+        data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
         $(document).on('click', '.restore-draft-button', function () {
           restore_draft($(this));
         });
@@ -49213,7 +49260,7 @@ if (document.URL.match(/transaction_details/)) {
           }
         }, 200);
       } else if (tab == 'in_process') {
-        data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+        data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
         $(document).on('click', '.cancel-envelope-button', function () {
           cancel_envelope($(this));
         });
@@ -49221,9 +49268,9 @@ if (document.URL.match(/transaction_details/)) {
           resend_envelope($(this));
         });
       } else if (tab == 'completed') {
-        data_table($('#completed_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+        data_table($('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
       } else if (tab == 'cancelled') {
-        data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
+        data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
       }
     })["catch"](function (error) {
       console.log(error);
@@ -49316,7 +49363,7 @@ if (document.URL.match(/transaction_details/)) {
   $(function () {
     dt_contacts = setInterval(function () {
       if ($('#contacts_table').length == 1) {
-        var contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], false, true, true, true, true);
+        var contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
         clearInterval(dt_contacts);
       }
     }, 500);
@@ -49781,6 +49828,26 @@ if (document.URL.match(/transaction_details/)) {
     })["catch"](function (error) {});
   };
 
+  var cancel_referral = function cancel_referral() {
+    var Referral_ID = $('#Referral_ID').val();
+    var formData = new FormData();
+    formData.append('Referral_ID', Referral_ID);
+    axios.post('/agents/doc_management/transactions/cancel_referral', formData, axios_options).then(function (response) {
+      load_details_header();
+      toastr['success']('Referral Successfully Canceled');
+    })["catch"](function (error) {});
+  };
+
+  var undo_cancel_referral = function undo_cancel_referral() {
+    var Referral_ID = $('#Referral_ID').val();
+    var formData = new FormData();
+    formData.append('Referral_ID', Referral_ID);
+    axios.post('/agents/doc_management/transactions/undo_cancel_referral', formData, axios_options).then(function (response) {
+      load_details_header();
+      toastr['success']('Referral Successfully Reactivated');
+    })["catch"](function (error) {});
+  };
+
   var show_accept_contract = function show_accept_contract() {
     $('#accept_contract_modal').modal();
     $('#save_accept_contract_button').off('click').on('click', function () {
@@ -49949,6 +50016,85 @@ if (document.URL.match(/transaction_details/)) {
     }
   };
 
+  var show_merge_with_listing = function show_merge_with_listing() {
+    var Contract_ID = $('#Contract_ID').val();
+    axios.get('/agents/doc_management/transactions/merge_listing_and_contract', {
+      params: {
+        Contract_ID: Contract_ID
+      }
+    }).then(function (response) {
+      var listings = response.data;
+
+      if (listings.length > 0) {
+        $('#merge_with_listing_modal').modal('show');
+        $('.matching-listings-list-group').html(''); //$.each(listings, function(key, val) {
+
+        listings.forEach(function (listing) {
+          var sellers = listing['SellerOneFullName'];
+
+          if (listing['SellerTwoFullname']) {
+            sellers += '<br>' + listing['SellerTwoFullname'];
+          }
+
+          var item = ' \
+                        <div class="list-group-item"> \
+                            <div class="row"> \
+                                <div class="col-3 d-flex align-items-center"> \
+                                    <button class="btn btn-primary btn-lg merge-listing-button" data-listing-id="' + listing['Listing_ID'] + '"><i class="fad fa-exchange-alt mr-2"></i> Merge</button> \
+                                </div> \
+                                <div class="col-9"> \
+                                    <div class="row text-primary font-10"> \
+                                        <div class="col-12 mb-3"> \
+                                            ' + listing['FullStreetAddress'] + ' ' + listing['City'] + ', ' + listing['StateOrProvince'] + ' ' + listing['PostalCode'] + ' \
+                                        </div> \
+                                    </div> \
+                                    <div class="row text-gray"> \
+                                        <div class="col-3"> \
+                                            <strong>Sellers</strong><br> \
+                                            ' + sellers + ' \
+                                        </div> \
+                                        <div class="col-3"> \
+                                            <strong>List Date</strong><br> \
+                                            ' + listing['MlsListDate'] + ' \
+                                        </div> \
+                                        <div class="col-3"> \
+                                            <strong>List Price</strong><br> \
+                                            $' + global_format_number(listing['ListPrice']) + ' \
+                                        </div> \
+                                        <div class="col-3 d-flex align-items-center"> \
+                                            <a href="/agents/doc_management/transactions/transaction_details/' + listing['Listing_ID'] + '/listing" class="btn btn-primary btn-sm" target="_blank"><i class="fad fa-eye mr-2"></i> View Listing</a> \
+                                        </div> \
+                                    </div> \
+                                </div> \
+                            </div> \
+                        </div> \
+                    ';
+          console.log(item);
+          $('.matching-listings-list-group').append(item);
+        });
+        $('.merge-listing-button').off('click').on('click', function () {
+          var Listing_ID = $(this).data('listing-id');
+          var Contract_ID = $('#Contract_ID').val();
+          var formData = new FormData();
+          formData.append('Listing_ID', Listing_ID);
+          formData.append('Contract_ID', Contract_ID);
+          axios.post('/agents/doc_management/transactions/save_merge_listing_and_contract', formData, axios_options).then(function (response) {
+            $('#merge_with_listing_modal').modal('hide');
+            toastr['success']('Listing and Contract Successfully Merged');
+            load_details_header();
+            load_tabs('members');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        });
+      } else {
+        $('#modal_info').modal().find('.modal-body').html('No matching listings were found.<br><br>The street, city, state and zip must match for both properties.');
+      }
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   var docs_count = function docs_count() {
     $('.folder-div').each(function () {
       var docs_count = $(this).find('.sortable-documents').find('.document-div').length;
@@ -50081,6 +50227,22 @@ if (document.URL.match(/transaction_details/)) {
     }
   });
 
+  window.undo_merge_with_listing = function () {
+    var Listing_ID = $(this).data('listing-id');
+    var Contract_ID = $('#Contract_ID').val();
+    var formData = new FormData();
+    formData.append('Listing_ID', Listing_ID);
+    formData.append('Contract_ID', Contract_ID);
+    axios.post('/agents/doc_management/transactions/save_undo_merge_listing_and_contract', formData, axios_options).then(function (response) {
+      $('#merge_with_listing_modal').modal('hide');
+      toastr['success']('Listing and Contract Successfully Separated');
+      load_details_header();
+      load_tabs('members');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   window.load_details_header = function () {
     var Listing_ID = $('#Listing_ID').val();
     var Contract_ID = $('#Contract_ID').val();
@@ -50102,8 +50264,12 @@ if (document.URL.match(/transaction_details/)) {
       $('#accept_contract_button').off('click').on('click', show_accept_contract);
       $('#cancel_contract_button').off('click').on('click', show_cancel_contract);
       $('#cancel_listing_button').off('click').on('click', show_cancel_listing);
+      $('#cancel_referral_button').off('click').on('click', cancel_referral);
       $('.undo-cancel-listing-button').off('click').on('click', undo_cancel_listing);
       $('.undo-cancel-contract-button').off('click').on('click', show_undo_cancel_contract);
+      $('.undo-cancel-referral-button').off('click').on('click', undo_cancel_referral);
+      $('#merge_with_listing_button').off('click').on('click', show_merge_with_listing);
+      $('#undo_merge_with_listing_button').off('click').on('click', undo_merge_with_listing);
     })["catch"](function (error) {});
   };
 
@@ -51649,6 +51815,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             parent_div = $('.checklist-item-div.active');
           }
 
+          parent_div.removeClass('rejected');
           review_options = ele.closest('.review-options');
           review_options.find('.item-not-reviewed, .item-rejected, .item-accepted').removeClass('d-flex').addClass('d-none');
           review_options.removeClass('bg-green-light bg-red-light').addClass('bg-light'); //let required = ele.data('required');
@@ -51696,7 +51863,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
               } // notify complete unless other docs not required are not reviewed
 
 
-              if (page_type == 'review' && $('.checklist-item-div.pending').length == 0 || page_type == 'checklist' && $('.checklist-item-div.pending').length == 0) {
+              if (page_type == 'review' && $('.checklist-item-div.pending').length == 0 || page_type == 'checklist' && $('.checklist-item-div.pending').length == 0 && $('.checklist-item-div.rejected').length == 0) {
                 if (page_type == 'checklist') {
                   load_tabs('checklist');
                 }
@@ -51757,7 +51924,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
               }, 1000);
             }
 
-            parent_div.removeClass('pending');
+            parent_div.removeClass('pending').addClass('rejected');
           } else if (action == 'not_reviewed') {
             if (page_type == 'checklist') {
               html = '<i class="fal fa-minus-circle fa-lg mr-2"></i> Pending';
@@ -51856,10 +52023,12 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 /***/ (function(module, exports) {
 
 if (document.URL.match(/transactions$/)) {
-  var get_transactions = function get_transactions(type) {
+  var get_transactions = function get_transactions(type, status) {
+    var group = getCookie('user_group');
     axios.get('/agents/doc_management/transactions/get_transactions', {
       params: {
-        type: type
+        type: type,
+        status: status
       },
       headers: {
         'Accept-Version': 1,
@@ -51868,7 +52037,19 @@ if (document.URL.match(/transactions$/)) {
       }
     }).then(function (response) {
       $('#' + type + '_div').html(response.data);
-      data_table($('#' + type + '_div table'), [1, 'asc'], [0], true, true, true, true);
+      var hidden_cols = [];
+
+      if (group == 'agent') {
+        hidden_cols = [2];
+      }
+
+      if (type == 'listings') {
+        data_table($('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+      } else if (type == 'contracts') {
+        data_table($('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+      } else if (type == 'referrals') {
+        data_table($('#' + type + '_div table'), [1, 'asc'], [0], hidden_cols, false, true, true, true);
+      }
     })["catch"](function (error) {
       console.log(error);
     });
@@ -51876,11 +52057,20 @@ if (document.URL.match(/transactions$/)) {
 
   $(function () {
     if ($('#agent_referral').val() == '') {
-      get_transactions('listings');
-      get_transactions('contracts');
+      get_transactions('listings', 'active');
+      get_transactions('contracts', 'active');
     }
 
-    get_transactions('referrals');
+    get_transactions('referrals', 'active');
+    $('#transactions_tabs .nav-link').on('click', function () {
+      $('.view-option').first().trigger('click');
+    });
+    $('.view-option').on('click', function () {
+      $('.view-option').removeClass('active');
+      $(this).addClass('active');
+      var type = $('#transactions_tabs .nav-link.active').data('tab');
+      get_transactions(type, $(this).data('status'));
+    });
   });
 }
 
@@ -52833,7 +53023,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       }
     }).then(function (response) {
       $('.commissions-pending').html(response.data);
-      data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], true, true, true, true);
+      data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], [], true, true, true, true);
     })["catch"](function (error) {});
   };
 
@@ -52846,8 +53036,8 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       }
     }).then(function (response) {
       $('.commission-checks-queue').html(response.data);
-      data_table($('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], true, true, true, true);
-      data_table($('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], true, true, true, true);
+      data_table($('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], [], true, true, true, true);
+      data_table($('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], [], true, true, true, true);
       $('.edit-queue-check-button').off('click').on('click', show_edit_queue_check);
       $('.delete-check-button').off('click').on('click', show_delete_queue_check);
       $('.undo-delete-check-button').off('click').on('click', undo_delete_queue_check); //select_refresh();
@@ -52920,7 +53110,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       $('#search_deleted_checks').on('keyup', search_deleted_checks);
       $(document).on('click', '.undo-delete-queue-check', undo_delete_queue_check);
       $(document).on('click', '#save_edit_queue_check_button', save_edit_queue_check);
-      data_table($('#deleted_checks_table'), [1, 'desc'], [0, 8], false, false, false, false);
+      data_table($('#deleted_checks_table'), [1, 'desc'], [0, 8], [], false, false, false, false);
     }
 
     $(document).on('click', '#save_add_check_in_button', save_add_check_in);
@@ -54694,10 +54884,10 @@ if (document.URL.match(/balance_earnest/)) {
         }
       }).then(function (response) {
         $('.earnest-checks-container').html(response.data);
-        data_table($('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], true, true, true, false);
-        data_table($('.earnest-checks-table-out'), [1, 'desc'], [0, 7], true, true, true, false);
-        data_table($('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], true, true, true, true);
-        data_table($('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], true, true, true, true); //form_elements();
+        data_table($('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], [], true, true, true, false);
+        data_table($('.earnest-checks-table-out'), [1, 'desc'], [0, 7], [], true, true, true, false);
+        data_table($('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], [], true, true, true, true);
+        data_table($('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], [], true, true, true, true); //form_elements();
 
         $('.cleared-checkbox').on('change', function () {
           cleared_bounced($(this));
@@ -56405,12 +56595,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
         $('#' + tab + '_div').html(response.data);
 
         if (tab == 'drafts') {
-          data_table($('#drafts_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+          data_table($('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-draft-button').off('click').on('click', function () {
             delete_draft($(this));
           });
         } else if (tab == 'deleted_drafts') {
-          data_table($('#deleted_drafts_table'), [3, 'desc'], [0], false, true, true, true, true);
+          data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-draft-button').off('click').on('click', function () {
             restore_draft($(this));
           });
@@ -56424,7 +56614,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'in_process') {
-          data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+          data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
           $('.cancel-envelope-button').off('click').on('click', function () {
             cancel_envelope($(this));
           });
@@ -56432,14 +56622,14 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             resend_envelope($(this));
           });
         } else if (tab == 'completed') {
-          data_table($('#completed_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+          data_table($('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
         } else if (tab == 'templates') {
-          data_table($('#templates_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+          data_table($('#templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-template-button').off('click').on('click', function () {
             delete_template($(this));
           });
         } else if (tab == 'deleted_templates') {
-          data_table($('#deleted_templates_table'), [3, 'desc'], [0], false, true, true, true, true);
+          data_table($('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-template-button').off('click').on('click', function () {
             restore_template($(this));
           });
@@ -56453,12 +56643,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'system_templates') {
-          data_table($('#system_templates_table'), [3, 'desc'], [0, 4], false, true, true, true, true);
+          data_table($('#system_templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-system-template-button').off('click').on('click', function () {
             delete_system_template($(this));
           });
         } else if (tab == 'deleted_system_templates') {
-          data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], false, true, true, true, true);
+          data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-system-template-button').off('click').on('click', function () {
             restore_system_template($(this));
           });
@@ -56472,7 +56662,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'cancelled') {
-          data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
+          data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -56633,7 +56823,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
     $('#uploads_div').sortable({
       handle: '.file-handle'
     });
-    data_table($('#templates_table'), [1, 'asc'], [0], false, true, true, true);
+    data_table($('#templates_table'), [1, 'asc'], [0], [], false, true, true, true);
 
     if ($('#from_upload').val() == 'yes') {
       create_envelope();
@@ -58680,13 +58870,14 @@ $(function () {
     "search": ""
   });
 
-  window.data_table = function (table, sort_by, no_sort_cols, show_buttons, show_search, show_info, show_paging) {
-    var hide_cols = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : true;
+  window.data_table = function (table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging) {
+    var hide_cols = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : true;
 
     /*
     table = $('#table_id')
     sort_by = [1, 'desc'] - col #, dir
     no_sort_cols = [0, 8] - array of cols
+    hide_cols = [0, 8] - array of cols
     show_buttons = true/false
     show_search = true/false
     show_info = true/false
@@ -58701,6 +58892,15 @@ $(function () {
         orderable: false,
         targets: no_sort_cols
       }];
+    }
+
+    if (hidden_cols.length > 0) {
+      hidden_cols.forEach(function (col) {
+        datatable_settings.columnDefs.push({
+          targets: [col],
+          visible: false
+        });
+      });
     }
 
     var buttons = '';
@@ -58749,7 +58949,7 @@ $(function () {
       length = '<l>';
     }
 
-    datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"' + search + length + buttons + '>rt<"d-flex justify-content-between align-items-center text-gray"' + info + paging + '>';
+    datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"' + search + info + length + buttons + '>rt<"d-flex justify-content-between align-items-center text-gray"' + info + paging + '>';
     table.DataTable(datatable_settings); //$('.dt-buttons .btn-secondary span').css({ color: 'white' });
 
     $('.dataTables_filter [type="search"]').attr('placeholder', 'Search');
@@ -58904,6 +59104,23 @@ window.inactivityTime = function () {
 
 /**************************  STANDARD USE FUNCTIONS ***********************************/
 
+
+window.getCookie = function (name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1, c.length);
+    }
+
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+
+  return null;
+};
 
 window.scrollToAnchor = function (id) {
   var anchor_position = $('#' + id).offset().top;

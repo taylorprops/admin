@@ -162,12 +162,13 @@ $(function() {
         }
     }
 
-    window.data_table = function(table, sort_by, no_sort_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
+    window.data_table = function(table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
 
         /*
         table = $('#table_id')
         sort_by = [1, 'desc'] - col #, dir
         no_sort_cols = [0, 8] - array of cols
+        hide_cols = [0, 8] - array of cols
         show_buttons = true/false
         show_search = true/false
         show_info = true/false
@@ -182,6 +183,15 @@ $(function() {
                 orderable: false,
                 targets: no_sort_cols
             }];
+        }
+
+        if(hidden_cols.length > 0) {
+            hidden_cols.forEach(function(col) {
+                datatable_settings.columnDefs.push({
+                    targets: [col],
+                    visible: false
+                });
+            });
         }
 
         let buttons = '';
@@ -232,7 +242,7 @@ $(function() {
             length = '<l>';
         }
 
-        datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"'+search+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
+        datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"'+search+info+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
 
         table.DataTable(datatable_settings);
 
@@ -413,6 +423,18 @@ window.inactivityTime = function () {
 } */
 
 /**************************  STANDARD USE FUNCTIONS ***********************************/
+
+
+window.getCookie = function(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
 
 window.scrollToAnchor = function(id) {
     var anchor_position = $('#'+id).offset().top;

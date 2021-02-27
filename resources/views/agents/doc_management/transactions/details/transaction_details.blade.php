@@ -2137,6 +2137,27 @@
     </div>
 </div>
 
+<div class="modal fade draggable" id="merge_with_listing_modal" tabindex="-1" role="dialog" aria-labelledby="merge_with_listing_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="merge_with_listing_modal_title">Merge With Listing</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="font-11 text-orange mb-4">Matching Listings Found</div>
+                        <div class="list-group matching-listings-list-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- required fields --}}
 <div class="modal fade draggable" id="required_fields_modal" tabindex="-1" role="dialog" aria-labelledby="required_fields_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

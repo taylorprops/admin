@@ -19,19 +19,28 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         });
 
 
+        $(document).on('mouseup', function (e) {
+            var container = $('.popout-row');
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
+                $('.popout').hide();
+                $('.commission-details-tabs').animate({ opacity: '1' });
+            }
+        });
 
 
     });
 
     window.commission_init = function(Commission_ID, Agent_ID) {
 
-        $('.popout').eq(0).show();
+        //$('.popout').eq(0).show();
         get_checks_in(Commission_ID);
         get_checks_out(Commission_ID);
         get_commission_notes(Commission_ID);
         get_income_deductions(Commission_ID);
         get_commission_deductions(Commission_ID);
         get_agent_details(Agent_ID);
+        get_agent_commission_details(Commission_ID);
         save_commission('no');
 
         show_title();
@@ -77,6 +86,26 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             if($(this).val() == '') {
                 $(this).val('$0.00');
             }
+        });
+    }
+
+    window.get_agent_commission_details = function(Commission_ID) {
+
+        axios.get('/agents/doc_management/transactions/details/data/get_agent_commission_details', {
+            params: {
+                Commission_ID: Commission_ID
+            },
+            headers: {
+                'Accept-Version': 1,
+                'Accept': 'text/html',
+                'Content-Type': 'text/html'
+            }
+        })
+        .then(function (response) {
+            $('.agent-commission-div').html(response.data);
+        })
+        .catch(function (error) {
+
         });
     }
 
@@ -494,8 +523,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.show_add_check_in = function() {
 
+        clear_add_check_form();
+
         $('#add_check_in_modal').modal('show');
-        $('#add_check_in_modal').on('hidden.bs.modal', clear_add_check_form);
+
         // shared with commission js
         get_check_info();
 
@@ -539,6 +570,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.show_edit_check_in = function() {
 
+        clear_add_check_form();
         $('#edit_check_in_modal').modal();
 
         $('.edit-check-in-preview-div').html('<div class="border border-primary mt-2 check-preview"><img src="'+$(this).data('image-location')+'" class="w-100"></div>');
@@ -690,8 +722,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.show_add_check_out = function() {
 
+        clear_add_check_form();
+
         $('#add_check_out_modal').modal('show');
-        $('#add_check_out_modal').on('hidden.bs.modal', clear_add_check_form);
 
         $('#check_out_upload').off('change').on('change', function () {
 
@@ -789,8 +822,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     window.show_edit_check_out = function() {
 
+        clear_add_check_form();
         $('#edit_check_out_modal').modal();
-        //$('#edit_check_out_modal').on('hidden.bs.modal', clear_add_check_form);
         let button = $(this);
         setTimeout(function() {
             $('.edit-check-out-preview-div').html('<div class="border border-primary mt-2 check-preview"><img src="'+button.data('image-location')+'" class="w-100"></div>');
@@ -930,7 +963,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     }
 
-    clear_add_check_form = function() {
+    function clear_add_check_form() {
         $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('');
         $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
     }
@@ -996,10 +1029,12 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         let popout_row = $(this).closest('.popout-row');
         let popout_action = popout_row.find('.popout-action');
         let popout = popout_row.find('.popout');
+
+        let anime_in = 'lightSpeedInRight';
+        let anime_out = 'lightSpeedOutRight';
+
         if(!popout_action.hasClass('bg-blue-light')) {
 
-            let anime_in = 'flipInX';
-            let anime_out = 'flipOutX';
             $('.popout-action, .popout').removeClass('active bg-blue-light '+ anime_in+' '+anime_out);
             popout_action.addClass('bg-blue-light');
 
@@ -1010,6 +1045,21 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 $('.popout.middle').css({ top: '-'+ ((popout.height() / 2) - 30) + 'px' });
             }
 
+        } else {
+
+            $('.popout-action, .popout').removeClass('active bg-blue-light '+ anime_in+' '+anime_out);
+            popout.addClass(anime_out).hide();
+
+        }
+
+        if(!$(this).is('.show-view-add-button:last')) {
+            if($('.popout.active').length > 0) {
+                $('.commission-details-tabs').animate({ opacity: '0.3' });
+            } else {
+                $('.commission-details-tabs').animate({ opacity: '1' });
+            }
+        } else {
+            $('.commission-details-tabs').animate({ opacity: '1' });
         }
 
     }

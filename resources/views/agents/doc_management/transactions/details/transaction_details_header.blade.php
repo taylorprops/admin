@@ -162,7 +162,68 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                     </div>
 
+                    @if(!$property -> Listing_ID > 0 && $listings_count > 0)
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <a href="javascript:void(0)" id="merge_with_listing_button"><i class="fad fa-exchange-alt mr-2"></i> Merge with Listing</a>
+                        </div>
+
+                    @endif
+
+                    @if($property -> Merged == 'yes')
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <a href="javascript:void(0)" id="undo_merge_with_listing_button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fad fa-exchange-alt mr-2"></i> Undo Merge with Listing</a>
+                        </div>
+
+                    @endif
+
+
+
                 </div>
+
+            </div>
+
+        @elseif($transaction_type == 'referral')
+
+            <div class="d-flex flex-wrap justify-content-end align-items-center">
+
+                    @php
+                    $header_status = $status;
+                    $header_status_class = 'bg-orange';
+                    $header_fa = 'fa-check';
+                    if($status == 'Closed') {
+                        $header_status_class = 'bg-success';
+                        $header_fa = 'fa-check-circle';
+                    } elseif($status == 'Canceled') {
+                        $header_status_class = 'bg-danger';
+                        $header_fa = 'fa-ban';
+                    }
+                    @endphp
+
+
+                    @if($property -> Status == $resource_items -> GetResourceID('Active', 'referral_status'))
+
+                        <div>
+                            <a href="javascript: void(0);" class="btn btn-danger" id="cancel_referral_button"><i class="fal fa-minus mr-2"></i> Cancel Referral</a>
+                        </div>
+
+                    @else
+
+                        <div>
+                            <span class="badge {{ $header_status_class }} text-white mr-2 font-12"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
+                        </div>
+
+                        @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'referral_status'))
+
+                            <div class="mx-3">
+                                <a href="javascript: void(0)"class="undo-cancel-referral-button" data-referral-id="{{ $property -> Referral_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+                            </div>
+
+                        @endif
+
+                    @endif
+
 
             </div>
 

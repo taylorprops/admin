@@ -57,7 +57,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 if(tab == 'drafts') {
 
-                    data_table($('#drafts_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                    data_table($('#drafts_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
                     $('.delete-draft-button').off('click').on('click', function() {
                         delete_draft($(this));
@@ -65,7 +65,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'deleted_drafts') {
 
-                    data_table($('#deleted_drafts_table'), [3, 'desc'], [0], false, true, true, true, true);
+                    data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
                     $('.restore-draft-button').off('click').on('click', function() {
                         restore_draft($(this));
@@ -82,7 +82,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'in_process') {
 
-                    data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+                    data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
                     $('.cancel-envelope-button').off('click').on('click', function() {
                         cancel_envelope($(this));
                     });
@@ -93,11 +93,11 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'completed') {
 
-                    data_table($('#completed_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                    data_table($('#completed_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
                 } else if(tab == 'templates') {
 
-                    data_table($('#templates_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                    data_table($('#templates_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
                     $('.delete-template-button').off('click').on('click', function() {
                         delete_template($(this));
@@ -105,7 +105,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'deleted_templates') {
 
-                    data_table($('#deleted_templates_table'), [3, 'desc'], [0], false, true, true, true, true);
+                    data_table($('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
                     $('.restore-template-button').off('click').on('click', function() {
                         restore_template($(this));
@@ -122,7 +122,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'system_templates') {
 
-                    data_table($('#system_templates_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                    data_table($('#system_templates_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
                     $('.delete-system-template-button').off('click').on('click', function() {
                         delete_system_template($(this));
@@ -130,7 +130,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'deleted_system_templates') {
 
-                    data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], false, true, true, true, true);
+                    data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
                     $('.restore-system-template-button').off('click').on('click', function() {
                         restore_system_template($(this));
@@ -147,7 +147,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'cancelled') {
 
-                    data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
+                    data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
                 }
 

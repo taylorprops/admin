@@ -41,7 +41,7 @@
                             @endforeach
                         @endforeach
                     </td>
-                    <td data-sort="{{ $template -> created_at }}">{{ date('M jS, Y', strtotime($template -> created_at)) }}<br>{{ date('g:i:s A', strtotime($template -> created_at)) }}</td>
+                    <td class="no-wrap small" data-sort="{{ $template -> created_at }}">{{ date('M jS, Y', strtotime($template -> created_at)) }}<br>{{ date('g:i:s A', strtotime($template -> created_at)) }}</td>
                 </tr>
             @endforeach
 

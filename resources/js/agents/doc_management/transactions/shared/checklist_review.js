@@ -538,6 +538,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                             parent_div = $('.checklist-item-div.active');
                         }
 
+                        parent_div.removeClass('rejected');
+
 
                         review_options = ele.closest('.review-options');
                         review_options.find('.item-not-reviewed, .item-rejected, .item-accepted').removeClass('d-flex').addClass('d-none');
@@ -591,7 +593,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                                 }
 
                                 // notify complete unless other docs not required are not reviewed
-                                if((page_type == 'review' && $('.checklist-item-div.pending').length == 0) || (page_type == 'checklist' && $('.checklist-item-div.pending').length == 0)) {
+                                if((page_type == 'review' && $('.checklist-item-div.pending').length == 0) || (page_type == 'checklist' && $('.checklist-item-div.pending').length == 0 && $('.checklist-item-div.rejected').length == 0)) {
                                     if(page_type == 'checklist') {
                                         load_tabs('checklist');
                                     }
@@ -665,7 +667,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 
                             }
 
-                            parent_div.removeClass('pending');
+                            parent_div.removeClass('pending').addClass('rejected');
 
                         } else if (action == 'not_reviewed') {
 

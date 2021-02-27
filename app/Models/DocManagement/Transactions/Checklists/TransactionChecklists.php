@@ -22,6 +22,10 @@ class TransactionChecklists extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
+    public function items() {
+        return $this -> hasMany('App\Models\DocManagement\Checklists\ChecklistsItems', 'checklist_id', 'id') -> with('docs') -> with('notes');
+    }
+
     public function ScopeCreateTransactionChecklist($request, $checklist_id, $Listing_ID, $Contract_ID, $Referral_ID, $Agent_ID, $checklist_represent, $checklist_type, $checklist_property_type_id, $checklist_property_sub_type_id, $checklist_sale_rent, $checklist_state, $checklist_location_id, $checklist_hoa_condo, $checklist_year_built) {
 
         $for_sale_and_rent = false;

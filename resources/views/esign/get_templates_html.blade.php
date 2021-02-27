@@ -50,7 +50,7 @@
                             @endforeach
                         @endforeach
                     </td>
-                    <td data-sort="{{ $template -> created_at }}">{{ date('M jS, Y', strtotime($template -> created_at)) }}<br>{{ date('g:i:s A', strtotime($template -> created_at)) }}</td>
+                    <td class="no-wrap small" data-sort="{{ $template -> created_at }}">{{ date('M jS, Y', strtotime($template -> created_at)) }}<br>{{ date('g:i:s A', strtotime($template -> created_at)) }}</td>
                     <td class="text-center"><a href="javascript:void(0)" class="btn btn-danger delete-template-button" data-template-id="{{ $template -> id }}"><i class="fal fa-times"></i></a></td>
                 </tr>
             @endforeach

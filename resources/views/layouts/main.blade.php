@@ -37,6 +37,9 @@
         {{-- text editor --}}
         <script src="//cdn.tiny.cloud/1/t3u7alod16y8nsqt07h4m5kwfw8ob9sxbvy2rlmrqo94zrui/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
+        @larabugJavaScriptClient
+        {{-- xhr.open("POST", window.location.protocol+'//'+window.location.hostname + '/larabug-api/javascript-report', true); --}}
+
 
         @yield('js_scripts')
 
@@ -60,7 +63,7 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div class="loading-spinner-html mt-0 mx-2 mx-sm-auto">Loading...</div>
+            <div class="loading-spinner-html h4 text-white mt-0 mx-2 mx-sm-auto">Loading...</div>
         </div>
 
         @include('layouts.includes.header')

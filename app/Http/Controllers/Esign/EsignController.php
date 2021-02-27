@@ -69,7 +69,7 @@ class EsignController extends Controller {
 
     public function get_in_process(Request $request) {
 
-        $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Signed'])
+        $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Viewed', 'Signed'])
             -> with('signers')
             -> with('callbacks')
             -> with('listing')
@@ -1340,6 +1340,7 @@ class EsignController extends Controller {
 
         $status = [
             'document_sent' => 'Sent',
+            'document_viewed' => 'Viewed',
             'document_signed' => 'Signed',
             'document_declined' => 'Declined',
             'signer_bounced' => 'Bounced',

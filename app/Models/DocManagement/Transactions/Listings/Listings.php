@@ -14,7 +14,7 @@ class Listings extends Model
     protected $connection = 'mysql';
     public $table = 'docs_transactions_listings';
     protected $primaryKey = 'Listing_ID';
-    public $timestamps = false;
+    //public $timestamps = false;
     protected $guarded = [];
 
     public static function boot() {
@@ -39,6 +39,10 @@ class Listings extends Model
 
     public function contract() {
         return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
+    }
+
+    public function checklist() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Checklists\TransactionChecklists', 'Listing_ID', 'Listing_ID');
     }
 
 

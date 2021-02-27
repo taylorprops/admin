@@ -22,7 +22,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
             handle: '.file-handle'
         });
 
-        data_table($('#templates_table'), [1, 'asc'], [0], false, true, true, true);
+        data_table($('#templates_table'), [1, 'asc'], [0], [], false, true, true, true);
 
         if($('#from_upload').val() == 'yes') {
             create_envelope();

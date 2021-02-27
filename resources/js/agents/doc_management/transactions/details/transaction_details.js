@@ -17,6 +17,8 @@ if (document.URL.match(/transaction_details/)) {
             window.location = '/doc_management/document_review/' + Contract_ID;
         });
 
+
+
         load_details_header();
 
 
@@ -436,6 +438,40 @@ if (document.URL.match(/transaction_details/)) {
 
     }
 
+    function cancel_referral() {
+
+        let Referral_ID = $('#Referral_ID').val();
+
+        let formData = new FormData();
+        formData.append('Referral_ID', Referral_ID);
+        axios.post('/agents/doc_management/transactions/cancel_referral', formData, axios_options)
+        .then(function (response) {
+            load_details_header();
+            toastr['success']('Referral Successfully Canceled');
+        })
+        .catch(function (error) {
+
+        });
+
+    }
+
+    function undo_cancel_referral() {
+
+        let Referral_ID = $('#Referral_ID').val();
+
+        let formData = new FormData();
+        formData.append('Referral_ID', Referral_ID);
+        axios.post('/agents/doc_management/transactions/undo_cancel_referral', formData, axios_options)
+        .then(function (response) {
+            load_details_header();
+            toastr['success']('Referral Successfully Reactivated');
+        })
+        .catch(function (error) {
+
+        });
+
+    }
+
     function show_accept_contract() {
         $('#accept_contract_modal').modal();
         $('#save_accept_contract_button').off('click').on('click', function() {
@@ -623,6 +659,126 @@ if (document.URL.match(/transaction_details/)) {
         }
     }
 
+    function show_merge_with_listing() {
+        let Contract_ID = $('#Contract_ID').val();
+        axios.get('/agents/doc_management/transactions/merge_listing_and_contract', {
+            params: {
+                Contract_ID: Contract_ID
+            }
+        })
+        .then(function (response) {
+
+            let listings = response.data;
+
+            if(listings.length > 0) {
+
+                $('#merge_with_listing_modal').modal('show');
+
+                $('.matching-listings-list-group').html('');
+
+                //$.each(listings, function(key, val) {
+                listings.forEach(function(listing) {
+
+                    let sellers = listing['SellerOneFullName'];
+                    if(listing['SellerTwoFullname']) {
+                        sellers += '<br>'+listing['SellerTwoFullname'];
+                    }
+
+                    let item = ' \
+                        <div class="list-group-item"> \
+                            <div class="row"> \
+                                <div class="col-3 d-flex align-items-center"> \
+                                    <button class="btn btn-primary btn-lg merge-listing-button" data-listing-id="'+listing['Listing_ID']+'"><i class="fad fa-exchange-alt mr-2"></i> Merge</button> \
+                                </div> \
+                                <div class="col-9"> \
+                                    <div class="row text-primary font-10"> \
+                                        <div class="col-12 mb-3"> \
+                                            '+listing['FullStreetAddress']+' '+listing['City']+', '+listing['StateOrProvince']+' '+listing['PostalCode']+' \
+                                        </div> \
+                                    </div> \
+                                    <div class="row text-gray"> \
+                                        <div class="col-3"> \
+                                            <strong>Sellers</strong><br> \
+                                            '+sellers+' \
+                                        </div> \
+                                        <div class="col-3"> \
+                                            <strong>List Date</strong><br> \
+                                            '+listing['MlsListDate']+' \
+                                        </div> \
+                                        <div class="col-3"> \
+                                            <strong>List Price</strong><br> \
+                                            $'+global_format_number(listing['ListPrice'])+' \
+                                        </div> \
+                                        <div class="col-3 d-flex align-items-center"> \
+                                            <a href="/agents/doc_management/transactions/transaction_details/'+listing['Listing_ID']+'/listing" class="btn btn-primary btn-sm" target="_blank"><i class="fad fa-eye mr-2"></i> View Listing</a> \
+                                        </div> \
+                                    </div> \
+                                </div> \
+                            </div> \
+                        </div> \
+                    ';
+                    console.log(item);
+
+                    $('.matching-listings-list-group').append(item);
+
+                });
+
+                $('.merge-listing-button').off('click').on('click', function() {
+
+                    let Listing_ID = $(this).data('listing-id');
+                    let Contract_ID = $('#Contract_ID').val();
+
+                    let formData = new FormData();
+                    formData.append('Listing_ID', Listing_ID);
+                    formData.append('Contract_ID', Contract_ID);
+
+                    axios.post('/agents/doc_management/transactions/save_merge_listing_and_contract', formData, axios_options)
+                    .then(function (response) {
+
+                        $('#merge_with_listing_modal').modal('hide');
+                        toastr['success']('Listing and Contract Successfully Merged');
+                        load_details_header();
+                        load_tabs('members');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                });
+
+            } else {
+
+                $('#modal_info').modal().find('.modal-body').html('No matching listings were found.<br><br>The street, city, state and zip must match for both properties.');
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+
+    window.undo_merge_with_listing = function() {
+
+        let Listing_ID = $(this).data('listing-id');
+        let Contract_ID = $('#Contract_ID').val();
+
+        let formData = new FormData();
+        formData.append('Listing_ID', Listing_ID);
+        formData.append('Contract_ID', Contract_ID);
+
+        axios.post('/agents/doc_management/transactions/save_undo_merge_listing_and_contract', formData, axios_options)
+        .then(function (response) {
+
+            $('#merge_with_listing_modal').modal('hide');
+            toastr['success']('Listing and Contract Successfully Separated');
+            load_details_header();
+            load_tabs('members');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
 
     window.load_details_header = function () {
         let Listing_ID = $('#Listing_ID').val();
@@ -644,8 +800,12 @@ if (document.URL.match(/transaction_details/)) {
                 $('#accept_contract_button').off('click').on('click', show_accept_contract);
                 $('#cancel_contract_button').off('click').on('click', show_cancel_contract);
                 $('#cancel_listing_button').off('click').on('click', show_cancel_listing);
+                $('#cancel_referral_button').off('click').on('click', cancel_referral);
                 $('.undo-cancel-listing-button').off('click').on('click', undo_cancel_listing);
                 $('.undo-cancel-contract-button').off('click').on('click', show_undo_cancel_contract);
+                $('.undo-cancel-referral-button').off('click').on('click', undo_cancel_referral);
+                $('#merge_with_listing_button').off('click').on('click', show_merge_with_listing);
+                $('#undo_merge_with_listing_button').off('click').on('click', undo_merge_with_listing);
 
             })
             .catch(function (error) {

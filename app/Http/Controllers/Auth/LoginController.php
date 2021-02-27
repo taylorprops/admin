@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Auth;
+use Cookie;
 use App\Models\Employees\Agents;
 use App\Models\Employees\InHouse;
 
@@ -64,6 +65,10 @@ class LoginController extends Controller
                 session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
             }
 
+        } else if(stristr(auth() -> user() -> group, 'agent_referral')) {
+
+        } else if(stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+
         }
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
@@ -73,6 +78,8 @@ class LoginController extends Controller
         } else {
             $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
         }
+
+        Cookie::queue(Cookie::make('user_group', auth() -> user() -> group, 60 * 24, null, null, false, false));
 
         return $this -> redirectTo;
 

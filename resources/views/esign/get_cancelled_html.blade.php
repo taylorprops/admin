@@ -40,7 +40,7 @@
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>
-                    <td class="no-wrap" data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
+                    <td class="no-wrap small" data-sort="{{ $envelope -> created_at }}">{{ date('M jS, Y', strtotime($envelope -> created_at)) }}<br>{{ date('g:i:s A', strtotime($envelope -> created_at)) }}</td>
                 </tr>
             @endforeach
 

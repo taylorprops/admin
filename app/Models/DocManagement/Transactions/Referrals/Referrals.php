@@ -16,12 +16,22 @@ class Referrals extends Model
         static::addGlobalScope(function ($query) {
             if(stristr(auth() -> user() -> group, 'agent')) {
                 $query -> where('Agent_ID', auth() -> user() -> user_id);
+            } else if(stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+                $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
             }
         });
     }
 
+    public function agent() {
+        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
+    }
+
     public function status() {
         return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
+    }
+
+    public function checklist() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Checklists\TransactionChecklists', 'Referral_ID', 'Referral_ID');
     }
 
 }

@@ -14,7 +14,7 @@ use Eversign\Client;
 use App\Mail\DefaultEmail;
 use Illuminate\Http\Request;
 
-use App\Jobs\AddFieldAndInputs;
+use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
 use App\Models\Jobs\Jobs;
 
 use App\Models\CRM\CRMContacts;
@@ -122,6 +122,9 @@ class TransactionsDetailsController extends Controller {
 
         if($transaction_type == 'listing') {
             $property = Listings::find($id);
+            if(!$property) {
+                return redirect('dashboard_'.auth() -> user() -> group);
+            }
             $field = 'Listing_ID';
             $Listing_ID = $id;
             // if not all required details submitted require them
@@ -139,6 +142,9 @@ class TransactionsDetailsController extends Controller {
 
         } else if($transaction_type == 'contract') {
             $property = Contracts::find($id);
+            if(!$property) {
+                return redirect('dashboard_'.auth() -> user() -> group);
+            }
             $field = 'Contract_ID';
             $Contract_ID = $id;
             $Listing_ID = $property -> Listing_ID;
@@ -153,6 +159,9 @@ class TransactionsDetailsController extends Controller {
 
         } else if($transaction_type == 'referral') {
             $property = Referrals::find($id);
+            if(!$property) {
+                return redirect('dashboard_'.auth() -> user() -> group);
+            }
             $field = 'Referral_ID';
             $Referral_ID = $id;
         }
@@ -244,10 +253,12 @@ class TransactionsDetailsController extends Controller {
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
 
+        $listings_count = Listings::where('Agent_ID', $property -> Agent_ID) -> count();
+
         $listing_expiration_date = null;
         if($transaction_type == 'contract') {
             if($property -> Listing_ID > 0) {
-                $listing = Listings::find($Listing_ID);
+                $listing = Listings::find($property -> Listing_ID);
                 $listing_expiration_date = $listing -> ExpirationDate;
             }
         }
@@ -292,7 +303,7 @@ class TransactionsDetailsController extends Controller {
 
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted'));
+        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted'));
     }
 
 
@@ -782,6 +793,7 @@ class TransactionsDetailsController extends Controller {
                 $member -> $col = $val ?? null;
             }
         }
+        $member -> transaction_type = $request -> transaction_type;
 
         $member -> save();
 
@@ -3197,6 +3209,9 @@ class TransactionsDetailsController extends Controller {
                     $release = 'yes';
                     $release_status = 'accepted';
 
+                // if closing doc uploaded do nothing
+                } else if(Upload::IsClosingDoc($checklist_item -> checklist_form_id)) {
+                    return false;
                 }
 
             } else if($transaction_type == 'referral') {
@@ -3268,7 +3283,7 @@ class TransactionsDetailsController extends Controller {
         // check if complete after updating checklist item status
         $complete = 'no';
         if($action == 'accepted') {
-            $complete = TransactionChecklistItems::ChecklistComplete($checklist_id) ? 'yes' : 'no';
+            $complete = TransactionChecklistItems::ChecklistComplete($checklist_id)['complete'] ? 'yes' : 'no';
             if($complete == 'yes') {
                 // make closing docs required
                 TransactionChecklistItems::MakeClosingDocsRequired($checklist_id);
@@ -3341,6 +3356,8 @@ class TransactionsDetailsController extends Controller {
         $Commission_ID = $request -> Commission_ID;
         $commission = Commission::find($Commission_ID);
         $Agent_ID = $commission -> Agent_ID;
+        $Contract_ID = $commission -> Contract_ID;
+        $Referral_ID = $commission -> Referral_ID;
 
         foreach($commission_fields as $key => $val) {
             if($key != 'Commission_ID') {
@@ -3349,10 +3366,16 @@ class TransactionsDetailsController extends Controller {
         }
         $commission -> save();
 
+        $breakdown_status = null;
+        $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> first();
+        if($breakdown) {
+            $breakdown_status = $breakdown -> status;
+        }
+
         // if a contract update the fields in transaction_docs_contracts
-        if($commission -> Contract_ID > 0) {
+        if($Contract_ID > 0) {
             $close_price = preg_replace('/[\$,]+/', '', $request -> close_price);
-            $contract = Contracts::find($commission -> Contract_ID) -> update(['CloseDate' => $request -> close_date, 'ClosePrice' => $close_price, 'UsingHeritage' => $request -> using_heritage, 'TitleCompany' => $request -> title_company]);
+            $contract = Contracts::find($Contract_ID) -> update(['CloseDate' => $request -> close_date, 'ClosePrice' => $close_price, 'UsingHeritage' => $request -> using_heritage, 'TitleCompany' => $request -> title_company]);
         }
 
         // if a commission other - update the check's agent, address and client name if changed
@@ -3360,6 +3383,34 @@ class TransactionsDetailsController extends Controller {
             $agent = Agents::find($Agent_ID);
             $agent_name = $agent -> first_name.' '.$agent -> last_name;
             $update_checks = CommissionChecksIn::where('Commission_ID', $Commission_ID) -> update(['Agent_ID' => $Agent_ID, 'agent_name' => $agent_name, 'client_name' => $request -> other_client_name, 'street' => $request -> other_street, 'city' => $request -> other_city, 'state' => $request -> other_state, 'zip' => $request -> other_zip]);
+        }
+
+        // if commission is done set status to closed
+        if($commission -> total_income > 0 && $commission -> total_left == 0) {
+
+            if($Referral_ID > 0) {
+                $closed_status = ResourceItems::GetResourceID('Closed', 'contract_status');
+            } else {
+                $closed_status = ResourceItems::GetResourceID('Closed', 'contract_status');
+                $update_contract_status = Contracts::find($Contract_ID) -> update(['Status' => $closed_status]);
+                if($contract -> Listing_ID > 0) {
+                    $closed_status = ResourceItems::GetResourceID('Closed', 'listing_status');
+                    $update_listing_status = Listings::where('Contract_ID', $Contract_ID) -> update(['Status' => $closed_status, 'CloseDate', $update_contract_status -> CloseDate]);
+                }
+            }
+            // update breakdown status
+            if($breakdown_status) {
+                $breakdown -> status = 'complete';
+                $breakdown -> save();
+            }
+
+        } else if($commission -> total_income > 0) {
+            // update breakdown status
+            if($breakdown_status) {
+                $breakdown -> status = 'reviewed';
+                $breakdown -> save();
+            }
+
         }
 
         return response() -> json(['result' => 'success']);
@@ -3393,6 +3444,58 @@ class TransactionsDetailsController extends Controller {
         $teams = new AgentsTeams();
 
         return view('agents/doc_management/transactions/details/data/get_agent_details_html', compact('agent_details', 'agent_notes', 'teams'));
+
+    }
+
+    public function get_agent_commission_details(Request $request) {
+
+        $Commission_ID = $request -> Commission_ID;
+
+        $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> with('deductions:commission_breakdown_id,description,amount') -> first();
+
+        $Agent_ID = $breakdown -> Agent_ID;
+        $Contract_ID = $breakdown -> Contract_ID;
+        $Referral_ID = $breakdown -> Referral_ID;
+
+        $holding_earnest = null;
+        $for_sale = null;
+        $is_rental = null;
+        $is_referral_company = null;
+        $referral_company_deduction = null;
+
+        $agent = Agents::find($Agent_ID);
+
+        if(stristr($agent -> company, 'referral')) {
+            $is_referral_company = 'yes';
+        }
+
+        if($Contract_ID > 0) {
+
+            $property = Contracts::find($Contract_ID);
+
+            if($property -> EarnestHeldBy == 'us') {
+                $holding_earnest = 'yes';
+            }
+            if($property -> SaleRent != 'rental') {
+                $for_sale = 'yes';
+            } else {
+                $is_rental = 'yes';
+            }
+
+        } else {
+
+            $property = Referrals::find($Referral_ID);
+
+        }
+
+        $agent_commission_deduction_percent = 0;
+
+        if($agent -> commission_percent == '85') {
+            $agent_commission_deduction_percent = 15;
+        }
+
+
+        return view('agents/doc_management/transactions/details/data/get_agent_commission_details_html', compact('breakdown', 'is_referral_company', 'referral_company_deduction', 'holding_earnest', 'for_sale', 'is_rental', 'agent_commission_deduction_percent'));
 
     }
 
@@ -3491,8 +3594,12 @@ class TransactionsDetailsController extends Controller {
             }
 
         }
+        if($breakdown -> status == 'not_submitted') {
+            $breakdown -> status = 'submitted';
+        }
 
         $breakdown -> save();
+
         $commission_breakdown_id = $breakdown -> id;
 
         $deduction_descriptions = $request -> deduction_description;
@@ -4256,7 +4363,7 @@ class TransactionsDetailsController extends Controller {
         $Agent_ID = $listing -> Agent_ID;
 
         // update listing
-        $listing -> BuyerAgentFirstName = $agent_first;
+        /* $listing -> BuyerAgentFirstName = $agent_first;
         $listing -> BuyerAgentLastName = $agent_last;
         $listing -> BuyerAgentEmail = $agent_email;
         $listing -> BuyerAgentPreferredPhone = $agent_phone;
@@ -4266,7 +4373,7 @@ class TransactionsDetailsController extends Controller {
         $listing -> BuyerOneFirstName = $buyer_one_first;
         $listing -> BuyerOneLastName = $buyer_one_last;
         $listing -> BuyerTwoFirstName = $buyer_two_first;
-        $listing -> BuyerTwoLastName = $buyer_two_last;
+        $listing -> BuyerTwoLastName = $buyer_two_last; */
         $listing -> Status = ResourceItems::GetResourceID('Under Contract', 'listing_status');
         $listing -> save();
 
@@ -4359,6 +4466,7 @@ class TransactionsDetailsController extends Controller {
         $add_buyer_to_members -> last_name = $buyer_one_last;
         $add_buyer_to_members -> Contract_ID = $Contract_ID;
         $add_buyer_to_members -> Agent_ID = $Agent_ID;
+        $add_buyer_to_members -> transaction_type = 'contract';
         $add_buyer_to_members -> save();
 
         if($buyer_two_first != '') {
@@ -4368,6 +4476,7 @@ class TransactionsDetailsController extends Controller {
             $add_buyer_to_members -> last_name = $buyer_two_last;
             $add_buyer_to_members -> Contract_ID = $Contract_ID;
             $add_buyer_to_members -> Agent_ID = $Agent_ID;
+            $add_buyer_to_members -> transaction_type = 'contract';
             $add_buyer_to_members -> save();
         }
 
@@ -4386,6 +4495,7 @@ class TransactionsDetailsController extends Controller {
             $add_buyer_agent_to_members -> address_office_zip = $agent_zip;
             $add_buyer_agent_to_members -> Contract_ID = $Contract_ID;
             $add_buyer_agent_to_members -> Agent_ID = $Agent_ID;
+            $add_buyer_agent_to_members -> transaction_type = 'contract';
             $add_buyer_agent_to_members -> save();
         }
 
@@ -4398,6 +4508,7 @@ class TransactionsDetailsController extends Controller {
             $add_heritage_to_members -> company = 'Heritage Title';
             $add_heritage_to_members -> Contract_ID = $Contract_ID;
             $add_heritage_to_members -> Agent_ID = $Agent_ID;
+            $add_heritage_to_members -> transaction_type = 'contract';
             $add_heritage_to_members -> save();
         }
         // TODO: if earnest
@@ -4425,10 +4536,83 @@ class TransactionsDetailsController extends Controller {
         // add folders from listing
         $folder = TransactionDocumentsFolders::where('Listing_ID', $Listing_ID) -> update(['Contract_ID' => $Contract_ID]);
 
+        $this -> update_transaction_members($Contract_ID, 'contract');
+
 
         return response() -> json([
             'Contract_ID' => $Contract_ID,
         ]);
+
+    }
+
+    public function merge_listing_and_contract(Request $request) {
+
+        $contract = Contracts::find($request -> Contract_ID);
+
+        $street_number = $contract -> StreetNumber;
+        $street_name = $contract -> StreetName;
+        $city = $contract -> City;
+        $state = $contract -> StateOrProvince;
+        $zip = $contract -> PostalCode;
+
+        $status_active = ResourceItems::GetResourceId('Active', 'listing_status');
+        $select = ['Listing_ID', 'SellerOneFullName', 'SellerTwoFullName', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'MlsListDate', 'ListPrice', 'Status'];
+        $listings = Listings::select($select)
+            -> where('Agent_ID', $contract -> Agent_ID)
+            -> where('Status', $status_active)
+            -> where('StreetNumber', $street_number)
+            -> where('StreetName', $street_name)
+            -> where('StateOrProvince', $state)
+            -> where('PostalCode', $zip)
+            -> get();
+
+        foreach($listings as $listing) {
+            $listing -> Status = ResourceItems::GetResourceName($listing -> Status);
+        }
+
+        $listings = json_encode($listings);
+
+        return $listings;
+    }
+
+    public function save_merge_listing_and_contract(Request $request) {
+
+        $Listing_ID = $request -> Listing_ID;
+        $Contract_ID = $request -> Contract_ID;
+
+        $status_under_contract = ResourceItems::GetResourceId('Under Contract', 'listing_status');
+
+        $listing = Listings::find($Listing_ID) -> update(['Contract_ID' => $Contract_ID, 'Status' => $status_under_contract]);
+        $contract = Contracts::find($Contract_ID) -> update(['Listing_ID' => $Listing_ID, 'Merged' => 'yes']);
+
+        // add Contract_ID to members already in members
+        $import_members_from_listing = Members::where('Listing_ID', $Listing_ID) -> update(['Contract_ID' => $Contract_ID]);
+
+        // add folders from listing
+        $add_folders = TransactionDocumentsFolders::where('Listing_ID', $Listing_ID) -> update(['Contract_ID' => $Contract_ID]);
+
+        return response() -> json(['status' => 'success']);
+
+
+    }
+
+    public function save_undo_merge_listing_and_contract(Request $request) {
+
+        $Listing_ID = $request -> Listing_ID;
+        $Contract_ID = $request -> Contract_ID;
+
+        $status_active = ResourceItems::GetResourceId('Active', 'listing_status');
+
+        $listing = Listings::find($Listing_ID) -> update(['Contract_ID' => 0, 'Status' => $status_active]);
+        $contract = Contracts::find($Contract_ID) -> update(['Listing_ID' => 0, 'Merged' => 'no']);
+
+        $remove_members_from_listing = Members::where('Listing_ID', $Listing_ID) -> where('transaction_type', 'listing') -> update(['Contract_ID' => 0]);
+        $remove_members_from_contract = Members::where('Listing_ID', $Listing_ID) -> where('transaction_type', 'contract') -> update(['Listing_ID' => 0]);
+
+        $remove_folders = TransactionDocumentsFolders::where('Listing_ID', $Listing_ID) -> update(['Contract_ID' => 0]);
+
+        return response() -> json(['status' => 'success']);
+
 
     }
 
@@ -4450,6 +4634,7 @@ class TransactionsDetailsController extends Controller {
         if($listing) {
             // remove Buyer from listing and update status
             $listing = Listings::find($contract -> Listing_ID);
+            $listing -> Contract_ID = '0';
             $listing -> BuyerAgentFirstName = '';
             $listing -> BuyerAgentLastName = '';
             $listing -> BuyerAgentEmail = '';
@@ -4464,6 +4649,12 @@ class TransactionsDetailsController extends Controller {
             $listing -> BuyerTwoLastName = '';
             $listing -> Status = ResourceItems::GetResourceID('Active', 'listing_status');
             $listing -> save();
+
+            // remove Contract_ID from members
+            $remove_members_from_listing = Members::where('Listing_ID', $contract -> Listing_ID) -> update(['Contract_ID' => 0]);
+
+            // remove folders from listing
+            $folder = TransactionDocumentsFolders::where('Listing_ID', $contract -> Listing_ID) -> update(['Contract_ID' => 0]);
         }
 
         $contract = Contracts::find($Contract_ID);
@@ -4541,6 +4732,22 @@ class TransactionsDetailsController extends Controller {
         }
 
 
+
+    }
+
+    public function cancel_referral(Request $request) {
+
+        $Referral_ID = $request -> Referral_ID;
+        $status = ResourceItems::GetResourceID('Canceled', 'referral_status');
+        $referral = Referrals::find($Referral_ID) -> update(['status' => $status]);
+
+    }
+
+    public function undo_cancel_referral(Request $request) {
+
+        $Referral_ID = $request -> Referral_ID;
+        $status = ResourceItems::GetResourceID('Active', 'referral_status');
+        $referral = Referrals::find($Referral_ID) -> update(['status' => $status]);
 
     }
 

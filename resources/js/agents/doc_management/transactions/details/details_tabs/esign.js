@@ -48,7 +48,7 @@ if (document.URL.match(/transaction_details/)) {
 
             if(tab == 'drafts') {
 
-                data_table($('#drafts_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                data_table($('#drafts_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
                 $(document).on('click', '.delete-draft-button', function() {
                     delete_draft($(this));
@@ -56,7 +56,7 @@ if (document.URL.match(/transaction_details/)) {
 
             } else if(tab == 'deleted_drafts') {
 
-                data_table($('#deleted_drafts_table'), [3, 'desc'], [0], false, true, true, true, true);
+                data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
                 $(document).on('click', '.restore-draft-button', function() {
                     restore_draft($(this));
@@ -73,7 +73,7 @@ if (document.URL.match(/transaction_details/)) {
 
             } else if(tab == 'in_process') {
 
-                data_table($('#in_process_table'), [3, 'desc'], [4], false, true, true, true, true);
+                data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
                 $(document).on('click', '.cancel-envelope-button', function() {
                     cancel_envelope($(this));
                 });
@@ -84,11 +84,11 @@ if (document.URL.match(/transaction_details/)) {
 
             } else if(tab == 'completed') {
 
-                data_table($('#completed_table'), [3, 'desc'], [0,4], false, true, true, true, true);
+                data_table($('#completed_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
             } else if(tab == 'cancelled') {
 
-                data_table($('#cancelled_table'), [3, 'desc'], [0], false, true, true, true, true);
+                data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
             }
 

@@ -13657,6 +13657,10 @@ body.modal-open {
   color: #7a7979;
 }
 
+.dataTables_wrapper .dataTable.table td.small {
+  font-size: 0.8rem !important;
+}
+
 .dataTables_wrapper .dataTable.table td:last-child {
   border-right: none;
 }
@@ -13672,6 +13676,7 @@ body.modal-open {
 .dataTables_wrapper .page-link {
   padding: 0.3rem 0.6rem;
   font-size: 0.7rem;
+  line-height: 1 !important;
 }
 
 @media (max-width: 1200px) {
@@ -16592,8 +16597,9 @@ header .main-search-input::placeholder {
 
 .page-transaction-details {
   min-height: 90VH;
-  /* #add_member_div .form-check {
-      padding-left: 0px;
+  /* #options_tab_content {
+      max-height: 700px;
+      overflow: auto;
   } */
   /* .checklist-attachment {
       width: 70px;
@@ -16715,6 +16721,13 @@ header .main-search-input::placeholder {
   height: auto;
   padding: 10px 20px;
   border: 1px solid #dee2e6;
+}
+
+.page-transaction-details .commission-details-tabs {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 95%;
 }
 
 .page-transaction-details .folder-header {
@@ -17091,6 +17104,11 @@ header .main-search-input::placeholder {
   }
 }
 
+.matching-listings-list-group {
+  max-height: 400px;
+  overflow: auto;
+}
+
 .buyer-agent-details,
 .our-agent-div {
   display: none;
@@ -17154,7 +17172,7 @@ header .main-search-input::placeholder {
 }
 
 .commission-container .popout .view-add-div {
-  max-height: 400px;
+  max-height: 800px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -17185,6 +17203,10 @@ header .main-search-input::placeholder {
   border-bottom-left-radius: 8px;
 }
 
+.commission-container .agent-commission-div {
+  max-width: 400px;
+}
+
 .commission-container .show-view-add-button {
   cursor: pointer;
 }
@@ -17199,12 +17221,12 @@ header .main-search-input::placeholder {
 }
 
 .commission-container .notes-container {
-  height: 220px;
+  height: 500px;
   overflow: auto;
 }
 
 .commission-container .commission-notes-div {
-  max-height: 220px;
+  max-height: 500px;
   overflow: auto;
 }
 
