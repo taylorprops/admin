@@ -31,7 +31,10 @@ class CommissionController extends Controller
 
         $select = ['id', 'commission_type','Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'total_left'];
         $commission_contracts = Commission::select($select)
-            -> where('total_left', '>', '0')
+            -> where(function($query) {
+                $query -> where('total_left', '>', '0')
+                -> orWhere('total_left', '<', '0');
+            })
             -> where('Contract_ID', '>', '0')
             -> with('property_contract:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode,created_at')
             -> with('agent:id,first_name,last_name,full_name')

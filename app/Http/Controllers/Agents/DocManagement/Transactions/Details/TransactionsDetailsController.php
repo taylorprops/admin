@@ -8,6 +8,7 @@ use Config;
 use App\User;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 use Eversign\Client;
 
@@ -3326,26 +3327,46 @@ class TransactionsDetailsController extends Controller {
     public function get_commission(Request $request) {
 
         $Commission_ID = $request -> Commission_ID;
-        $commission = Commission::find($Commission_ID);
+        //$commission = Commission::find($Commission_ID);
 
-        $agent_details = Agents::find($commission -> Agent_ID);
+        $commission = Cache::remember('commission', 1000, function () use($Commission_ID) {
+            return Commission::find($Commission_ID);
+        });
+
+        //$agent_details = Agents::find($commission -> Agent_ID);
+        $agent_details = Cache::remember('agent_details', 1000, function () use($commission) {
+            return Agents::find($commission -> Agent_ID);
+        });
 
         if($commission -> Contract_ID > 0) {
 
-            $property = Contracts::find($commission -> Contract_ID);
+            //$property = Contracts::find($commission -> Contract_ID);
+            $property = Cache::remember('property', 1000, function () use($commission) {
+                return Contracts::find($commission -> Contract_ID);
+            });
             $rep_both_sides = $property -> Listing_ID > 0 ? 'yes' : null;
             $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? 'yes' : null;
             $type = 'sale';
 
         } else if($commission -> Referral_ID > 0) {
-            $property = Referrals::find($commission -> Referral_ID);
+            //$property = Referrals::find($commission -> Referral_ID);
+            $property = Cache::remember('property', 1000, function () use($commission) {
+                return Referrals::find($commission -> Referral_ID);
+            });
             $rep_both_sides = null;
             $for_sale = null;
             $type = 'referral';
         }
 
-        $commission_percentages = Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
-        $agents = Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
+        //$commission_percentages = Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
+        $commission_percentages = Cache::remember('commission_percentages', 1000, function () {
+            return Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
+        });
+
+        //$agents = Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
+        $agents = Cache::remember('agents', 1000, function () {
+            return Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
+        });
 
         return view('/agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));
     }

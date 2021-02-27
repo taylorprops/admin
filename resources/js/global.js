@@ -144,7 +144,7 @@ $(function() {
 
     setInterval(function() {
         datepicker_custom();
-        //global_tooltip();
+        global_tooltip();
     }, 1000);
 
 

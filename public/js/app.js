@@ -46395,17 +46395,14 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     $(document).on('change', '#using_heritage', function () {
       show_title();
     });
-    $(document).on('mouseup', function (e) {
-      var container = $('.popout-row');
-
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
-        $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
-        $('.popout').hide();
-        $('.commission-details-tabs').animate({
-          opacity: '1'
-        });
-      }
-    });
+    /* $(document).on('mouseup', function (e) {
+        var container = $('.popout-row');
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
+            $('.popout').hide();
+            $('.commission-details-tabs').animate({ opacity: '1' });
+        }
+    }); */
   });
 
   window.commission_init = function (Commission_ID, Agent_ID) {
@@ -46417,7 +46414,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     get_commission_deductions(Commission_ID);
     get_agent_details(Agent_ID);
     get_agent_commission_details(Commission_ID);
-    save_commission('no');
+    setTimeout(function () {
+      save_commission('no');
+    }, 2000);
     show_title(); // $('#using_heritage').on('change', function() {
     //     show_title();
     // });
@@ -58855,7 +58854,8 @@ $(function () {
     $(this).attr('maxlength', 14);
   });
   setInterval(function () {
-    datepicker_custom(); //global_tooltip();
+    datepicker_custom();
+    global_tooltip();
   }, 1000);
   window.datatable_settings = _defineProperty({
     bAutoWidth: true,
