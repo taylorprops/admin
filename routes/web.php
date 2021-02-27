@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Auth;
     return view('/auth/login');
 }) -> name('login'); */
 
-Route::view('/', '/auth/login') -> name('login');
+Route::view('/', '/auth/login');
+Route::view('/login', '/auth/login');
+Route::view('login', '/auth/login');
 
 
 Route::get('/dashboard_admin', 'Dashboard\DashboardAdminController@dashboard_admin');
@@ -25,7 +27,7 @@ Route::get('/dashboard_agent_referral', 'Dashboard\DashboardAgentReferralControl
 
 
 Auth::routes();
-Route::get('/logout', 'Auth\LoginController@logout') -> name('logout');
+Route::get('/logout', 'Auth\LoginController@logout');
 
 
 // Route::get('/test', 'Testcontroller@test');
