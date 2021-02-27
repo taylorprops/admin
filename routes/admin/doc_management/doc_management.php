@@ -183,9 +183,9 @@ Route::middleware('admin') -> group(function () {
 
 
     /************ Form Elements ************/
-    Route::get('/form_elements', function() {
+    /* Route::get('/form_elements', function() {
         return view('/tests/form_elements');
-    });
+    }); */
 
     // Test Controller
     Route::get('/tests/test', 'TestController@test');
