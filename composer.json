@@ -23,6 +23,7 @@
         "socrata/soda-php": "dev-develop",
         "symfony/http-foundation": "5.0.7",
         "symfony/http-kernel": "5.1.5",
+        "therezor/laravel-transactional-jobs": "^1.1",
         "thiagoalessio/tesseract_ocr": "^2.9",
         "troydavisson/phrets": "2.6.2",
         "understand/understand-laravel": "^2.3",

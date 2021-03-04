@@ -64,6 +64,10 @@
 
 </li>
 
+<li class="nav-item mx-2">
+    <a href="/documents" class="nav-link"> Documents</a>
+</li>
+
 <li class="nav-item dropdown mx-2">
 
     <a class="nav-link dropdown-toggle" href="javascript: void(0)" id="admin_dropdown" role="button" data-toggle="dropdown"
@@ -77,11 +81,22 @@
         </li>
 
         <li>
-            <a href="/doc_management/balance_earnest" class="dropdown-item">Balance Earnest</a>
+            <a href="/doc_management/commission" class="dropdown-item">Breakdowns/Checks</a>
         </li>
 
-        <li>
-            <a href="/doc_management/commission" class="dropdown-item">Breakdowns/Checks</a>
+        <li class="nav-item dropdown">
+            <a class="dropdown-item dropdown-toggle" href="javascript: void(0)" id="earnest_sub_dropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Earnest
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="earnest_sub_dropdown">
+                <li>
+                    <a href="/doc_management/active_earnest" class="dropdown-item">Active Earnest Deposits</a>
+                </li>
+                <li>
+                    <a href="/doc_management/balance_earnest" class="dropdown-item">Balance Earnest</a>
+                </li>
+            </ul>
         </li>
 
     </ul>

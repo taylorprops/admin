@@ -4,7 +4,7 @@
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Cancelled" data-content="These are your cancelled envelopes, cancelled by either you or the signer."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
-<div class="mb-5">
+<div class="mb-5 table-responsive text-nowrap">
 
     <table id="cancelled_table" class="table table-bordered" width="100%">
 

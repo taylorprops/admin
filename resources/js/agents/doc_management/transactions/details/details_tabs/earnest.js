@@ -26,12 +26,37 @@ if (document.URL.match(/transaction_details/)) {
             $(this).prop('disabled', true);
             save_add_earnest_check();
         });
+        $(document).on('click', '#show_set_status_to_waiting_button', show_set_status_to_waiting);
+
         get_earnest_check_info();
         get_earnest_checks('in', false);
         get_earnest_checks('out', false);
         save_earnest('no');
     }
 
+
+    window.show_set_status_to_waiting = function() {
+
+        let Contract_ID = $('#Contract_ID').val();
+
+        $('#set_status_to_waiting_modal').modal('show');
+
+        $('#confirm_set_status_to_waiting_button').on('click', function() {
+
+            let formData = new FormData();
+            formData.append('Contract_ID', Contract_ID);
+            axios.post('/agents/doc_management/transactions/set_status_to_waiting_for_release', formData, axios_options)
+            .then(function (response) {
+                $('#set_status_to_waiting_modal').modal('hide');
+                toastr['success']('Status Successfully Set');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        });
+
+    }
 
     window.get_earnest_checks = function(check_type, save = true) {
 
@@ -99,9 +124,11 @@ if (document.URL.match(/transaction_details/)) {
             in_escrow = global_format_number_with_decimals(in_escrow_parsed.toFixed(2));
             $('#in_escrow').html(in_escrow);
 
+            $('.status-waiting').hide();
             $('.in-escrow-alert').removeClass('alert-success alert-danger').addClass('alert-info');
             if(in_escrow_parsed > 0) {
                 $('.in-escrow-alert').removeClass('alert-info').addClass('alert-success');
+                $('.status-waiting').show();
             } else if(in_escrow_parsed < 0) {
                 $('.in-escrow-alert').removeClass('alert-info').addClass('alert-danger');
             }
@@ -283,6 +310,9 @@ if (document.URL.match(/transaction_details/)) {
         } else if(check_type == 'out') {
             $('.check-out').show();
             $('#add_earnest_check_payable_to').addClass('required');
+            if($('#add_earnest_check_mail_to_address').val() == '') {
+                $('#add_earnest_check_mail_to_address').val($('#earnest_mail_to_address').val());
+            }
         }
 
         $('#add_earnest_check_type').val(check_type);
@@ -321,6 +351,8 @@ if (document.URL.match(/transaction_details/)) {
             .catch(function (error) {
 
             });
+        } else {
+            $('#save_add_earnest_check_button').prop('disabled', false);
         }
 
     }

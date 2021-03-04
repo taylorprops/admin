@@ -44772,6 +44772,50 @@ function delete_deactivate_resource_resource(ele, action) {
 
 /***/ }),
 
+/***/ "./resources/js/agents/doc_management/documents/documents.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/agents/doc_management/documents/documents.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  get_form_group_files(0);
+  $('.form-group-select').off('change').on('change', select_form_group);
+
+  function select_form_group() {
+    var form_group_id = $('.form-group-select').val();
+    get_form_group_files(form_group_id);
+  }
+
+  function get_form_group_files(form_group_id) {
+    $('.documents-table tbody').html('');
+    axios.get('/documents/get_form_group_files', {
+      params: {
+        form_group_id: form_group_id
+      },
+      headers: {
+        'Accept-Version': 1,
+        'Accept': 'text/html',
+        'Content-Type': 'text/html'
+      }
+    }).then(function (response) {
+      $('#forms_table_div').html(response.data);
+      var length = 50;
+
+      if (form_group_id == 0) {
+        length = 10;
+      }
+
+      var dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/agents/doc_management/transactions/add/transaction_add.js":
 /*!********************************************************************************!*\
   !*** ./resources/js/agents/doc_management/transactions/add/transaction_add.js ***!
@@ -45517,8 +45561,7 @@ if (document.URL.match(/transaction_required_details/)) {
     if (validate == 'yes') {
       var formData = new FormData(form[0]);
       axios.post('/agents/doc_management/transactions/save_transaction_required_details', formData, axios_options).then(function (response) {
-        global_loading_off();
-        window.location = '/agents/doc_management/transactions/transaction_details/' + response.data.id + '/' + response.data.type;
+        global_loading_off(); //window.location = '/agents/doc_management/transactions/transaction_details/' + response.data.id + '/' + response.data.type;
       })["catch"](function (error) {});
     }
   };
@@ -46395,14 +46438,17 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     $(document).on('change', '#using_heritage', function () {
       show_title();
     });
-    /* $(document).on('mouseup', function (e) {
-        var container = $('.popout-row');
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-            $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
-            $('.popout').hide();
-            $('.commission-details-tabs').animate({ opacity: '1' });
-        }
-    }); */
+    $(document).on('mouseup', function (e) {
+      var container = $('.popout-row, .modal-backdrop, .modal, .export-deductions-button');
+
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
+        $('.popout').hide();
+        $('.commission-details-tabs').animate({
+          opacity: '1'
+        });
+      }
+    });
   });
 
   window.commission_init = function (Commission_ID, Agent_ID) {
@@ -46438,6 +46484,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
       $('#commission_deduction_description, #commission_deduction_amount').val('');
     });
     $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
+    $(document).on('click', '.export-deductions-button', add_deductions_to_breakdown);
     numbers_only();
   };
 
@@ -46450,6 +46497,31 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         $(this).val('$0.00');
       }
     });
+  };
+
+  window.add_deductions_to_breakdown = function () {
+    var Commission_ID = $('#Commission_ID').val();
+
+    if ($('#Commission_Other_ID').length > 0) {
+      Commission_ID = $('#Commission_Other_ID').val();
+    }
+
+    $('.deduction-row').each(function () {
+      var description = $(this).find('.deduction-description').text();
+      var amount = $(this).find('.deduction-amount').text();
+      var formData = new FormData();
+      formData.append('Commission_ID', Commission_ID);
+      formData.append('description', description);
+      formData.append('amount', amount);
+      axios.post('/agents/doc_management/transactions/save_add_commission_deduction', formData, axios_options).then(function (response) {})["catch"](function (error) {});
+    });
+    $('.commission-popout-button').trigger('click');
+    document.getElementById('commission_deductions_popout').scrollIntoView();
+    toastr['success']('Deduction Successfully Added');
+    setTimeout(function () {
+      get_commission_deductions(Commission_ID);
+      save_commission('no');
+    }, 500);
   };
 
   window.get_agent_commission_details = function (Commission_ID) {
@@ -46581,10 +46653,11 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
       if (show_toastr_commission == 'yes') {
         toastr['success']('Commission Details Successfully Saved');
       }
+
+      load_details_header();
       /* if(page == 'details') {
           load_tabs('details');
       } */
-
     })["catch"](function (error) {});
   }; // Income Deductions
 
@@ -48919,10 +48992,26 @@ if (document.URL.match(/transaction_details/)) {
       $(this).prop('disabled', true);
       save_add_earnest_check();
     });
+    $(document).on('click', '#show_set_status_to_waiting_button', show_set_status_to_waiting);
     get_earnest_check_info();
     get_earnest_checks('in', false);
     get_earnest_checks('out', false);
     save_earnest('no');
+  };
+
+  window.show_set_status_to_waiting = function () {
+    var Contract_ID = $('#Contract_ID').val();
+    $('#set_status_to_waiting_modal').modal('show');
+    $('#confirm_set_status_to_waiting_button').on('click', function () {
+      var formData = new FormData();
+      formData.append('Contract_ID', Contract_ID);
+      axios.post('/agents/doc_management/transactions/set_status_to_waiting_for_release', formData, axios_options).then(function (response) {
+        $('#set_status_to_waiting_modal').modal('hide');
+        toastr['success']('Status Successfully Set');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    });
   };
 
   window.get_earnest_checks = function (check_type) {
@@ -48982,10 +49071,12 @@ if (document.URL.match(/transaction_details/)) {
       var in_escrow_parsed = parseFloat(checks_in_total).toFixed(2) - parseFloat(checks_out_total).toFixed(2);
       in_escrow = global_format_number_with_decimals(in_escrow_parsed.toFixed(2));
       $('#in_escrow').html(in_escrow);
+      $('.status-waiting').hide();
       $('.in-escrow-alert').removeClass('alert-success alert-danger').addClass('alert-info');
 
       if (in_escrow_parsed > 0) {
         $('.in-escrow-alert').removeClass('alert-info').addClass('alert-success');
+        $('.status-waiting').show();
       } else if (in_escrow_parsed < 0) {
         $('.in-escrow-alert').removeClass('alert-info').addClass('alert-danger');
       }
@@ -49117,6 +49208,10 @@ if (document.URL.match(/transaction_details/)) {
     } else if (check_type == 'out') {
       $('.check-out').show();
       $('#add_earnest_check_payable_to').addClass('required');
+
+      if ($('#add_earnest_check_mail_to_address').val() == '') {
+        $('#add_earnest_check_mail_to_address').val($('#earnest_mail_to_address').val());
+      }
     }
 
     $('#add_earnest_check_type').val(check_type);
@@ -49143,6 +49238,8 @@ if (document.URL.match(/transaction_details/)) {
         $('#save_add_earnest_check_button').prop('disabled', false).html('<i class="fal fa-check mr-2"></i> Save');
         get_earnest_checks(check_type);
       })["catch"](function (error) {});
+    } else {
+      $('#save_add_earnest_check_button').prop('disabled', false);
     }
   };
 
@@ -49240,12 +49337,12 @@ if (document.URL.match(/transaction_details/)) {
       $('#' + tab + '_esign_div').html(response.data);
 
       if (tab == 'drafts') {
-        data_table($('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+        data_table('10', $('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
         $(document).on('click', '.delete-draft-button', function () {
           delete_draft($(this));
         });
       } else if (tab == 'deleted_drafts') {
-        data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+        data_table('10', $('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
         $(document).on('click', '.restore-draft-button', function () {
           restore_draft($(this));
         });
@@ -49259,7 +49356,7 @@ if (document.URL.match(/transaction_details/)) {
           }
         }, 200);
       } else if (tab == 'in_process') {
-        data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
+        data_table('10', $('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
         $(document).on('click', '.cancel-envelope-button', function () {
           cancel_envelope($(this));
         });
@@ -49267,9 +49364,9 @@ if (document.URL.match(/transaction_details/)) {
           resend_envelope($(this));
         });
       } else if (tab == 'completed') {
-        data_table($('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+        data_table('10', $('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
       } else if (tab == 'cancelled') {
-        data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+        data_table('10', $('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
       }
     })["catch"](function (error) {
       console.log(error);
@@ -49362,7 +49459,7 @@ if (document.URL.match(/transaction_details/)) {
   $(function () {
     dt_contacts = setInterval(function () {
       if ($('#contacts_table').length == 1) {
-        var contacts_table = data_table($('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
+        var contacts_table = data_table('10', $('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
         clearInterval(dt_contacts);
       }
     }, 500);
@@ -51107,8 +51204,8 @@ if (document.URL.match(/edit_files/)) {
       }); // set inline styles for PDF
       // system fields
 
-      var font_size = '14px';
-      var top = '0px';
+      var font_size = '13px';
+      var top = '3px';
 
       if ($('#page_size').val() == 'a4') {
         font_size = '12px';
@@ -51133,20 +51230,24 @@ if (document.URL.match(/edit_files/)) {
       $('.data-div.system-html').not('.inline-editor').css({
         'text-align': 'center'
       });
+      $('.inline-editor').css({
+        'font-size': font_size
+      });
       $('.data-div-checkbox').css({
         'display': 'block',
         'height': '100%',
         'width': '100%',
-        'margin-left': '1px',
-        'margin-top': '3px',
+        'margin-left': '2px',
+        'margin-top': '1px',
         'color': '#000',
-        'font-size': '1.3em',
+        'font-size': '1.4em',
         'line-height': '35%',
         'font-weight': 'bold',
         'font-family': font_family
       });
       $('.data-div-radio').css({
-        'margin-left': '1px',
+        'margin-left': '2px',
+        'margin-top': '2px',
         'color': '#000',
         'font-size': '1.3em',
         'line-height': '40%',
@@ -52043,11 +52144,11 @@ if (document.URL.match(/transactions$/)) {
       }
 
       if (type == 'listings') {
-        data_table($('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+        data_table('10', $('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
       } else if (type == 'contracts') {
-        data_table($('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+        data_table('10', $('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
       } else if (type == 'referrals') {
-        data_table($('#' + type + '_div table'), [1, 'asc'], [0], hidden_cols, false, true, true, true);
+        data_table('10', $('#' + type + '_div table'), [1, 'asc'], [0], hidden_cols, false, true, true, true);
       }
     })["catch"](function (error) {
       console.log(error);
@@ -52245,7 +52346,9 @@ __webpack_require__(/*! ./global.js */ "./resources/js/global.js");
 
 __webpack_require__(/*! ./form_elements.js */ "./resources/js/form_elements.js");
 
-__webpack_require__(/*! ./nav/nav.js */ "./resources/js/nav/nav.js"); // dashboard
+__webpack_require__(/*! ./nav/nav.js */ "./resources/js/nav/nav.js");
+
+__webpack_require__(/*! ./nav/search.js */ "./resources/js/nav/search.js"); // dashboard
 
 
 __webpack_require__(/*! ./dashboard/admin.js */ "./resources/js/dashboard/admin.js");
@@ -52322,7 +52425,12 @@ __webpack_require__(/*! ./doc_management/review/review.js */ "./resources/js/doc
 __webpack_require__(/*! ./doc_management/commission/commission_breakdowns.js */ "./resources/js/doc_management/commission/commission_breakdowns.js"); // earnest
 
 
-__webpack_require__(/*! ./doc_management/earnest/earnest.js */ "./resources/js/doc_management/earnest/earnest.js");
+__webpack_require__(/*! ./doc_management/earnest/balance_earnest.js */ "./resources/js/doc_management/earnest/balance_earnest.js");
+
+__webpack_require__(/*! ./doc_management/earnest/active_earnest.js */ "./resources/js/doc_management/earnest/active_earnest.js"); // documents
+
+
+__webpack_require__(/*! ./agents/doc_management/documents/documents.js */ "./resources/js/agents/doc_management/documents/documents.js");
 
 /***/ }),
 
@@ -53022,7 +53130,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       }
     }).then(function (response) {
       $('.commissions-pending').html(response.data);
-      data_table($('.commissions-pending-table').eq(0), [1, 'desc'], [0], [], true, true, true, true);
+      data_table('10', $('.commissions-pending-table').eq(0), [1, 'desc'], [0], [], true, true, true, true);
     })["catch"](function (error) {});
   };
 
@@ -53035,8 +53143,8 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       }
     }).then(function (response) {
       $('.commission-checks-queue').html(response.data);
-      data_table($('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], [], true, true, true, true);
-      data_table($('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], [], true, true, true, true);
+      data_table('10', $('.checks-queue-table').eq(0), [1, 'desc'], [0, 7], [], true, true, true, true);
+      data_table('10', $('.checks-queue-table').eq(1), [1, 'desc'], [0, 8], [], true, true, true, true);
       $('.edit-queue-check-button').off('click').on('click', show_edit_queue_check);
       $('.delete-check-button').off('click').on('click', show_delete_queue_check);
       $('.undo-delete-check-button').off('click').on('click', undo_delete_queue_check); //select_refresh();
@@ -53109,7 +53217,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
       $('#search_deleted_checks').on('keyup', search_deleted_checks);
       $(document).on('click', '.undo-delete-queue-check', undo_delete_queue_check);
       $(document).on('click', '#save_edit_queue_check_button', save_edit_queue_check);
-      data_table($('#deleted_checks_table'), [1, 'desc'], [0, 8], [], false, false, false, false);
+      data_table('10', $('#deleted_checks_table'), [1, 'desc'], [0, 8], [], false, false, false, false);
     }
 
     $(document).on('click', '#save_add_check_in_button', save_add_check_in);
@@ -54833,10 +54941,49 @@ if (document.URL.match(/create\/upload\/files/)) {
 
 /***/ }),
 
-/***/ "./resources/js/doc_management/earnest/earnest.js":
-/*!********************************************************!*\
-  !*** ./resources/js/doc_management/earnest/earnest.js ***!
-  \********************************************************/
+/***/ "./resources/js/doc_management/earnest/active_earnest.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/doc_management/earnest/active_earnest.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+if (document.URL.match(/active_earnest/)) {
+  var get_earnest = function get_earnest(account_id) {
+    $.each(['active', 'missing', 'waiting'], function (index, tab) {
+      axios.get('/doc_management/get_earnest_deposits', {
+        params: {
+          account_id: account_id,
+          tab: tab
+        },
+        headers: {
+          'Accept-Version': 1,
+          'Accept': 'text/html',
+          'Content-Type': 'text/html'
+        }
+      }).then(function (response) {
+        $('#' + tab + '_content').html(response.data);
+        var dt = data_table('25', $('.earnest-table'), [2, 'desc'], [0], [], true, true, true, true, true);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    });
+  };
+
+  $(function () {
+    get_earnest('all');
+    $('.earnest-deposit-account').on('change', function () {
+      get_earnest($(this).val());
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/doc_management/earnest/balance_earnest.js":
+/*!****************************************************************!*\
+  !*** ./resources/js/doc_management/earnest/balance_earnest.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -54844,9 +54991,21 @@ if (document.URL.match(/balance_earnest/)) {
   $(function () {
     get_earnest_totals();
     get_earnest_checks();
+    $(document).on('click', '.refresh-accounts-button', function () {
+      refresh();
+    });
     $('#earnest_search_input').on('keyup', function () {
       search_earnest_checks($(this).val());
     }); //////////// functions ////////////
+
+    function refresh() {
+      var active_index = $('.earnest-totals-tab.active').index();
+      $('.earnest-checks-container').hide();
+      $('.earnest-totals-container').html('<div class="list-group-item p-5 text-center text-gray"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>');
+      get_earnest_totals(active_index);
+      get_earnest_checks();
+      $('.earnest-checks-container').show();
+    }
 
     function get_earnest_totals() {
       var active_index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -54860,8 +55019,7 @@ if (document.URL.match(/balance_earnest/)) {
         $('.earnest-totals-container').html(response.data);
 
         if (active_index) {
-          $('.earnest-totals-tab.active').removeClass('active');
-          $('.earnest-totals-tab').eq(active_index).addClass('active');
+          $('.earnest-totals-tab').eq(active_index).trigger('click');
         }
 
         $('.earnest-totals-tab').on('click', function () {
@@ -54883,10 +55041,10 @@ if (document.URL.match(/balance_earnest/)) {
         }
       }).then(function (response) {
         $('.earnest-checks-container').html(response.data);
-        data_table($('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], [], true, true, true, false);
-        data_table($('.earnest-checks-table-out'), [1, 'desc'], [0, 7], [], true, true, true, false);
-        data_table($('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], [], true, true, true, true);
-        data_table($('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], [], true, true, true, true); //form_elements();
+        data_table('10', $('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], [], true, true, true, false);
+        data_table('10', $('.earnest-checks-table-out'), [1, 'desc'], [0, 7], [], true, true, true, false);
+        data_table('10', $('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], [], true, true, true, true);
+        data_table('10', $('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], [], true, true, true, true); //form_elements();
 
         $('.cleared-checkbox').on('change', function () {
           cleared_bounced($(this));
@@ -54908,6 +55066,7 @@ if (document.URL.match(/balance_earnest/)) {
       var check_type = checkbox.data('check-type');
       var Earnest_ID = checkbox.data('earnest-id');
       var status = '';
+      $('.earnest-totals-tab.active').find('.account-total-amount').html('<i class="fas fa-spinner fa-pulse"></i>');
       checkbox.closest('.check-row').removeClass('cleared bounced');
 
       if (checkbox.is(':checked')) {
@@ -56594,12 +56753,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
         $('#' + tab + '_div').html(response.data);
 
         if (tab == 'drafts') {
-          data_table($('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-draft-button').off('click').on('click', function () {
             delete_draft($(this));
           });
         } else if (tab == 'deleted_drafts') {
-          data_table($('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-draft-button').off('click').on('click', function () {
             restore_draft($(this));
           });
@@ -56613,7 +56772,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'in_process') {
-          data_table($('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
+          data_table('10', $('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
           $('.cancel-envelope-button').off('click').on('click', function () {
             cancel_envelope($(this));
           });
@@ -56621,14 +56780,14 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             resend_envelope($(this));
           });
         } else if (tab == 'completed') {
-          data_table($('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
         } else if (tab == 'templates') {
-          data_table($('#templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-template-button').off('click').on('click', function () {
             delete_template($(this));
           });
         } else if (tab == 'deleted_templates') {
-          data_table($('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-template-button').off('click').on('click', function () {
             restore_template($(this));
           });
@@ -56642,12 +56801,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'system_templates') {
-          data_table($('#system_templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#system_templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
           $('.delete-system-template-button').off('click').on('click', function () {
             delete_system_template($(this));
           });
         } else if (tab == 'deleted_system_templates') {
-          data_table($('#deleted_system_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#deleted_system_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-system-template-button').off('click').on('click', function () {
             restore_system_template($(this));
           });
@@ -56661,7 +56820,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'cancelled') {
-          data_table($('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -56822,7 +56981,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
     $('#uploads_div').sortable({
       handle: '.file-handle'
     });
-    data_table($('#templates_table'), [1, 'asc'], [0], [], false, true, true, true);
+    data_table('10', $('#templates_table'), [1, 'asc'], [0], [], false, true, true, true);
 
     if ($('#from_upload').val() == 'yes') {
       create_envelope();
@@ -58238,9 +58397,8 @@ window.form_elements = function () {
               dropdown.find('.form-select-li').removeClass('active');
               li.addClass('active'); // update select element
 
-              _element.val(value);
+              _element.val(value); //element.trigger('change');
 
-              _element.trigger('change');
             } else {
               set_multiple_select($(this));
             }
@@ -58805,10 +58963,6 @@ $(function () {
   }, function (error) {
     console.log('error = ' + error);
   });
-  /* $(document).on('click', '.modal-dismiss, .modal-backdrop', function() {
-      $('.modal-backdrop').remove();
-  }); */
-
   $(document).on('focus', '.numbers-only', function (e) {
     e.target.focus().select();
   });
@@ -58859,6 +59013,7 @@ $(function () {
   }, 1000);
   window.datatable_settings = _defineProperty({
     bAutoWidth: true,
+    //responsive: true,
     "destroy": true,
     "language": {
       search: '',
@@ -58870,8 +59025,8 @@ $(function () {
     "search": ""
   });
 
-  window.data_table = function (table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging) {
-    var hide_cols = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : true;
+  window.data_table = function (page_length, table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging) {
+    var hide_cols = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : true;
 
     /*
     table = $('#table_id')
@@ -58883,6 +59038,10 @@ $(function () {
     show_info = true/false
     show_paging = true/false
     */
+    if (page_length != '') {
+      datatable_settings.pageLength = page_length;
+    }
+
     if (sort_by.length > 0) {
       datatable_settings.order = [[sort_by[0], sort_by[1]]];
     }
@@ -58950,14 +59109,9 @@ $(function () {
     }
 
     datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"' + search + info + length + buttons + '>rt<"d-flex justify-content-between align-items-center text-gray"' + info + paging + '>';
-    table.DataTable(datatable_settings); //$('.dt-buttons .btn-secondary span').css({ color: 'white' });
-
+    var dt = table.DataTable(datatable_settings);
     $('.dataTables_filter [type="search"]').attr('placeholder', 'Search');
-    /* $('.dataTables_filter [type="search"]').addClass('custom-form-element form-input datatable-search').data('label', 'Search');
-    setTimeout(function() {
-        $('.datatable-search').siblings('label').css({ left: '10px' });
-    }, 500); */
-    //$('.dataTables_length').find('select').addClass('custom-form-element form-select form-select-no-search form-select-no-cancel').data('label', 'Results');
+    return dt;
   };
 
   window.format_date = function (date) {
@@ -58990,17 +59144,7 @@ $(function () {
 
     if (!$(this).find('modal-dialog').hasClass('modal-xl')) {
       $(this).addClass('draggable').find('.modal-header').addClass('draggable-handle');
-    } // modal-open gets stuck in the body class so have to remove it manually
-
-    /* let remove_modal_open = setInterval(function() {
-        if($('.modal.show').length == 0) {
-            $('body').removeClass('modal-open');
-            clearInterval(remove_modal_open);
-        } else {
-            $('body').addClass('modal-open');
-        }
-    }, 1000); */
-
+    }
   });
 });
 
@@ -59082,26 +59226,7 @@ window.inactivityTime = function () {
 
     time = setTimeout(logout, timeout);
   }
-}; // page transitions
-
-/* window.global_page_transition = function() {
-
-    if (document.URL.match(/(upload\/files)/)) {
-        $('.loader').show();
-        var tl = new TimelineMax();
-        tl.to(CSSRulePlugin.getRule('body:before'), 0, { cssRule: { top: '50%' }, ease: Power2.easeOut }, 'close')
-            .to(CSSRulePlugin.getRule('body:after'), 0, { cssRule: { bottom: '50%' }, ease: Power2.easeOut }, 'close')
-            .to($('.loader'), 0, { opacity: 1 })
-            .to(CSSRulePlugin.getRule('body:before'), 0.2, { cssRule: { top: '0%' }, ease: Power2.easeOut }, '+=0.5', 'open')
-            .to(CSSRulePlugin.getRule('body:after'), 0.2, { cssRule: { bottom: '0%' }, ease: Power2.easeOut }, '-=0.2', 'open')
-            .to($('.loader'), 0.2, { opacity: 0, display: 'none' }, '-=0.2');
-
-    } else {
-        $('.loader').hide();
-    }
-
-} */
-
+};
 /**************************  STANDARD USE FUNCTIONS ***********************************/
 
 
@@ -59365,7 +59490,14 @@ window.nl2br = function (str, replaceMode, isXhtml) {
   var breakTag = isXhtml ? '<br />' : '<br>';
   var replaceStr = replaceMode ? '$1' + breakTag : '$1' + breakTag + '$2';
   return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, replaceStr);
-}; // get location details from zip code
+};
+
+$(document).on('keydown', function (event) {
+  if (event.ctrlKey && event.key === 's') {
+    $('.main-search-input').focus().select();
+    return false;
+  }
+}); // get location details from zip code
 
 /* window.get_location_details = function(zip) {
     if(zip.length == 5) {
@@ -59471,6 +59603,75 @@ window.nl2br = function (str, replaceMode, isXhtml) {
     });
   };
 })(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/nav/search.js":
+/*!************************************!*\
+  !*** ./resources/js/nav/search.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  $(document).on('keyup', '.main-search-input', function () {
+    main_search($(this));
+  });
+  $(document).on('click', '.hide-search', hide_search);
+  $(document).on('click', '.search-results-row .list-group-item', function () {
+    window.open($(this).data('href'));
+  });
+  var top = $('#main_nav_bar').css('height');
+  $('.main-search-results-div').css('top', top);
+  var search_request = null;
+
+  function main_search(input) {
+    // cancel  previous ajax if exists
+    if (search_request) {
+      search_request.cancel();
+    } // creates a new token for upcoming ajax (overwrite the previous one)
+
+
+    search_request = axios.CancelToken.source();
+    var value = input.val().trim();
+    var container = $('.main-search-results-div');
+
+    if (value.length > 0) {
+      input.next('.hide-search').removeClass('hidden');
+      axios.get('/search', {
+        cancelToken: search_request.token,
+        params: {
+          value: value
+        },
+        headers: {
+          'Accept-Version': 1,
+          'Accept': 'text/html',
+          'Content-Type': 'text/html'
+        }
+      }).then(function (response) {
+        $('.main-search-results').html(response.data);
+        container.show();
+        $(document).on('mouseup', function (e) {
+          var search_divs = $('.search-ele');
+
+          if (!search_divs.is(e.target) && search_divs.has(e.target).length === 0) {
+            hide_search();
+          }
+        });
+      })["catch"](function (error) {});
+    } else {
+      $('.main-search-results').html('');
+      container.hide();
+      $('.hide-search').addClass('hidden');
+    }
+  }
+
+  function hide_search() {
+    $('.main-search-results-div').hide();
+    $('.main-search-input').val('');
+    $('.hide-search').addClass('hidden');
+  }
+});
 
 /***/ }),
 

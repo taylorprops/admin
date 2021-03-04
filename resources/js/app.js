@@ -12,6 +12,7 @@ require('./bootstrap');
 require('./global.js');
 require('./form_elements.js');
 require('./nav/nav.js');
+require('./nav/search.js');
 
 // dashboard
 require('./dashboard/admin.js');
@@ -66,7 +67,11 @@ require('./doc_management/review/review.js');
 require('./doc_management/commission/commission_breakdowns.js');
 
 // earnest
-require('./doc_management/earnest/earnest.js');
+require('./doc_management/earnest/balance_earnest.js');
+require('./doc_management/earnest/active_earnest.js');
+
+// documents
+require('./agents/doc_management/documents/documents.js');
 
 
 

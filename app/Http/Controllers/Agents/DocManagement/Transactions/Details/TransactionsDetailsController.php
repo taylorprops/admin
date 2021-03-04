@@ -7,21 +7,15 @@ use File;
 use Config;
 use App\User;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
-
 use Eversign\Client;
-
-use App\Mail\DefaultEmail;
-use Illuminate\Http\Request;
-
-use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
 use App\Models\Jobs\Jobs;
 
+use App\Mail\DefaultEmail;
+
+use Illuminate\Http\Request;
 use App\Models\CRM\CRMContacts;
 
 use App\Models\Employees\Agents;
-
 use App\Models\Esign\EsignFields;
 
 use Illuminate\Http\UploadedFile;
@@ -29,22 +23,28 @@ use Illuminate\Http\UploadedFile;
 use App\Models\Esign\EsignSigners;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Esign\EsignCallbacks;
+
 use App\Models\Esign\EsignDocuments;
+
 use App\Models\Esign\EsignEnvelopes;
 use App\Models\Esign\EsignTemplates;
 use Illuminate\Support\Facades\Mail;
 use App\Models\BrightMLS\AgentRoster;
 use App\Models\Commission\Commission;
 use App\Models\Employees\AgentsNotes;
-
 use App\Models\Employees\AgentsTeams;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
 
-
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+
+
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
+use App\Jobs\OldDB\Earnest\EscrowExportJob;
 
 use App\Mail\DocManagement\Emails\Documents;
 
@@ -91,17 +91,18 @@ use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
 use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
 
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
 
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
 use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
+
+
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
-
-
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
 
@@ -254,25 +255,32 @@ class TransactionsDetailsController extends Controller {
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
 
-        $listings_count = Listings::where('Agent_ID', $property -> Agent_ID) -> count();
+        //$listings_count = Listings::where('Agent_ID', $property -> Agent_ID) -> count();
+        $listings_count = Cache::remember('listings_count', 1000, function () use ($property) {
+            return Listings::where('Agent_ID', $property -> Agent_ID) -> count();
+        });
 
         $listing_expiration_date = null;
         if($transaction_type == 'contract') {
             if($property -> Listing_ID > 0) {
-                $listing = Listings::find($property -> Listing_ID);
-                $listing_expiration_date = $listing -> ExpirationDate;
+                //$listing = Listings::find($property -> Listing_ID);
+                //$listing_expiration_date = $listing -> ExpirationDate;
+                $listing_expiration_date = Cache::remember('listing_expiration_date', 1000, function () use ($property) {
+                    return Listings::find($property -> Listing_ID) -> ExpirationDate;
+                });
             }
         }
 
-        $resource_items = new ResourceItems();
+        //$resource_items = new ResourceItems();
+        $resource_items = Cache::remember('resource_items', 1000, function () use ($property) {
+            return new ResourceItems();
+        });
 
         if($transaction_type != 'referral') {
             $members = Members::where('Contract_ID', $Contract_ID) -> get();
             if($transaction_type == 'listing') {
                 $members = Members::where('Listing_ID', $Listing_ID) -> get();
             }
-            //$buyers = $members -> where('member_type_id', $resource_items -> BuyerResourceId());
-            //$sellers = $members -> where('member_type_id', $resource_items -> SellerResourceId());
 
             $buyers = collect($property -> BuyerOneFirstName.' '.$property -> BuyerOneLastName);
             if($property -> BuyerTwoFirstName != '') {
@@ -282,10 +290,6 @@ class TransactionsDetailsController extends Controller {
             if($property -> SellerTwoFirstName != '') {
                 $sellers -> push($property -> SellerTwoFirstName.' '.$property -> SellerTwoLastName);
             }
-
-            // get active contracts
-            /* $status = ResourceItems::GetResourceID('Active', 'contract_status');
-            $active_contracts_count = Contracts::where('Listing_ID', $Listing_ID) -> where('Status', $status) -> count(); */
 
         } else {
             $buyers = null;
@@ -305,6 +309,16 @@ class TransactionsDetailsController extends Controller {
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
         return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted'));
+    }
+
+    public function set_status_to_waiting_for_release(Request $request) {
+
+        $Contract_ID = $request -> Contract_ID;
+        $status = ResourceItems::GetResourceID('Waiting For Release', 'contract_status');
+        $contract = Contracts::find($Contract_ID) -> update(['Status' => $status]);
+
+        return response() -> json(['status' => 'success']);
+
     }
 
 
@@ -1564,6 +1578,7 @@ class TransactionsDetailsController extends Controller {
     }
 
     public function save_add_template_documents(Request $request) {
+
         $Agent_ID = $request -> Agent_ID;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1574,8 +1589,6 @@ class TransactionsDetailsController extends Controller {
         $files = json_decode($request['files'], true);
 
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
-
-        //$queue_name = 'add_field_and_inputs_'.$Agent_ID.'_'.$Listing_ID.'_'.$Contract_ID.'_'.$Referral_ID;
 
         foreach ($files as $file) {
 
@@ -3291,6 +3304,15 @@ class TransactionsDetailsController extends Controller {
             }
         }
 
+        // update DocsMissingCount
+        $docs_missing_count = TransactionChecklistItems::where('checklist_id', $checklist_id)
+            -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', '!=', 'accepted')
+            -> count();
+
+        $property -> DocsMissingCount = $docs_missing_count;
+        $property -> save();
+
         return response() -> json([
             'result' => 'success',
             'release' => $release,
@@ -4142,8 +4164,24 @@ class TransactionsDetailsController extends Controller {
 
         }
 
+        $earnest_mail_to_address = '';
+        if($earnest -> release_to_city != '') {
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account'));
+            $earnest_mail_to_address =
+        $earnest -> release_to_street.'
+        '.$earnest -> release_to_city.', '.$earnest -> release_to_state.' '.$earnest -> release_to_zip;
+
+        }
+
+        $waiting_status = ResourceItems::GetResourceID('Waiting For Release', 'contract_status');
+        $hide_set_status_to_waiting = 'yes';
+        if($property -> Status == $waiting_status) {
+            $hide_set_status_to_waiting = null;
+        }
+
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting'));
+
     }
 
     public function get_earnest_checks(Request $request) {
@@ -4218,6 +4256,8 @@ class TransactionsDetailsController extends Controller {
         if($request -> amount_received > 0) {
             $property = Contracts::find($earnest -> Contract_ID) -> update(['EarnestAmount' => $request -> amount_received]);
         }
+
+        EscrowExportJob::dispatch();
 
         return response() -> json(['status' => 'success']);
 

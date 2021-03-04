@@ -9,7 +9,10 @@
         role="tabpanel"
         aria-labelledby="account_tab_{{ $account -> resource_id }}">
 
-        <h4 class="text-primary mt-4 mt-xl-0 mb-3">{{ $account -> resource_state.' - '.$account -> resource_account_number.' - '.$account -> resource_name }}</h4>
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="text-primary mt-4 mt-xl-0 mb-3">{{ $account -> resource_state.' - '.$account -> resource_account_number.' - '.$account -> resource_name }}</h4>
+            <button class="btn btn-primary refresh-accounts-button"><i class="fad fa-sync mr-2"></i> Refresh</button>
+        </div>
 
         <h5 class="text-orange">Checks In</h5>
 
@@ -57,7 +60,7 @@
                             </td>
                             <td>{{ $check -> date_deposited }}</td>
                             <td class="font-weight-bold text-orange">${{ number_format($check -> check_amount, 2) }}</td>
-                            <td>{{ $check -> check_number }}</td>
+                            <td class="font-weight-bold">{{ $check -> check_number }}</td>
                             <td>{{ $check -> check_name }}</td>
                             <td>{!! $address !!}</td>
                             <td>{{ $agent_name }}</td>
@@ -133,7 +136,7 @@
                             </td>
                             <td>{{ $check -> date_sent }}</td>
                             <td class="font-weight-bold text-orange">${{ number_format($check -> check_amount, 2) }}</td>
-                            <td class="font-weight-bold text-orange">{{ $check -> check_number }}</td>
+                            <td class="font-weight-bold">{{ $check -> check_number }}</td>
                             <td>{{ $check -> payable_to }}</td>
                             <td>{!! $address !!}</td>
                             <td>{{ $agent_name }}</td>
@@ -203,8 +206,8 @@
                                 </div>
                             </td>
                             <td>{{ $check -> date_cleared }}</td>
-                            <td class="font-weight-bold">${{ number_format($check -> check_amount, 2) }}</td>
-                            <td>{{ $check -> check_number }}</td>
+                            <td class="font-weight-bold text-orange">${{ number_format($check -> check_amount, 2) }}</td>
+                            <td class="font-weight-bold">{{ $check -> check_number }}</td>
                             <td>{{ $check -> check_name }}</td>
                             <td>{!! $address !!}</td>
                             <td>{{ $agent_name }}</td>
@@ -280,8 +283,8 @@
                                 </div>
                             </td>
                             <td>{{ $check -> date_cleared }}</td>
-                            <td class="font-weight-bold">${{ number_format($check -> check_amount, 2) }}</td>
-                            <td>{{ $check -> check_number }}</td>
+                            <td class="font-weight-bold text-orange">${{ number_format($check -> check_amount, 2) }}</td>
+                            <td class="font-weight-bold">{{ $check -> check_number }}</td>
                             <td>{{ $check -> payable_to }}</td>
                             <td>{!! $address !!}</td>
                             <td>{{ $agent_name }}</td>

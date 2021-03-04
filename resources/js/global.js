@@ -86,11 +86,6 @@ $(function() {
         console.log('error = '+error);
     });
 
-    /* $(document).on('click', '.modal-dismiss, .modal-backdrop', function() {
-        $('.modal-backdrop').remove();
-    }); */
-
-
 
     $(document).on('focus', '.numbers-only', function (e) {
         e.target.focus().select();
@@ -150,6 +145,7 @@ $(function() {
 
     window.datatable_settings = {
         bAutoWidth: true,
+        //responsive: true,
         "destroy": true,
         "language": {
             search: '',
@@ -162,7 +158,7 @@ $(function() {
         }
     }
 
-    window.data_table = function(table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
+    window.data_table = function(page_length, table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
 
         /*
         table = $('#table_id')
@@ -174,6 +170,11 @@ $(function() {
         show_info = true/false
         show_paging = true/false
         */
+
+        if(page_length != '') {
+            datatable_settings.pageLength = page_length;
+        }
+
         if(sort_by.length > 0) {
             datatable_settings.order = [[sort_by[0], sort_by[1]]];
         }
@@ -244,17 +245,11 @@ $(function() {
 
         datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"'+search+info+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
 
-        table.DataTable(datatable_settings);
-
-        //$('.dt-buttons .btn-secondary span').css({ color: 'white' });
+        let dt = table.DataTable(datatable_settings);
 
         $('.dataTables_filter [type="search"]').attr('placeholder', 'Search');
-        /* $('.dataTables_filter [type="search"]').addClass('custom-form-element form-input datatable-search').data('label', 'Search');
-        setTimeout(function() {
-            $('.datatable-search').siblings('label').css({ left: '10px' });
-        }, 500); */
 
-        //$('.dataTables_length').find('select').addClass('custom-form-element form-select form-select-no-search form-select-no-cancel').data('label', 'Results');
+        return dt;
 
     }
 
@@ -293,16 +288,6 @@ $(function() {
         if(!$(this).find('modal-dialog').hasClass('modal-xl')) {
             $(this).addClass('draggable').find('.modal-header').addClass('draggable-handle');
         }
-
-        // modal-open gets stuck in the body class so have to remove it manually
-        /* let remove_modal_open = setInterval(function() {
-            if($('.modal.show').length == 0) {
-                $('body').removeClass('modal-open');
-                clearInterval(remove_modal_open);
-            } else {
-                $('body').addClass('modal-open');
-            }
-        }, 1000); */
 
     });
 
@@ -403,24 +388,6 @@ window.inactivityTime = function () {
     }
 };
 
-// page transitions
-/* window.global_page_transition = function() {
-
-    if (document.URL.match(/(upload\/files)/)) {
-        $('.loader').show();
-        var tl = new TimelineMax();
-        tl.to(CSSRulePlugin.getRule('body:before'), 0, { cssRule: { top: '50%' }, ease: Power2.easeOut }, 'close')
-            .to(CSSRulePlugin.getRule('body:after'), 0, { cssRule: { bottom: '50%' }, ease: Power2.easeOut }, 'close')
-            .to($('.loader'), 0, { opacity: 1 })
-            .to(CSSRulePlugin.getRule('body:before'), 0.2, { cssRule: { top: '0%' }, ease: Power2.easeOut }, '+=0.5', 'open')
-            .to(CSSRulePlugin.getRule('body:after'), 0.2, { cssRule: { bottom: '0%' }, ease: Power2.easeOut }, '-=0.2', 'open')
-            .to($('.loader'), 0.2, { opacity: 0, display: 'none' }, '-=0.2');
-
-    } else {
-        $('.loader').hide();
-    }
-
-} */
 
 /**************************  STANDARD USE FUNCTIONS ***********************************/
 
@@ -665,6 +632,12 @@ window.nl2br = function(str, replaceMode, isXhtml) {
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, replaceStr);
 }
 
+$(document).on('keydown', function(event) {
+    if (event.ctrlKey && event.key === 's') {
+        $('.main-search-input').focus().select();
+        return false;
+    }
+});
 
 // get location details from zip code
 /* window.get_location_details = function(zip) {

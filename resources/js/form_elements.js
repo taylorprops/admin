@@ -381,7 +381,7 @@ window.form_elements = function () {
                                 li.addClass('active');
                                 // update select element
                                 element.val(value);
-                                element.trigger('change');
+                                //element.trigger('change');
 
 
                             } else {

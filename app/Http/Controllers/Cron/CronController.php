@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Cron;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Config;
+use App\User;
 
+use Illuminate\Http\Request;
 use App\Models\OldDB\OldAgents;
-use App\Models\OldDB\OldAgentsTeams;
-use App\Models\OldDB\OldAgentsLicenses;
-use App\Models\OldDB\OldAgentsNotes;
 use App\Models\Employees\Agents;
-use App\Models\Employees\AgentsTeams;
-use App\Models\Employees\AgentsLicenses;
+use App\Http\Controllers\Controller;
+use App\Models\OldDB\OldAgentsNotes;
+use App\Models\OldDB\OldAgentsTeams;
 use App\Models\Employees\AgentsNotes;
+use App\Models\Employees\AgentsTeams;
+
+use App\Models\OldDB\OldAgentsLicenses;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Employees\AgentsLicenses;
+
 
 use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-
-use App\User;
-use Config;
-use Illuminate\Support\Facades\Storage;
 
 
 class CronController extends Controller {
@@ -145,6 +146,7 @@ class CronController extends Controller {
         }
 
     }
+
 
 
 }

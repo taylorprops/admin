@@ -140,14 +140,18 @@ Route::middleware('admin') -> group(function () {
 
 
     /********* Balance Earnest ************/
+    // active earnest page
+    Route::get('/doc_management/active_earnest', 'DocManagement\Earnest\EarnestController@active_earnest');
+    // active earnest page - get earnest deposits
+    Route::get('/doc_management/get_earnest_deposits', 'DocManagement\Earnest\EarnestController@get_earnest_deposits');
     // balance earnest page
-    Route::get('/doc_management/balance_earnest', 'DocManagement\Earnest\BalanceEarnestController@balance_earnest');
+    Route::get('/doc_management/balance_earnest', 'DocManagement\Earnest\EarnestController@balance_earnest');
     // get earnest totals
-    Route::get('/doc_management/get_earnest_totals', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_totals');
+    Route::get('/doc_management/get_earnest_totals', 'DocManagement\Earnest\EarnestController@get_earnest_totals');
     // get earnest checks
-    Route::get('/doc_management/get_earnest_checks', 'DocManagement\Earnest\BalanceEarnestController@get_earnest_checks');
+    Route::get('/doc_management/get_earnest_checks', 'DocManagement\Earnest\EarnestController@get_earnest_checks');
     // search earnest checks
-    Route::get('/doc_management/search_earnest_checks', 'DocManagement\Earnest\BalanceEarnestController@search_earnest_checks');
+    Route::get('/doc_management/search_earnest_checks', 'DocManagement\Earnest\EarnestController@search_earnest_checks');
 
 
 

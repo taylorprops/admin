@@ -7,20 +7,87 @@ use Illuminate\Http\Request;
 
 use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+
 use App\Models\DocManagement\Resources\ResourceItems;
 
 class DashboardAgentController extends Controller
 {
     public function dashboard_agent(Request $request) {
 
-        $Agent_ID = auth() -> user() -> user_id;
+        $listings_select = [
+            'Agent_ID',
+            'City',
+            'Contract_ID',
+            'ExpirationDate',
+            'FullStreetAddress',
+            'Listing_ID',
+            'ListPrice',
+            'ListPictureURL',
+            'MLSListDate',
+            'PostalCode',
+            'SaleRent',
+            'StateOrProvince',
+            'Status',
+            'TransactionCoordinator_ID'
+        ];
 
-        $resource_items = new ResourceItems();
+        $contracts_select = [
+            'Agent_ID',
+            'City',
+            'CloseDate',
+            'ContractPrice',
+            'ContractDate',
+            'EarnestHeldBy',
+            'FullStreetAddress',
+            'Contract_ID',
+            'ListPictureURL',
+            'PostalCode',
+            'SaleRent',
+            'StateOrProvince',
+            'Status',
+            'TransactionCoordinator_ID'
+        ];
 
-        $include_under_contract = 'yes';
-        $listings = Listings::where('Agent_ID', $Agent_ID) -> whereIn('Status', ResourceItems::GetActiveListingStatuses($include_under_contract, 'no', 'no')) -> orderBy('Status') -> get();
-        $contracts = Contracts::where('Agent_ID', $Agent_ID) -> whereIn('Status', ResourceItems::GetActiveContractStatuses()) -> orderBy('Status') -> get();
+        $referrals_select = [
+            'Agent_ID',
+            'City',
+            'ClientFirstName',
+            'ClientLastName',
+            'CloseDate',
+            'FullStreetAddress',
+            'Referral_ID',
+            'PostalCode',
+            'StateOrProvince',
+            'Status',
+            'TransactionCoordinator_ID'
+        ];
 
-        return view('/dashboard/agent/dashboard', compact('resource_items', 'listings', 'contracts'));
+        $active_listings = Listings::select($listings_select)
+            -> whereIn('Status', ResourceItems::GetActiveListingStatuses('yes', 'no', 'no'))
+            -> orderBy('MlsListDate', 'desc')
+            -> get();
+
+        $active_contracts = Contracts::select($contracts_select)
+            -> whereIn('Status', ResourceItems::GetActiveContractStatuses())
+            -> orderBy('CloseDate', 'desc')
+            -> get();
+
+        $pending_referrals = Referrals::select($referrals_select)
+            -> whereIn('Status', ResourceItems::GetActiveReferralStatuses())
+            -> orderBy('CloseDate', 'desc')
+            -> get();
+
+        $contracts_closing_this_month = $active_contracts -> where('CloseDate', '<=', date('Y-m-t')) -> where('CloseDate', '>=', date('Y-m-1'));
+
+        $contracts_past_settle_date = $active_contracts -> where('CloseDate', '>=', date('Y-m-d'));
+
+        $expired_listings = Listings::select($listings_select)
+            -> where('Status', ResourceItems::GetResourceID('Expired', 'listing_status'))
+            -> get();
+
+
+        return view('/dashboard/agent/dashboard', compact('active_listings', 'active_contracts', 'pending_referrals'));
+
     }
 }

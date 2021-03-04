@@ -252,7 +252,7 @@
                                         <div class="text-gray document-title py-1 py-sm-2">
                                             <div class="completed-info text-success"><i class="fal fa-signature mr-2"></i> Signatures Completed!</div>
                                             <div class="sent-info text-orange"><i class="fal fa-hourglass-half mr-2"></i> Sent For Signatures</div>
-                                            <a href="{{ $document -> file_location_converted }}?0293847" target="_blank">{{ $document -> file_name_display }}</a>
+                                            <a href="{{ $document -> file_location_converted }}?t={{ time() }}" target="_blank">{{ $document -> file_name_display }}</a>
                                             <div class="d-flex justify-content-start flex-wrap">
                                                 <div>
                                                     <span class="small">Added: {{ date('n/j/Y g:i:sA', strtotime($document -> created_at)) }} </span>

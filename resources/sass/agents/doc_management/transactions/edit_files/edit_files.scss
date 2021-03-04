@@ -304,12 +304,12 @@
 
         &.data-div-radio {
             line-height: 30% !important;
-            padding-top: 4px !important;
+            padding-top: 3px !important;
             border-radius: 50%;
         }
         &.data-div-checkbox {
             // margin-left: 1px;
-            // margin-top: 3px;
+            padding-top: 2px;
             line-height: 40% !important;
         }
     }

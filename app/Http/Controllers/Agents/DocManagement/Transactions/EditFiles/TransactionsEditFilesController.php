@@ -2,23 +2,40 @@
 
 namespace App\Http\Controllers\Agents\DocManagement\Transactions\EditFiles;
 
-use App\Http\Controllers\Controller;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
-use App\Models\DocManagement\Transactions\Documents\InProcess;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
-use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use mikehaertl\wkhtmlto\Pdf;
+use App\Models\DocManagement\Transactions\Documents\InProcess;
+use App\Models\DocManagement\Transactions\EditFiles\UserFields;
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
+use App\Jobs\Agents\DocManagement\Transactions\EditFiles\ConvertToPDF;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+use App\Jobs\Agents\DocManagement\Transactions\EditFiles\SaveEditSystemInputs;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 
 class TransactionsEditFilesController extends Controller {
 
     public function convert_to_pdf(Request $request) {
 
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+        $transaction_type = $request -> transaction_type;
+        $file_id = $request -> file_id;
+        $document_id = $request -> document_id;
+        $file_type = $request -> file_type;
+        $page_count = $request['page_count'];
+
+
+
+        ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
+
+        /*
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -198,6 +215,9 @@ class TransactionsEditFilesController extends Controller {
 
         // remove from in_process
         $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
+        */
+
+        return response() -> json(['status' => 'success']);
 
     }
 
@@ -280,37 +300,7 @@ class TransactionsEditFilesController extends Controller {
         $inputs = $request -> inputs;
         $inputs = json_decode($inputs, true);
 
-        if (count($inputs) > 0) {
-
-            foreach ($inputs as $input) {
-
-                $updated_input = UserFieldsInputs::find($input['id']);
-
-                if($updated_input) {
-
-                    $updated_input -> update(['input_value' => $input['value']]);
-
-                    //update all common fields on other docs
-                    if ($updated_input -> input_db_column != '') {
-                        // update all with same transaction_type, Listing_ID, Contract_ID, Referral_ID and input_db_column
-                        $common_inputs = UserFieldsInputs::where([
-                            'transaction_type' => $updated_input -> transaction_type,
-                            'Listing_ID' => $updated_input -> Listing_ID ?? 0,
-                            'Contract_ID' => $updated_input -> Contract_ID ?? 0,
-                            'Referral_ID' => $updated_input -> Referral_ID ?? 0,
-                            'input_db_column' => $updated_input -> input_db_column,
-                        ])
-                        -> update([
-                            'input_value' => $updated_input -> input_value,
-                        ]);
-
-                    }
-
-                }
-
-            }
-
-        }
+        SaveEditSystemInputs::dispatch($inputs);
 
         return response() -> json(['status' => 'success']);
 
@@ -318,69 +308,73 @@ class TransactionsEditFilesController extends Controller {
 
     public function save_edit_user_fields(Request $request) {
 
-        // add and update user input values
-        $user_fields = $request -> user_fields;
-        $user_fields = json_decode($user_fields, true);
+        DB::transaction(function() use ($request) {
 
-        $file_id = $request -> file_id;
-        $Agent_ID = $request -> Agent_ID;
-        $Listing_ID = $request -> Listing_ID;
-        $Contract_ID = $request -> Contract_ID;
-        $transaction_type = $request -> transaction_type;
+            // add and update user input values
+            $user_fields = $request -> user_fields;
+            $user_fields = json_decode($user_fields, true);
 
-        // delete all current user fields for this file
-        $delete_user_fields = UserFields::where('field_created_by', 'user') -> where('Agent_ID', $Agent_ID) -> where('file_id', $file_id) -> delete();
-        $delete_user_inputs = UserFieldsInputs::where('file_type', 'user') -> where('Agent_ID', $Agent_ID) -> where('file_id', $file_id) -> delete();
+            $file_id = $request -> file_id;
+            $Agent_ID = $request -> Agent_ID;
+            $Listing_ID = $request -> Listing_ID;
+            $Contract_ID = $request -> Contract_ID;
+            $transaction_type = $request -> transaction_type;
 
-        if (count($user_fields) > 0) {
+            // delete all current user fields for this file
+            $delete_user_fields = UserFields::where('field_created_by', 'user') -> where('Agent_ID', $Agent_ID) -> where('file_id', $file_id) -> delete();
+            $delete_user_inputs = UserFieldsInputs::where('file_type', 'user') -> where('Agent_ID', $Agent_ID) -> where('file_id', $file_id) -> delete();
 
-            foreach ($user_fields as $field) {
+            if (count($user_fields) > 0) {
 
-                $new_field = new UserFields();
+                foreach ($user_fields as $field) {
 
-                $new_field -> file_id = $file_id;
-                $new_field -> create_field_id = $field['create_field_id'];
-                $new_field -> group_id = $field['create_field_id'];
-                $new_field -> page = $field['page'];
-                $new_field -> field_category = $field['field_type'];
-                $new_field -> field_type = $field['field_type'];
-                $new_field -> field_created_by = 'user'; // system, user
-                $new_field -> top_perc = $field['yp'];
-                $new_field -> left_perc = $field['xp'];
-                $new_field -> width_perc = $field['wp'];
-                $new_field -> height_perc = $field['hp'];
-                $new_field -> Agent_ID = $Agent_ID;
-                $new_field -> Listing_ID = $Listing_ID;
-                $new_field -> Contract_ID = $Contract_ID;
-                $new_field -> transaction_type = $transaction_type;
+                    $new_field = new UserFields();
 
-                $new_field -> save();
+                    $new_field -> file_id = $file_id;
+                    $new_field -> create_field_id = $field['create_field_id'];
+                    $new_field -> group_id = $field['create_field_id'];
+                    $new_field -> page = $field['page'];
+                    $new_field -> field_category = $field['field_type'];
+                    $new_field -> field_type = $field['field_type'];
+                    $new_field -> field_created_by = 'user'; // system, user
+                    $new_field -> top_perc = $field['yp'];
+                    $new_field -> left_perc = $field['xp'];
+                    $new_field -> width_perc = $field['wp'];
+                    $new_field -> height_perc = $field['hp'];
+                    $new_field -> Agent_ID = $Agent_ID;
+                    $new_field -> Listing_ID = $Listing_ID;
+                    $new_field -> Contract_ID = $Contract_ID;
+                    $new_field -> transaction_type = $transaction_type;
 
-                $new_field_id = $new_field -> id;
+                    $new_field -> save();
 
-                // add inputs if user_text
-                if ($field['field_type'] == 'user_text') {
+                    $new_field_id = $new_field -> id;
 
-                    $new_field_input = new UserFieldsInputs();
+                    // add inputs if user_text
+                    if ($field['field_type'] == 'user_text') {
 
-                    $new_field_input -> file_id = $field['file_id'];
-                    $new_field_input -> group_id = $field['create_field_id'];
-                    $new_field_input -> file_type = 'user';
-                    $new_field_input -> field_type = $field['field_type'];
-                    $new_field_input -> input_value = $field['input_data']['value'];
-                    $new_field_input -> transaction_field_id = $new_field_id;
-                    $new_field_input -> Agent_ID = $new_field -> Agent_ID;
-                    $new_field_input -> Listing_ID = $new_field -> Listing_ID;
-                    $new_field_input -> Contract_ID = $new_field -> Contract_ID;
-                    $new_field_input -> transaction_type = $new_field -> transaction_type;
+                        $new_field_input = new UserFieldsInputs();
 
-                    $new_field_input -> save();
+                        $new_field_input -> file_id = $field['file_id'];
+                        $new_field_input -> group_id = $field['create_field_id'];
+                        $new_field_input -> file_type = 'user';
+                        $new_field_input -> field_type = $field['field_type'];
+                        $new_field_input -> input_value = $field['input_data']['value'];
+                        $new_field_input -> transaction_field_id = $new_field_id;
+                        $new_field_input -> Agent_ID = $new_field -> Agent_ID;
+                        $new_field_input -> Listing_ID = $new_field -> Listing_ID;
+                        $new_field_input -> Contract_ID = $new_field -> Contract_ID;
+                        $new_field_input -> transaction_type = $new_field -> transaction_type;
+
+                        $new_field_input -> save();
+
+                    }
 
                 }
 
             }
 
-        }
+        });
 
         return response() -> json(['status' => 'success']);
 

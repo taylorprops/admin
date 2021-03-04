@@ -2,20 +2,100 @@
 
 namespace App\Http\Controllers\DocManagement\Earnest;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use App\Models\DocManagement\Earnest\Earnest;
-use App\Models\DocManagement\Earnest\EarnestChecks;
-
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-
 use App\Models\Employees\Agents;
 
-use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\OldDB\OldEarnest;
+use App\Http\Controllers\Controller;
 
-class BalanceEarnestController extends Controller
-{
+use App\Models\DocManagement\Earnest\Earnest;
+
+use App\Models\DocManagement\Earnest\EarnestChecks;
+
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+
+class EarnestController extends Controller {
+
+    public function active_earnest(Request $request) {
+
+        $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts')
+            -> orderBy('resource_order')
+            -> get();
+
+        return view('/doc_management/earnest/active_earnest', compact('earnest_accounts'));
+
+    }
+
+    public function get_earnest_deposits(Request $request) {
+
+        $account_id = $request -> account_id;
+        $tab = $request -> tab;
+
+        $contracts_select = [
+            'Agent_ID',
+            'City',
+            'CloseDate',
+            'Contract_ID',
+            'ContractDate',
+            'ContractPrice',
+            'FullStreetAddress',
+            'PostalCode',
+            'SaleRent',
+            'StateOrProvince',
+            'Status',
+            'TransactionCoordinator_ID'
+        ];
+
+        // active and expired
+        $active_status_ids = [
+            ResourceItems::GetResourceID('Active', 'contract_status'),
+            ResourceItems::GetResourceID('Expired', 'contract_status')
+        ];
+
+        if($tab == 'active') {
+
+            $contracts = Contracts::select($contracts_select)
+                -> where('EarnestHeldBy', 'us')
+                -> whereIn('Status', $active_status_ids)
+                -> with('status:resource_id,resource_name');
+
+        } else if($tab == 'missing') {
+
+            $contracts = Contracts::select($contracts_select)
+                -> where('EarnestHeldBy', 'us')
+                -> whereIn('Status', $active_status_ids)
+                -> with('status:resource_id,resource_name');
+
+        } else if($tab == 'waiting') {
+
+            // waiting for release
+            $waiting_status_ids = [
+                ResourceItems::GetResourceID('Waiting For Release', 'contract_status')
+            ];
+
+            $contracts = Contracts::select($contracts_select)
+                -> whereIn('Status', $waiting_status_ids);
+
+        }
+
+        $contracts = $contracts -> with('agent')
+            -> with(['earnest' => function($query) use ($account_id, $tab) {
+                if($account_id != 'all') {
+                    $query -> where('earnest_account_id', $account_id);
+                }
+                if($tab == 'active') {
+                    $query -> where('amount_received', '>', '0');
+                } else if($tab == 'missing') {
+                    $query -> where('amount_received', '0.00');
+                }
+            }])
+            -> get();
+
+        return view('/doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));
+
+    }
+
     public function balance_earnest(Request $request) {
 
         return view('/doc_management/earnest/balance_earnest');
@@ -27,10 +107,15 @@ class BalanceEarnestController extends Controller
         // get totals for all accounts
         $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> orderBy('resource_order') -> get();
 
+        $earnest_old = OldEarnest::EarnestBalances();
+
         $earnest_account_totals = [];
         foreach($accounts as $account) {
 
             $account_total = Earnest::where('earnest_account_id', $account -> resource_id) -> where('amount_total', '>', 0) -> sum('amount_total');
+
+            $company = stristr($account -> resource_name, 'taylor') ? 'TP' : 'AAP';
+            $account_total += $earnest_old[$company.'_'.$account -> resource_state];
 
             $earnest_account_totals[] = [
                 'id' => $account -> resource_id,

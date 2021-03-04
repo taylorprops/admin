@@ -5,11 +5,26 @@ if(document.URL.match(/balance_earnest/)) {
         get_earnest_totals();
         get_earnest_checks();
 
+        $(document).on('click', '.refresh-accounts-button', function() {
+            refresh();
+        });
+
         $('#earnest_search_input').on('keyup', function() {
             search_earnest_checks($(this).val());
         });
 
         //////////// functions ////////////
+
+        function refresh() {
+
+            let active_index = $('.earnest-totals-tab.active').index();
+            $('.earnest-checks-container').hide();
+            $('.earnest-totals-container').html('<div class="list-group-item p-5 text-center text-gray"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>');
+            get_earnest_totals(active_index);
+            get_earnest_checks();
+            $('.earnest-checks-container').show();
+
+        }
 
         function get_earnest_totals(active_index = null) {
 
@@ -23,8 +38,7 @@ if(document.URL.match(/balance_earnest/)) {
             .then(function (response) {
                 $('.earnest-totals-container').html(response.data);
                 if(active_index) {
-                    $('.earnest-totals-tab.active').removeClass('active');
-                    $('.earnest-totals-tab').eq(active_index).addClass('active');
+                    $('.earnest-totals-tab').eq(active_index).trigger('click');
                 }
                 $('.earnest-totals-tab').on('click', function() {
                     $('html, body').animate({scrollTop:0}, 200, 'swing');
@@ -47,10 +61,10 @@ if(document.URL.match(/balance_earnest/)) {
             .then(function (response) {
 
                 $('.earnest-checks-container').html(response.data);
-                data_table($('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], [], true, true, true, false);
-                data_table($('.earnest-checks-table-out'), [1, 'desc'], [0, 7], [], true, true, true, false);
-                data_table($('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], [], true, true, true, true);
-                data_table($('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], [], true, true, true, true);
+                data_table('10', $('.earnest-checks-table-in'), [1, 'desc'], [0, 7, 8], [], true, true, true, false);
+                data_table('10', $('.earnest-checks-table-out'), [1, 'desc'], [0, 7], [], true, true, true, false);
+                data_table('10', $('.earnest-checks-table-in-recent'), [1, 'desc'], [0, 7, 8], [], true, true, true, true);
+                data_table('10', $('.earnest-checks-table-out-recent'), [1, 'desc'], [0, 7], [], true, true, true, true);
                 //form_elements();
 
                 $('.cleared-checkbox').on('change', function() {
@@ -75,6 +89,9 @@ if(document.URL.match(/balance_earnest/)) {
             let check_type = checkbox.data('check-type');
             let Earnest_ID = checkbox.data('earnest-id');
             let status = '';
+
+            $('.earnest-totals-tab.active').find('.account-total-amount').html('<i class="fas fa-spinner fa-pulse"></i>');
+
             checkbox.closest('.check-row').removeClass('cleared bounced');
             if(checkbox.is(':checked')) {
                 status = checkbox.val();

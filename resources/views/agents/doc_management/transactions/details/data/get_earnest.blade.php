@@ -36,16 +36,28 @@
 
             </div>
 
-            <div class="alert alert-info mb-0 font-12 in-escrow-alert">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>In Escrow</div>
-                    <div class="ml-3" id="in_escrow"></div>
+            <div>
+
+                <div class="alert alert-info mb-0 font-12 in-escrow-alert">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>In Escrow</div>
+                        <div class="ml-3" id="in_escrow"></div>
+                    </div>
                 </div>
+
+                <div class="mt-3 status-waiting">
+                    @if($hide_set_status_to_waiting)
+                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Set Status" data-content="Use this if the contract has been canceled but we have not received the release agreement."><i class="fad fa-question-circle ml-2"></i></a>
+                    <a href="javascript: void(0)" class="text-orange" id="show_set_status_to_waiting_button">Set Status to Waiting For Release</a>
+                    @endif
+                </div>
+
             </div>
 
         </div>
 
     </form>
+
 
     <div class="row">
         <div class="col-12 my-4">
@@ -109,4 +121,5 @@
 
 </div>
 
-<input type="hidden" id="Earnest_ID" name="Earnest_ID" value="{{ $earnest -> id }}" />
+<input type="hidden" id="Earnest_ID" name="Earnest_ID" value="{{ $earnest -> id }}" >
+<input type="hidden" id="earnest_mail_to_address" value="{{ $earnest_mail_to_address }}">

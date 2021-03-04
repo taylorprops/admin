@@ -30,6 +30,18 @@ class Contracts extends Model
         });
     }
 
+    public function agent() {
+        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
+    }
+
+    public function transaction_coordinator() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Members\TransactionCoordinators', 'id', 'TransactionCoordinator_ID');
+    }
+
+    public function earnest() {
+        return $this -> hasOne('App\Models\DocManagement\Earnest\Earnest', 'Contract_ID', 'Contract_ID');
+    }
+
     public function listing() {
         return $this -> hasOne('App\Models\DocManagement\Transactions\Listings\Listings', 'Listing_ID', 'Listing_ID');
     }

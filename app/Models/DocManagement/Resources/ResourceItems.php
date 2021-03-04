@@ -17,6 +17,10 @@ class ResourceItems extends Model
     public $timestamps = false;
     protected $guarded = [];
 
+    public function uploads() {
+        return $this -> hasMany('App\Models\DocManagement\Create\Upload\Upload', 'form_group_id', 'resource_id') -> where(['published' => 'yes', 'active' => 'yes']) -> orderBy('file_name_display');
+    }
+
     public function earnest() {
         return $this -> hasMany('App\Models\DocManagement\Earnest\Earnest', 'earnest_account_id', 'resource_id') -> with('checks') ;
     }

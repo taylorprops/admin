@@ -118,8 +118,13 @@ class TransactionChecklists extends Model
 
         }
 
-        // if not an item from old checklist that is transferred to new, add to new checklist`
+        // if not an item from old checklist that is transferred to new, add to new checklist
+        $required_count = 0;
         foreach($items as $item) {
+
+            if($item -> checklist_item_required == 'yes') {
+                $required_count += 1;
+            }
 
             if(!in_array($item -> checklist_form_id, $keep_form_ids)) {
 
@@ -143,6 +148,7 @@ class TransactionChecklists extends Model
 
         }
 
+
         // update required items if lead, hoa, etc
         $form_tags = ResourceItems::where('resource_type', 'form_tags') -> get();
 
@@ -153,6 +159,9 @@ class TransactionChecklists extends Model
         } else if($checklist_type == 'referral') {
             $property = Referrals::find($Referral_ID);
         }
+
+        $property -> DocsMissingCount = $required_count;
+        $property -> save();
 
         // set all tagged items to not required
         $if_applicable = [];

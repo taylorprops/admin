@@ -118,7 +118,7 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex justify-content-center w-100 h-100">
-                            <button id="save_required_details" class="waves-effect waves-light btn btn-lg btn-primary">Continue <i class="fal fa-arrow-circle-right ml-3"></i></button>
+                            <button id="save_required_details" class="waves-effect waves-light btn btn-lg btn-primary p-4 font-13">Continue <i class="fal fa-arrow-circle-right ml-3"></i></button>
                         </div>
                     </div>
                 </div>

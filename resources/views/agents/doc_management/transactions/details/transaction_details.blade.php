@@ -169,6 +169,31 @@
     </div>
 </div>
 
+
+{{-- set status to waiting for release --}}
+<div class="modal fade draggable" id="set_status_to_waiting_modal" tabindex="-1" role="dialog" aria-labelledby="set_status_to_waiting_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="set_status_to_waiting_title">Cancel Contract</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container text-center">
+                    This will cancel the contract and set the status to<br>"Waitng For Release".<br><br>
+                    Are you sure you want to cancel this?
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-success modal-confirm-button" id="confirm_set_status_to_waiting_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- details --}}
 {{-- import property data from mls --}}
 <div class="modal fade draggable" id="confirm_import_modal" tabindex="-1" role="dialog" aria-labelledby="import_title" aria-hidden="true">

@@ -24,6 +24,7 @@ if($transaction_type == 'listing') {
 }
 
 $status = $resource_items -> GetResourceName($property -> Status);
+
 @endphp
 <div class="row mt-1 mt-sm-5">
 
@@ -95,7 +96,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                     }
                     @endphp
                     <div>
-                        <span class="badge {{ $header_status_class }} text-white mr-2 font-12"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
+                        <span class="{{ $header_status_class }} text-white mr-2 font-13 rounded px-3 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
                     </div>
 
                     @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'listing_status') || $property -> Status == $resource_items -> GetResourceID('Withdrawn', 'listing_status'))
@@ -131,7 +132,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                         @elseif($property -> Status == $resource_items -> GetResourceID('Cancel Pending', 'contract_status'))
 
-                            <span class="badge bg-orange text-white mr-2 font-12"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</span>
+                            <span class="bg-orange text-white mr-2 font-13 rounded px-3 py-2"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</span>
                             <div class="mx-3 mt-1">
                                 <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                             </div>
@@ -143,13 +144,17 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                         @elseif($property -> Status == $resource_items -> GetResourceID('Released', 'contract_status') || $property -> Status == $resource_items -> GetResourceID('Canceled', 'contract_status'))
 
-                            <span class="badge bg-danger text-white mr-2 font-13"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</span>
+                            <span class="bg-danger text-white mr-2 font-13 rounded px-3 py-2"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</span>
                             <div class="mx-3 mt-1">
                                 <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                             </div>
 
+                        @elseif($property -> Status == $resource_items -> GetResourceID('Closed', 'contract_status'))
+
+                            <span class="bg-success text-white mr-2 font-13 rounded px-3 py-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</span>
+
                         @else
-                            <span class="badge bg-primary text-white mr-2 font-13"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span>
+                            <span class="bg-primary text-white mr-2 font-13 rounded px-3 py-2"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span>
                         @endif
 
                         @if($property -> Listing_ID > 0 && $property -> Contract_ID > 0)
@@ -211,7 +216,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                     @else
 
                         <div>
-                            <span class="badge {{ $header_status_class }} text-white mr-2 font-12"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
+                            <span class="{{ $header_status_class }} text-white mr-2 font-13 rounded px-3 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
                         </div>
 
                         @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'referral_status'))

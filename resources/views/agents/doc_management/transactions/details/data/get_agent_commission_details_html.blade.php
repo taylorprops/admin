@@ -2,7 +2,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="font-12 text-orange">Income</div>
+            <div class="font-12 text-success">Income</div>
         </div>
     </div>
 
@@ -43,7 +43,7 @@
         <div class="col-8 font-weight-bold font-10">
             Total In
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end font-weight-bold">
             ${{ number_format($breakdown -> total_income, 2) ?? '0.00' }}
         </div>
     </div>
@@ -66,11 +66,11 @@
 
     @endif
 
-    <div class="row d-flex align-items-center client-paid-admin {{-- @if(!$is_rental) hidden @endif --}}">
+    <div class="row d-flex align-items-center client-paid-admin mt-3">
         <div class="col-8 text-success font-10">
             Commission In Total
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end font-weight-bold">
             ${{ number_format($breakdown -> sub_total, 2) }}
         </div>
     </div>
@@ -83,7 +83,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="font-12 text-orange">Deductions</div>
+            <div class="font-12 text-danger">Deductions</div>
         </div>
     </div>
 
@@ -100,7 +100,7 @@
     @endif
 
     @if(!$is_referral_company)
-        <div class="row d-flex align-items-center agent-paid-admin">
+        <div class="row d-flex align-items-center">
             <div class="col-8">
                 Admin Fee Paid By Agent
             </div>
@@ -113,7 +113,7 @@
 
     @if($is_referral_company)
         {{-- 15% referral fee for referral company agents --}}
-        <div class="row d-flex align-items-center agent-paid-admin">
+        <div class="row d-flex align-items-center">
             <div class="col-8">
                 15% Transaction Fee
             </div>
@@ -127,13 +127,7 @@
 
         <div class="col-12">
 
-            <div class="row">
-                <div class="col-12">
-                    <input type="checkbox" class="custom-form-element form-checkbox" disabled data-label="Send Check by FedEx ($22.00)" @if($breakdown -> add_fedex == 'on') checked @endif>
-                </div>
-            </div>
-
-            <div id="deduction_container">
+            <div class="border-top border-bottom py-2 mb-3">
 
                 @php
                 $deductions = $breakdown -> deductions;
@@ -143,18 +137,20 @@
 
                     @foreach($deductions as $deduction)
 
-                        <div class="row d-flex align-items-center no-gutters template">
-                            <div class="col-7">
+                        <div class="row d-flex align-items-center no-gutters deduction-row">
+                            <div class="col-7 deduction-description">
                                 {{ $deduction -> description }}
                             </div>
-                            <div class="col-5 d-flex justify-content-end">
+                            <div class="col-5 d-flex justify-content-end deduction-amount">
                                 ${{ number_format($deduction -> amount, 2) }}
                             </div>
-                    </div>
+                        </div>
 
                     @endforeach
 
                 @endif
+
+                <a href="javascript:void(0)" class="export-deductions-button"><i class="fal fa-plus mr-2"></i> Add Deductions To Breakdown</a>
 
             </div>
 
@@ -166,7 +162,7 @@
         <div class="col-8">
             <span class="text-danger font-10">Deductions Total</span>
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end font-weight-bold">
             ${{ number_format($breakdown -> commission_deductions_total, 2) }}
         </div>
     </div>
@@ -177,11 +173,11 @@
         </div>
     </div>
 
-    <div class="row d-flex align-items-center border-top mt-3 p-4 bg-success text-white commission-total-row">
+    <div class="row d-flex align-items-center border-top mt-3 p-4 bg-success text-white ">
         <div class="col-8">
             <span class="font-weight-bold font-11">Total Commission To Agent</span>
         </div>
-        <div class="col-4 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end font-weight-bold">
             ${{ number_format($breakdown -> total_commission_to_agent, 2) }}
         </div>
     </div>
@@ -190,18 +186,22 @@
 
         <div class="col-12">
 
-            <div class="font-12 text-orange mt-5 mb-4">Commission Check Details</div>
+            <div class="font-12 text-orange mt-4 mb-2">Commission Check Details</div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div>Make Check Payable To</div>
+            <div class="row d-flex align-items-center">
+                <div class="col-8">
+                    Make Check Payable To
+                </div>
+                <div class="col-4 d-flex justify-content-end">
                     {{ $breakdown -> check_payable_to }}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div>How would you like to receive your commission check?</div>
+            <div class="row d-flex align-items-center">
+                <div class="col-8">
+                    Check Delivery Method
+                </div>
+                <div class="col-4 d-flex justify-content-end">
                     {{ ucwords($breakdown -> delivery_method) }}
                 </div>
             </div>
@@ -209,17 +209,11 @@
             @if($breakdown -> delivery_method == 'mail' || $breakdown -> delivery_method == 'fedex')
 
                 <div class="row">
-                    <div class="col-12">
-                        <div>Mailing address</div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                {{ $breakdown -> check_mail_to_street }}
-                                <br>
-                                {{ $breakdown -> check_mail_to_city }}, {{ $breakdown -> check_mail_to_state }} {{ $breakdown -> check_mail_to_zip }}
-                            </div>
-                        </div>
-
+                    <div class="col-4">
+                        Mail To
+                    </div>
+                    <div class="col-8 d-flex justify-content-end">
+                        {{ $breakdown -> check_mail_to_street }} {{ $breakdown -> check_mail_to_city }}, {{ $breakdown -> check_mail_to_state }} {{ $breakdown -> check_mail_to_zip }}
                     </div>
                 </div>
 

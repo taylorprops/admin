@@ -14,7 +14,7 @@
                 <div>{{ $earnest_account_total['account_number'] }}</div>
                 <div>{{ get_initials($earnest_account_total['company']) }}</div>
             </div>
-            <div class="font-weight-bold">${{ number_format($earnest_account_total['total'], 2) }}</div>
+            <div class="font-weight-bold account-total-amount">${{ number_format($earnest_account_total['total'], 2) }}</div>
         </div>
 
     </a>

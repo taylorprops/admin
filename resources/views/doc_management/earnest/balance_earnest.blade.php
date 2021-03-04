@@ -13,7 +13,17 @@
 
             <div class="earnest-key">
 
-                <div class="earnest-search">
+                <div class="earnest-totals">
+
+                    <h4 class="text-primary mb-3">Accounts</h4>
+
+                    <div class="list-group earnest-totals-container animate__animated animate__fadeIn" role="tablist">
+                        <div class="list-group-item p-5 text-center text-gray"><i class="fas fa-spinner fa-pulse fa-2x"></i></div>
+                    </div>
+
+                </div>
+
+                <div class="earnest-search mt-5">
 
                     <h4 class="text-primary mb-3">Search All Deposits</h4>
 
@@ -29,21 +39,13 @@
 
                 </div>
 
-                <div class="earnest-totals mt-5">
-
-                    <h4 class="text-primary mb-3">Account Balances</h4>
-
-                    <div class="list-group earnest-totals-container" role="tablist"></div>
-
-                </div>
-
             </div>
 
         </div>
 
         <div class="col-12 col-xl-9">
 
-            <div class="earnest-checks-container tab-content">
+            <div class="earnest-checks-container tab-content animate__animated animate__fadeIn">
 
             </div>
 

@@ -1,4 +1,4 @@
-.page-balance-earnest {
+.page-earnest {
 
     .earnest-key {
         position: sticky;
@@ -42,10 +42,10 @@
     .check-row {
 
         &.cleared {
-            background: rgba($green, .1);
+            background: rgb(176 255 176 / 25%);
         }
         &.bounced {
-            background: rgba($red, .1);
+            background: rgb(245 80 64 / 8%);
         }
 
     }

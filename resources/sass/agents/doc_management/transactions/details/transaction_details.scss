@@ -130,6 +130,7 @@
         top: 0px;
         left: 0px;
         width: 95%;
+        z-index: 5;
     }
 
     /* #options_tab_content {
@@ -602,7 +603,7 @@
         z-index: -1;
         left: -3px;
         border-radius: 8px;
-        min-height: 150px;
+        min-height: 250px;
 
         &.top {
             top: -3rem;

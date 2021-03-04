@@ -321,7 +321,7 @@
                                 <div class="row mb-5">
                                     <div class="col-12">
                                         <div>Make Check Payable To</div>
-                                        <input type="text" class="custom-form-element form-input required" id="check_payable_to" name="check_payable_to" value="@if($breakdown -> check_payable_to != '') {{ $breakdown -> check_payable_to }} @else {{ $agent -> llc_name ?? $agent -> fullname }} @endif">
+                                        <input type="text" class="custom-form-element form-input required" id="check_payable_to" name="check_payable_to" value="@if($breakdown -> check_payable_to != '') {{ $breakdown -> check_payable_to }} @elseif($agent -> llc_name != '') {{ $agent -> llc_name }} @else {{ $agent -> full_name }} @endif">
                                     </div>
                                 </div>
 

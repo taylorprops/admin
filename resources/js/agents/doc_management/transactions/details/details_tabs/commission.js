@@ -19,14 +19,14 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         });
 
 
-        /* $(document).on('mouseup', function (e) {
-            var container = $('.popout-row');
+        $(document).on('mouseup', function (e) {
+            var container = $('.popout-row, .modal-backdrop, .modal, .export-deductions-button');
             if (!container.is(e.target) && container.has(e.target).length === 0) {
                 $('.popout-action, .popout').removeClass('active bg-blue-light lightSpeedInRight lightSpeedOutRight');
                 $('.popout').hide();
                 $('.commission-details-tabs').animate({ opacity: '1' });
             }
-        }); */
+        });
 
 
     });
@@ -74,6 +74,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
 
+        $(document).on('click', '.export-deductions-button', add_deductions_to_breakdown);
+
 
         numbers_only();
 
@@ -89,6 +91,44 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
                 $(this).val('$0.00');
             }
         });
+    }
+
+    window.add_deductions_to_breakdown = function() {
+
+        let Commission_ID = $('#Commission_ID').val();
+        if($('#Commission_Other_ID').length > 0) {
+            Commission_ID = $('#Commission_Other_ID').val();
+        }
+
+        $('.deduction-row').each(function() {
+
+            let description = $(this).find('.deduction-description').text();
+            let amount = $(this).find('.deduction-amount').text();
+
+            let formData = new FormData();
+            formData.append('Commission_ID', Commission_ID);
+            formData.append('description', description);
+            formData.append('amount', amount);
+
+            axios.post('/agents/doc_management/transactions/save_add_commission_deduction', formData, axios_options)
+            .then(function (response) {
+            })
+            .catch(function (error) {
+
+            });
+
+        });
+
+        $('.commission-popout-button').trigger('click');
+        document.getElementById('commission_deductions_popout').scrollIntoView();
+
+        toastr['success']('Deduction Successfully Added');
+
+        setTimeout(function() {
+            get_commission_deductions(Commission_ID);
+            save_commission('no');
+        }, 500);
+
     }
 
     window.get_agent_commission_details = function(Commission_ID) {
@@ -255,6 +295,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             if(show_toastr_commission == 'yes') {
                 toastr['success']('Commission Details Successfully Saved');
             }
+            load_details_header();
             /* if(page == 'details') {
                 load_tabs('details');
             } */

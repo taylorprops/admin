@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d644dd5a5b39cf2087ae75d251dcbded",
+    "content-hash": "15462fb3ed292185f7301138686f76b6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6042,6 +6042,57 @@
                 }
             ],
             "time": "2021-01-27T10:15:41+00:00"
+        },
+        {
+            "name": "therezor/laravel-transactional-jobs",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/therezor/laravel-transactional-jobs.git",
+                "reference": "c185efc1cea994447deec5e66b43802aa0e8babc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/therezor/laravel-transactional-jobs/zipball/c185efc1cea994447deec5e66b43802aa0e8babc",
+                "reference": "c185efc1cea994447deec5e66b43802aa0e8babc",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.8|^6.0|^7.0|^8.0",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TheRezor\\TransactionalJobs\\BusServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TheRezor\\TransactionalJobs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Nagirnyi",
+                    "email": "rnagirnyi@smartcats.pro"
+                }
+            ],
+            "description": "Submit laravel jobs inside transaction. Cancel job after rollback. Proceed after successful commit.",
+            "support": {
+                "issues": "https://github.com/therezor/laravel-transactional-jobs/issues",
+                "source": "https://github.com/therezor/laravel-transactional-jobs/tree/1.1.2"
+            },
+            "time": "2021-01-27T08:45:00+00:00"
         },
         {
             "name": "thiagoalessio/tesseract_ocr",

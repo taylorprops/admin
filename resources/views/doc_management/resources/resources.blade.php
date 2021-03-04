@@ -176,7 +176,7 @@
 
                                             @if($resources_item -> resource_account_number != '')
                                             <div class="col px-1">
-                                                <input type="text" class="custom-form-element form-input edit-resource-account-number" value="{{ $resources_item -> resource_account_number }}" data-default-value="{{ $resources_item -> resource_account_number }}" data-label="County Abbr">
+                                                <input type="text" class="custom-form-element form-input edit-resource-account-number" value="{{ $resources_item -> resource_account_number }}" data-default-value="{{ $resources_item -> resource_account_number }}" data-label="Account Number">
                                             </div>
                                             @endif
 

@@ -820,8 +820,8 @@ if (document.URL.match(/edit_files/)) {
 
             // set inline styles for PDF
             // system fields
-            let font_size = '14px';
-            let top = '0px';
+            let font_size = '13px';
+            let top = '3px';
             if($('#page_size').val() == 'a4') {
                 font_size = '12px';
                 top = '3px';
@@ -844,20 +844,24 @@ if (document.URL.match(/edit_files/)) {
             $('.data-div.system-html').not('.inline-editor').css({
                 'text-align': 'center'
             });
+            $('.inline-editor').css({
+                'font-size': font_size
+            });
             $('.data-div-checkbox').css({
                 'display': 'block',
                 'height': '100%',
                 'width': '100%',
-                'margin-left': '1px',
-                'margin-top': '3px',
+                'margin-left': '2px',
+                'margin-top': '1px',
                 'color': '#000',
-                'font-size': '1.3em',
+                'font-size': '1.4em',
                 'line-height': '35%',
                 'font-weight': 'bold',
                 'font-family': font_family
             });
             $('.data-div-radio').css({
-                'margin-left': '1px',
+                'margin-left': '2px',
+                'margin-top': '2px',
                 'color': '#000',
                 'font-size': '1.3em',
                 'line-height': '40%',

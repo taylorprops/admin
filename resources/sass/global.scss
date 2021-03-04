@@ -7,6 +7,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 .page-container {
@@ -24,31 +25,33 @@ html {
 
 }
 
-@media (max-width: 767.98px) {
-    body {
-        font-size: .9rem;
-    }
 
-}
 
-@media (max-width: 991.98px) {
-    html {
-        font-size: .9rem;
-    }
-}
 
-@media (max-width: 1199.98px) {
-    html {
-        font-size: 1rem;
-    }
-}
+
+
 
 body {
     padding-top: 55px;
 
 }
 
+@media (max-width: 768px) {
+    body {
+        font-size: .7rem;
+    }
 
+}
+
+@media (max-width: 992px) and  (min-width: 769px) {
+    body {
+        font-size: .9rem;
+    }
+}
+
+@media (max-width: 11200px) and (min-width: 993px) {
+
+}
 
 h1,
 h2,
@@ -319,6 +322,35 @@ div[class*='container-'] {
     font-size: .7rem;
 }
 
+@media (max-width: 768px) {
+
+    .font-14 {
+        font-size: 1.1rem;
+    }
+
+    .font-13 {
+        font-size: 1.0rem;
+    }
+
+    .font-12 {
+        font-size: 1.0rem;
+    }
+
+    .font-11 {
+        font-size: 0.9rem;
+    }
+
+    .font-10 {
+        font-size: 0.8rem;
+    }
+
+    .font-9 {
+        font-size: 0.8rem;
+    }
+
+}
+
+
 .container {
     animation: fadeIn 0.5s;
 }
@@ -404,26 +436,30 @@ a.ck.ck-button {
 
     h1,
     .h1 {
-        font-size: 1.7rem;
+        font-size: 1.3rem;
     }
 
     h2,
     .h2 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     h3,
     .h3 {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
 
     h4,
     .h4 {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 
     h5,
     .h5 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    a {
+        font-size: .8rem !important;
     }
 }

@@ -16,9 +16,11 @@ use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
 use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
 
 class AddFieldAndInputs implements ShouldQueue {
+
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    //protected $queue_name;
+    public $tries = 5;
+
     protected $file_id;
     protected $new_file_id;
     protected $Agent_ID;

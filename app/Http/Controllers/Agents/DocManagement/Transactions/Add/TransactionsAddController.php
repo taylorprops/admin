@@ -38,17 +38,25 @@ class TransactionsAddController extends Controller {
 
     public function add_transaction(Request $request) {
 
-        $transaction_type_header = 'Contract/Lease';
         $transaction_type = $request -> type;
+
+        $agents = Agents::where('active', 'yes');
+
         if($transaction_type == 'listing') {
             $transaction_type_header = 'Listing';
+            $agents = $agents -> where('company', 'not like', '%referral%');
+        } else if($transaction_type == 'contract') {
+            $transaction_type_header = 'Contract/Lease';
+            $agents = $agents -> where('company', 'not like', '%referral%');
         } else if($transaction_type == 'referral') {
             $transaction_type_header = 'Referral Agreement';
         }
 
+        $agents = $agents -> orderBy('last_name') -> get();
+
         $states = LocationData::ActiveStates();
 
-        $agents = Agents::where('active', 'yes') -> orderBy('last_name') -> get();
+
 
         return view('/agents/doc_management/transactions/add/transaction_add', compact('transaction_type', 'transaction_type_header', 'states', 'agents'));
     }
@@ -943,9 +951,17 @@ class TransactionsAddController extends Controller {
             $checklist_hoa_condo = $property -> HoaCondoFees;
             $checklist_year_built = $property -> YearBuilt;
 
-            // TODO: if earnest
+            // TODO: notify admin
             // if holding earnest
-            // notify
+            // add earnest account id to earnest
+            if($request -> EarnestHeldBy == 'us') {
+                $earnest_account_id = ResourceItems::where('resource_type', 'earnest_accounts')
+                    -> where('resource_state', $property -> StateOrProvince)
+                    -> where('resource_name', $agent -> company)
+                    -> pluck('resource_id');
+
+                $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id[0]]);
+            }
 
         }
 

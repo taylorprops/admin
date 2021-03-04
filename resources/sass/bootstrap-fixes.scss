@@ -188,6 +188,11 @@ body.modal-open {
 }
 
 // datatables
+
+.table.responsive {
+    width: 100%;
+}
+
 .dataTables_wrapper {
 
     .dt-buttons .btn {
@@ -257,6 +262,12 @@ body.modal-open {
     }
 
 
+}
+
+@media (max-width: 768px) {
+    div.dataTables_filter input {
+        width: 100px !important;
+    }
 }
 
 @media(max-width: 1200px) {

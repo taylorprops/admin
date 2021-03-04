@@ -59,6 +59,7 @@ class RouteServiceProvider extends ServiceProvider
             require base_path('routes/admin/doc_management/doc_management.php');
             require base_path('routes/agents/doc_management/doc_management.php');
             require base_path('routes/admin/cron.php');
+            require base_path('routes/esign/esign.php');
         });
     }
 

@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\CheckEmailedDocuments',
+        'App\Console\Commands\DocManagement\ExpireListings',
     ];
 
     /**
@@ -30,6 +31,10 @@ class Kernel extends ConsoleKernel
         $schedule -> exec('sudo find '.base_path().'/storage/app/public/doc_management/transactions/contracts/*/emailed_docs/* -mtime +2 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find '.base_path().'/storage/app/public/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
+
+        // set listings to expired
+        $schedule -> command('doc_management:expire_listings') -> dailyAt('00:01');
+
     }
 
     /**

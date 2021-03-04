@@ -26,6 +26,10 @@ class Referrals extends Model
         return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
     }
 
+    public function transaction_coordinator() {
+        return $this -> hasOne('App\Models\DocManagement\Transactions\Members\TransactionCoordinators', 'id', 'TransactionCoordinator_ID');
+    }
+
     public function status() {
         return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
     }

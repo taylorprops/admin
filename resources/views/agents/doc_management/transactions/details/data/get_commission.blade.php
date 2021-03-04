@@ -403,7 +403,7 @@
 
                     <div class="col-5">
                         <div class="d-flex justify-content-end align-items-center mt-3">
-                            <div class="text-primary text-right show-view-add-button">
+                            <div class="text-success font-12 text-right show-view-add-button">
                                 Checks In
                             </div>
                             <div>
@@ -568,7 +568,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="p-1 p-sm-2 p-md-4">
+                                    <div class="bg-white p-2 mt-3">
                                         <div class="list-group check-deductions-div"></div>
                                     </div>
 
@@ -748,7 +748,7 @@
                         <div class="popout-action pr-1 pr-lg-4 py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <a href="javascript: void(0)" class="btn btn-primary show-view-add-button toggle-agent-info">View/Add <i class="fal fa-plus ml-2"></i></a>
+                                    <a href="javascript: void(0)" class="btn btn-primary show-view-add-button toggle-agent-info commission-popout-button">View/Add <i class="fal fa-plus ml-2"></i></a>
                                 </div>
                                 <div class="badge badge-pill badge-primary py-1" id="commission_deductions_count"></div>
                                 <div class="mr-2 font-10 text-danger">
@@ -768,7 +768,7 @@
 
                 <div class="pr-2">
 
-                    <div class="popout-div mr-3 h-100">
+                    <div class="popout-div mr-3 h-100" id="commission_deductions_popout">
 
                         <div class="popout top animate__animated animate__fast animate__lightSpeedInRight w-100">
 
@@ -777,107 +777,111 @@
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="h4 mt-2 text-primary">Commission Deductions</div>
                                     <div class="ml-4">
-                                        <a class="btn btn-success" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
+                                        <a class="btn btn-success" id="show_add_commission_deduction_button" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
                                     </div>
                                 </div>
 
 
-                                <div class="row">
+                                <div class="bg-white p-2 mt-2">
 
-                                    <div class="col-7">
+                                    <div class="row">
 
-                                        <div class="view-add-div">
+                                        <div class="col-7">
 
-                                            <div class="collapse" id="add_commission_deduction_div">
+                                            <div class="view-add-div">
 
-                                                <div class="bg-white rounded p-2 mt-3">
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-8">
-                                                            <input type="text" class="custom-form-element form-input required" name="commission_deduction_description" id="commission_deduction_description" data-label="Enter Description">
+                                                <div class="collapse" id="add_commission_deduction_div">
+
+                                                    <div class="bg-white rounded p-2 mt-3">
+                                                        <div class="row">
+                                                            <div class="col-12 col-md-8">
+                                                                <input type="text" class="custom-form-element form-input required" name="commission_deduction_description" id="commission_deduction_description" data-label="Enter Description">
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="commission_deduction_amount" id="commission_deduction_amount" data-label="Enter Amount">
+                                                            </div>
                                                         </div>
-                                                        <div class="col-12 col-md-4">
-                                                            <input type="text" class="custom-form-element form-input money-decimal numbers-only required" name="commission_deduction_amount" id="commission_deduction_amount" data-label="Enter Amount">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="d-flex justify-content-around align-items-center">
-                                                                <div>
-                                                                    <a href="javascript: void(0);" class="btn btn-primary" id="save_add_commission_deduction_button"><i class="fad fa-save mr-2"></i> Save</a>
-                                                                    <a class="btn btn-sm btn-danger" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-ban"></i></a>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="d-flex justify-content-around align-items-center">
+                                                                    <div>
+                                                                        <a href="javascript: void(0);" class="btn btn-primary" id="save_add_commission_deduction_button"><i class="fad fa-save mr-2"></i> Save</a>
+                                                                        <a class="btn btn-sm btn-danger" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-ban"></i></a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
 
-                                            </div>
+                                                <div class="p-1 p-sm-2 p-md-4">
+                                                    <div class="list-group commission-deductions-div"></div>
+                                                </div>
 
-                                            <div class="p-1 p-sm-2 p-md-4">
-                                                <div class="list-group commission-deductions-div"></div>
-                                            </div>
+                                                <div class="col-12 mt-3">
 
-                                            <div class="col-12 mt-3">
+                                                    @if($agent_details -> owe_other == 'yes')
+                                                        <div class="wage-garnishments p-1 mt-1 bg-orange-light text-danger rounded">{!! nl2br($agent_details -> owe_other_notes) !!}</div>
+                                                    @endif
 
-                                                @if($agent_details -> owe_other == 'yes')
-                                                    <div class="wage-garnishments p-1 mt-1 bg-orange-light text-danger rounded">{!! nl2br($agent_details -> owe_other_notes) !!}</div>
-                                                @endif
+                                                </div>
 
                                             </div>
 
                                         </div>
 
-                                    </div>
+                                        <div class="col-5">
 
-                                    <div class="col-5">
+                                            <div class="p-2 text-gray">
 
-                                        <div class="p-2 text-gray">
+                                                @if(!stristr($agent_details -> company, 'referral'))
 
-                                            @if(!stristr($agent_details -> company, 'referral'))
+                                                    <div class="row">
 
-                                                <div class="row">
+                                                        <div class="col-12">
+                                                            @if($type == 'sale' || $type == 'referral')
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div>Admin Fee Amount</div>
+                                                                    <div>${{ $for_sale ? $agent_details -> admin_fee : $agent_details -> admin_fee_rentals }}</div>
+                                                                </div>
+                                                            @endif
+                                                            <div class="d-flex justify-content-between @if($agent_details -> balance > 0) text-danger @endif">
+                                                                <div>Balance Dues</div>
+                                                                <div>${{ number_format($agent_details -> balance, 2) ?? '0.00' }}</div>
+                                                            </div>
 
-                                                    <div class="col-12">
-                                                        @if($type == 'sale' || $type == 'referral')
+                                                            <div class="d-flex justify-content-between @if($agent_details -> balance_eno > 0) text-danger @endif">
+                                                                <div>Balance E&O</div>
+                                                                <div>${{ number_format($agent_details -> balance_eno, 2) ?? '0.00' }}</div>
+                                                            </div>
+
+                                                            @if($agent_details -> office_rent_amount > 0 || $agent_details -> balance_rent != 0)
+                                                                <div class="d-flex justify-content-between @if($agent_details -> balance_rent > 0) text-danger @endif">
+                                                                    <div>Balance Rent</div>
+                                                                    <div>${{ number_format($agent_details -> balance_rent, 2) ?? '0.00' }}</div>
+                                                                </div>
+                                                            @endif
+
+                                                            <hr class="my-1">
+
                                                             <div class="d-flex justify-content-between">
-                                                                <div>Admin Fee Amount</div>
-                                                                <div>${{ $for_sale ? $agent_details -> admin_fee : $agent_details -> admin_fee_rentals }}</div>
+                                                                <div>Auto Billed</div>
+                                                                <div>{{ $agent_details -> auto_bill == 'on' ? 'Yes' : 'No' }}</div>
                                                             </div>
-                                                        @endif
-                                                        <div class="d-flex justify-content-between @if($agent_details -> balance > 0) text-danger @endif">
-                                                            <div>Balance Dues</div>
-                                                            <div>${{ number_format($agent_details -> balance, 2) ?? '0.00' }}</div>
-                                                        </div>
 
-                                                        <div class="d-flex justify-content-between @if($agent_details -> balance_eno > 0) text-danger @endif">
-                                                            <div>Balance E&O</div>
-                                                            <div>${{ number_format($agent_details -> balance_eno, 2) ?? '0.00' }}</div>
-                                                        </div>
-
-                                                        @if($agent_details -> office_rent_amount > 0 || $agent_details -> balance_rent != 0)
-                                                            <div class="d-flex justify-content-between @if($agent_details -> balance_rent > 0) text-danger @endif">
-                                                                <div>Balance Rent</div>
-                                                                <div>${{ number_format($agent_details -> balance_rent, 2) ?? '0.00' }}</div>
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>Commission</div>
+                                                                <div>{{ ucwords($agent_details -> commission_percent) }}% - Plan {{ ucwords($agent_details -> commission_plan) }}</div>
                                                             </div>
-                                                        @endif
 
-                                                        <hr class="my-1">
-
-                                                        <div class="d-flex justify-content-between">
-                                                            <div>Auto Billed</div>
-                                                            <div>{{ $agent_details -> auto_bill == 'on' ? 'Yes' : 'No' }}</div>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-between">
-                                                            <div>Commission</div>
-                                                            <div>{{ ucwords($agent_details -> commission_percent) }}% - Plan {{ ucwords($agent_details -> commission_plan) }}</div>
                                                         </div>
 
                                                     </div>
 
-                                                </div>
+                                                @endif
 
-                                            @endif
+                                            </div>
 
                                         </div>
 
@@ -967,7 +971,7 @@
                 <div class="row">
 
                     <div class="col-5 text-gray">
-                        <div class="text-primary mt-3 text-right show-view-add-button toggle-agent-info">
+                        <div class="text-danger font-12 mt-3 text-right show-view-add-button toggle-agent-info">
                             Checks Out
                         </div>
                     </div>

@@ -4,7 +4,7 @@
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Completed" data-content="These are your completed envelopes. They have been sgined by all parties."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
-<div class="mb-5">
+<div class="mb-5 table-responsive text-nowrap">
 
     <table id="completed_table" class="table table-bordered" width="100%">
 
