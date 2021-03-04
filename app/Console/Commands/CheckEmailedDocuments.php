@@ -56,6 +56,7 @@ class CheckEmailedDocuments extends Command
     }
 
     public function get_emailed_docs_from_server() {
+
         $username = config('mail_server.mail_server.username');
         $password = config('mail_server.mail_server.password');
         $server = config('mail_server.mail_server.address');
@@ -155,7 +156,7 @@ class CheckEmailedDocuments extends Command
 
                             // add emailed_docs folder
                             if(!Storage::disk('public') -> exists($emailed_docs_folder)){
-                                Storage::disk('public') -> makeDirectory($emailed_docs_folder);
+                                Storage::disk('public') -> makeDirectory($emailed_docs_folder, 0755);
                             }
 
                             foreach($attachments as $attachment) {
@@ -222,5 +223,7 @@ class CheckEmailedDocuments extends Command
             }
 
         }
+
+        return true;
     }
 }
