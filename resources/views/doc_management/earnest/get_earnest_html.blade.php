@@ -28,19 +28,15 @@
 
                     @php $earnest_account = $earnest -> earnest_account; @endphp
 
-                    {{-- @if($earnest -> amount_total > 0) --}}
-
-                        <tr>
-                            <td><a class="btn btn-primary" href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract?tab=earnest"><i class="fal fa-eye mr-2"></i> View</a></td>
-                            <td>{{ $earnest_account -> resource_state.' - '.$earnest_account -> resource_name }}</td>
-                            <td>{{ $agent }}</td>
-                            <td>{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</td>
-                            <td>${{ number_format($earnest -> amount_received) }}</td>
-                            <td>{{ date_mdy($contract -> ContractDate) }}</td>
-                            <td>{{ $status }}</td>
-                        </tr>
-
-                   {{--  @endif --}}
+                    <tr>
+                        <td><a class="btn btn-primary" href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract?tab=earnest"><i class="fal fa-eye mr-2"></i> View</a></td>
+                        <td>{{ $earnest_account -> resource_state.' - '.$earnest_account -> resource_name }}</td>
+                        <td>{{ $agent }}</td>
+                        <td>{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</td>
+                        <td>${{ number_format($earnest -> amount_received) }}</td>
+                        <td>{{ date_mdy($contract -> ContractDate) }}</td>
+                        <td>{{ $status }}</td>
+                    </tr>
 
                 @endif
 

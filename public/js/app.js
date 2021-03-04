@@ -45561,7 +45561,8 @@ if (document.URL.match(/transaction_required_details/)) {
     if (validate == 'yes') {
       var formData = new FormData(form[0]);
       axios.post('/agents/doc_management/transactions/save_transaction_required_details', formData, axios_options).then(function (response) {
-        global_loading_off(); //window.location = '/agents/doc_management/transactions/transaction_details/' + response.data.id + '/' + response.data.type;
+        global_loading_off();
+        window.location = '/agents/doc_management/transactions/transaction_details/' + response.data.id + '/' + response.data.type;
       })["catch"](function (error) {});
     }
   };
