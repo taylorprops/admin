@@ -25,6 +25,11 @@ if($transaction_type == 'listing') {
 
 $status = $resource_items -> GetResourceName($property -> Status);
 
+$settle_date = '';
+if($property -> CloseDate != '') {
+    $settle_date = date_mdy($property -> CloseDate);
+}
+
 @endphp
 <div class="row mt-1 mt-sm-5">
 
@@ -54,19 +59,47 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                     @if($transaction_type != 'referral')
 
-                        <div class="d-flex justify-content-start align-items-center">
+                        <div>
 
-                            <span class="text-gray ml-3">{{ $sale_rent }}</span>
+                            <div class="d-flex justify-content-start align-items-center flex-wrap">
 
-                            <span class="font-12 text-primary mx-3">|</span>
+                                <div class="font-12 text-gray ml-sm-3">
+                                    @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> ContractPrice) }} @endif
+                                </div>
 
-                            <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span>
+                                <span class="font-12 text-primary mx-3">|</span>
 
-                            <span class="font-12 text-primary mx-3">|</span>
+                                <span class="text-gray">{{ $sale_rent }}</span>
 
-                            @if($sale_rent != 'Rental' && $property -> PropertySubType > '0')
-                                <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span>
-                            @endif
+                                <span class="font-12 text-primary mx-3">|</span>
+
+                                <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span>
+
+                                <span class="font-12 text-primary mx-3">|</span>
+
+                                @if($sale_rent != 'Rental' && $property -> PropertySubType > '0')
+                                    <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span>
+                                @endif
+
+                            </div>
+
+                            <div class="d-flex justify-content-start align-items-center flex-wrap">
+
+                                <span class="font-11 text-gray ml-sm-3">{{ $status }}</span>
+
+                                <span class="font-12 text-primary mx-3">|</span>
+
+                                <div data-toggle="tooltip" title="@if($transaction_type == 'listing') List Date @else Contract Date @endif">
+                                    <span class="text-gray">@if($transaction_type == 'listing') LD - {{ date_mdy($property -> MLSListDate) }} @else CD - {{ date_mdy($property -> ContractDate) }} @endif</span>
+                                </div>
+
+                                <span class="font-12 text-primary mx-3">|</span>
+
+                                <div data-toggle="tooltip" title="@if($transaction_type == 'listing') Expiration Date @else Settle Date @endif">
+                                    <span class="text-gray">@if($transaction_type == 'listing') EX - {{ date_mdy($property -> ExpirationDate) }} @else SD - {{ $settle_date }}  @endif</span>
+                                </div>
+
+                            </div>
 
                         </div>
 
@@ -372,7 +405,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
             @endif
 
 
-            <div class="col-12 col-sm-6 col-xl-3 h-100">
+            {{-- <div class="col-12 col-sm-6 col-xl-3 h-100">
 
                 <div class="bg-blue-light text-gray rounded h-100  header-status-div">
 
@@ -389,10 +422,10 @@ $status = $resource_items -> GetResourceName($property -> Status);
                             </div>
                             <div class="row">
                                 <div class="col-6 text-right pr-0">
-                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') List Date @else Offer Date @endif</span>
+                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') List Date @else Contract Date @endif</span>
                                 </div>
                                 <div class="col-6 text-left">
-                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> MLSListDate)) }} @else {{ date('n/j/Y', strtotime($property -> ContractDate)) }} @endif
+                                    @if($transaction_type == 'listing') {{ date_mdy($property -> MLSListDate) }} @else {{ date_mdy($property -> ContractDate) }} @endif
                                 </div>
                             </div>
                             <div class="row">
@@ -403,10 +436,10 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                     @php
                                     $settle_date = '';
                                     if($property -> CloseDate != '') {
-                                        $settle_date = date('n/j/Y', strtotime($property -> CloseDate));
+                                        $settle_date = date_mdy($property -> CloseDate);
                                     }
                                     @endphp
-                                    @if($transaction_type == 'listing') {{ date('n/j/Y', strtotime($property -> ExpirationDate)) }} @else {{ $settle_date }} @endif
+                                    @if($transaction_type == 'listing') {{ date_mdy($property -> ExpirationDate) }} @else {{ date_mdy($settle_date) }} @endif
                                 </div>
                             </div>
                             <div class="row">
@@ -427,7 +460,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                     <span class="font-weight-bold text-nowrap">Lease Date</span>
                                 </div>
                                 <div class="col-6 text-left">
-                                    {{ date('n/j/Y', strtotime($property -> CloseDate)) }}
+                                    {{ date_mdy($property -> CloseDate) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -444,7 +477,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
                 </div>
 
-            </div>
+            </div> --}}
 
         </div>
 

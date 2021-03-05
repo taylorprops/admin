@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\DocManagement\Earnest;
 
+use App\Mail\DefaultEmail;
 use Illuminate\Http\Request;
 use App\Models\Employees\Agents;
-
 use App\Models\OldDB\OldEarnest;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Database\Eloquent\Builder;
-
 use App\Models\DocManagement\Earnest\Earnest;
-
+use App\Jobs\Earnest\EmailAgentsMissingEarnest;
 use App\Models\DocManagement\Earnest\EarnestChecks;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
@@ -170,6 +168,21 @@ class EarnestController extends Controller {
 
 
         return view('/doc_management/earnest/get_search_results_html', compact('checks_in', 'checks_out'));
+
+    }
+
+    public function email_agents_missing_earnest(Request $request) {
+
+        $contract_ids = explode(',', $request -> contract_ids);
+
+        $subject = $request -> subject;
+        $message = $request -> message;
+
+        $from_name = auth() -> user() -> name;
+        $from_address = auth() -> user() -> email;
+
+        EmailAgentsMissingEarnest::dispatch($contract_ids, $subject, $message, $from_name, $from_address);
+
 
     }
 

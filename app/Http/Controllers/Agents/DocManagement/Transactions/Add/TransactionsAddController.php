@@ -908,7 +908,7 @@ class TransactionsAddController extends Controller {
             $property -> ExpirationDate = $request -> ExpirationDate;
             if(date('Y-m-d') < $request -> MLSListDate) {
                 $property -> Status = ResourceItems::GetResourceID('Pre-Listing', 'listing_status');
-            } else if(date('Y-m-d') > $request -> MLSListDate && date('Y-m-d') < $request -> ExpirationDate) {
+            } else if(date('Y-m-d') >= $request -> MLSListDate && date('Y-m-d') < $request -> ExpirationDate) {
                 $property -> Status = ResourceItems::GetResourceID('Active', 'listing_status');
             } else {
                 $property -> Status = ResourceItems::GetResourceID('Expired', 'listing_status');

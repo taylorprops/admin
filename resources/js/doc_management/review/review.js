@@ -280,13 +280,12 @@ if(document.URL.match(/document_review/)) {
                 toolbar: false
             }
             text_editor(options);
-            console.log($('.text-editor').length);
 
-            let zoom_input = $('#zoom').slider({
+            /* let zoom_input = $('#zoom').slider({
                 formatter: function(value) {
                     return value+'%';
                 }
-            });
+            }); */
 
             $('#zoom').on('input change', zoom);
 

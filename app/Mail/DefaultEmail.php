@@ -24,7 +24,7 @@ class DefaultEmail extends Mailable
         $this -> email = $email;
         $this -> from = $email['from'];
         $this -> subject = $email['subject'];
-        $this -> email_attachments = $email['attachments'];
+        $this -> email_attachments = $email['attachments'] ?? null;
     }
 
     /**

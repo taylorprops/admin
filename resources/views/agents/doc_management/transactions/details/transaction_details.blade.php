@@ -695,23 +695,19 @@
                                         $checklist_form_if_applicable = $available_files -> where('file_id', $checklist_item_if_applicable -> checklist_form_id) -> first();
                                         @endphp
                                         @if($checklist_form_if_applicable -> file_location != '')
-                                            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                    <div>
-                                                        <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
-                                                        data-file-id="{{ $checklist_form_if_applicable -> file_id }}"
-                                                        data-template-id="{{ $checklist_form_if_applicable -> template_id }}"
-                                                        data-file-name="{{ $checklist_form_if_applicable -> file_name }}"
-                                                        data-file-name-display="{{ $checklist_form_if_applicable -> file_name_display }}"
-                                                        data-pages-total="{{ $checklist_form_if_applicable -> pages_total }}"
-                                                        data-file-location="{{ $checklist_form_if_applicable -> file_location }}"
-                                                        data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_if_applicable -> file_location)))) }}"
-                                                        >
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <a href="javascript:void(0)">{{ $checklist_form_if_applicable -> file_name_display }}</a>
-                                                    </div>
-                                                </div>
+                                            <li class="list-group-item p-0 border-top-0 border-left-0 border-right-0 border-bottom">
+
+                                                <input type="checkbox" class="custom-form-element form-checkbox checklist-template-form"
+                                                    data-file-id="{{ $checklist_form_if_applicable -> file_id }}"
+                                                    data-template-id="{{ $checklist_form_if_applicable -> template_id }}"
+                                                    data-file-name="{{ $checklist_form_if_applicable -> file_name }}"
+                                                    data-file-name-display="{{ $checklist_form_if_applicable -> file_name_display }}"
+                                                    data-pages-total="{{ $checklist_form_if_applicable -> pages_total }}"
+                                                    data-file-location="{{ $checklist_form_if_applicable -> file_location }}"
+                                                    data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_if_applicable -> file_location)))) }}"
+                                                    data-label="{{ $checklist_form_if_applicable -> file_name_display }}"
+                                                >
+
                                             </li>
                                         @endif
                                     @endforeach

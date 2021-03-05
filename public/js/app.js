@@ -54973,12 +54973,11 @@ if (document.URL.match(/active_earnest/)) {
         }
       }).then(function (response) {
         $('#' + tab + '_content').html(response.data);
-        console.log(tab);
 
         if (tab == 'missing') {
-          var dt = data_table('25', $('.earnest-table'), [7, 'desc'], [0, 1, 2], [], true, true, true, true, true);
+          data_table('25', $('.earnest-table.' + tab + ''), [6, 'desc'], [0, 1, 10], [], true, true, true, true, true);
         } else {
-          var _dt = data_table('25', $('.earnest-table'), [5, 'desc'], [0], [], true, true, true, true, true);
+          data_table('25', $('.earnest-table.' + tab + ''), [5, 'desc'], [0], [], true, true, true, true, true);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -55015,6 +55014,50 @@ if (document.URL.match(/active_earnest/)) {
         $('button.email-agent').prop('disabled', false);
       }
     });
+    $(document).on('click', '.email-agent', function () {
+      if ($(this).hasClass('single')) {
+        $(this).closest('tr').find('td input[type=checkbox]').prop('checked', true);
+      }
+
+      $('#email_agents_missing_earnest_modal').modal('show');
+      var ids = [];
+      $('.deposit-input:checked').each(function () {
+        ids.push($(this).data('contract-id'));
+      });
+      $('#contract_ids').val(ids.join());
+      $('#email_agents_missing_earnest_modal').on('hide.bs.modal', function () {
+        $('.deposit-input, .check-all').prop('checked', false);
+        email_button('hide');
+      });
+      $('#send_email_agents_missing_earnest_button').off('click').on('click', function () {
+        var form = $('#email_agents_missing_earnest_form');
+        var validate = validate_form(form);
+
+        if (validate == 'yes') {
+          $('#email_agents_missing_earnest_modal').modal('hide');
+          toastr['success']('Emails Successfully Sent!');
+          var subject = $('#email_agent_earnest_subject').val();
+          var message = tinyMCE.activeEditor.getContent();
+          var contract_ids = $('#contract_ids').val();
+          var formData = new FormData();
+          formData.append('subject', subject);
+          formData.append('message', message);
+          formData.append('contract_ids', contract_ids);
+          axios.post('/doc_management/email_agents_missing_earnest', formData, axios_options).then(function (response) {
+            console.log(response);
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    });
+    var options = {
+      menubar: false,
+      statusbar: false,
+      height: 370,
+      selector: '#email_agent_earnest_message'
+    };
+    text_editor(options);
   });
 }
 
@@ -56535,12 +56578,12 @@ if (document.URL.match(/document_review/)) {
         toolbar: false
       };
       text_editor(options);
-      console.log($('.text-editor').length);
-      var zoom_input = $('#zoom').slider({
-        formatter: function formatter(value) {
-          return value + '%';
-        }
-      });
+      /* let zoom_input = $('#zoom').slider({
+          formatter: function(value) {
+              return value+'%';
+          }
+      }); */
+
       $('#zoom').on('input change', zoom);
       /* $('.zoom-out').on('click', function() {
           $('#zoom').val(parseInt($('#zoom').val()) - 5).trigger('change');
@@ -58967,6 +59010,8 @@ $(function () {
     options.content_style = 'body { font-size: .9rem; }', //options.content_css = '/css/tinymce.css';
     options.force_p_newlines = false;
     options.forced_root_block = '';
+    options.branding = false;
+    options.toolbar = 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |';
     tinymce.remove(options.selector);
     tinymce.init(options);
   }; // send csrf with every ajax request
@@ -59698,6 +59743,9 @@ $(function () {
           if (!search_divs.is(e.target) && search_divs.has(e.target).length === 0) {
             hide_search();
           }
+        });
+        $('#main_nav_collapse .nav-link').on('click', function () {
+          hide_search();
         });
       })["catch"](function (error) {});
     } else {

@@ -265,6 +265,38 @@ body.modal-open {
 }
 
 @media (max-width: 768px) {
+
+    .dataTables_wrapper {
+
+        .dataTable {
+
+            &.table {
+
+                th {
+                    padding: .3rem 0rem .3rem 0.2rem !important;
+                    font-size: .7rem !important;
+
+                    &:last-child {
+                        border-right: none;
+                    }
+
+                }
+                td {
+                    padding: 0.2rem !important;
+                    font-size: .7rem !important;
+
+                    &.small {
+                        font-size: .7rem !important;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
     div.dataTables_filter input {
         width: 100px !important;
     }

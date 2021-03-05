@@ -152,6 +152,8 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/get_earnest_checks', 'DocManagement\Earnest\EarnestController@get_earnest_checks');
     // search earnest checks
     Route::get('/doc_management/search_earnest_checks', 'DocManagement\Earnest\EarnestController@search_earnest_checks');
+    // email agents missing earnest
+    Route::post('/doc_management/email_agents_missing_earnest', 'DocManagement\Earnest\EarnestController@email_agents_missing_earnest');
 
 
 

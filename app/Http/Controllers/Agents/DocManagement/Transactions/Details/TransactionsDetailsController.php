@@ -535,9 +535,9 @@ class TransactionsDetailsController extends Controller {
         $property -> ListingId = $request -> ListingId;
 
         if($represent == 'seller') {
-            $omit = ['/ListAgent/', '/ListOffice/'];
+            $omit = '/(ListAgent|ListOffice)/';
         } else if($represent == 'buyer') {
-            $omit = ['/BuyerAgent/', '/BuyerOffice/'];
+            $omit = '/(BuyerAgent|BuyerOffice)/';
         }
 
         // get cols and vals for mls search

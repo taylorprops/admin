@@ -13709,6 +13709,24 @@ body.modal-open {
 }
 
 @media (max-width: 768px) {
+  .dataTables_wrapper .dataTable.table th {
+    padding: 0.3rem 0rem 0.3rem 0.2rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .dataTables_wrapper .dataTable.table th:last-child {
+    border-right: none;
+  }
+
+  .dataTables_wrapper .dataTable.table td {
+    padding: 0.2rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .dataTables_wrapper .dataTable.table td.small {
+    font-size: 0.7rem !important;
+  }
+
   div.dataTables_filter input {
     width: 100px !important;
   }
@@ -14683,7 +14701,7 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 
 @media (max-width: 767.98px) {
   header .main-search-results-container .main-search-results-div .main-search-results {
-    max-width: 100VW;
+    max-width: 95VW;
     padding: 5px;
     margin-left: auto;
     margin-right: auto;
@@ -16711,8 +16729,12 @@ header .main-search-results-container .main-search-results-div .main-search-resu
   z-index: 0;
 }
 
+.page-transaction-details #esign_tab .nav-link {
+  padding: 0.4rem 0.3rem !important;
+}
+
 .page-transaction-details .property-image-div img {
-  height: 85px;
+  height: 90px;
   border: 1px solid #4c9bdb;
 }
 

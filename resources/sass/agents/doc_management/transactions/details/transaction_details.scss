@@ -54,8 +54,12 @@
         z-index: 0;
     }
 
+    #esign_tab .nav-link {
+        padding: 0.4rem 0.3rem !important
+    }
+
     .property-image-div img {
-        height: 85px;
+        height: 90px;
         border: 1px solid $primary-color;
     }
 

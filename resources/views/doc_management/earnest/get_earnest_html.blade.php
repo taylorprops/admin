@@ -1,6 +1,6 @@
 <div class="table-responsive text-nowrap">
 
-    <table class="table table-bordered table-sm earnest-table" width="100%">
+    <table class="table table-bordered table-sm earnest-table {{ $tab }}" width="100%">
 
         <thead>
             <tr>
@@ -8,7 +8,6 @@
                     <th class="text-center pl-0">
                         <input type="checkbox" class="custom-form-element form-checkbox check-all" data-label="">
                     </th>
-                    <th></th>
                 @endif
                 <th></th>
                 <th>Account</th>
@@ -18,6 +17,10 @@
                 <th>Contract Date</th>
                 <th>CloseDate</th>
                 <th>Status</th>
+                @if($tab == 'missing')
+                    <th>Last Emailed</th>
+                    <th></th>
+                @endif
             </tr>
         </thead>
 
@@ -35,10 +38,7 @@
                 <tr>
                     @if($tab == 'missing')
                         <td class="text-center">
-                            <input type="checkbox" class="custom-form-element form-checkbox deposit-input" data-earnest-id="{{ $earnest -> id }}" data-label="">
-                        </td>
-                        <td>
-                            <button class="btn btn-primary email-agent" data-agent-id="{{ $earnest -> Agent_ID }}"><i class="fal fa-envelope mr-2"></i> Email Agent</button>
+                            <input type="checkbox" class="custom-form-element form-checkbox deposit-input" data-contract-id="{{ $contract -> Contract_ID }}" data-label="">
                         </td>
                     @endif
                     <td>
@@ -51,11 +51,19 @@
                     <td>{{ date_mdy($contract -> ContractDate) }}</td>
                     <td>{{ date_mdy($contract -> CloseDate) }}</td>
                     <td>{{ $status }}</td>
+                    @if($tab == 'missing')
+                        <td>
+                            @if($earnest -> last_emailed_date != '' && $earnest -> last_emailed_date != '0000-00-00') {{ date_mdy($earnest -> last_emailed_date) }} @endif
+                        </td>
+                        <td>
+                            <button class="btn btn-primary email-agent single"><i class="fal fa-envelope mr-2"></i> Email Agent</button>
+                        </td>
+                    @endif
                 </tr>
 
             @endforeach
 
-        </body>
+        </tbody>
 
     </table>
 

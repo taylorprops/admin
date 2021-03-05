@@ -58,6 +58,10 @@ $(function() {
                     }
                 });
 
+                $('#main_nav_collapse .nav-link').on('click', function(){
+                    hide_search();
+                });
+
             })
             .catch(function (error) {
 

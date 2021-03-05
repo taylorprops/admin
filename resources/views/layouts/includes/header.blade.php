@@ -57,7 +57,7 @@
 
         <div class="main-search-results-div">
 
-            <div class="main-search-results shadow search-ele"></div>
+            <div class="main-search-results overflow-hidden shadow search-ele"></div>
 
         </div>
 

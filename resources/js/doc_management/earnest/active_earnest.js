@@ -26,6 +26,64 @@ if(document.URL.match(/active_earnest/)) {
             }
         });
 
+        $(document).on('click', '.email-agent', function() {
+
+            if($(this).hasClass('single')) {
+                $(this).closest('tr').find('td input[type=checkbox]').prop('checked', true);
+            }
+            $('#email_agents_missing_earnest_modal').modal('show');
+
+            let ids = [];
+            $('.deposit-input:checked').each(function() {
+                ids.push($(this).data('contract-id'));
+            });
+            $('#contract_ids').val(ids.join());
+
+            $('#email_agents_missing_earnest_modal').on('hide.bs.modal', function() {
+                $('.deposit-input, .check-all').prop('checked', false);
+                email_button('hide');
+            });
+
+            $('#send_email_agents_missing_earnest_button').off('click').on('click', function() {
+
+                let form = $('#email_agents_missing_earnest_form');
+                let validate = validate_form(form);
+
+                if(validate == 'yes') {
+
+                    $('#email_agents_missing_earnest_modal').modal('hide');
+                    toastr['success']('Emails Successfully Sent!');
+
+                    let subject = $('#email_agent_earnest_subject').val();
+                    let message = tinyMCE.activeEditor.getContent();
+                    let contract_ids = $('#contract_ids').val();
+
+                    let formData = new FormData();
+                    formData.append('subject', subject);
+                    formData.append('message', message);
+                    formData.append('contract_ids', contract_ids);
+                    axios.post('/doc_management/email_agents_missing_earnest', formData, axios_options)
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                }
+
+            });
+
+        });
+
+        let options = {
+            menubar: false,
+            statusbar: false,
+            height: 370,
+            selector: '#email_agent_earnest_message'
+        }
+        text_editor(options);
+
     });
 
     function get_earnest(account_id) {
@@ -46,11 +104,10 @@ if(document.URL.match(/active_earnest/)) {
             .then(function (response) {
 
                 $('#'+tab+'_content').html(response.data);
-                console.log(tab);
                 if(tab == 'missing') {
-                    let dt = data_table('25', $('.earnest-table'), [7, 'desc'], [0,1,2], [], true, true, true, true, true);
+                    data_table('25', $('.earnest-table.'+tab+''), [6, 'desc'], [0,1,10], [], true, true, true, true, true);
                 } else {
-                    let dt = data_table('25', $('.earnest-table'), [5, 'desc'], [0], [], true, true, true, true, true);
+                    data_table('25', $('.earnest-table.'+tab+''), [5, 'desc'], [0], [], true, true, true, true, true);
                 }
 
             })

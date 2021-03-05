@@ -45,7 +45,7 @@
 
                                     <div class="col-3 d-md-none d-lg-inline-block">
 
-                                        <div class=" text-right font-10">
+                                        <div class="overflow-hidden text-right font-10">
                                             @if($property -> ListPictureURL)
                                                 <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
                                             @else
@@ -76,11 +76,11 @@
                                                 <span class="text-gray">${{ number_format($property -> ListPrice) }}</span>
                                             </div>
                                             <span class="font-12 text-primary">|</span>
-                                            <div>
+                                            <div title="List Date" data-toggle="tooltip">
                                                 LD - <span class="text-gray">{{ date_mdy($property -> MLSListDate) }}</span>
                                             </div>
                                             <span class="font-12 text-primary">|</span>
-                                            <div>
+                                            <div title="Expiration Date" data-toggle="tooltip">
                                                 EX - <span class="text-gray">{{ date_mdy($property -> ExpirationDate) }}</span>
                                             </div>
 
@@ -152,7 +152,7 @@
 
                                 <div class="col-3 d-md-none d-lg-inline-block">
 
-                                    <div class=" text-right font-10">
+                                    <div class="overflow-hidden text-right font-10">
                                         @if($property -> ListPictureURL)
                                             <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
                                         @else
@@ -182,12 +182,12 @@
                                             <span class="text-gray">${{ number_format($property -> ContractPrice) }}</span>
                                         </div>
                                         <span class="font-12 text-primary">|</span>
-                                        <div>
-                                            AD - <span class="text-gray">{{ date_mdy($property -> ContractDate) }}</span>
+                                        <div title="Contract Date" data-toggle="tooltip">
+                                            CD - <span class="text-gray">{{ date_mdy($property -> ContractDate) }}</span>
                                         </div>
                                         <span class="font-12 text-primary">|</span>
-                                        <div>
-                                            CD - <span class="text-gray">{{ date_mdy($property -> CloseDate) }}</span>
+                                        <div title="Settle Date" data-toggle="tooltip">
+                                            SD - <span class="text-gray">{{ date_mdy($property -> CloseDate) }}</span>
                                         </div>
                                     </div>
 
@@ -275,7 +275,7 @@
 
                                 <div class="col-3 d-md-none d-lg-inline-block">
 
-                                    <div class=" text-right font-10">
+                                    <div class="overflow-hidden text-right font-10">
                                         <i class="fad fa-home fa-3x text-primary"></i>
                                     </div>
 
@@ -299,7 +299,7 @@
                                         </div>
                                         <span class="font-12 text-primary">|</span>
 
-                                        <div>
+                                        <div title="Close Date" data-toggle="tooltip">
                                             CD - <span class="text-gray">{{ date_mdy($property -> CloseDate) }}</span>
                                         </div>
                                     </div>
