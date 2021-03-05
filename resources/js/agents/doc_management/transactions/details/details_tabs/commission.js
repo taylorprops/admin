@@ -270,13 +270,17 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
     }
 
-    window.save_commission = function (show_toastr_commission = 'no') {
+    window.save_commission = function (saved_manually = 'no') {
 
         let Contract_ID = $('#Contract_ID').val();
         let form = $('#commission_form');
         let Commission_ID = $('#Commission_ID').val();
         if($('#Commission_Other_ID').length > 0) {
             Commission_ID = $('#Commission_Other_ID').val();
+        }
+        let change_status = 'no';
+        if(saved_manually == 'yes') {
+            change_status = 'yes';
         }
 
         let formData = new FormData();
@@ -290,9 +294,10 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         formData.append('Contract_ID', Contract_ID);
         formData.append('Commission_ID', Commission_ID);
+        formData.append('change_status', change_status);
         axios.post('/agents/doc_management/transactions/save_commission', formData, axios_options)
         .then(function (response) {
-            if(show_toastr_commission == 'yes') {
+            if(saved_manually == 'yes') {
                 toastr['success']('Commission Details Successfully Saved');
             }
             load_details_header();

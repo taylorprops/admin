@@ -4,12 +4,19 @@
 
         <thead>
             <tr>
-                <th width="100"></th>
+                @if($tab == 'missing')
+                    <th class="text-center pl-0">
+                        <input type="checkbox" class="custom-form-element form-checkbox check-all" data-label="">
+                    </th>
+                    <th></th>
+                @endif
+                <th></th>
                 <th>Account</th>
                 <th>Agent</th>
                 <th>Property</th>
                 <th>Received</th>
                 <th>Contract Date</th>
+                <th>CloseDate</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -22,23 +29,29 @@
                 $agent = $contract -> agent -> full_name;
                 $status = $contract -> status -> resource_name;
                 $earnest = $contract -> earnest;
+                $earnest_account = $earnest -> earnest_account;
                 @endphp
 
-                @if($earnest)
-
-                    @php $earnest_account = $earnest -> earnest_account; @endphp
-
-                    <tr>
-                        <td><a class="btn btn-primary" href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract?tab=earnest"><i class="fal fa-eye mr-2"></i> View</a></td>
-                        <td>{{ $earnest_account -> resource_state.' - '.$earnest_account -> resource_name }}</td>
-                        <td>{{ $agent }}</td>
-                        <td>{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</td>
-                        <td>${{ number_format($earnest -> amount_received) }}</td>
-                        <td>{{ date_mdy($contract -> ContractDate) }}</td>
-                        <td>{{ $status }}</td>
-                    </tr>
-
-                @endif
+                <tr>
+                    @if($tab == 'missing')
+                        <td class="text-center">
+                            <input type="checkbox" class="custom-form-element form-checkbox deposit-input" data-earnest-id="{{ $earnest -> id }}" data-label="">
+                        </td>
+                        <td>
+                            <button class="btn btn-primary email-agent" data-agent-id="{{ $earnest -> Agent_ID }}"><i class="fal fa-envelope mr-2"></i> Email Agent</button>
+                        </td>
+                    @endif
+                    <td>
+                        <a class="btn btn-primary" href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract?tab=earnest" target="_blank"><i class="fal fa-eye mr-2"></i> View</a>
+                    </td>
+                    <td>{{ $earnest_account -> resource_state.' - '.$earnest_account -> resource_name }}</td>
+                    <td>{{ $agent }}</td>
+                    <td>{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</td>
+                    <td>${{ number_format($earnest -> amount_received) }}</td>
+                    <td>{{ date_mdy($contract -> ContractDate) }}</td>
+                    <td>{{ date_mdy($contract -> CloseDate) }}</td>
+                    <td>{{ $status }}</td>
+                </tr>
 
             @endforeach
 

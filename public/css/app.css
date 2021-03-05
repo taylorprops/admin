@@ -14621,7 +14621,7 @@ header .main-search-input::placeholder {
 
 @media only screen and (max-width: 768px) {
   header .main-search-input {
-    width: 200px;
+    width: 150px;
   }
 }
 
@@ -16716,17 +16716,8 @@ header .main-search-results-container .main-search-results-div .main-search-resu
   border: 1px solid #4c9bdb;
 }
 
-.page-transaction-details .transaction-type {
-  font-size: 1.3rem;
-}
-
 .page-transaction-details .transaction-sub-type {
   font-size: 0.8rem;
-}
-
-.page-transaction-details .badge:not(.form-pill) {
-  padding: 0.5rem;
-  box-shadow: none;
 }
 
 .page-transaction-details .cancel-alerts .list-group-item {
@@ -18433,5 +18424,18 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 
 .page-earnest .check-row.bounced {
   background: rgba(245, 80, 64, 0.08);
+}
+
+.page-active-earnest .earnest-table .form-ele {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.page-active-earnest th .pretty {
+  font-size: 1.1rem;
+}
+
+.page-active-earnest th .pretty .state label:after {
+  border: 2px solid #ccc !important;
 }
 

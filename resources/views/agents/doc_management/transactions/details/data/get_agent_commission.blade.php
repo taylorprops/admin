@@ -6,7 +6,7 @@
 
             @if($breakdown -> status != 'complete')
 
-                @if($breakdown -> status == 'submitted')
+                @if($breakdown -> submitted == 'yes')
 
                     <div class="d-flex justify-content-start align-items-center bg-blue-light text-primary">
                         <div class="p-3">
@@ -381,7 +381,7 @@
                                                 <div class="font-italic font-weight-bold mb-2 text-danger">Required Authorization</div>
                                                 <div class="d-flex justify-content-start align-items-center">
                                                     <div class="mx-3">
-                                                        <input type="checkbox" class="custom-form-element form-checkbox" id="mail_disclosure" @if($breakdown -> status != 'not_submitted') checked @endif>
+                                                        <input type="checkbox" class="custom-form-element form-checkbox" id="mail_disclosure" @if($breakdown -> submitted  == 'yes') checked @endif>
                                                     </div>
                                                     <label for="mail_disclosure" class="font-9 mb-0">
                                                         I authorize Anne Arundel Properties, Inc / Taylor Properties to mail this commission check to the address requested. If the check is lost in the mail, I agree to pay the “Stop Payment” bank fee of $35 to have a new commission check processed and mailed.

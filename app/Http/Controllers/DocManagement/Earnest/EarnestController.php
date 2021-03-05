@@ -8,10 +8,11 @@ use App\Models\Employees\Agents;
 use App\Models\OldDB\OldEarnest;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Database\Eloquent\Builder;
+
 use App\Models\DocManagement\Earnest\Earnest;
 
 use App\Models\DocManagement\Earnest\EarnestChecks;
-
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 
@@ -80,7 +81,7 @@ class EarnestController extends Controller {
         }
 
         $contracts = $contracts -> with('agent')
-            -> with(['earnest' => function($query) use ($account_id, $tab) {
+            -> whereHas('earnest', function(Builder $query) use ($account_id, $tab) {
                 if($account_id != 'all') {
                     $query -> where('earnest_account_id', $account_id);
                 }
@@ -89,7 +90,7 @@ class EarnestController extends Controller {
                 } else if($tab == 'missing') {
                     $query -> where('amount_received', '0.00');
                 }
-            }])
+            })
             -> get();
 
         return view('/doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));

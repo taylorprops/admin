@@ -40,21 +40,38 @@ $status = $resource_items -> GetResourceName($property -> Status);
                 </div>
             @endif
 
-            <div>
+            <div class="w-100">
 
-                <div class="h3 mb-2 ml-2 text-gray {{-- text-uppercase --}}">
+                <div class="h3 mt-2 mt-sm-0 mb-2 ml-2 text-gray">
                     {!! $property -> FullStreetAddress.' '.$property -> Street.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                 </div>
 
-                <div class="mb-1 mb-md-3">
-                    <span class="badge {{ $transaction_type_bg }} my-1"><span class="transaction-type text-white">{!! $header_transaction_type !!}</span></span>
+                <div class="d-flex justify-content-start align-items-center flex-wrap mb-1 mb-md-3">
+
+                    <div class="{{ $transaction_type_bg }} my-1 p-1 p-sm-2 rounded no-wrap">
+                        <span class="font-12 text-white">{!! $header_transaction_type !!}</span>
+                    </div>
+
                     @if($transaction_type != 'referral')
-                        <span class="badge bg-primary ml-0 ml-sm-2 my-1"><span class="transaction-sub-type text-white">{{ $sale_rent }}</span></span>
-                        <span class="badge bg-primary ml-0 ml-sm-2 my-1"><span class="transaction-sub-type text-white">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span></span>
-                        @if($sale_rent != 'Rental' && $property -> PropertySubType > '0')
-                            <span class="badge bg-primary ml-0 ml-sm-2 my-1"><span class="transaction-sub-type text-white">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span></span>
-                        @endif
+
+                        <div class="d-flex justify-content-start align-items-center">
+
+                            <span class="text-gray ml-3">{{ $sale_rent }}</span>
+
+                            <span class="font-12 text-primary mx-3">|</span>
+
+                            <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span>
+
+                            <span class="font-12 text-primary mx-3">|</span>
+
+                            @if($sale_rent != 'Rental' && $property -> PropertySubType > '0')
+                                <span class="text-gray">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span>
+                            @endif
+
+                        </div>
+
                     @endif
+
                 </div>
             </div>
 
@@ -246,7 +263,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
             <div class="col-12 col-sm-6 col-xl-4 h-100">
 
-                <div class="bg-blue-light text-gray rounded p-2 border h-100">
+                <div class="bg-blue-light text-gray rounded p-2 h-100">
 
                     <div class="row">
 
@@ -265,7 +282,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                             <span class="font-weight-bold">List Agent</span>
                                         </div>
                                         <div>
-                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
+                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
                                         </div>
                                     </div>
                                     <div>
@@ -310,7 +327,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                     <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
                     @endphp
 
-                    <div class="bg-blue-light text-gray rounded p-2 border h-100">
+                    <div class="bg-blue-light text-gray rounded p-2 h-100">
 
                         <div class="row">
 
@@ -321,7 +338,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
                                             <span class="font-weight-bold">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</span>
                                         </div>
                                         <div>
-                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-1"></i> Contact</a>
+                                            <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 my-2" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
                                         </div>
                                     </div>
                                     <div>
@@ -357,7 +374,7 @@ $status = $resource_items -> GetResourceName($property -> Status);
 
             <div class="col-12 col-sm-6 col-xl-3 h-100">
 
-                <div class="bg-blue-light text-gray rounded h-100 border header-status-div">
+                <div class="bg-blue-light text-gray rounded h-100  header-status-div">
 
                     @if($for_sale || $transaction_type == 'listing')
 

@@ -44779,40 +44779,42 @@ function delete_deactivate_resource_resource(ele, action) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-$(function () {
-  get_form_group_files(0);
-  $('.form-group-select').off('change').on('change', select_form_group);
+if (document.URL.match(/documents$/)) {
+  $(function () {
+    get_form_group_files(0);
+    $('.form-group-select').off('change').on('change', select_form_group);
 
-  function select_form_group() {
-    var form_group_id = $('.form-group-select').val();
-    get_form_group_files(form_group_id);
-  }
+    function select_form_group() {
+      var form_group_id = $('.form-group-select').val();
+      get_form_group_files(form_group_id);
+    }
 
-  function get_form_group_files(form_group_id) {
-    $('.documents-table tbody').html('');
-    axios.get('/documents/get_form_group_files', {
-      params: {
-        form_group_id: form_group_id
-      },
-      headers: {
-        'Accept-Version': 1,
-        'Accept': 'text/html',
-        'Content-Type': 'text/html'
-      }
-    }).then(function (response) {
-      $('#forms_table_div').html(response.data);
-      var length = 50;
+    function get_form_group_files(form_group_id) {
+      $('.documents-table tbody').html('');
+      axios.get('/documents/get_form_group_files', {
+        params: {
+          form_group_id: form_group_id
+        },
+        headers: {
+          'Accept-Version': 1,
+          'Accept': 'text/html',
+          'Content-Type': 'text/html'
+        }
+      }).then(function (response) {
+        $('#forms_table_div').html(response.data);
+        var length = 50;
 
-      if (form_group_id == 0) {
-        length = 10;
-      }
+        if (form_group_id == 0) {
+          length = 10;
+        }
 
-      var dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
-    })["catch"](function (error) {
-      console.log(error);
-    });
-  }
-});
+        var dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  });
+}
 
 /***/ }),
 
@@ -46634,13 +46636,19 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
   };
 
   window.save_commission = function () {
-    var show_toastr_commission = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'no';
+    var saved_manually = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'no';
     var Contract_ID = $('#Contract_ID').val();
     var form = $('#commission_form');
     var Commission_ID = $('#Commission_ID').val();
 
     if ($('#Commission_Other_ID').length > 0) {
       Commission_ID = $('#Commission_Other_ID').val();
+    }
+
+    var change_status = 'no';
+
+    if (saved_manually == 'yes') {
+      change_status = 'yes';
     }
 
     var formData = new FormData();
@@ -46650,8 +46658,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     });
     formData.append('Contract_ID', Contract_ID);
     formData.append('Commission_ID', Commission_ID);
+    formData.append('change_status', change_status);
     axios.post('/agents/doc_management/transactions/save_commission', formData, axios_options).then(function (response) {
-      if (show_toastr_commission == 'yes') {
+      if (saved_manually == 'yes') {
         toastr['success']('Commission Details Successfully Saved');
       }
 
@@ -54964,17 +54973,47 @@ if (document.URL.match(/active_earnest/)) {
         }
       }).then(function (response) {
         $('#' + tab + '_content').html(response.data);
-        var dt = data_table('25', $('.earnest-table'), [2, 'desc'], [0], [], true, true, true, true, true);
+        console.log(tab);
+
+        if (tab == 'missing') {
+          var dt = data_table('25', $('.earnest-table'), [7, 'desc'], [0, 1, 2], [], true, true, true, true, true);
+        } else {
+          var _dt = data_table('25', $('.earnest-table'), [5, 'desc'], [0], [], true, true, true, true, true);
+        }
       })["catch"](function (error) {
         console.log(error);
       });
     });
   };
 
+  var email_button = function email_button(action) {
+    $('.email-agents-div').addClass('d-none');
+
+    if (action == 'show') {
+      $('.email-agents-div').removeClass('d-none');
+    }
+  };
+
   $(function () {
     get_earnest('all');
     $('.earnest-deposit-account').on('change', function () {
       get_earnest($(this).val());
+    });
+    $(document).on('change', '.check-all', function () {
+      if ($(this).is(':checked')) {
+        $('.deposit-input').prop('checked', true);
+      } else {
+        $('.deposit-input').prop('checked', false);
+      }
+    });
+    $(document).on('change', '.deposit-input, .check-all', function () {
+      if ($('.deposit-input:checked').length > 0) {
+        email_button('show');
+        $('button.email-agent').prop('disabled', true);
+      } else {
+        email_button('hide');
+        $('button.email-agent').prop('disabled', false);
+      }
     });
   });
 }
@@ -59616,6 +59655,7 @@ $(document).on('keydown', function (event) {
 
 $(function () {
   $(document).on('keyup', '.main-search-input', function () {
+    $('#main_nav_collapse').collapse('hide');
     main_search($(this));
   });
   $(document).on('click', '.hide-search', hide_search);

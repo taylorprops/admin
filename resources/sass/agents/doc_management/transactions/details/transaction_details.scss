@@ -59,18 +59,11 @@
         border: 1px solid $primary-color;
     }
 
-    .transaction-type {
-        font-size: 1.3rem;
-    }
 
     .transaction-sub-type {
         font-size: .8rem;
     }
 
-    .badge:not(.form-pill) {
-        padding: .5rem;
-        box-shadow: none;
-    }
 
     .cancel-alerts .list-group-item {
         border: none;

@@ -31,6 +31,10 @@
 
     <div class="tab-content pt-5" id="earnest_tabs_content">
 
+        <div class="mb-4 email-agents-div d-none">
+            <a href="javascript:void(0)" class="btn btn-primary btn-lg p-3 email-agent"><i class="fal fa-envelope mr-2"></i> Email Selected Agents</a>
+        </div>
+
         <div class="tab-pane fade show active" id="active_content" role="tabpanel" aria-labelledby="active_tab"></div>
 
         <div class="tab-pane fade" id="missing_content" role="tabpanel" aria-labelledby="missing_tab"></div>

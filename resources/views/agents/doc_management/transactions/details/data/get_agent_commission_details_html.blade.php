@@ -1,4 +1,4 @@
-@if($breakdown -> status != 'not_submitted')
+@if($breakdown -> submitted == 'yes')
 
     <div class="row">
         <div class="col-12">
@@ -240,8 +240,8 @@
 @else
 
     <div class="row">
-        <div class="col-12">
-            <div class="font-11 text-gray">No Commission Breakdown Has Been Submitted Yet</div>
+        <div class="col-12 my-5">
+            <div class="font-10 text-orange"><i class="fal fa-exclamation-triangle mr-2"></i> Commission Breakdown Not Submitted</div>
         </div>
     </div>
 

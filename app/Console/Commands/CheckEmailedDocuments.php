@@ -156,7 +156,7 @@ class CheckEmailedDocuments extends Command
 
                             // add emailed_docs folder
                             if(!Storage::disk('public') -> exists($emailed_docs_folder)){
-                                Storage::disk('public') -> makeDirectory($emailed_docs_folder, 0755);
+                                Storage::disk('public') -> makeDirectory($emailed_docs_folder);
                             }
 
                             foreach($attachments as $attachment) {

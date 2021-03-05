@@ -8,6 +8,24 @@ if(document.URL.match(/active_earnest/)) {
             get_earnest($(this).val());
         });
 
+        $(document).on('change', '.check-all', function() {
+            if($(this).is(':checked')) {
+                $('.deposit-input').prop('checked', true);
+            } else {
+                $('.deposit-input').prop('checked', false);
+            }
+        });
+
+        $(document).on('change', '.deposit-input, .check-all', function() {
+            if($('.deposit-input:checked').length > 0) {
+                email_button('show');
+                $('button.email-agent').prop('disabled', true);
+            } else {
+                email_button('hide');
+                $('button.email-agent').prop('disabled', false);
+            }
+        });
+
     });
 
     function get_earnest(account_id) {
@@ -28,7 +46,12 @@ if(document.URL.match(/active_earnest/)) {
             .then(function (response) {
 
                 $('#'+tab+'_content').html(response.data);
-                let dt = data_table('25', $('.earnest-table'), [2, 'desc'], [0], [], true, true, true, true, true);
+                console.log(tab);
+                if(tab == 'missing') {
+                    let dt = data_table('25', $('.earnest-table'), [7, 'desc'], [0,1,2], [], true, true, true, true, true);
+                } else {
+                    let dt = data_table('25', $('.earnest-table'), [5, 'desc'], [0], [], true, true, true, true, true);
+                }
 
             })
             .catch(function (error) {
@@ -36,6 +59,15 @@ if(document.URL.match(/active_earnest/)) {
             });
 
         });
+
+    }
+
+    function email_button(action) {
+
+        $('.email-agents-div').addClass('d-none');
+        if(action == 'show') {
+            $('.email-agents-div').removeClass('d-none');
+        }
 
     }
 

@@ -1,6 +1,7 @@
 $(function() {
 
     $(document).on('keyup', '.main-search-input', function() {
+        $('#main_nav_collapse').collapse('hide');
         main_search($(this));
     });
 

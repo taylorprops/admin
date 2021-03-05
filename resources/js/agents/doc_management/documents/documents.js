@@ -1,45 +1,49 @@
-$(function() {
+if (document.URL.match(/documents$/)) {
 
-    get_form_group_files(0);
+    $(function() {
 
-    $('.form-group-select').off('change').on('change', select_form_group);
+        get_form_group_files(0);
 
-    function select_form_group() {
+        $('.form-group-select').off('change').on('change', select_form_group);
 
-        let form_group_id = $('.form-group-select').val();
+        function select_form_group() {
 
-        get_form_group_files(form_group_id);
+            let form_group_id = $('.form-group-select').val();
 
-    }
+            get_form_group_files(form_group_id);
 
-    function get_form_group_files(form_group_id) {
+        }
 
-        $('.documents-table tbody').html('');
+        function get_form_group_files(form_group_id) {
 
-        axios.get('/documents/get_form_group_files', {
-            params: {
-                form_group_id: form_group_id
-            },
-            headers: {
-                'Accept-Version': 1,
-                'Accept': 'text/html',
-                'Content-Type': 'text/html'
-            }
-        })
-        .then(function (response) {
+            $('.documents-table tbody').html('');
 
-            $('#forms_table_div').html(response.data);
+            axios.get('/documents/get_form_group_files', {
+                params: {
+                    form_group_id: form_group_id
+                },
+                headers: {
+                    'Accept-Version': 1,
+                    'Accept': 'text/html',
+                    'Content-Type': 'text/html'
+                }
+            })
+            .then(function (response) {
 
-            let length = 50;
-            if(form_group_id == 0) {
-                length = 10;
-            }
-            let dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
+                $('#forms_table_div').html(response.data);
 
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    }
+                let length = 50;
+                if(form_group_id == 0) {
+                    length = 10;
+                }
+                let dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
 
-});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+
+    });
+
+}

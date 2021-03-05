@@ -138,7 +138,7 @@
                                             <select class="custom-form-element form-select required" @if(Auth::user() -> group == 'agent') disabled @endif data-label="Listing Agent" name="Agent_ID" id="Agent_ID">
                                                 <option value=""></option>
                                                 @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> last_name . ', ' . $agent -> first_name }}</option>
+                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> firstt_name . ' ' . $agent -> last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -146,7 +146,7 @@
                                             <select class="custom-form-element form-select" data-label="Co-Listing Agent" name="CoAgent_ID" id="CoAgent_ID">
                                                 <option value=""></option>
                                                 @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($property -> CoAgent_ID == $agent -> id) selected @endif>{{ $agent -> last_name . ', ' . $agent -> first_name }}</option>
+                                                <option value="{{ $agent -> id }}" @if($property -> CoAgent_ID == $agent -> id) selected @endif>{{ $agent -> first_name . ' ' . $agent -> last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -169,7 +169,7 @@
                                             <select class="custom-form-element form-select required" @if(Auth::user() -> group == 'agent') disabled @endif data-label="{{ $for_sale ? 'Buyer' : 'Renter' }} Agent" name="Agent_ID" id="Agent_ID">
                                                 <option value=""></option>
                                                 @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> last_name . ', ' . $agent -> first_name }}</option>
+                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> first_name . ' ' . $agent -> last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -177,7 +177,7 @@
                                             <select class="custom-form-element form-select" data-label="Co-{{ $for_sale ? 'Buyer' : 'Renter' }} Agent" name="CoAgent_ID" id="CoAgent_ID">
                                                 <option value=""></option>
                                                 @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($property -> CoAgent_ID == $agent -> id) selected @endif>{{ $agent -> last_name . ', ' . $agent -> first_name }}</option>
+                                                <option value="{{ $agent -> id }}" @if($property -> CoAgent_ID == $agent -> id) selected @endif>{{ $agent -> first_name . ' ' . $agent -> last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -534,32 +534,43 @@ class TransactionsDetailsController extends Controller {
 
         $property -> ListingId = $request -> ListingId;
 
+        if($represent == 'seller') {
+            $omit = ['/ListAgent/', '/ListOffice/'];
+        } else if($represent == 'buyer') {
+            $omit = ['/BuyerAgent/', '/BuyerOffice/'];
+        }
+
         // get cols and vals for mls search
         foreach ($mls_search_details as $col => $val) {
 
-            // if property col matches then update it if it doesn't match original value
-            if(isset($property -> $col)) {
-                if($property -> $col != $val && $val != '') {
-                    // if a name field only replace if blank
-                    if(in_array($property -> $col, config('global.vars.select_columns_bright_agents'))) {
-                        if($val == '') {
-                            $property -> $col = $val;
-                        }
-                    } else {
-                        if($col == 'PropertyType') {
-                            $property -> $col = $property_type_id;
-                        } else if($col == 'PropertySubType') {
-                            $property -> $col = $property_sub_type_id;
-                        } else if($col == 'County') {
-                            $property -> $col = $location_id;
-                        } else if($col == 'HoaCondoFees') {
-                            $property -> $col = $hoa_condo;
+            if(!preg_match($omit, $col)) {
+
+                // if property col matches then update it if it doesn't match original value
+                if(isset($property -> $col)) {
+                    if($property -> $col != $val && $val != '') {
+                        // if a name field only replace if blank
+                        if(in_array($property -> $col, config('global.vars.select_columns_bright_agents'))) {
+                            if($val == '') {
+                                $property -> $col = $val;
+                            }
                         } else {
-                            $property -> $col = $val;
+                            if($col == 'PropertyType') {
+                                $property -> $col = $property_type_id;
+                            } else if($col == 'PropertySubType') {
+                                $property -> $col = $property_sub_type_id;
+                            }/*  else if($col == 'County') {
+                                $property -> $col = $location_id;
+                            } */ else if($col == 'HoaCondoFees') {
+                                $property -> $col = $hoa_condo;
+                            } else {
+                                $property -> $col = $val;
+                            }
                         }
                     }
                 }
+
             }
+
         }
 
         $property -> MLS_Verified = 'yes';
@@ -3401,19 +3412,17 @@ class TransactionsDetailsController extends Controller {
         $Agent_ID = $commission -> Agent_ID;
         $Contract_ID = $commission -> Contract_ID;
         $Referral_ID = $commission -> Referral_ID;
+        $change_status = $request -> change_status;
 
         foreach($commission_fields as $key => $val) {
-            if($key != 'Commission_ID') {
+            $ignore = ['Commission_ID', 'change_status'];
+            if(!in_array($key, $ignore)) {
                 $commission -> $key = $val;
             }
         }
         $commission -> save();
 
-        $breakdown_status = null;
         $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> first();
-        if($breakdown) {
-            $breakdown_status = $breakdown -> status;
-        }
 
         // if a contract update the fields in transaction_docs_contracts
         if($Contract_ID > 0) {
@@ -3442,17 +3451,13 @@ class TransactionsDetailsController extends Controller {
                 }
             }
             // update breakdown status
-            if($breakdown_status) {
-                $breakdown -> status = 'complete';
-                $breakdown -> save();
-            }
+            $breakdown -> status = 'complete';
+            $breakdown -> save();
 
-        } else if($commission -> total_income > 0) {
+        } else if($change_status == 'yes') {
             // update breakdown status
-            if($breakdown_status) {
-                $breakdown -> status = 'reviewed';
-                $breakdown -> save();
-            }
+            $breakdown -> status = 'reviewed';
+            $breakdown -> save();
 
         }
 
@@ -3629,7 +3634,9 @@ class TransactionsDetailsController extends Controller {
         $breakdown = CommissionBreakdowns::where('Commission_ID', $request -> Commission_ID) -> first();
         foreach ($data as $key => $value) {
 
-            if($key != 'deduction_description' && $key != 'deduction_amount') {
+            $ignore = ['deduction_description', 'deduction_amount'];
+
+            if(!in_array($key, $ignore)) {
                 if(preg_match('/\$/', $value)) {
                     $value = preg_replace('/[\$,]+/', '', $value);
                 }
@@ -3637,8 +3644,8 @@ class TransactionsDetailsController extends Controller {
             }
 
         }
-        if($breakdown -> status == 'not_submitted') {
-            $breakdown -> status = 'submitted';
+        if($breakdown -> submitted == 'no') {
+            $breakdown -> submitted = 'yes';
         }
 
         $breakdown -> save();
