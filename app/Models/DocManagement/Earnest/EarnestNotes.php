@@ -10,4 +10,9 @@ class EarnestNotes extends Model
     protected $_connection = 'mysql';
     protected $_primaryKey = 'id';
     protected $guarded = [];
+
+    public function user() {
+        return $this -> hasOne('\App\User', 'id', 'user_id');
+    }
+
 }

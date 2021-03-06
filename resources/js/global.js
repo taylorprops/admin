@@ -146,8 +146,8 @@ $(function() {
 
 
     window.datatable_settings = {
-        bAutoWidth: true,
-        //responsive: true,
+        "bAutoWidth": true,
+        //"responsive": false,
         "destroy": true,
         "language": {
             search: '',

@@ -219,6 +219,12 @@
     Route::post('/agents/doc_management/transactions/undo_delete_earnest_check', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@undo_delete_earnest_check');
     // set status to waiting for release
     Route::post('/agents/doc_management/transactions/set_status_to_waiting_for_release', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@set_status_to_waiting_for_release');
+    // get notes
+    Route::get('/agents/doc_management/transactions/get_earnest_notes', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_earnest_notes');
+    // add notes
+    Route::post('/agents/doc_management/transactions/save_add_earnest_notes', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@save_add_earnest_notes');
+    // delete note
+    Route::post('/agents/doc_management/transactions/delete_note', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@delete_note');
 
 
 

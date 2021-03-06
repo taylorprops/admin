@@ -16,7 +16,7 @@ class Earnest extends Model
     }
 
     public function notes() {
-        return $this -> hasMany('App\Models\DocManagement\Earnest\EarnestNotes', 'Earnest_ID', 'id');
+        return $this -> hasMany('App\Models\DocManagement\Earnest\EarnestNotes', 'Earnest_ID', 'id') -> orderBy('created_at', 'desc');
     }
 
     public function agent() {

@@ -1,15 +1,15 @@
-@foreach($commission_notes as $commission_note)
-    @php
-    $user = $users -> where('id', $commission_note -> user_id) -> first();
-    $username = $user -> name;
-    @endphp
-    <li class="list-group-item my-1 mr-2 p-1 bg-blue-light text-primary text-white rounded">
-        <div class="small border-bottom">
-            {{ date('m/d/Y', strtotime($commission_note -> created_at)) }} - <span class="font-italic">{{ $username }}</span>
+@foreach($notes as $note)
+
+    @php $user_name = $note -> user -> name; @endphp
+
+    <div class="list-group-item border-top mb-2">
+        <div class="d-flex justify-content-between small">
+            <div class="font-italic">{{ $user_name }}</div>
+            <div>{{ date_mdy($note -> created_at) }}</div>
         </div>
-        <div class="p-2">
-            {!! nl2br($commission_note -> notes) !!}
+        <div class="m-1 p-2 border text-gray">
+            {!! nl2br($note -> notes) !!}
         </div>
-    </li>
+    </div>
 
 @endforeach

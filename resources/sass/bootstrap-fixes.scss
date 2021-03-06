@@ -189,6 +189,10 @@ body.modal-open {
 
 // datatables
 
+.table-responsive {
+    overflow: visible !important;
+}
+
 .table.responsive {
     width: 100%;
 }
@@ -308,6 +312,12 @@ body.modal-open {
     }
 }
 
+@media (max-width: 992px) {
+    .modal-lg {
+        max-width: 90% !important;
+    }
+}
+
 // tabs
 @media (max-width: 768px) {
 
@@ -324,7 +334,7 @@ body.modal-open {
     .modal {
         padding-right: 0px !important;
 
-        .modal-xl {
+        .modal-lg, .modal-xl {
             max-width: 100% !important;
         }
 

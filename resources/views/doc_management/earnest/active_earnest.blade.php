@@ -56,11 +56,9 @@
             </div>
             <div class="modal-body py-4 px-5">
 
-                <div class="d-flex justify-content-start align-items-center mb-4">
-                    <div class="text-orange font-11">Send email to all agents of selected transactions</div>
-                    <div>
-                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Mail Merge Fields" data-content="Any fields enclosed in %% such as %%PropertyAddress%% will be replaced with the actual value when sent."><i class="fad fa-question-circle ml-2"></i></a>
-                    </div>
+                <div class="mb-4">
+                    <span class="text-orange font-11">Send email to all agents of selected transactions</span>
+                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Mail Merge Fields" data-content="Any fields enclosed in %% such as %%PropertyAddress%% will be replaced with the actual value when sent."><i class="fad fa-question-circle ml-2"></i></a>
                 </div>
 
                 <form id="email_agents_missing_earnest_form">

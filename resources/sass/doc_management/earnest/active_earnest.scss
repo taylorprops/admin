@@ -16,5 +16,18 @@
         border: 2px solid #ccc !important;
     }
 
+    .earnest-notes-section {
+        position: absolute;
+        right: 100%;
+        top: -150px;
+        width: 600px;
+
+        .earnest-notes-div {
+            max-height: 400px;
+            overflow: auto;
+            margin-top: 15px;
+        }
+    }
+
 }
 

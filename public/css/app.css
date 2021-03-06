@@ -13641,6 +13641,10 @@ body.modal-open {
   border-width: 3px !important;
 }
 
+.table-responsive {
+  overflow: visible !important;
+}
+
 .table.responsive {
   width: 100%;
 }
@@ -13738,6 +13742,12 @@ body.modal-open {
   }
 }
 
+@media (max-width: 992px) {
+  .modal-lg {
+    max-width: 90% !important;
+  }
+}
+
 @media (max-width: 768px) {
   .tab-content {
     padding: 0.5rem 0;
@@ -13753,6 +13763,7 @@ body.modal-open {
     padding-right: 0px !important;
   }
 
+  .modal .modal-lg,
   .modal .modal-xl {
     max-width: 100% !important;
   }
@@ -18459,5 +18470,18 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 
 .page-active-earnest th .pretty .state label:after {
   border: 2px solid #ccc !important;
+}
+
+.page-active-earnest .earnest-notes-section {
+  position: absolute;
+  right: 100%;
+  top: -150px;
+  width: 600px;
+}
+
+.page-active-earnest .earnest-notes-section .earnest-notes-div {
+  max-height: 400px;
+  overflow: auto;
+  margin-top: 15px;
 }
 

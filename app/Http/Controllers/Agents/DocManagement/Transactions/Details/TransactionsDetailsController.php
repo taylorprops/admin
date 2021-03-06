@@ -3,31 +3,20 @@
 namespace App\Http\Controllers\Agents\DocManagement\Transactions\Details;
 
 use File;
-
 use Config;
 use App\User;
-
 use Eversign\Client;
 use App\Models\Jobs\Jobs;
-
 use App\Mail\DefaultEmail;
-
 use Illuminate\Http\Request;
 use App\Models\CRM\CRMContacts;
-
 use App\Models\Employees\Agents;
 use App\Models\Esign\EsignFields;
-
 use Illuminate\Http\UploadedFile;
-
 use App\Models\Esign\EsignSigners;
-
 use App\Http\Controllers\Controller;
-
 use App\Models\Esign\EsignCallbacks;
-
 use App\Models\Esign\EsignDocuments;
-
 use App\Models\Esign\EsignEnvelopes;
 use App\Models\Esign\EsignTemplates;
 use Illuminate\Support\Facades\Mail;
@@ -37,62 +26,44 @@ use App\Models\Employees\AgentsNotes;
 use App\Models\Employees\AgentsTeams;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
-
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-
-
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Jobs\OldDB\Earnest\EscrowExportJob;
-
 use App\Mail\DocManagement\Emails\Documents;
-
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use App\Models\Commission\CommissionChecksIn;
 use App\Models\DocManagement\Earnest\Earnest;
-
 use App\Models\Commission\CommissionChecksOut;
 use App\Models\Commission\CommissionBreakdowns;
 use App\Models\Admin\Resources\ResourceItemsAdmin;
 use App\Models\Commission\CommissionChecksInQueue;
 use App\Models\DocManagement\Create\Fields\Fields;
-
 use App\Models\DocManagement\Create\Upload\Upload;
 use App\Models\DocManagement\Earnest\EarnestNotes;
-
 use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Earnest\EarnestChecks;
-
 use App\Models\Commission\CommissionIncomeDeductions;
-
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Create\Upload\UploadPages;
 use App\Models\DocManagement\Checklists\ChecklistsItems;
-
 use App\Models\DocManagement\Create\Fields\CommonFields;
 use App\Models\DocManagement\Create\Upload\UploadImages;
 use App\Models\Commission\CommissionBreakdownsDeductions;
 use App\Models\Commission\CommissionCommissionDeductions;
 use App\Models\DocManagement\Transactions\Members\Members;
-
-
 use App\Models\DocManagement\Transactions\Data\ListingsData;
 use App\Models\DocManagement\Transactions\Listings\Listings;
-
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
-
 use App\Models\DocManagement\Transactions\Documents\InProcess;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-
 use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
 use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
 use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
-
 use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
-
 use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
 use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
@@ -100,8 +71,6 @@ use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-
-
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
@@ -3467,10 +3436,12 @@ class TransactionsDetailsController extends Controller {
     public function get_commission_notes(Request $request) {
 
         $Commission_ID = $request -> Commission_ID;
-        $commission_notes = CommissionNotes::where('Commission_ID', $Commission_ID) -> orderBy('created_at', 'DESC') -> get();
-        $users = new User();
+        $notes = CommissionNotes::where('Commission_ID', $Commission_ID)
+            -> with('user')
+            -> orderBy('created_at', 'DESC')
+            -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_commission_notes_html', compact( 'commission_notes', 'users'));
+        return view('/agents/doc_management/transactions/details/data/get_commission_notes_html', compact( 'notes'));
     }
 
     public function add_commission_notes(Request $request) {
@@ -4389,6 +4360,34 @@ class TransactionsDetailsController extends Controller {
         $undo_delete_check = EarnestChecks::find($request -> check_id) -> update(['active' => 'yes']);
 
         return response() -> json(['response' => 'success']);
+
+    }
+
+    public function get_earnest_notes(Request $request) {
+
+        $notes = EarnestNotes::where('Earnest_ID', $request -> Earnest_ID) -> orderBy('created_at', 'desc') -> get();
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest_notes_html', compact('notes'));
+
+    }
+
+    public function save_add_earnest_notes(Request $request) {
+
+        $add_notes = new EarnestNotes();
+        $add_notes -> Earnest_ID = $request -> Earnest_ID;
+        $add_notes -> notes = $request -> notes;
+        $add_notes -> user_id = auth() -> user() -> id;
+        $add_notes -> save();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function delete_note(Request $request) {
+
+        $note = EarnestNotes::find($request -> note_id) -> delete();
+
+        return response() -> json(['status' => 'success']);
 
     }
 

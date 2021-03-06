@@ -117,6 +117,43 @@
 
         </div>
 
+        <hr>
+
+        <div class="row">
+
+            <div class="col-12">
+
+                <div class="h4 text-primary mt-4 mb-3"><i class="fa fa-file-alt mr-3"></i> Notes</div>
+
+                <div class="row">
+
+                    <div class="col-12 col-sm-6">
+
+                        <div class="mt-4">
+
+                            <span class="text-orange font-10"><i class="fal fa-plus mr-2"></i> Add Notes</span>
+
+                            <textarea class="custom-form-element form-textarea earnest-notes" data-label="Enter Notes"></textarea>
+
+                            <button class="btn btn-success save-earnest-notes-button ml-0"><i class="fad fa-save mr-2"></i> Save Notes </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+
+                        <div id="earnest_notes_div"></div>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+
     </div>
 
 </div>

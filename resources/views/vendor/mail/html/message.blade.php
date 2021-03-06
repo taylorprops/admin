@@ -21,7 +21,13 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            © {{ date('Y') }} {{ stristr(auth() -> user() -> group, 'agent') ? \Session::get('agent_details') -> company : 'Taylor Properties' }}. @lang('All rights reserved.')
+            © {{ date('Y') }}
+            @if(auth() -> user() && stristr(auth() -> user() -> group, 'agent'))
+                {{ \Session::get('agent_details') -> company }}
+                @else
+                Taylor Properties
+                @endif
+                @lang('All rights reserved.')
         @endcomponent
     @endslot
 @endcomponent

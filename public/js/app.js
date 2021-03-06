@@ -48982,6 +48982,43 @@ if (document.URL.match(/transaction_details/)) {
 /***/ (function(module, exports) {
 
 if (document.URL.match(/transaction_details/)) {
+  var delete_earnest_note = function delete_earnest_note(Earnest_ID, note_id) {
+    var formData = new FormData();
+    formData.append('note_id', note_id);
+    axios.post('/agents/doc_management/transactions/delete_note', formData, axios_options).then(function (response) {
+      get_earnest_notes();
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var save_add_earnest_notes = function save_add_earnest_notes() {
+    var Earnest_ID = $('#Earnest_ID').val();
+    var notes = $('.earnest-notes').val();
+    var formData = new FormData();
+    formData.append('Earnest_ID', Earnest_ID);
+    formData.append('notes', notes);
+    axios.post('/agents/doc_management/transactions/save_add_earnest_notes', formData, axios_options).then(function (response) {
+      get_earnest_notes();
+      $('.earnest-notes').val('');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var get_earnest_notes = function get_earnest_notes() {
+    var Earnest_ID = $('#Earnest_ID').val();
+    axios.get('/agents/doc_management/transactions/get_earnest_notes', {
+      params: {
+        Earnest_ID: Earnest_ID
+      }
+    }).then(function (response) {
+      $('#earnest_notes_div').html(response.data);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   /* TODO:
   earnest_held_by
       needs to be disabled if there are checks in
@@ -49003,10 +49040,17 @@ if (document.URL.match(/transaction_details/)) {
       save_add_earnest_check();
     });
     $(document).on('click', '#show_set_status_to_waiting_button', show_set_status_to_waiting);
+    $('.save-earnest-notes-button').off('click').on('click', save_add_earnest_notes);
+    $(document).on('click', '.delete-earnest-note-button', function () {
+      var Earnest_ID = $(this).data('earnest-id');
+      var note_id = $(this).data('note-id');
+      delete_earnest_note(Earnest_ID, note_id);
+    });
     get_earnest_check_info();
     get_earnest_checks('in', false);
     get_earnest_checks('out', false);
     save_earnest('no');
+    get_earnest_notes();
   };
 
   window.show_set_status_to_waiting = function () {
@@ -54972,16 +55016,53 @@ if (document.URL.match(/active_earnest/)) {
           'Content-Type': 'text/html'
         }
       }).then(function (response) {
+        // reload if gets caught up
+        if (!response.data) {
+          if (account_id == 'all') {
+            window.location.reload();
+          }
+        }
+
         $('#' + tab + '_content').html(response.data);
 
         if (tab == 'missing') {
-          data_table('25', $('.earnest-table.' + tab + ''), [6, 'desc'], [0, 1, 10], [], true, true, true, true, true);
+          data_table('25', $('.earnest-table.' + tab + ''), [6, 'desc'], [0, 1, 10, 11], [], true, true, true, true, true);
         } else {
           data_table('25', $('.earnest-table.' + tab + ''), [5, 'desc'], [0], [], true, true, true, true, true);
         }
+
+        $('.save-earnest-notes-button').off('click').on('click', function () {
+          var Earnest_ID = $(this).data('earnest-id');
+          var notes = $('.earnest-notes-' + Earnest_ID).val();
+          save_add_earnest_notes(Earnest_ID, notes);
+        });
       })["catch"](function (error) {
         console.log(error);
       });
+    });
+  };
+
+  var save_add_earnest_notes = function save_add_earnest_notes(Earnest_ID, notes) {
+    var formData = new FormData();
+    formData.append('Earnest_ID', Earnest_ID);
+    formData.append('notes', notes);
+    axios.post('/agents/doc_management/transactions/save_add_earnest_notes', formData, axios_options).then(function (response) {
+      get_earnest_notes(Earnest_ID);
+      $('.earnest-notes-' + Earnest_ID).val('');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var get_earnest_notes = function get_earnest_notes(Earnest_ID) {
+    axios.get('/agents/doc_management/transactions/get_earnest_notes', {
+      params: {
+        Earnest_ID: Earnest_ID
+      }
+    }).then(function (response) {
+      $('#earnest_notes_div_' + Earnest_ID).html(response.data);
+    })["catch"](function (error) {
+      console.log(error);
     });
   };
 
@@ -55028,6 +55109,7 @@ if (document.URL.match(/active_earnest/)) {
       $('#email_agents_missing_earnest_modal').on('hide.bs.modal', function () {
         $('.deposit-input, .check-all').prop('checked', false);
         email_button('hide');
+        $('button.email-agent').prop('disabled', false);
       });
       $('#send_email_agents_missing_earnest_button').off('click').on('click', function () {
         var form = $('#email_agents_missing_earnest_form');
@@ -55044,11 +55126,22 @@ if (document.URL.match(/active_earnest/)) {
           formData.append('message', message);
           formData.append('contract_ids', contract_ids);
           axios.post('/doc_management/email_agents_missing_earnest', formData, axios_options).then(function (response) {
-            console.log(response);
+            get_earnest('all');
           })["catch"](function (error) {
             console.log(error);
           });
         }
+      });
+    });
+    $(document).on('click', '.delete-earnest-note-button', function () {
+      var Earnest_ID = $(this).data('earnest-id');
+      var note_id = $(this).data('note-id');
+      var formData = new FormData();
+      formData.append('note_id', note_id);
+      axios.post('/agents/doc_management/transactions/delete_note', formData, axios_options).then(function (response) {
+        get_earnest_notes(Earnest_ID);
+      })["catch"](function (error) {
+        console.log(error);
       });
     });
     var options = {
@@ -59097,8 +59190,8 @@ $(function () {
     global_tooltip();
   }, 1000);
   window.datatable_settings = _defineProperty({
-    bAutoWidth: true,
-    //responsive: true,
+    "bAutoWidth": true,
+    //"responsive": false,
     "destroy": true,
     "language": {
       search: '',

@@ -42,6 +42,7 @@ if(document.URL.match(/active_earnest/)) {
             $('#email_agents_missing_earnest_modal').on('hide.bs.modal', function() {
                 $('.deposit-input, .check-all').prop('checked', false);
                 email_button('hide');
+                $('button.email-agent').prop('disabled', false);
             });
 
             $('#send_email_agents_missing_earnest_button').off('click').on('click', function() {
@@ -64,7 +65,7 @@ if(document.URL.match(/active_earnest/)) {
                     formData.append('contract_ids', contract_ids);
                     axios.post('/doc_management/email_agents_missing_earnest', formData, axios_options)
                     .then(function (response) {
-                        console.log(response);
+                        get_earnest('all');
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -74,6 +75,22 @@ if(document.URL.match(/active_earnest/)) {
 
             });
 
+        });
+
+        $(document).on('click', '.delete-earnest-note-button', function() {
+
+            let Earnest_ID = $(this).data('earnest-id');
+            let note_id = $(this).data('note-id');
+
+            let formData = new FormData();
+            formData.append('note_id', note_id);
+            axios.post('/agents/doc_management/transactions/delete_note', formData, axios_options)
+            .then(function (response) {
+                get_earnest_notes(Earnest_ID);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         });
 
         let options = {
@@ -103,12 +120,28 @@ if(document.URL.match(/active_earnest/)) {
             })
             .then(function (response) {
 
+                // reload if gets caught up
+                if(!response.data) {
+                    if(account_id == 'all') {
+                        window.location.reload();
+                    }
+                }
+
                 $('#'+tab+'_content').html(response.data);
                 if(tab == 'missing') {
-                    data_table('25', $('.earnest-table.'+tab+''), [6, 'desc'], [0,1,10], [], true, true, true, true, true);
+                    data_table('25', $('.earnest-table.'+tab+''), [6, 'desc'], [0,1,10,11], [], true, true, true, true, true);
                 } else {
                     data_table('25', $('.earnest-table.'+tab+''), [5, 'desc'], [0], [], true, true, true, true, true);
                 }
+
+                $('.save-earnest-notes-button').off('click').on('click', function() {
+
+                    let Earnest_ID = $(this).data('earnest-id');
+                    let notes = $('.earnest-notes-'+Earnest_ID).val();
+
+                    save_add_earnest_notes(Earnest_ID, notes);
+
+                });
 
             })
             .catch(function (error) {
@@ -117,6 +150,37 @@ if(document.URL.match(/active_earnest/)) {
 
         });
 
+    }
+
+    function save_add_earnest_notes(Earnest_ID, notes) {
+
+        let formData = new FormData();
+        formData.append('Earnest_ID', Earnest_ID);
+        formData.append('notes', notes);
+        axios.post('/agents/doc_management/transactions/save_add_earnest_notes', formData, axios_options)
+        .then(function (response) {
+            get_earnest_notes(Earnest_ID);
+            $('.earnest-notes-'+Earnest_ID).val('');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    function get_earnest_notes(Earnest_ID) {
+
+        axios.get('/agents/doc_management/transactions/get_earnest_notes', {
+            params: {
+                Earnest_ID: Earnest_ID
+            }
+        })
+        .then(function (response) {
+            $('#earnest_notes_div_'+Earnest_ID).html(response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     function email_button(action) {

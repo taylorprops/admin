@@ -28,10 +28,73 @@ if (document.URL.match(/transaction_details/)) {
         });
         $(document).on('click', '#show_set_status_to_waiting_button', show_set_status_to_waiting);
 
+        $('.save-earnest-notes-button').off('click').on('click', save_add_earnest_notes);
+
+        $(document).on('click', '.delete-earnest-note-button', function() {
+
+            let Earnest_ID = $(this).data('earnest-id');
+            let note_id = $(this).data('note-id');
+
+            delete_earnest_note(Earnest_ID, note_id);
+
+        });
+
         get_earnest_check_info();
         get_earnest_checks('in', false);
         get_earnest_checks('out', false);
         save_earnest('no');
+        get_earnest_notes();
+    }
+
+
+    function delete_earnest_note(Earnest_ID, note_id) {
+
+        let formData = new FormData();
+        formData.append('note_id', note_id);
+        axios.post('/agents/doc_management/transactions/delete_note', formData, axios_options)
+        .then(function (response) {
+            get_earnest_notes();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    function save_add_earnest_notes() {
+
+        let Earnest_ID = $('#Earnest_ID').val();
+        let notes = $('.earnest-notes').val();
+
+        let formData = new FormData();
+        formData.append('Earnest_ID', Earnest_ID);
+        formData.append('notes', notes);
+        axios.post('/agents/doc_management/transactions/save_add_earnest_notes', formData, axios_options)
+        .then(function (response) {
+            get_earnest_notes();
+            $('.earnest-notes').val('');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    function get_earnest_notes() {
+
+        let Earnest_ID = $('#Earnest_ID').val();
+
+        axios.get('/agents/doc_management/transactions/get_earnest_notes', {
+            params: {
+                Earnest_ID: Earnest_ID
+            }
+        })
+        .then(function (response) {
+            $('#earnest_notes_div').html(response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
 

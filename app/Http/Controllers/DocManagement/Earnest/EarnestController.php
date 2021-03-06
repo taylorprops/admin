@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Employees\Agents;
 use App\Models\OldDB\OldEarnest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\DocManagement\Earnest\Earnest;
-use App\Jobs\Earnest\EmailAgentsMissingEarnest;
+use App\Models\DocManagement\Earnest\EarnestNotes;
 use App\Models\DocManagement\Earnest\EarnestChecks;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
@@ -78,7 +79,7 @@ class EarnestController extends Controller {
 
         }
 
-        $contracts = $contracts -> with('agent')
+        $contracts = $contracts -> with('agent:id,full_name')
             -> whereHas('earnest', function(Builder $query) use ($account_id, $tab) {
                 if($account_id != 'all') {
                     $query -> where('earnest_account_id', $account_id);
@@ -181,8 +182,52 @@ class EarnestController extends Controller {
         $from_name = auth() -> user() -> name;
         $from_address = auth() -> user() -> email;
 
-        EmailAgentsMissingEarnest::dispatch($contract_ids, $subject, $message, $from_name, $from_address);
+        $email['from'] = ['address' => $from_address, 'name' => $from_name];
 
+        $select = [
+            'Agent_ID',
+            'Contract_ID',
+            'FullStreetAddress',
+            'City',
+            'StateOrProvince',
+            'PostalCode'
+        ];
+        $contracts = Contracts::select($select)
+            -> whereIn('Contract_ID', $contract_ids)
+            -> with('agent:id,first_name,full_name,email', 'earnest')
+            -> get();
+
+        foreach($contracts as $contract) {
+
+            $agent = $contract -> agent;
+            $to_name = $agent -> full_name;
+            $to_address = $agent -> email;
+            $property_address = $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode;
+            $subject = preg_replace('/%%PropertyAddress%%/', $property_address, $subject);
+            $message = preg_replace('/%%PropertyAddress%%/', $property_address, $message);
+            $message = preg_replace('/%%FirstName%%/', $agent -> first_name, $message);
+
+            $email['subject'] = $subject;
+            $email['message'] = $message;
+
+            $to_name = $agent -> full_name;
+            $to_address = $agent -> email;
+
+            $new_mail = new DefaultEmail($email);
+
+            //return ($new_mail) -> render();
+
+            Mail::to([['name' => $to_name, 'email' => $to_address]])
+                -> queue($new_mail);
+
+            // update earnest last emailed date
+            $earnest = $contract -> earnest;
+            $earnest -> last_emailed_date = date('Y-m-d');
+            $earnest -> save();
+
+        }
+
+        return response() -> json(['status' => 'success']);
 
     }
 
