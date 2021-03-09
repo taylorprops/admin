@@ -51447,7 +51447,10 @@ if (document.URL.match(/edit_files/)) {
           });
         });
       }, 1000);
-      in_process([document_id]);
+      $('#in_process_div').show();
+      setTimeout(function () {
+        in_process([document_id]);
+      }, 3000);
       $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
       axios_options['header'] = {
         'content-type': 'multipart/form-data'

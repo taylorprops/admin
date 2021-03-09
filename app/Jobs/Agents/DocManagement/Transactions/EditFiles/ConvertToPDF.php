@@ -60,10 +60,12 @@ class ConvertToPDF implements ShouldQueue
         $file_id = $this -> file_id;
         $document_id = $this -> document_id;
         $file_type = $this -> file_type;
+        $uuid = $this -> job -> uuid();
 
         // add to in_process table
         $in_process = new InProcess();
         $in_process -> document_id = $document_id;
+        $in_process -> uuid = $uuid;
         $in_process -> save();
 
         $path = [
@@ -218,6 +220,6 @@ class ConvertToPDF implements ShouldQueue
         $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $file_id);
 
         // remove from in_process
-        $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
+        $remove_in_process = InProcess::where('document_id', $document_id) -> where('uuid', $uuid) -> delete();
     }
 }
