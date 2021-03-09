@@ -1,12 +1,10 @@
 <?php
 
-
-
 namespace Database\Factories\CRM;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Model;
 use App\Models\CRM\CRMContacts;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CRMContactsFactory extends Factory
 {

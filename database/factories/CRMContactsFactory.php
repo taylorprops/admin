@@ -4,9 +4,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Model;
 use App\Models\CRM\CRMContacts;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 $factory->define(CRMContacts::class, function (Faker $faker) {
     return [

@@ -13,6 +13,6 @@ class EsignDocumentsImages extends Model
 
     public function images()
     {
-        return $this->hasMany(\App\Models\Esign\EsignDocumentsImages::class, 'document_id', 'id');
+        return $this->hasMany(self::class, 'document_id', 'id');
     }
 }
