@@ -2,34 +2,31 @@
 
 namespace App\Http\Controllers\Agents\DocManagement\Transactions;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
-use Yajra\Datatables\Facades\Datatables;
 use App\Models\DocManagement\Resources\ResourceItems;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 class TransactionsController extends Controller
 {
-
-    public function transactions_all(Request $request) {
-
+    public function transactions_all(Request $request)
+    {
         $agent_referral = null;
-        if(stristr(auth() -> user() -> group, 'referral')) {
+        if (stristr(auth()->user()->group, 'referral')) {
             $agent_referral = 'yes';
         }
+
         return view('/agents/doc_management/transactions/transactions_all', compact('agent_referral'));
     }
 
-    public function get_transactions(Request $request) {
-
-        $type = $request -> type;
-        $status = $request -> status;
+    public function get_transactions(Request $request)
+    {
+        $type = $request->type;
+        $status = $request->status;
 
         $select_listings = [
             'City',
@@ -45,7 +42,7 @@ class TransactionsController extends Controller
             'SellerOneFullName',
             'SellerTwoFullName',
             'StateOrProvince',
-            'Status'
+            'Status',
         ];
 
         $select_contracts = [
@@ -63,7 +60,7 @@ class TransactionsController extends Controller
             'ListPictureURL',
             'PostalCode',
             'StateOrProvince',
-            'Status'
+            'Status',
         ];
 
         $select_referrals = [
@@ -79,47 +76,42 @@ class TransactionsController extends Controller
             'ReceivingAgentLastName',
             'Referral_ID',
             'StateOrProvince',
-            'Status'
+            'Status',
         ];
 
-        $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no') -> toArray();
+        $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no')->toArray();
         $closed_status_listing = ResourceItems::GetResourceID('Closed', 'listing_status');
-        $active_contract_statuses = ResourceItems::GetActiveContractStatuses() -> toArray();
+        $active_contract_statuses = ResourceItems::GetActiveContractStatuses()->toArray();
         $closed_status_contract = ResourceItems::GetResourceID('Closed', 'contract_status');
-        $active_referral_statuses = ResourceItems::GetActiveReferralStatuses() -> toArray();
+        $active_referral_statuses = ResourceItems::GetActiveReferralStatuses()->toArray();
         $closed_status_referral = ResourceItems::GetResourceID('Closed', 'referral_status');
 
-
-        if($type == 'listings') {
-            $transactions = Listings::select($select_listings) -> with('contract:Contract_ID,CloseDate');
-            if($status == 'active') {
-                $transactions = $transactions -> whereIn('Status', $active_listing_statuses);
-            } else if($status == 'closed') {
-                $transactions = $transactions -> where('Status', $closed_status_listing);
+        if ($type == 'listings') {
+            $transactions = Listings::select($select_listings)->with('contract:Contract_ID,CloseDate');
+            if ($status == 'active') {
+                $transactions = $transactions->whereIn('Status', $active_listing_statuses);
+            } elseif ($status == 'closed') {
+                $transactions = $transactions->where('Status', $closed_status_listing);
             }
-        } else if($type == 'contracts') {
-            $transactions = Contracts::select($select_contracts) -> with('listing:Listing_ID,SellerOneFullName,SellerTwoFullName');
-            if($status == 'active') {
-                $transactions = $transactions -> whereIn('Status', $active_contract_statuses);
-            } else if($status == 'closed') {
-                $transactions = $transactions -> where('Status', $closed_status_contract);
+        } elseif ($type == 'contracts') {
+            $transactions = Contracts::select($select_contracts)->with('listing:Listing_ID,SellerOneFullName,SellerTwoFullName');
+            if ($status == 'active') {
+                $transactions = $transactions->whereIn('Status', $active_contract_statuses);
+            } elseif ($status == 'closed') {
+                $transactions = $transactions->where('Status', $closed_status_contract);
             }
-        } else if($type == 'referrals') {
-            $transactions = Referrals::select($select_referrals) -> with('agent:id,full_name');
-            if($status == 'active') {
-                $transactions = $transactions -> whereIn('Status', $active_referral_statuses);
-            } else if($status == 'closed') {
-                $transactions = $transactions -> where('Status', $closed_status_referral);
+        } elseif ($type == 'referrals') {
+            $transactions = Referrals::select($select_referrals)->with('agent:id,full_name');
+            if ($status == 'active') {
+                $transactions = $transactions->whereIn('Status', $active_referral_statuses);
+            } elseif ($status == 'closed') {
+                $transactions = $transactions->where('Status', $closed_status_referral);
             }
         }
-        $transactions = $transactions -> with('status') -> with('checklist') -> orderBy('Status') -> get();
+        $transactions = $transactions->with('status')->with('checklist')->orderBy('Status')->get();
 
         $contract_closed_status = ResourceItems::GetResourceId('Closed', 'contract_status');
 
-
-        return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions','contract_closed_status'));
-
+        return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions', 'contract_closed_status'));
     }
-
-
 }

@@ -1,6 +1,8 @@
 <?php
-use Illuminate\Support\Facades\Route;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,12 +29,8 @@ Route::get('/dashboard_admin', 'Dashboard\DashboardAdminController@dashboard_adm
 Route::get('/dashboard_agent', 'Dashboard\DashboardAgentController@dashboard_agent');
 Route::get('/dashboard_agent_referral', 'Dashboard\DashboardAgentReferralController@dashboard_agent_referral');
 
-
-
 /********** Search Routes ********/
 Route::get('/search', 'Search\SearchController@search');
-
-
 
 // Route::get('/test', 'Testcontroller@test');
 /* Route::get('/testing', function() {

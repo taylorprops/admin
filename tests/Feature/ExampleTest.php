@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\User;
 
 class ExampleTest extends TestCase
 {
@@ -13,12 +13,12 @@ class ExampleTest extends TestCase
      *
      * @return void
      */
-
-    public function testBasicTest() {
+    public function testBasicTest()
+    {
         $users = User::all();
+
         return $users;
     }
-
 
     /* public function testBasicTest()
     {

@@ -6,11 +6,11 @@ use App\Models\Employees\Agents;
 use Auth;
 use Illuminate\Http\Request;
 
-class UserController extends Controller {
-
+class UserController extends Controller
+{
     public function __construct()
     {
-        $this -> middleware('auth');
+        $this->middleware('auth');
     }
 
     /* public function dashboard(Request $request) {
@@ -44,5 +44,4 @@ class UserController extends Controller {
     }
 
     public function dashboard_agent(Request $request) {} */
-
 }

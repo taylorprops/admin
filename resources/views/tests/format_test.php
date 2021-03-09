@@ -14,7 +14,7 @@ if ($field['field_type'] == 'number') {
 } elseif ($field['field_type'] == 'date') {
     $class = 'fillable-field-container standard';
 }
-$class .= ' ' . $field['field_type'];
+$class .= ' '.$field['field_type'];
 
 $common_name = '';
 $custom_name = '';
@@ -23,5 +23,3 @@ if ($field['field_name_type'] == 'common') {
 } elseif ($field['field_name_type'] == 'custom') {
     $custom_name = $field['field_name_display'];
 }
-
-?>

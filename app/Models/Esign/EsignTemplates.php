@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EsignTemplates extends Model
 {
-
     use SoftDeletes;
 
     public $table = 'esign_templates';
@@ -33,17 +32,18 @@ class EsignTemplates extends Model
         });
     } */
 
-    public function envelopes() {
-        return $this -> hasMany('App\Models\Esign\EsignEnvelopes', 'template_id', 'id') -> with('documents') -> with('signers');
+    public function envelopes()
+    {
+        return $this->hasMany('App\Models\Esign\EsignEnvelopes', 'template_id', 'id')->with('documents')->with('signers');
     }
 
-    public function fields() {
-        return $this -> hasMany('App\Models\Esign\EsignFields', 'template_id', 'id');
+    public function fields()
+    {
+        return $this->hasMany('App\Models\Esign\EsignFields', 'template_id', 'id');
     }
 
-    public function signers() {
-        return $this -> hasMany('App\Models\Esign\EsignSigners', 'template_id', 'id');
+    public function signers()
+    {
+        return $this->hasMany('App\Models\Esign\EsignSigners', 'template_id', 'id');
     }
-
-
 }

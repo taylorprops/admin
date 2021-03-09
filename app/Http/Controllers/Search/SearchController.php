@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Search;
 
-use Illuminate\Http\Request;
-use App\Models\Employees\Agents;
 use App\Http\Controllers\Controller;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use App\Models\Employees\Agents;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Database\Eloquent\Collection;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
 
 class SearchController extends Controller
 {
-    public function search(Request $request) {
-
-        $value = $request -> value;
+    public function search(Request $request)
+    {
+        $value = $request->value;
 
         $agent_ids = [];
 
-        if(Cookie::get('user_group')) {
-            if(Cookie::get('user_group') == 'admin') {
-                $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
+        if (Cookie::get('user_group')) {
+            if (Cookie::get('user_group') == 'admin') {
+                $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%')->pluck('id');
             }
         } else {
             abort(404);
@@ -42,18 +42,18 @@ class SearchController extends Controller
             'SaleRent',
             'StateOrProvince',
             'Status',
-            'TransactionCoordinator_ID'
+            'TransactionCoordinator_ID',
         ];
         $listings = Listings::select($listings_select)
-            -> where('FullStreetAddress', 'like', '%'.$value.'%')
-            -> orWhere(function($query) use ($agent_ids) {
-                if(count($agent_ids) > 0) {
-                    $query -> whereIn('Agent_ID', $agent_ids);
+            ->where('FullStreetAddress', 'like', '%'.$value.'%')
+            ->orWhere(function ($query) use ($agent_ids) {
+                if (count($agent_ids) > 0) {
+                    $query->whereIn('Agent_ID', $agent_ids);
                 }
             })
-            -> with('status:resource_id,resource_name,resource_color', 'agent', 'transaction_coordinator')
-            -> orderBy('MLSListDate', 'DESC')
-            -> get();
+            ->with('status:resource_id,resource_name,resource_color', 'agent', 'transaction_coordinator')
+            ->orderBy('MLSListDate', 'DESC')
+            ->get();
 
         $contracts_select = [
             'Agent_ID',
@@ -69,18 +69,18 @@ class SearchController extends Controller
             'SaleRent',
             'StateOrProvince',
             'Status',
-            'TransactionCoordinator_ID'
+            'TransactionCoordinator_ID',
         ];
         $contracts = Contracts::select($contracts_select)
-            -> where('FullStreetAddress', 'like', '%'.$value.'%')
-            -> orWhere(function($query) use ($agent_ids) {
-                if(count($agent_ids) > 0) {
-                    $query -> whereIn('Agent_ID', $agent_ids);
+            ->where('FullStreetAddress', 'like', '%'.$value.'%')
+            ->orWhere(function ($query) use ($agent_ids) {
+                if (count($agent_ids) > 0) {
+                    $query->whereIn('Agent_ID', $agent_ids);
                 }
             })
-            -> with('status:resource_id,resource_name,resource_color', 'agent', 'earnest', 'transaction_coordinator')
-            -> orderBy('ContractDate', 'DESC')
-            -> get();
+            ->with('status:resource_id,resource_name,resource_color', 'agent', 'earnest', 'transaction_coordinator')
+            ->orderBy('ContractDate', 'DESC')
+            ->get();
 
         $referrals_select = [
             'Agent_ID',
@@ -93,20 +93,19 @@ class SearchController extends Controller
             'PostalCode',
             'StateOrProvince',
             'Status',
-            'TransactionCoordinator_ID'
+            'TransactionCoordinator_ID',
         ];
         $referrals = Referrals::select($referrals_select)
-        -> where('FullStreetAddress', 'like', '%'.$value.'%')
-        -> orWhere(function($query) use ($agent_ids) {
-            if(count($agent_ids) > 0) {
-                $query -> whereIn('Agent_ID', $agent_ids);
+        ->where('FullStreetAddress', 'like', '%'.$value.'%')
+        ->orWhere(function ($query) use ($agent_ids) {
+            if (count($agent_ids) > 0) {
+                $query->whereIn('Agent_ID', $agent_ids);
             }
         })
-        -> with('status', 'agent', 'transaction_coordinator')
-        -> orderBy('CloseDate', 'DESC')
-        -> get();
+        ->with('status', 'agent', 'transaction_coordinator')
+        ->orderBy('CloseDate', 'DESC')
+        ->get();
 
         return view('/search/search_results_html', compact('listings', 'contracts', 'referrals'));
-
     }
 }

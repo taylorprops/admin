@@ -2,8 +2,8 @@
 
 namespace App\Models\DocManagement\Transactions\Members;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\DocManagement\Resources\ResourceItems;
+use Illuminate\Database\Eloquent\Model;
 
 class Members extends Model
 {
@@ -12,8 +12,10 @@ class Members extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function ScopeGetMemberTypeID($query, $member_type) {
-        $member_type = ResourceItems::where('resource_name', $member_type) -> where('resource_type', 'contact_type') -> first();
-        return $member_type -> resource_id;
+    public function ScopeGetMemberTypeID($query, $member_type)
+    {
+        $member_type = ResourceItems::where('resource_name', $member_type)->where('resource_type', 'contact_type')->first();
+
+        return $member_type->resource_id;
     }
 }

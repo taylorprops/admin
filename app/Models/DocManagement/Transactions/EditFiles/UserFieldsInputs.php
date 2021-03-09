@@ -9,6 +9,4 @@ class UserFieldsInputs extends Model
     protected $connection = 'mysql';
     public $table = 'docs_transaction_fields_inputs';
     protected $guarded = [];
-
-
 }

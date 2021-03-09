@@ -11,11 +11,14 @@ class CommonFieldsSubGroups extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    public function ScopeGetSubGroupTitle($query, $id) {
-        if($id) {
-            $sub_group = $query -> find($id);
-            return $sub_group -> sub_group_name;
+    public function ScopeGetSubGroupTitle($query, $id)
+    {
+        if ($id) {
+            $sub_group = $query->find($id);
+
+            return $sub_group->sub_group_name;
         }
+
         return false;
     }
 }

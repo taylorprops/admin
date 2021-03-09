@@ -1,13 +1,14 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 /****************** COMPONENT PAGES: DOCUMENT MANAGEMENT ******************/
 
 // ######### ADMIN ONLY ##########//
-Route::middleware('admin') -> group(function () {
+Route::middleware('admin')->group(function () {
 
     /* List of uploads */
-    Route::get('/doc_management/create/upload/files', 'DocManagement\Create\UploadController@get_uploaded_files') -> name('create.upload.files');
+    Route::get('/doc_management/create/upload/files', 'DocManagement\Create\UploadController@get_uploaded_files')->name('create.upload.files');
     /* Add fields page */
     Route::get('/doc_management/create/add_fields/{file_id}', 'DocManagement\Fill\FieldsController@add_fields');
     /* Resources | Add/remove associations, tags, etc. */
@@ -25,21 +26,17 @@ Route::middleware('admin') -> group(function () {
     /* Resources | Reorder Common Fields */
     Route::post('/doc_management/resources/reorder_common_fields', 'DocManagement\Resources\ResourcesController@reorder_common_fields');
 
-
     /* Checklists  */
     Route::get('/doc_management/checklists/{checklist_id?}/{checklist_location_id?}/{checklist_type?}', 'DocManagement\Checklists\ChecklistsController@checklists');
 
-/****************** END COMPONENT PAGES: DOCUMENT MANAGEMENT ******************/
+    /****************** END COMPONENT PAGES: DOCUMENT MANAGEMENT ******************/
 
+    //************************** COMPONENT DATA: DOCUMENT MANAGEMENT **************************//
 
-
-//************************** COMPONENT DATA: DOCUMENT MANAGEMENT **************************//
-
-/**********  DATA - ADD/EDIT/DELETE /**********/
-
+    /**********  DATA - ADD/EDIT/DELETE /**********/
 
     // Upload //
-    Route::post('/doc_management/upload_file', 'DocManagement\Create\UploadController@upload_file') -> name('doc_management.upload_file');
+    Route::post('/doc_management/upload_file', 'DocManagement\Create\UploadController@upload_file')->name('doc_management.upload_file');
     // Edit uploaded File
     Route::post('/doc_management/save_file_edit', 'DocManagement\Create\UploadController@save_file_edit');
     // Add non form checklist item
@@ -85,7 +82,6 @@ Route::middleware('admin') -> group(function () {
     // delete page from upload
     Route::post('/doc_management/delete_page', 'DocManagement\Fill\FieldsController@delete_page');
 
-
     /* checklists */
     /* Add Checklists */
     Route::post('/doc_management/add_checklist', 'DocManagement\Checklists\ChecklistsController@add_checklist');
@@ -106,12 +102,10 @@ Route::middleware('admin') -> group(function () {
     /* Save Copy Checklists  */
     Route::post('/doc_management/save_copy_checklists', 'DocManagement\Checklists\ChecklistsController@save_copy_checklists');
 
-
     /**********  DATA - GET /**********/
 
-
     // get updated list of form_group files after adding a new one
-    Route::get('/doc_management/get_form_group_files', 'DocManagement\Create\UploadController@get_form_group_files') -> name('doc_management.get_form_group_files');
+    Route::get('/doc_management/get_form_group_files', 'DocManagement\Create\UploadController@get_form_group_files')->name('doc_management.get_form_group_files');
     // get upload details for edit
     Route::get('/doc_management/get_upload_details', 'DocManagement\Create\UploadController@get_upload_details');
     // get checklist after adding
@@ -129,15 +123,12 @@ Route::middleware('admin') -> group(function () {
     // get details to add to checklists
     Route::get('/doc_management/get_add_to_checklists_details', 'DocManagement\Create\UploadController@get_add_to_checklists_details');
 
-
-
     //Route::get('/doc_management/common_fields', 'DocManagement\Fill\FieldsController@get_common_fields');
 
     // get custom names for autofill when adding a form
     Route::get('/doc_management/get_custom_names', 'DocManagement\Fill\FieldsController@get_custom_names');
     // get edit properties modal
     Route::get('/doc_management/get_edit_properties_html', 'DocManagement\Fill\FieldsController@get_edit_properties_html');
-
 
     /********* Balance Earnest ************/
     // active earnest page
@@ -155,9 +146,6 @@ Route::middleware('admin') -> group(function () {
     // email agents missing earnest
     Route::post('/doc_management/email_agents_missing_earnest', 'DocManagement\Earnest\EarnestController@email_agents_missing_earnest');
 
-
-
-
     /********* Document Review ************/
     // doc review page
     Route::get('/doc_management/document_review/{Contract_ID?}', 'DocManagement\Review\DocumentReviewController@document_review');
@@ -169,7 +157,6 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/get_details', 'DocManagement\Review\DocumentReviewController@get_details');
     // save earnest and title details
     Route::post('/doc_management/save_earnest_and_title_details', 'DocManagement\Review\DocumentReviewController@save_earnest_and_title_details');
-
 
     /********* Commission ************/
     // commission
@@ -188,8 +175,6 @@ Route::middleware('admin') -> group(function () {
     // save edit check in
     Route::post('/doc_management/commission/save_edit_queue_check', 'DocManagement\Commission\CommissionController@save_edit_queue_check');
 
-
-
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {
         return view('/tests/form_elements');
@@ -197,8 +182,6 @@ Route::middleware('admin') -> group(function () {
 
     // Test Controller
     Route::get('/tests/test', 'TestController@test');
-
-
 });
 
 //************************** END COMPONENT: DOCUMENT MANAGEMENT **************************//

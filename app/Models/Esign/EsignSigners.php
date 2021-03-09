@@ -10,6 +10,4 @@ class EsignSigners extends Model
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];
-
-
 }

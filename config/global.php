@@ -2,8 +2,8 @@
 
 $bad_characters = ['/\#/', '/\</', '/\$/', '/\+/', '/\%/', '/\>/', '/\!/', '/\&/', '/\*/', '/\'/', '/\|/', '/\{/', '/\?/', '/\"/', '/\=/', '/\}/', '/\//', '/\:/', '/\s/', '/\@/', '/\;/', '/\,/', '/\(/', '/\)/', '/\[/', '/\]/', '/\./'];
 
-$street_suffixes = array('ALLEY', 'AVENUE', 'BEND', 'BOULEVARD', 'BRANCH', 'CIRCLE', 'CIR', 'CORNER', 'COURSE', 'COURT', 'COVE', 'CRESCENT', 'CROSSING', 'DRIVE', 'DRIVEWAY', 'EXTENSION', 'GARDENS', 'GARTH', 'GATEWAY', 'GLEN', 'GROVE', 'HARBOR', 'HIGHWAY', 'HILL', 'HOLLOW', 'KNOLLS', 'LANDING', 'LANE', 'LOOP', 'MEWS', 'MILLS', 'NORTHWAY', 'PARKWAY', 'PASSAGE', 'PATH', 'PIKE', 'PLACE', 'RIDGE', 'ROAD', 'ROUTE', 'ROW', 'RUN', 'SQUARE', 'STREET', 'TERRACE', 'TRACE', 'TRAIL', 'TURN', 'VIEW', 'VISTA', 'WALK', 'WAY');
-$street_dir_suffixes = array('E', 'EAST', 'N', 'NE', 'NORTH', 'NORTHEAST', 'NORTHWEST', 'NW', 'S', 'SE', 'SOUTH', 'SOUTHEAST', 'SOUTHWEST', 'SW', 'W', 'WEST');
+$street_suffixes = ['ALLEY', 'AVENUE', 'BEND', 'BOULEVARD', 'BRANCH', 'CIRCLE', 'CIR', 'CORNER', 'COURSE', 'COURT', 'COVE', 'CRESCENT', 'CROSSING', 'DRIVE', 'DRIVEWAY', 'EXTENSION', 'GARDENS', 'GARTH', 'GATEWAY', 'GLEN', 'GROVE', 'HARBOR', 'HIGHWAY', 'HILL', 'HOLLOW', 'KNOLLS', 'LANDING', 'LANE', 'LOOP', 'MEWS', 'MILLS', 'NORTHWAY', 'PARKWAY', 'PASSAGE', 'PATH', 'PIKE', 'PLACE', 'RIDGE', 'ROAD', 'ROUTE', 'ROW', 'RUN', 'SQUARE', 'STREET', 'TERRACE', 'TRACE', 'TRAIL', 'TURN', 'VIEW', 'VISTA', 'WALK', 'WAY'];
+$street_dir_suffixes = ['E', 'EAST', 'N', 'NE', 'NORTH', 'NORTHEAST', 'NORTHWEST', 'NW', 'S', 'SE', 'SOUTH', 'SOUTHEAST', 'SOUTHWEST', 'SW', 'W', 'WEST'];
 
 $loader = '
 <div class="preloader-wrapper active">
@@ -24,7 +24,6 @@ $select_columns_bright = 'Appliances,AssociationFee,AssociationFeeFrequency,Asso
 
 $select_columns_bright_agents = ['ListAgentFirstName,ListAgentLastName,ListAgentEmail,ListAgentPreferredPhone,BuyerOfficeName,BuyerOfficeMlsId,BuyerAgentMlsId,BuyerAgentFirstName,BuyerAgentLastName,BuyerAgentEmail,BuyerAgentPreferredPhone'];
 
-
 return [
     'vars' => [
         'app_stage' => env('APP_STAGE'),
@@ -42,8 +41,6 @@ return [
         'company_city' => env('COMPANY_CITY'),
         'company_state' => env('COMPANY_STATE'),
         'company_zip' => env('COMPANY_ZIP'),
-        'property_email' => env('PROPERTY_EMAIL')
-    ]
+        'property_email' => env('PROPERTY_EMAIL'),
+    ],
 ];
-
-?>

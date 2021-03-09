@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands\DocManagement;
 
-use Illuminate\Console\Command;
-
-use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use Illuminate\Console\Command;
 
 class ExpireListings extends Command
 {
@@ -40,26 +39,22 @@ class ExpireListings extends Command
      */
     public function handle()
     {
-        $this -> set_listings_expired();
+        $this->set_listings_expired();
     }
 
     /* ---------- Update Listing Statuses ---------- */
-    public function set_listings_expired() {
-
+    public function set_listings_expired()
+    {
         $status_id_active = ResourceItems::GetResourceID('Active', 'listing_status');
         $status_id_expired = ResourceItems::GetResourceID('Expired', 'listing_status');
 
-        $listings = Listings::where('Status', $status_id_active) -> get();
+        $listings = Listings::where('Status', $status_id_active)->get();
 
-        foreach($listings as $listing) {
-
-            if($listing -> ExpirationDate < date('Y-m-d')) {
-                $listing -> Status = $status_id_expired;
-                $listing -> save();
+        foreach ($listings as $listing) {
+            if ($listing->ExpirationDate < date('Y-m-d')) {
+                $listing->Status = $status_id_expired;
+                $listing->save();
             }
-
         }
-
     }
-
 }

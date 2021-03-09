@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
-use Closure;
 use Auth;
+use Closure;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
 class VerifyCsrfToken extends Middleware
 {
@@ -21,22 +21,22 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/logout'
+        '/logout',
     ];
 
     private $openRoutes = [
         'esign_callback',
-        'login'
+        'login',
     ];
 
     public function handle($request, Closure $next)
     {
-
-        foreach($this -> openRoutes as $route) {
-            if ($request -> is($route)) {
+        foreach ($this->openRoutes as $route) {
+            if ($request->is($route)) {
                 return $next($request);
             }
         }
+
         return $next($request);
     }
 }

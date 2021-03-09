@@ -2,16 +2,16 @@
 
 namespace App\Jobs\Agents\DocManagement\Transactions\EditFiles;
 
-use mikehaertl\wkhtmlto\Pdf;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
+use App\Models\DocManagement\Transactions\Documents\InProcess;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\DocManagement\Transactions\Documents\InProcess;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
+use mikehaertl\wkhtmlto\Pdf;
 
 class ConvertToPDF implements ShouldQueue
 {
@@ -35,14 +35,14 @@ class ConvertToPDF implements ShouldQueue
      */
     public function __construct($request, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type)
     {
-        $this -> request = $request;
-        $this -> Listing_ID = $Listing_ID;
-        $this -> Contract_ID = $Contract_ID;
-        $this -> Referral_ID = $Referral_ID;
-        $this -> transaction_type = $transaction_type;
-        $this -> file_id = $file_id;
-        $this -> document_id = $document_id;
-        $this -> file_type = $file_type;
+        $this->request = $request;
+        $this->Listing_ID = $Listing_ID;
+        $this->Contract_ID = $Contract_ID;
+        $this->Referral_ID = $Referral_ID;
+        $this->transaction_type = $transaction_type;
+        $this->file_id = $file_id;
+        $this->document_id = $document_id;
+        $this->file_type = $file_type;
     }
 
     /**
@@ -52,20 +52,19 @@ class ConvertToPDF implements ShouldQueue
      */
     public function handle()
     {
-
-        $request = $this -> request;
-        $Listing_ID = $this -> Listing_ID;
-        $Contract_ID = $this -> Contract_ID;
-        $Referral_ID = $this -> Referral_ID;
-        $transaction_type = $this -> transaction_type;
-        $file_id = $this -> file_id;
-        $document_id = $this -> document_id;
-        $file_type = $this -> file_type;
+        $request = $this->request;
+        $Listing_ID = $this->Listing_ID;
+        $Contract_ID = $this->Contract_ID;
+        $Referral_ID = $this->Referral_ID;
+        $transaction_type = $this->transaction_type;
+        $file_id = $this->file_id;
+        $document_id = $this->document_id;
+        $file_type = $this->file_type;
 
         // add to in_process table
         $in_process = new InProcess();
-        $in_process -> document_id = $document_id;
-        $in_process -> save();
+        $in_process->document_id = $document_id;
+        $in_process->save();
 
         $path = [
             'listing' => 'listings/'.$Listing_ID,
@@ -75,10 +74,10 @@ class ConvertToPDF implements ShouldQueue
 
         $upload_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type;
 
-        \Storage::disk('public') -> makeDirectory($upload_dir.'/combined/');
-        \Storage::disk('public') -> makeDirectory($upload_dir.'/layers/');
-        $full_path_dir = \Storage::disk('public') -> path($upload_dir);
-        $pdf_output_dir = \Storage::disk('public') -> path($upload_dir.'/combined/');
+        \Storage::disk('public')->makeDirectory($upload_dir.'/combined/');
+        \Storage::disk('public')->makeDirectory($upload_dir.'/layers/');
+        $full_path_dir = \Storage::disk('public')->path($upload_dir);
+        $pdf_output_dir = \Storage::disk('public')->path($upload_dir.'/combined/');
 
         // get file name to use for the final converted file
         $file = glob($full_path_dir.'/converted/*pdf');
@@ -87,14 +86,14 @@ class ConvertToPDF implements ShouldQueue
 
         // create or clear out directories if they already exist
         $clean_dir = new Filesystem;
-        $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/layers');
-        $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/combined');
+        $clean_dir->cleanDirectory('storage/'.$upload_dir.'/layers');
+        $clean_dir->cleanDirectory('storage/'.$upload_dir.'/combined');
         //$clean_dir -> cleanDirectory('storage/'.$upload_dir.'/converted');
         exec('cp -p '.$file[0].' '.$full_path_dir.'/converted/backup.pdf');
         //exec('rm '.$file[0]);
 
         // pdf options - more added below depending on page size
-        $options = array(
+        $options = [
             //'binary' => '/usr/bin/xvfb-run -- /usr/bin/wkhtmltopdf',
             'no-outline',
             'margin-top' => 0,
@@ -104,12 +103,11 @@ class ConvertToPDF implements ShouldQueue
             'encoding' => 'UTF-8',
             'dpi' => 96,
             'disable-smart-shrinking',
-            'tmpDir' => '/var/www/tmp'
-        );
+            'tmpDir' => '/var/www/tmp',
+        ];
 
         // loop through all pages
         for ($c = 1; $c <= $request['page_count']; $c++) {
-
             $page_number = $c;
 
             if (strlen($c) == 1) {
@@ -129,22 +127,16 @@ class ConvertToPDF implements ShouldQueue
             $page_height = get_width_height($layer_pdf)['height'];
 
             // if not standard 612 by 792 get width and height and convert to mm
-            if($page_width == 612 && $page_height == 792) {
-
+            if ($page_width == 612 && $page_height == 792) {
                 $options['page-size'] = 'Letter';
-
-            } else if($page_width == 595 && $page_height == 842) {
-
+            } elseif ($page_width == 595 && $page_height == 842) {
                 $options['page-size'] = 'a4';
-
             } else {
-
                 $page_width = $page_width * 0.2745833333;
                 $page_height = $page_height * 0.2745833333;
 
                 $options['page-width'] = $page_width.'mm';
                 $options['page-height'] = $page_height.'mm';
-
             }
 
             $html = "
@@ -156,50 +148,46 @@ class ConvertToPDF implements ShouldQueue
             $html_top = '';
             $html_bottom = '';
 
-            if(isset($request['page_html_top_'.$c])) {
-
+            if (isset($request['page_html_top_'.$c])) {
                 $html_top = $html.$request['page_html_top_'.$c];
 
                 $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
-                $pdf -> addPage($html_top);
+                $pdf->addPage($html_top);
 
-                if (!$pdf -> saveAs($layer_top_temp)) {
-                    $error = $pdf -> getError();
+                if (! $pdf->saveAs($layer_top_temp)) {
+                    $error = $pdf->getError();
                     dd($error);
                 }
-
             }
 
-            if(isset($request['page_html_bottom_'.$c])) {
-
+            if (isset($request['page_html_bottom_'.$c])) {
                 $html_bottom = $html.$request['page_html_bottom_'.$c];
 
                 $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
-                $pdf -> addPage($html_bottom);
+                $pdf->addPage($html_bottom);
 
-                if (!$pdf -> saveAs($layer_bottom)) {
-                    $error = $pdf -> getError();
+                if (! $pdf->saveAs($layer_bottom)) {
+                    $error = $pdf->getError();
                     dd($error);
                 }
-
             }
 
-            if($html_top != '') {
+            if ($html_top != '') {
                 // remove background and resize top layer
                 exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
                 exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
                 // if not bottom move combined_top to combined
-                if($html_bottom == '') {
+                if ($html_bottom == '') {
                     exec('mv '.$combined_top.' '.$combined);
                 }
                 // remove top layer file
                 exec('rm '.$layer_top);
             }
 
-            if($html_bottom != '') {
+            if ($html_bottom != '') {
                 // if html_top add it to pdf-top layer
-                if($html_top != '') {
+                if ($html_top != '') {
                     exec('pdftk '.$combined_top.' background '.$layer_bottom.' output '.$combined.' compress');
                     exec('rm '.$combined_top);
                     exec('rm '.$layer_bottom);
@@ -211,10 +199,9 @@ class ConvertToPDF implements ShouldQueue
             }
 
             // if no fields to add to page
-            if($html_top == '' && $html_bottom == '') {
+            if ($html_top == '' && $html_bottom == '') {
                 exec('cp -p '.$layer_pdf.' '.$combined);
             }
-
         }
 
         // merge all from combined and add final to converted - named $filename
@@ -228,9 +215,9 @@ class ConvertToPDF implements ShouldQueue
         $image_filename = str_replace('.pdf', '.jpg', $filename);
         $source = $full_path_dir.'/converted/'.$filename;
         $destination = $full_path_dir.'/converted_images';
-        $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $file_id);
+        $checklist_item_docs_model->convert_doc_to_images($source, $destination, $image_filename, $file_id);
 
         // remove from in_process
-        $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
+        $remove_in_process = InProcess::where('document_id', $document_id)->delete();
     }
 }

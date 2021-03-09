@@ -11,36 +11,39 @@ class Referrals extends Model
     protected $primaryKey = 'Referral_ID';
     protected $guarded = [];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            if(auth() -> user()) {
-                if(stristr(auth() -> user() -> group, 'agent')) {
-                    $query -> where('Agent_ID', auth() -> user() -> user_id);
-                } else if(stristr(auth() -> user() -> group, 'transaction_coordinator')) {
-                    $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
+            if (auth()->user()) {
+                if (stristr(auth()->user()->group, 'agent')) {
+                    $query->where('Agent_ID', auth()->user()->user_id);
+                } elseif (stristr(auth()->user()->group, 'transaction_coordinator')) {
+                    $query->where('TransactionCoordinator_ID', auth()->user()->user_id);
                 }
             } else {
                 abort(404);
             }
-
         });
     }
 
-    public function agent() {
-        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
+    public function agent()
+    {
+        return $this->hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
     }
 
-    public function transaction_coordinator() {
-        return $this -> hasOne('App\Models\DocManagement\Transactions\Members\TransactionCoordinators', 'id', 'TransactionCoordinator_ID');
+    public function transaction_coordinator()
+    {
+        return $this->hasOne('App\Models\DocManagement\Transactions\Members\TransactionCoordinators', 'id', 'TransactionCoordinator_ID');
     }
 
-    public function status() {
-        return $this -> hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
+    public function status()
+    {
+        return $this->hasOne('App\Models\DocManagement\Resources\ResourceItems', 'resource_id', 'Status');
     }
 
-    public function checklist() {
-        return $this -> hasOne('App\Models\DocManagement\Transactions\Checklists\TransactionChecklists', 'Referral_ID', 'Referral_ID');
+    public function checklist()
+    {
+        return $this->hasOne('App\Models\DocManagement\Transactions\Checklists\TransactionChecklists', 'Referral_ID', 'Referral_ID');
     }
-
 }

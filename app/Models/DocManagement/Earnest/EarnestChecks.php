@@ -11,16 +11,18 @@ class EarnestChecks extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function agent() {
-        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
+    public function agent()
+    {
+        return $this->hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
     }
 
-    public function property() {
-        return $this -> hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
+    public function property()
+    {
+        return $this->hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
     }
 
-    public function earnest() {
-        return $this -> hasOne('App\Models\DocManagement\Earnest\Earnest', 'id', 'Earnest_ID');
+    public function earnest()
+    {
+        return $this->hasOne('App\Models\DocManagement\Earnest\Earnest', 'id', 'Earnest_ID');
     }
-
 }

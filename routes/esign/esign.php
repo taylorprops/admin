@@ -1,8 +1,9 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 // esign
-Route::get('/esign', 'Esign\EsignController@esign') -> name('esign');
+Route::get('/esign', 'Esign\EsignController@esign')->name('esign');
 // esign after sending docs for signatures
 Route::get('/esign_show_sent', 'Esign\EsignController@esign');
 
@@ -51,9 +52,6 @@ Route::get('/esign/get_system_templates', 'Esign\EsignController@get_system_temp
 Route::get('/esign/get_deleted_system_templates', 'Esign\EsignController@get_deleted_system_templates');
 Route::get('/esign/get_cancelled', 'Esign\EsignController@get_cancelled');
 
-
-
-
 // add documents
 Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_documents');
 Route::get('/esign/esign_add_documents_from_uploads/{document_id}/{is_template}', 'Esign\EsignController@esign_add_documents');
@@ -78,7 +76,6 @@ Route::post('/esign/esign_send_for_signatures', 'Esign\EsignController@esign_sen
 
 // upload docs for envelope
 Route::post('/esign/upload', 'Esign\EsignController@upload');
-
 
 // delete draft
 Route::post('/agents/doc_management/transactions/esign/delete_draft', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@delete_draft');

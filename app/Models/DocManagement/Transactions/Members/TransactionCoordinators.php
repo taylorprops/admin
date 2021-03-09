@@ -9,5 +9,4 @@ class TransactionCoordinators extends Model
     protected $connection = 'mysql';
     public $table = 'docs_transaction_coordinators';
     protected $guarded = [];
-
 }

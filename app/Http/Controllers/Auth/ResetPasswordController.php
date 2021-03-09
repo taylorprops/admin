@@ -25,7 +25,7 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-     // XXX
+    // XXX
     protected $redirectTo = 'login';
 
     /**
@@ -35,6 +35,6 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {
-        $this -> middleware('guest');
+        $this->middleware('guest');
     }
 }

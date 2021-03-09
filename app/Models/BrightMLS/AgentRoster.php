@@ -12,12 +12,12 @@ class AgentRoster extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            $query -> join('bright_offices', 'bright_agent_roster.OfficeKey', '=', 'bright_offices.OfficeKey')
-                -> select('bright_agent_roster.MemberFirstName',
+            $query->join('bright_offices', 'bright_agent_roster.OfficeKey', '=', 'bright_offices.OfficeKey')
+                ->select('bright_agent_roster.MemberFirstName',
                 'bright_agent_roster.MemberFullName',
                 'bright_agent_roster.MemberKey',
                 'bright_agent_roster.MemberLastName',
@@ -40,8 +40,7 @@ class AgentRoster extends Model
                 'bright_offices.OfficeMlsId',
                 'bright_offices.OfficeName',
                 'bright_offices.OfficePhone')
-                -> where('bright_agent_roster.MemberSubType', 'like', '%salesperson%');
+                ->where('bright_agent_roster.MemberSubType', 'like', '%salesperson%');
         });
     }
-
 }

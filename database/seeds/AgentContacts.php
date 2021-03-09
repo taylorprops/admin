@@ -1,15 +1,18 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\CRM\CRMContacts;
-class AgentContacts extends Seeder {
+use Illuminate\Database\Seeder;
+
+class AgentContacts extends Seeder
+{
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         $count = 100;
-        factory(CRMContacts::class, $count) -> create();
+        factory(CRMContacts::class, $count)->create();
     }
 }

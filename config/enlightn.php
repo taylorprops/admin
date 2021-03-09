@@ -122,9 +122,9 @@ return [
         config_path() => '775',
         database_path() => '775',
         base_path('routes') => '775',
-        app() -> bootstrapPath() => '775',
-        app() -> bootstrapPath('cache') => '775',
-        app() -> bootstrapPath('app.php') => '664',
+        app()->bootstrapPath() => '775',
+        app()->bootstrapPath('cache') => '775',
+        app()->bootstrapPath('app.php') => '664',
         base_path('artisan') => '775',
         public_path('index.php') => '664',
         public_path('server.php') => '664',
@@ -132,7 +132,7 @@ return [
 
     'writable_directories' => [
         storage_path(),
-        app() -> bootstrapPath('cache'),
+        app()->bootstrapPath('cache'),
     ],
 
     /*

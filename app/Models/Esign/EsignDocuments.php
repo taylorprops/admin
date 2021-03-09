@@ -11,21 +11,24 @@ class EsignDocuments extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function envelope() {
-        return $this -> hasOne('App\Models\Esign\EsignEnvelopes', 'id', 'envelope_id');
+    public function envelope()
+    {
+        return $this->hasOne('App\Models\Esign\EsignEnvelopes', 'id', 'envelope_id');
     }
 
-    public function images() {
+    public function images()
+    {
         //return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'transaction_document_id');
-        return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'envelope_id', 'envelope_id');
+        return $this->hasMany('App\Models\Esign\EsignDocumentsImages', 'envelope_id', 'envelope_id');
     }
 
-    public function fields() {
-        return $this -> hasMany('App\Models\Esign\EsignFields', 'document_id', 'id') -> with('signer');
+    public function fields()
+    {
+        return $this->hasMany('App\Models\Esign\EsignFields', 'document_id', 'id')->with('signer');
     }
 
-    public function signers() {
-        return $this -> hasMany('App\Models\Esign\EsignSigners', 'document_id', 'id');
+    public function signers()
+    {
+        return $this->hasMany('App\Models\Esign\EsignSigners', 'document_id', 'id');
     }
-
 }

@@ -11,9 +11,8 @@ class CommissionNotes extends Model
     protected $_primaryKey = 'id';
     protected $guarded = [];
 
-    public function user() {
-        return $this -> hasOne('\App\User', 'id', 'user_id');
+    public function user()
+    {
+        return $this->hasOne('\App\User', 'id', 'user_id');
     }
-
-
 }

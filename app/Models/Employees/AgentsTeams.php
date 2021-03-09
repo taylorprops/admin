@@ -11,8 +11,10 @@ class AgentsTeams extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function ScopeGetTeamName($request, $id) {
-        $team = $request -> find($id);
-        return $team -> team_name;
+    public function ScopeGetTeamName($request, $id)
+    {
+        $team = $request->find($id);
+
+        return $team->team_name;
     }
 }

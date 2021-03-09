@@ -11,7 +11,8 @@ class CommissionChecksIn extends Model
     protected $_primaryKey = 'id';
     protected $guarded = [];
 
-    public function agent() {
-        return $this -> belongsTo('App\Models\Employees\Agents', 'Agent_ID');
+    public function agent()
+    {
+        return $this->belongsTo('App\Models\Employees\Agents', 'Agent_ID');
     }
 }

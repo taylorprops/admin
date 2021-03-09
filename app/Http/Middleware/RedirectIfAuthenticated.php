@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Auth;
+use Closure;
 
 class RedirectIfAuthenticated
 {
@@ -17,13 +17,10 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-
-        if (Auth::guard($guard) -> check()) {
-
-            return redirect('/') -> with('error','Session Has Expired');
+        if (Auth::guard($guard)->check()) {
+            return redirect('/')->with('error', 'Session Has Expired');
             //echo '<script>top.location.href="/";</script>';
         }
-
 
         return $next($request);
     }
