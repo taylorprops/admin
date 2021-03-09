@@ -2,9 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Model;
 use App\Models\CRM\CRMContacts;
-use Faker\Generator as Faker;
 
 $factory->define(CRMContacts::class, function (Faker $faker) {
     return [

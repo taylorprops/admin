@@ -13,6 +13,6 @@ class AgentContacts extends Seeder
     public function run()
     {
         $count = 100;
-        factory(CRMContacts::class, $count)->create();
+        CRMContacts::factory()->count($count)->create();
     }
 }
