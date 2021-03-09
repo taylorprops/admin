@@ -35,14 +35,14 @@ class ConvertToPDF implements ShouldQueue
      */
     public function __construct($request, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type)
     {
-        $this->request = $request;
-        $this->Listing_ID = $Listing_ID;
-        $this->Contract_ID = $Contract_ID;
-        $this->Referral_ID = $Referral_ID;
-        $this->transaction_type = $transaction_type;
-        $this->file_id = $file_id;
-        $this->document_id = $document_id;
-        $this->file_type = $file_type;
+        $this -> request = $request;
+        $this -> Listing_ID = $Listing_ID;
+        $this -> Contract_ID = $Contract_ID;
+        $this -> Referral_ID = $Referral_ID;
+        $this -> transaction_type = $transaction_type;
+        $this -> file_id = $file_id;
+        $this -> document_id = $document_id;
+        $this -> file_type = $file_type;
     }
 
     /**
@@ -52,19 +52,19 @@ class ConvertToPDF implements ShouldQueue
      */
     public function handle()
     {
-        $request = $this->request;
-        $Listing_ID = $this->Listing_ID;
-        $Contract_ID = $this->Contract_ID;
-        $Referral_ID = $this->Referral_ID;
-        $transaction_type = $this->transaction_type;
-        $file_id = $this->file_id;
-        $document_id = $this->document_id;
-        $file_type = $this->file_type;
+        $request = $this -> request;
+        $Listing_ID = $this -> Listing_ID;
+        $Contract_ID = $this -> Contract_ID;
+        $Referral_ID = $this -> Referral_ID;
+        $transaction_type = $this -> transaction_type;
+        $file_id = $this -> file_id;
+        $document_id = $this -> document_id;
+        $file_type = $this -> file_type;
 
         // add to in_process table
         $in_process = new InProcess();
-        $in_process->document_id = $document_id;
-        $in_process->save();
+        $in_process -> document_id = $document_id;
+        $in_process -> save();
 
         $path = [
             'listing' => 'listings/'.$Listing_ID,
@@ -74,10 +74,10 @@ class ConvertToPDF implements ShouldQueue
 
         $upload_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type;
 
-        \Storage::disk('public')->makeDirectory($upload_dir.'/combined/');
-        \Storage::disk('public')->makeDirectory($upload_dir.'/layers/');
-        $full_path_dir = \Storage::disk('public')->path($upload_dir);
-        $pdf_output_dir = \Storage::disk('public')->path($upload_dir.'/combined/');
+        \Storage::disk('public') -> makeDirectory($upload_dir.'/combined/');
+        \Storage::disk('public') -> makeDirectory($upload_dir.'/layers/');
+        $full_path_dir = \Storage::disk('public') -> path($upload_dir);
+        $pdf_output_dir = \Storage::disk('public') -> path($upload_dir.'/combined/');
 
         // get file name to use for the final converted file
         $file = glob($full_path_dir.'/converted/*pdf');
@@ -86,10 +86,10 @@ class ConvertToPDF implements ShouldQueue
 
         // create or clear out directories if they already exist
         $clean_dir = new Filesystem;
-        $clean_dir->cleanDirectory('storage/'.$upload_dir.'/layers');
-        $clean_dir->cleanDirectory('storage/'.$upload_dir.'/combined');
+        $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/layers');
+        $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/combined');
         //$clean_dir -> cleanDirectory('storage/'.$upload_dir.'/converted');
-        exec('cp -p '.$file[0].' '.$full_path_dir.'/converted/backup.pdf');
+        exec('cp '.$file[0].' '.$full_path_dir.'/converted/backup.pdf');
         //exec('rm '.$file[0]);
 
         // pdf options - more added below depending on page size
@@ -152,10 +152,10 @@ class ConvertToPDF implements ShouldQueue
                 $html_top = $html.$request['page_html_top_'.$c];
 
                 $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
-                $pdf->addPage($html_top);
+                $pdf -> addPage($html_top);
 
-                if (! $pdf->saveAs($layer_top_temp)) {
-                    $error = $pdf->getError();
+                if (! $pdf -> saveAs($layer_top_temp)) {
+                    $error = $pdf -> getError();
                     dd($error);
                 }
             }
@@ -164,10 +164,10 @@ class ConvertToPDF implements ShouldQueue
                 $html_bottom = $html.$request['page_html_bottom_'.$c];
 
                 $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
-                $pdf->addPage($html_bottom);
+                $pdf -> addPage($html_bottom);
 
-                if (! $pdf->saveAs($layer_bottom)) {
-                    $error = $pdf->getError();
+                if (! $pdf -> saveAs($layer_bottom)) {
+                    $error = $pdf -> getError();
                     dd($error);
                 }
             }
@@ -200,7 +200,7 @@ class ConvertToPDF implements ShouldQueue
 
             // if no fields to add to page
             if ($html_top == '' && $html_bottom == '') {
-                exec('cp -p '.$layer_pdf.' '.$combined);
+                exec('cp '.$layer_pdf.' '.$combined);
             }
         }
 
@@ -215,9 +215,9 @@ class ConvertToPDF implements ShouldQueue
         $image_filename = str_replace('.pdf', '.jpg', $filename);
         $source = $full_path_dir.'/converted/'.$filename;
         $destination = $full_path_dir.'/converted_images';
-        $checklist_item_docs_model->convert_doc_to_images($source, $destination, $image_filename, $file_id);
+        $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $file_id);
 
         // remove from in_process
-        $remove_in_process = InProcess::where('document_id', $document_id)->delete();
+        $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
     }
 }

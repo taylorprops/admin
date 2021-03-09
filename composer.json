@@ -22,7 +22,7 @@
         "mikehaertl/php-pdftk": "^0.7.0",
         "mikehaertl/phpwkhtmltopdf": "^2.4",
         "socrata/soda-php": "dev-develop",
-        "symfony/http-foundation": "5.0.7",
+        "symfony/http-foundation": "^5.1.4",
         "symfony/http-kernel": "5.1.5",
         "therezor/laravel-transactional-jobs": "^1.1",
         "thiagoalessio/tesseract_ocr": "^2.9",

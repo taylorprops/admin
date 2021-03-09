@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
+use App\Providers\RouteServiceProvider;
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
@@ -12,14 +14,17 @@ class RedirectIfAuthenticated
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $guard
+     * @param  string|null  ...$guards
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, ...$guards)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect('/')->with('error', 'Session Has Expired');
-            //echo '<script>top.location.href="/";</script>';
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard) -> check()) {
+                return redirect(RouteServiceProvider::HOME);
+            }
         }
 
         return $next($request);

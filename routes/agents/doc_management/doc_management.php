@@ -267,7 +267,7 @@
     Route::post('/agents/doc_management/transactions/edit_files/save_edit_user_fields', 'Agents\DocManagement\Transactions\EditFiles\TransactionsEditFilesController@save_edit_user_fields');
 
     // Export filled fields to pdf
-    Route::post('/agents/doc_management/transactions/edit_files/convert_to_pdf', 'Agents\DocManagement\Transactions\EditFiles\TransactionsEditFilesController@convert_to_pdf')->name('convert_to_pdf');
+    Route::post('/agents/doc_management/transactions/edit_files/convert_to_pdf', 'Agents\DocManagement\Transactions\EditFiles\TransactionsEditFilesController@convert_to_pdf') -> name('convert_to_pdf');
 
     /********** Documents ********/
 
@@ -279,7 +279,7 @@
 ///////////////////////////////// ADMIN ONLY //////////////////////////////////////////////
 /**********  File review /**********/
 
-Route::middleware('admin')->group(function () {
+Route::middleware('admin') -> group(function () {
 
     // accept reject checklist items
     Route::post('/agents/doc_management/transactions/set_checklist_item_review_status', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@set_checklist_item_review_status');

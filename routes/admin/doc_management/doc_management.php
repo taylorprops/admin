@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Route;
 /****************** COMPONENT PAGES: DOCUMENT MANAGEMENT ******************/
 
 // ######### ADMIN ONLY ##########//
-Route::middleware('admin')->group(function () {
+Route::middleware('admin') -> group(function () {
 
     /* List of uploads */
-    Route::get('/doc_management/create/upload/files', 'DocManagement\Create\UploadController@get_uploaded_files')->name('create.upload.files');
+    Route::get('/doc_management/create/upload/files', 'DocManagement\Create\UploadController@get_uploaded_files') -> name('create.upload.files');
     /* Add fields page */
     Route::get('/doc_management/create/add_fields/{file_id}', 'DocManagement\Fill\FieldsController@add_fields');
     /* Resources | Add/remove associations, tags, etc. */
@@ -36,7 +36,7 @@ Route::middleware('admin')->group(function () {
     /**********  DATA - ADD/EDIT/DELETE /**********/
 
     // Upload //
-    Route::post('/doc_management/upload_file', 'DocManagement\Create\UploadController@upload_file')->name('doc_management.upload_file');
+    Route::post('/doc_management/upload_file', 'DocManagement\Create\UploadController@upload_file') -> name('doc_management.upload_file');
     // Edit uploaded File
     Route::post('/doc_management/save_file_edit', 'DocManagement\Create\UploadController@save_file_edit');
     // Add non form checklist item
@@ -105,7 +105,7 @@ Route::middleware('admin')->group(function () {
     /**********  DATA - GET /**********/
 
     // get updated list of form_group files after adding a new one
-    Route::get('/doc_management/get_form_group_files', 'DocManagement\Create\UploadController@get_form_group_files')->name('doc_management.get_form_group_files');
+    Route::get('/doc_management/get_form_group_files', 'DocManagement\Create\UploadController@get_form_group_files') -> name('doc_management.get_form_group_files');
     // get upload details for edit
     Route::get('/doc_management/get_upload_details', 'DocManagement\Create\UploadController@get_upload_details');
     // get checklist after adding
