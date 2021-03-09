@@ -21,7 +21,7 @@ if(document.URL.match(/document_review/)) {
             next_property();
         });
 
-        $('#search_properties').keyup(search_properties);
+        $('#search_properties').on('keyup', search_properties);
         $('#cancel_search_properties').on('click', cancel_search_properties);
 
         if($('#review_contract_id').val() > 0) {
@@ -281,22 +281,15 @@ if(document.URL.match(/document_review/)) {
             }
             text_editor(options);
 
-            /* let zoom_input = $('#zoom').slider({
+            // new slider
+            let zoom_input = $('#zoom').slider({
                 formatter: function(value) {
                     return value+'%';
                 }
-            }); */
+            });
 
             $('#zoom').on('input change', zoom);
 
-            /* $('.zoom-out').on('click', function() {
-                $('#zoom').val(parseInt($('#zoom').val()) - 5).trigger('change');
-                $('#thumb span').text($('#zoom').val());
-            });
-            $('.zoom-in').on('click', function() {
-                $('#zoom').val(parseInt($('#zoom').val()) + 5).trigger('change');
-                $('#thumb span').text($('#zoom').val());
-            }); */
 
             $('#scroll_up').off('click').on('click', function () {
                 document.querySelector('.review-image-container').scrollBy({
@@ -329,21 +322,31 @@ if(document.URL.match(/document_review/)) {
             params: {
                 id: id,
                 type: type
-            },
-            headers: {
-                'Accept-Version': 1,
-                'Accept': 'text/html',
-                'Content-Type': 'text/html'
             }
         })
         .then(function (response) {
+
             $('.details-div').html(response.data);
-            /* $('#reject_cancellation_section').on('show.bs.collapse', function() {
-                $('.cancellation-options').prop('disabled', true);
+
+            $('#EarnestHeldBy, #UsingHeritage').on('change', function () {
+
+                let Contract_ID = $('#Contract_ID').val();
+                let EarnestHeldBy = $('#EarnestHeldBy').val();
+                let UsingHeritage = $('#UsingHeritage').val();
+
+                let formData = new FormData();
+                formData.append('Contract_ID', Contract_ID);
+                formData.append('EarnestHeldBy', EarnestHeldBy);
+                formData.append('UsingHeritage', UsingHeritage);
+                axios.post('/doc_management/save_earnest_and_title_details', formData, axios_options)
+                .then(function (response) {
+                    toastr['success']('Changes Successfully Saved');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             });
-            $('#reject_cancellation_section').on('hide.bs.collapse', function() {
-                $('.cancellation-options').prop('disabled', false);
-            }); */
+
         })
         .catch(function (error) {
 

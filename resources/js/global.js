@@ -1,11 +1,15 @@
 import datepicker from 'js-datepicker';
 
-
+// reload page on back button
 let perfEntries = performance.getEntriesByType('navigation');
 
 if (perfEntries[0].type === 'back_forward') {
     window.location.reload();
 }
+
+
+
+
 
 
 // check for duplicate ids
@@ -25,9 +29,10 @@ $(function() {
 
     /* global_page_transition(); */
 
-    if(!document.URL.match(/login/)) {
-        //inactivityTime();
+    if(!document.URL.match(/admin\/$/)) {
+        inactivityTime();
     }
+
 
     $('#main_nav_bar').bootnavbar({});
 
@@ -85,7 +90,9 @@ $(function() {
         return response;
 
     }, function (error) {
-        console.log('error = '+error);
+        if(error.response.status == 404) {
+            window.location = '/';
+        }
     });
 
 
@@ -345,7 +352,7 @@ window.datepicker_custom = function() {
 // session timeout
 window.inactivityTime = function () {
     var time;
-    //window.onload = resetTimer;
+    window.onload = resetTimer;
     // DOM Events
     document.onmousemove = resetTimer;
     document.onkeypress = resetTimer;
@@ -362,8 +369,8 @@ window.inactivityTime = function () {
         stay.text('Continue Session');
 
         let force_logout = setTimeout(function() {
-            location.href = '/';
-        }, 1000 * 60);
+            location.href = '/logout';
+        }, 1000 * 60 * 5);
 
         logout.on('click', function() {
             location.href = '/';
@@ -373,11 +380,6 @@ window.inactivityTime = function () {
             resetTimer();
             $('#confirm_modal').modal('hide');
         });
-
-        $('#confirm_modal').on('hide.bs.modal', function () {
-            location.href = '/';
-        });
-
 
 
     }

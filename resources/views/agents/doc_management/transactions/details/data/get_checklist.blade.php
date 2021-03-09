@@ -84,10 +84,10 @@
 
                                 // get docs and notes for checklist item
                                 $checklist_item_id = $checklist_item -> id;
-                                $transaction_documents = $transaction_checklist_item_docs_model -> GetDocs($checklist_item_id);
+                                $transaction_documents = $checklist_item -> docs;
                                 $transaction_documents_count = count($transaction_documents);
 
-                                $notes = $transaction_checklist_item_notes_model -> GetNotes($checklist_item_id);
+                                $notes = $checklist_item -> notes;
                                 $notes_count = count($notes);
 
                                 $notes_count_unread = $notes -> where('note_status', 'unread');
@@ -126,8 +126,8 @@
 
                                     <div class="row">
 
-                                        <div class="col-12 col-xl-5">
-                                            <div class="checklist-item-details d-flex justify-content-start flex-wrap flex-sm-nowrap align-items-center h-100 mb-lg-0">
+                                        <div class="col-12 @if(auth() -> user() -> group == 'admin') col-xl-5 @else col-xl-7 @endif">
+                                            <div class="checklist-item-details d-flex justify-content-start flex-sm-nowrap align-items-center h-100 mb-lg-0">
 
                                                 <div class="my-1 d-flex justify-content-start align-items-center">
                                                     <div class="status-badge badge {{ $badge_classes }} mr-2" title="{{ $helper_text }}">
@@ -170,13 +170,13 @@
 
 
 
-                                        <div class="col-12 col-xl-7">
+                                        <div class="col-12 @if(auth() -> user() -> group == 'admin') col-xl-7 @else col-xl-5 @endif">
 
                                             <div class="row mt-1">
 
-                                                <div class="col-12 col-sm-6 col-md-4 ">
+                                                <div class="col-12 col-sm-6 @if(auth() -> user() -> group == 'admin') col-md-4 @endif">
 
-                                                    <div class="checklist-item-options d-flex justify-content-between align-items-center p-1 my-1 my-md-0 mx-auto bg-light">
+                                                    <div class="checklist-item-options d-flex justify-content-between align-items-center p-1 my-1 bg-light">
                                                         <div class="font-weight-bold text-primary checklist-attachment">Docs</div>
                                                         <div>
                                                             <button type="button" class="btn btn-sm btn-primary add-document-button" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}" data-target="documents_div_{{ $checklist_item_id }}"><i class="fal fa-plus"></i></button>
@@ -190,9 +190,9 @@
 
                                                 </div>
 
-                                                <div class="col-12 col-sm-6 col-md-4 mx-auto">
+                                                <div class="col-12 col-sm-6  @if(auth() -> user() -> group == 'admin') col-md-4 @endif">
 
-                                                    <div class="checklist-item-options d-flex justify-content-betwen align-items-center p-1 pr-2 my-1 my-md-0 mx-auto bg-light">
+                                                    <div class="checklist-item-options d-flex justify-content-betwen align-items-center p-1 pr-2 my-1 bg-light">
 
                                                         <div class="font-weight-bold text-primary checklist-attachment">Comments</div>
 
@@ -208,10 +208,12 @@
 
                                                 </div>
 
-                                                <div class="col-12 col-sm-6 col-md-4 mx-auto">
 
 
-                                                    @if(auth() -> user() -> group == 'admin')
+
+                                                @if(auth() -> user() -> group == 'admin')
+
+                                                    <div class="col-12 col-sm-6 col-md-4">
 
                                                         @php
                                                         $bg_color = 'bg-light';
@@ -222,7 +224,7 @@
                                                         }
                                                         @endphp
 
-                                                        <div class="checklist-item-options d-flex justify-content-between align-items-center my-1 my-md-0 mx-auto">
+                                                        <div class="checklist-item-options d-flex justify-content-between align-items-center my-1">
 
                                                             <div class="review-options p-1 {{ $bg_color }}">
 
@@ -249,10 +251,9 @@
 
                                                         </div>
 
-                                                    @endif
+                                                    </div>
 
-
-                                                </div>
+                                                @endif
 
                                             </div>
 
@@ -282,10 +283,6 @@
                                                                 @php
                                                                 $document_id = $transaction_document -> document_id;
                                                                 $doc_info = $documents_model -> GetDocInfo($document_id);
-
-                                                                /* $transaction_doc_notes = $transaction_checklist_item_notes_model -> GetNotes($checklist_item_id, $document_id);
-                                                                $transaction_doc_notes_count = count($transaction_doc_notes);
-                                                                $transaction_doc_notes_count_unread = $transaction_doc_notes -> where('note_status', 'unread') -> where('note_user_id', '!=', auth() -> user() -> id) -> count(); */
                                                                 @endphp
 
                                                                 <div class="d-flex justify-content-between align-items-center border-bottom document-row mb-2">
@@ -338,9 +335,99 @@
                                                                 <hr>
 
                                                                 <div class="row">
+
                                                                     <div class="col-12">
+
                                                                         <div class="notes-div" data-checklist-item-id="{{ $checklist_item_id }}">
-                                                                            <div class="text-gray">No Comments</div>
+
+                                                                            @if(count($notes) > 0)
+
+                                                                                <div class="notes-container bg-white px-1">
+
+                                                                                    @foreach($notes as $note)
+                                                                                        @php
+                                                                                        $user = $note -> user;
+                                                                                        $username = $user -> name;
+
+                                                                                        if($user -> group == 'admin') {
+                                                                                            $emp_photo_location = $admin_details -> photo_location ?? null;
+                                                                                            $avatar_bg = 'bg-orange';
+                                                                                        } else if($user -> group == 'agent') {
+                                                                                            $emp_photo_location = $agent_details -> photo_location ?? null;
+                                                                                            $avatar_bg = 'bg-primary';
+                                                                                        }
+                                                                                        if(!$emp_photo_location) {
+                                                                                            $initials = substr($user -> name, 0, 1);
+                                                                                            $initials .= substr($user -> name, strpos($user -> name, ' ') + 1, 1);
+                                                                                        }
+
+                                                                                        $unread = null;
+                                                                                        if($note -> note_status == 'unread' && $note -> note_user_id != auth() -> user() -> id) {
+                                                                                            $unread = 'unread';
+                                                                                        }
+
+                                                                                        $created_at = $note -> created_at;
+                                                                                        $date_added = $created_at -> format('n/j/Y g:iA');
+                                                                                        if($created_at -> format('Y-m-d') == date('Y-m-d')) {
+                                                                                            $date_added = 'Today at '.$created_at -> format('g:iA');
+                                                                                        } else if($created_at -> format('Y-m-d') == date('Y-m-d', strtotime('-1 day'))) {
+                                                                                            $date_added = 'Yesterday at '.$created_at -> format('g:iA');
+                                                                                        }
+                                                                                        @endphp
+
+                                                                                        <div class="p-2 mb-3 note-div rounded @if($unread) bg-orange-light animate__animated animate__shakeX @else bg-blue-light @endif">
+
+                                                                                            <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
+                                                                                                <div class="d-flex justify-content-start align-items-center">
+                                                                                                    <div class="emp_photo mr-2">
+                                                                                                        <div class="rounded-pill avatar-initials {{ $avatar_bg }} p-2">
+                                                                                                            @if($emp_photo_location)
+                                                                                                                <img src="{{ $emp_photo_location }}" class="avatar rounded-circle d-flex align-self-center mr-2 shadow">
+                                                                                                            @else
+                                                                                                                <span class="text-white">{{ $initials }}</span>
+                                                                                                            @endif
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="text-primary font-italic">{{ $username }}</div>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    @if($note -> note_status == 'unread')
+                                                                                                        @if($note -> note_user_id != auth() -> user() -> id)
+                                                                                                            <button class="btn btn-success btn-sm mark-read-button mb-0" data-note-id="{{ $note -> id }}" data-notes-collapse="notes_div_{{ $checklist_item_id }}"><i class="fal fa-check mr-2"></i> Mark Read</button>
+                                                                                                        @else
+                                                                                                            <div class="d-flex justify-content-end align-items-center">
+                                                                                                                <span class="text-gray small">Not Read</span>
+                                                                                                                @if($note -> note_user_id == auth() -> user() -> id)
+                                                                                                                    <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $note -> id }}"><i class="fad fa-times-circle text-danger"></i></a>
+                                                                                                                @endif
+                                                                                                            </div>
+                                                                                                        @endif
+                                                                                                    @else
+                                                                                                        <span class="text-success small"><i class="fal fa-check"></i> Read</span>
+                                                                                                    @endif
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="text-gray bg-white p-2 rounded">
+                                                                                                {!! $note -> notes !!}
+                                                                                            </div>
+
+                                                                                            <div class="text-gray font-7 mt-1">{{ $date_added }}</div>
+
+                                                                                        </div>
+
+
+
+                                                                                    @endforeach
+
+                                                                                </div>
+
+                                                                            @else
+
+                                                                                <div class="text-gray">No Comments</div>
+
+                                                                            @endif
+
                                                                         </div>
                                                                     </div>
                                                                 </div>

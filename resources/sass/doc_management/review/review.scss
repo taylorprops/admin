@@ -117,7 +117,7 @@
         }
 
         .review-image-container {
-            height: 88VH;
+            height: 87VH;
             overflow-y: auto;
             scroll-behavior: smooth;
             padding-bottom: 25px;
@@ -185,6 +185,11 @@
 
         .property-details-table td:first-of-type {
             width: 35%;
+        }
+
+        .property-details-table .form-ele {
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
 
         .divider {

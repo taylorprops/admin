@@ -114,7 +114,7 @@
 </div>
 
 <div class="modal fade draggable modal-shared" id="confirm_remove_checklist_item_modal" tabindex="-1" role="dialog" aria-labelledby="remove_checklist_item_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="remove_checklist_item_title">Remove Checklist Item</h4>
@@ -127,12 +127,9 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex justify-content-start align-items-center p-3">
-                                <div class="mr-3 text-danger"><i class="fad fa-exclamation-circle fa-2x"></i></div>
+                                <div class="mr-3 text-danger"><i class="fad fa-exclamation-circle fa-3x"></i></div>
                                 <div>
                                     Are you sure you want to remove this checklist item? All notes and assigned documents will also be removed.
-                                    <div class="text-center w-100 mt-2">
-                                        Continue?
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,7 @@ if($property -> Owner2 != '') {
 </script>
 <div class="container-1000 page-container page-required-details mx-auto mb-5 pb-5">
     <div class="row">
-        <div class="col-8 mb-5 mx-auto">
+        <div class="col-12 col-sm-8 mb-5 mx-auto">
 
             <div class="h3 text-orange mt-3 mt-sm-4 text-center w-100">{{ $property -> FullStreetAddress }} {{ $property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode }}</div>
 

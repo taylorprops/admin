@@ -4,7 +4,7 @@
 
         @foreach($transaction_checklist_item_notes as $transaction_checklist_item_note)
             @php
-            $user = $users -> where('id', $transaction_checklist_item_note -> note_user_id) -> first();
+            $user = $transaction_checklist_item_note -> user;
             $username = $user -> name;
 
             if($user -> group == 'admin') {

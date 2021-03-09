@@ -34,6 +34,14 @@ class Contracts extends Model
         return $this -> hasOne('App\Models\Employees\Agents', 'id', 'Agent_ID');
     }
 
+    public function co_agent() {
+        return $this -> hasOne('App\Models\Employees\Agents', 'id', 'CoAgent_ID');
+    }
+
+    public function team() {
+        return $this -> hasOne('App\Models\Employees\AgentsTeams', 'id', 'Team_ID');
+    }
+
     public function transaction_coordinator() {
         return $this -> hasOne('App\Models\DocManagement\Transactions\Members\TransactionCoordinators', 'id', 'TransactionCoordinator_ID');
     }

@@ -21,15 +21,10 @@
                 $checklist = $transaction -> checklist;
                 //$checklist_items = $checklist -> items;
 
-                $checklist_complete = $checklist_items_modal -> ChecklistComplete($checklist -> id, 'yes')['complete'];
-                $items_completed = $checklist_items_modal -> ChecklistComplete($checklist -> id, 'yes')['items_completed'];
-
-                $checklist_status = '<span class="text-orange"><i class="fal fa-minus-circle mr-2"></i> No Docs Submitted</span>';
-                if($items_completed > 0) {
+                if($transaction -> DocsMissingCount > 0) {
                     $checklist_status = '<span class="text-danger"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
-                    if($checklist_complete == true) {
-                        $checklist_status = '<span class="text-success"><i class="fal fa-check mr-2"></i> Complete</span>';
-                    }
+                } else {
+                    $checklist_status = '<span class="text-success"><i class="fal fa-check mr-2"></i> Complete</span>';
                 }
 
                 if($contract) {

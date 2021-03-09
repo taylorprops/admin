@@ -167,6 +167,8 @@ Route::middleware('admin') -> group(function () {
     Route::get('/doc_management/get_documents', 'DocManagement\Review\DocumentReviewController@get_documents');
     // get details
     Route::get('/doc_management/get_details', 'DocManagement\Review\DocumentReviewController@get_details');
+    // save earnest and title details
+    Route::post('/doc_management/save_earnest_and_title_details', 'DocManagement\Review\DocumentReviewController@save_earnest_and_title_details');
 
 
     /********* Commission ************/

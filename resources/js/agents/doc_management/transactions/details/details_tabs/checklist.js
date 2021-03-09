@@ -53,9 +53,9 @@ if (document.URL.match(/transaction_details/)) {
 
             });
 
-            $('.notes-div').each(function() {
+            /* $('.notes-div').each(function() {
                 get_notes($(this).data('checklist-item-id'));
-            });
+            }); */
 
 
         }, 1);

@@ -18,11 +18,11 @@ class TransactionChecklistItems extends Model {
 
 
     public function docs() {
-        return $this -> hasMany('App\Models\DocManagement\Checklists\ChecklistsItemsDocs', 'checklist_id', 'id');
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs', 'checklist_item_id', 'id');
     }
 
     public function notes() {
-        return $this -> hasMany('App\Models\DocManagement\Checklists\ChecklistsItemsNotes', 'checklist_id', 'id');
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes', 'checklist_item_id', 'id') -> orderBy('created_at', 'DESC');
     }
 
 

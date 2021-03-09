@@ -165,6 +165,19 @@ body.modal-open {
     }
 }
 
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+.overflow-x-scroll {
+    overflow-x: scroll;
+}
+.overflow-y-hidden {
+    overflow-y: hidden;
+}
+.overflow-y-scroll {
+    overflow-y: scroll;
+}
+
 // toastr
 #toast-container > div {
     opacity: 1 !important;

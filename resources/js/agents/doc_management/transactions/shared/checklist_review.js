@@ -354,7 +354,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                 }
             });
 
-            $('#save_add_checklist_item_button').on('click', function () {
+            $('#save_add_checklist_item_button').off('click').on('click', function () {
                 save_add_checklist_item(group_id);
             });
 

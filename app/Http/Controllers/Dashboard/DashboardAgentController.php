@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Listings\Listings;
+
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
-
-use App\Models\DocManagement\Resources\ResourceItems;
 
 class DashboardAgentController extends Controller
 {
@@ -18,35 +19,28 @@ class DashboardAgentController extends Controller
         $listings_select = [
             'Agent_ID',
             'City',
-            'Contract_ID',
+            'CloseDate',
+            'DocsMissingCount',
             'ExpirationDate',
             'FullStreetAddress',
-            'Listing_ID',
-            'ListPrice',
-            'ListPictureURL',
             'MLSListDate',
             'PostalCode',
-            'SaleRent',
             'StateOrProvince',
-            'Status',
-            'TransactionCoordinator_ID'
+            'Listing_ID as id'
         ];
 
         $contracts_select = [
             'Agent_ID',
             'City',
             'CloseDate',
-            'ContractPrice',
             'ContractDate',
+            'DocsMissingCount',
             'EarnestHeldBy',
             'FullStreetAddress',
-            'Contract_ID',
             'ListPictureURL',
             'PostalCode',
-            'SaleRent',
             'StateOrProvince',
-            'Status',
-            'TransactionCoordinator_ID'
+            'Contract_ID as id'
         ];
 
         $referrals_select = [
@@ -55,39 +49,125 @@ class DashboardAgentController extends Controller
             'ClientFirstName',
             'ClientLastName',
             'CloseDate',
+            'DocsMissingCount',
             'FullStreetAddress',
-            'Referral_ID',
             'PostalCode',
             'StateOrProvince',
-            'Status',
-            'TransactionCoordinator_ID'
+            'Referral_ID as id'
         ];
 
+        // LISTINGS
         $active_listings = Listings::select($listings_select)
-            -> whereIn('Status', ResourceItems::GetActiveListingStatuses('yes', 'no', 'no'))
-            -> orderBy('MlsListDate', 'desc')
+            -> addSelect(DB::raw('"listing" as transaction_type'))
+            -> whereIn('Status', ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no')) // include 'Under Contract' and 'Exired'
+            -> orderBy('MlsListDate', 'desc');
+
+        $active_listings_count = $active_listings -> count();
+
+        // alerts
+        $alert_type = 'missing-docs-listings';
+        $title = 'Missing Listing Documents';
+        $details = 'The listings below have required checklist items that you have not submitted yet.';
+        $missing_docs_listings = $active_listings
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
+            -> where('DocsMissingCount', '>', '0')
             -> get();
 
-        $active_contracts = Contracts::select($contracts_select)
-            -> whereIn('Status', ResourceItems::GetActiveContractStatuses())
-            -> orderBy('CloseDate', 'desc')
-            -> get();
-
-        $pending_referrals = Referrals::select($referrals_select)
-            -> whereIn('Status', ResourceItems::GetActiveReferralStatuses())
-            -> orderBy('CloseDate', 'desc')
-            -> get();
-
-        $contracts_closing_this_month = $active_contracts -> where('CloseDate', '<=', date('Y-m-t')) -> where('CloseDate', '>=', date('Y-m-1'));
-
-        $contracts_past_settle_date = $active_contracts -> where('CloseDate', '>=', date('Y-m-d'));
-
-        $expired_listings = Listings::select($listings_select)
+        $alert_type = 'expired-listings';
+        $title = 'Expired Listings';
+        $details = 'The listings below are past their expiration date. They need to be withdrawn or extended.';
+        $expired_listings = $active_listings
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('Status', ResourceItems::GetResourceID('Expired', 'listing_status'))
             -> get();
 
 
-        return view('/dashboard/agent/dashboard', compact('active_listings', 'active_contracts', 'pending_referrals'));
+        // CONTRACTS
+        $active_contracts = Contracts::select($contracts_select)
+            -> addSelect(DB::raw('"contract" as transaction_type'))
+            -> whereIn('Status', ResourceItems::GetActiveContractStatuses())
+            -> orderBy('CloseDate', 'desc');
+
+        $active_contracts_count = $active_contracts -> count();
+
+        // alerts
+        $alert_type = 'missing-earnest';
+        $title = 'Missing Earnest Deposits';
+        $details = 'Our records indicate that we are holding the earnest deposit for the properties below but we have not received a deposit yet.';
+        $missing_earnest = $active_contracts
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
+            -> where('EarnestHeldBy', 'us')
+            -> whereHas('earnest', function(Builder $query) {
+                $query -> where('amount_received', '0.00');
+            }) -> get();
+
+        $alert_type = 'contracts-past-settle-date';
+        $title = 'Contracts Past Settle Date';
+        $details = 'The contracts below are still active yet past their settlement date. If the contract just closed and you have submitted all required closing docs the contract will be automatically removed once processed.';
+        $contracts_past_settle_date = $active_contracts
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
+            -> where('CloseDate', '>=', date('Y-m-d'))
+            -> get();
+
+        $alert_type = 'missing-docs-contracts';
+        $title = 'Contracts Missing Documents';
+        $details = 'The contracts below have required checklist items that you have not submitted yet.';
+        $missing_docs_contracts = $active_contracts
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
+            -> where('DocsMissingCount', '>', '0')
+            -> get();
+
+
+        // non alerts
+        $contracts_closing_this_month = $active_contracts
+            -> where('CloseDate', '<=', date('Y-m-t'))
+            -> where('CloseDate', '>=', date('Y-m-1'))
+            -> get();
+
+
+        // REFERRALS
+        $active_referrals = Referrals::select($referrals_select)
+            -> addSelect(DB::raw('"referral" as transaction_type'))
+            -> whereIn('Status', ResourceItems::GetActiveReferralStatuses())
+            -> orderBy('CloseDate', 'desc');
+
+        $active_referrals_count = $active_referrals -> count();
+
+        // alerts
+        $alert_type = 'missing-docs-referrals';
+        $title = 'Referrals Missing Documents';
+        $details = 'The referrals below have required checklist items that you have not submitted yet.';
+        $missing_docs_referrals = $active_referrals
+            -> addSelect(DB::raw('"'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
+            -> where('DocsMissingCount', '>', '0')
+            -> get();
+
+
+        // merge all alerts
+        $alerts = collect();
+        $alerts = $alerts -> merge($missing_docs_listings) -> merge($expired_listings) -> merge($missing_earnest) -> merge($contracts_past_settle_date) -> merge($missing_docs_contracts) -> merge($missing_docs_referrals);
+
+        // commission checks status
+
+        $show_alerts = null;
+        $alert_types = [];
+        if(
+            count($contracts_past_settle_date) > 0 ||
+            count($missing_docs_listings) > 0 ||
+            count($missing_docs_contracts) > 0 ||
+            count($missing_docs_referrals) > 0 ||
+            count($expired_listings) > 0 ||
+            count($missing_earnest) > 0
+        ) {
+            $show_alerts = 'yes';
+            foreach($alerts as $alert) {
+                $alert_types[] = $alert -> alert_type;
+            }
+            $alert_types = array_unique($alert_types);
+        }
+
+
+        return view('/dashboard/agent/dashboard', compact('active_listings_count', 'alert_types', 'alerts', 'active_contracts_count', 'active_referrals_count', 'contracts_closing_this_month', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts'));
 
     }
 }

@@ -7,9 +7,9 @@ $(function() {
 
     $(document).on('click', '.hide-search', hide_search);
 
-    $(document).on('click', '.search-results-row .list-group-item', function() {
+    /* $(document).on('click', '.search-results-row .list-group-item', function() {
         window.open($(this).data('href'));
-    })
+    }) */
 
     let top = $('#main_nav_bar').css('height');
     $('.main-search-results-div').css('top', top);

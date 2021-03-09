@@ -2738,8 +2738,6 @@ class TransactionsDetailsController extends Controller {
 
         $checklist_items_model = new ChecklistsItems();
         $transaction_checklist_items_model = new TransactionChecklistItems();
-        $transaction_checklist_item_docs_model = new TransactionChecklistItemsDocs();
-        $transaction_checklist_item_notes_model = new TransactionChecklistItemsNotes();
         $users = User::get();
 
         /* $agent = Agents::find($Agent_ID); */
@@ -2759,7 +2757,7 @@ class TransactionsDetailsController extends Controller {
             $checklist_types = ['referral'];
         }
 
-        $transaction_checklist_items = $transaction_checklist_items_model -> where('checklist_id', $transaction_checklist_id) -> orderBy('checklist_item_order') -> get();
+        $transaction_checklist_items = $transaction_checklist_items_model -> where('checklist_id', $transaction_checklist_id) -> with('notes', 'docs') -> orderBy('checklist_item_order') -> get();
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
@@ -2781,7 +2779,7 @@ class TransactionsDetailsController extends Controller {
             $checklist_type = 'Lease';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'checklist_items_model', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_item_docs_model', 'transaction_checklist_item_notes_model', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'users', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
+        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'checklist_items_model', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'users', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
     }
 
     public function get_add_document_to_checklist_documents_html(Request $request) {
@@ -3078,6 +3076,28 @@ class TransactionsDetailsController extends Controller {
 
         $mark_required = TransactionChecklistItems::find($checklist_item_id) -> update(['checklist_item_required' => $required]);
 
+
+        $checklist_item = TransactionChecklistItems::find($checklist_item_id);
+        $checklist_id = $checklist_item -> checklist_id;
+
+        // update DocsMissingCount
+        $docs_missing_count = TransactionChecklistItems::where('checklist_id', $checklist_id)
+            -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', '!=', 'accepted')
+            -> count();
+
+        $transaction_type = 'listing';
+        if($checklist_item -> Contract_ID > 0) {
+            $transaction_type = 'contract';
+        } else if($checklist_item -> Referral_ID > 0) {
+            $transaction_type = 'referral';
+        }
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$checklist_item -> Listing_ID, $checklist_item -> Contract_ID, $checklist_item -> Referral_ID]);
+        $property -> DocsMissingCount = $docs_missing_count;
+
+        $property -> save();
+
         return true;
     }
 
@@ -3085,7 +3105,10 @@ class TransactionsDetailsController extends Controller {
 
         // remove from items, item_docs and item_notes. then mark all transaction_docs unassigned
         $checklist_item_id = $request -> checklist_item_id;
-        $delete_item = TransactionChecklistItems::where('id', $checklist_item_id) -> delete();
+        $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
+        $checklist_id = $checklist_item -> checklist_id;
+
+
         $delete_item_notes = TransactionChecklistItemsNotes::where('checklist_item_id', $checklist_item_id) -> delete();
 
         $delete_item_docs = TransactionChecklistItemsDocs::where('checklist_item_id', $checklist_item_id);
@@ -3094,6 +3117,26 @@ class TransactionsDetailsController extends Controller {
         $unassign = TransactionDocuments::whereIn('id', $delete_item_doc_ids) -> update(['assigned' => 'no', 'checklist_item_id' => null]);
 
         $delete_item_docs -> delete();
+
+        // update DocsMissingCount
+        $docs_missing_count = TransactionChecklistItems::where('checklist_id', $checklist_id)
+            -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', '!=', 'accepted')
+            -> count();
+
+        $transaction_type = 'listing';
+        if($checklist_item -> Contract_ID > 0) {
+            $transaction_type = 'contract';
+        } else if($checklist_item -> Referral_ID > 0) {
+            $transaction_type = 'referral';
+        }
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$checklist_item -> Listing_ID, $checklist_item -> Contract_ID, $checklist_item -> Referral_ID]);
+        $property -> DocsMissingCount = $docs_missing_count;
+
+        $property -> save();
+
+        $checklist_item -> delete();
 
         return true;
 
@@ -3156,6 +3199,24 @@ class TransactionsDetailsController extends Controller {
         $new_checklist_item -> checklist_item_order = $checklist_item_order;
 
         $new_checklist_item -> save();
+
+        // update DocsMissingCount
+        $docs_missing_count = TransactionChecklistItems::where('checklist_id', $checklist_id)
+            -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', '!=', 'accepted')
+            -> count();
+
+        $transaction_type = 'listing';
+        if($Contract_ID > 0) {
+            $transaction_type = 'contract';
+        } else if($Referral_ID > 0) {
+            $transaction_type = 'referral';
+        }
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+        $property -> DocsMissingCount = $docs_missing_count;
+
+        $property -> save();
 
     }
 

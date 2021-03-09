@@ -34,6 +34,7 @@ class TransactionsController extends Controller
         $select_listings = [
             'City',
             'Contract_ID',
+            'DocsMissingCount',
             'ExpirationDate',
             'FullStreetAddress',
             'ListAgentFullName',
@@ -55,6 +56,7 @@ class TransactionsController extends Controller
             'CloseDate',
             'ContractDate',
             'Contract_ID',
+            'DocsMissingCount',
             'FullStreetAddress',
             'ListAgentFullName',
             'Listing_ID',
@@ -70,6 +72,7 @@ class TransactionsController extends Controller
             'ClientFirstName',
             'ClientLastName',
             'CloseDate',
+            'DocsMissingCount',
             'FullStreetAddress',
             'PostalCode',
             'ReceivingAgentFirstName',
@@ -111,12 +114,10 @@ class TransactionsController extends Controller
         }
         $transactions = $transactions -> with('status') -> with('checklist') -> orderBy('Status') -> get();
 
-        $checklist_items_modal = new TransactionChecklistItems();
-
         $contract_closed_status = ResourceItems::GetResourceId('Closed', 'contract_status');
 
 
-        return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions', 'checklist_items_modal', 'contract_closed_status'));
+        return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions','contract_closed_status'));
 
     }
 

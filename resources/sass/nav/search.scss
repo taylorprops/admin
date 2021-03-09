@@ -13,7 +13,7 @@ header {
             .main-search-results {
                 max-width: 90VW;
                 max-height: 90VH;
-                overflow: auto;
+                overflow-y: auto;
                 padding: 25px;
                 margin-left: auto;
                 margin-right: auto;
@@ -26,9 +26,9 @@ header {
                     height: 50px;
                 }
 
-                .search-results-row .list-group-item {
-                    cursor: pointer;
-                }
+                // .search-results-row .list-group-item {
+                //     cursor: pointer;
+                // }
 
             }
 

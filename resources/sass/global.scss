@@ -196,84 +196,18 @@ div[class*='container-'] {
     padding-right: 10px !important;
 }
 
-.wpx-50 {
-    width: 50px;
+@for $i from 1 through 50 {
+    .wpx-#{$i * 5} {
+        width: #{$i * 5}px;
+    }
 }
 
-.wpx-75 {
-    width: 75px;
+@for $i from 1 through 20 {
+    .w-#{$i * 5} {
+        width: $i * 5%;
+    }
 }
 
-.wpx-80 {
-    width: 80px;
-}
-
-.wpx-90 {
-    width: 90px;
-}
-
-.wpx-100 {
-    width: 100px;
-}
-
-.wpx-125 {
-    width: 125px;
-}
-
-.wpx-150 {
-    width: 150px;
-}
-
-.wpx-200 {
-    width: 200px;
-}
-
-.wpx-250 {
-    width: 250px;
-}
-
-.w-5 {
-    width: 5%;
-}
-
-.w-10 {
-    width: 10%;
-}
-
-.w-15 {
-    width: 15%;
-}
-
-.w-20 {
-    width: 20%;
-}
-
-.w-30 {
-    width: 30%;
-}
-
-.w-40 {
-    width: 40%;
-}
-
-.w-60 {
-    width: 60%;
-}
-
-.w-70 {
-    width: 70%;
-}
-
-.w-80 {
-    width: 80%;
-}
-.w-85 {
-    width: 85%;
-}
-
-.w-90 {
-    width: 90%;
-}
 
 .uppercase {
     text-transform: uppercase
@@ -320,6 +254,42 @@ div[class*='container-'] {
 
 .font-7 {
     font-size: .7rem;
+}
+
+@media (max-width: 1300px) {
+
+    .font-14 {
+        font-size: 1.2rem;
+    }
+
+    .font-13 {
+        font-size: 1.1rem;
+    }
+
+    .font-12 {
+        font-size: 1.1rem;
+    }
+
+    .font-11 {
+        font-size: 1rem;
+    }
+
+    .font-10 {
+        font-size: 0.9rem;
+    }
+
+    .font-9 {
+        font-size: .8rem;
+    }
+
+    .font-8 {
+        font-size: .7rem;
+    }
+
+    .font-7 {
+        font-size: .6rem;
+    }
+
 }
 
 @media (max-width: 768px) {

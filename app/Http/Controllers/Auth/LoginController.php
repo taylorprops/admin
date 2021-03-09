@@ -73,13 +73,15 @@ class LoginController extends Controller
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
         // redirect to page requested or dashboard
-        if($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === FALSE && $path != '/') {
+        if($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === FALSE && $path != '/' && !preg_match('/dashboard/', $path)) {
             $this -> redirectTo = $this -> previous_url;
         } else {
             $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
         }
 
-        Cookie::queue(Cookie::make('user_group', auth() -> user() -> group, 60 * 24, null, null, false, false));
+        $maxlifetime = ini_get("session.gc_maxlifetime");
+
+        Cookie::queue(Cookie::make('user_group', auth() -> user() -> group, $maxlifetime, null, null, false, false));
 
         return $this -> redirectTo;
 

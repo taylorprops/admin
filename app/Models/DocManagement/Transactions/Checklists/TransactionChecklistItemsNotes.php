@@ -20,4 +20,8 @@ class TransactionChecklistItemsNotes extends Model
 
         return $notes;
     }
+
+    public function user() {
+        return $this -> hasOne('\App\User', 'id', 'note_user_id');
+    }
 }

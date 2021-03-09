@@ -53,14 +53,7 @@ class EarnestController extends Controller {
             ResourceItems::GetResourceID('Expired', 'contract_status')
         ];
 
-        if($tab == 'active') {
-
-            $contracts = Contracts::select($contracts_select)
-                -> where('EarnestHeldBy', 'us')
-                -> whereIn('Status', $active_status_ids)
-                -> with('status:resource_id,resource_name');
-
-        } else if($tab == 'missing') {
+        if($tab == 'active' || $tab == 'missing') {
 
             $contracts = Contracts::select($contracts_select)
                 -> where('EarnestHeldBy', 'us')

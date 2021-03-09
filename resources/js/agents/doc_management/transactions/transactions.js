@@ -1,4 +1,4 @@
-if (document.URL.match(/transactions$/)) {
+if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab=[a-z]+/)) {
 
     $(function() {
 
@@ -7,6 +7,11 @@ if (document.URL.match(/transactions$/)) {
             get_transactions('contracts', 'active');
         }
         get_transactions('referrals', 'active');
+
+        let tab = global_get_url_parameters('tab');
+        if(tab != '') {
+            $('[data-tab="' + tab + '"]').trigger('click');
+        }
 
         $('#transactions_tabs .nav-link').on('click', function() {
             $('.view-option').first().trigger('click');

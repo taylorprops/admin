@@ -46119,9 +46119,9 @@ if (document.URL.match(/transaction_details/)) {
         reset_email();
         show_email_agent();
       });
-      $('.notes-div').each(function () {
-        get_notes($(this).data('checklist-item-id'));
-      });
+      /* $('.notes-div').each(function() {
+          get_notes($(this).data('checklist-item-id'));
+      }); */
     }, 1);
     $('.notes-collapse').on('show.bs.collapse', function () {
       $('.documents-collapse.show').collapse('hide'); //$('.checklist-item-div').removeClass('bg-blue-light');
@@ -51800,7 +51800,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
           clear_selected_form();
         }
       });
-      $('#save_add_checklist_item_button').on('click', function () {
+      $('#save_add_checklist_item_button').off('click').on('click', function () {
         save_add_checklist_item(group_id);
       });
     };
@@ -52176,7 +52176,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-if (document.URL.match(/transactions$/)) {
+if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab=[a-z]+/)) {
   var get_transactions = function get_transactions(type, status) {
     var group = getCookie('user_group');
     axios.get('/agents/doc_management/transactions/get_transactions', {
@@ -52216,6 +52216,12 @@ if (document.URL.match(/transactions$/)) {
     }
 
     get_transactions('referrals', 'active');
+    var tab = global_get_url_parameters('tab');
+
+    if (tab != '') {
+      $('[data-tab="' + tab + '"]').trigger('click');
+    }
+
     $('#transactions_tabs .nav-link').on('click', function () {
       $('.view-option').first().trigger('click');
     });
@@ -52551,7 +52557,21 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-$(function () {});
+if (document.URL.match(/dashboard_agent/)) {
+  var show_alert_details = function show_alert_details(type, title, details) {
+    $('.alert-details-item').hide();
+    $('.' + type).show();
+    $('#alert_details_modal').modal('show');
+    $('#alert_details_modal_title').html(title);
+    $('#alert_details_modal_details').html(details);
+  };
+
+  $(function () {
+    $(document).on('click', '.view-alert-details-button', function () {
+      show_alert_details($(this).data('type'), $(this).data('title'), $(this).data('details'));
+    });
+  });
+}
 
 /***/ }),
 
@@ -56670,23 +56690,14 @@ if (document.URL.match(/document_review/)) {
         statusbar: false,
         toolbar: false
       };
-      text_editor(options);
-      /* let zoom_input = $('#zoom').slider({
-          formatter: function(value) {
-              return value+'%';
-          }
-      }); */
+      text_editor(options); // new slider
 
-      $('#zoom').on('input change', zoom);
-      /* $('.zoom-out').on('click', function() {
-          $('#zoom').val(parseInt($('#zoom').val()) - 5).trigger('change');
-          $('#thumb span').text($('#zoom').val());
+      var zoom_input = $('#zoom').slider({
+        formatter: function formatter(value) {
+          return value + '%';
+        }
       });
-      $('.zoom-in').on('click', function() {
-          $('#zoom').val(parseInt($('#zoom').val()) + 5).trigger('change');
-          $('#thumb span').text($('#zoom').val());
-      }); */
-
+      $('#zoom').on('input change', zoom);
       $('#scroll_up').off('click').on('click', function () {
         document.querySelector('.review-image-container').scrollBy({
           top: -500,
@@ -56712,20 +56723,23 @@ if (document.URL.match(/document_review/)) {
       params: {
         id: id,
         type: type
-      },
-      headers: {
-        'Accept-Version': 1,
-        'Accept': 'text/html',
-        'Content-Type': 'text/html'
       }
     }).then(function (response) {
       $('.details-div').html(response.data);
-      /* $('#reject_cancellation_section').on('show.bs.collapse', function() {
-          $('.cancellation-options').prop('disabled', true);
+      $('#EarnestHeldBy, #UsingHeritage').on('change', function () {
+        var Contract_ID = $('#Contract_ID').val();
+        var EarnestHeldBy = $('#EarnestHeldBy').val();
+        var UsingHeritage = $('#UsingHeritage').val();
+        var formData = new FormData();
+        formData.append('Contract_ID', Contract_ID);
+        formData.append('EarnestHeldBy', EarnestHeldBy);
+        formData.append('UsingHeritage', UsingHeritage);
+        axios.post('/doc_management/save_earnest_and_title_details', formData, axios_options).then(function (response) {
+          toastr['success']('Changes Successfully Saved');
+        })["catch"](function (error) {
+          console.log(error);
+        });
       });
-      $('#reject_cancellation_section').on('hide.bs.collapse', function() {
-          $('.cancellation-options').prop('disabled', false);
-      }); */
     })["catch"](function (error) {});
   };
 
@@ -56760,7 +56774,7 @@ if (document.URL.match(/document_review/)) {
     $('.next-button').off('click').on('click', function () {
       next_property();
     });
-    $('#search_properties').keyup(search_properties);
+    $('#search_properties').on('keyup', search_properties);
     $('#cancel_search_properties').on('click', cancel_search_properties);
 
     if ($('#review_contract_id').val() > 0) {
@@ -59065,6 +59079,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var js_datepicker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(js_datepicker__WEBPACK_IMPORTED_MODULE_0__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+ // reload page on back button
 
 var perfEntries = performance.getEntriesByType('navigation');
 
@@ -59086,7 +59101,8 @@ $(function () {
   global_loading_off();
   /* global_page_transition(); */
 
-  if (!document.URL.match(/login/)) {//inactivityTime();
+  if (!document.URL.match(/admin\/$/)) {
+    inactivityTime();
   }
 
   $('#main_nav_bar').bootnavbar({});
@@ -59139,7 +59155,9 @@ $(function () {
 
     return response;
   }, function (error) {
-    console.log('error = ' + error);
+    if (error.response.status == 404) {
+      window.location = '/';
+    }
   });
   $(document).on('focus', '.numbers-only', function (e) {
     e.target.focus().select();
@@ -59368,8 +59386,8 @@ window.datepicker_custom = function () {
 
 
 window.inactivityTime = function () {
-  var time; //window.onload = resetTimer;
-  // DOM Events
+  var time;
+  window.onload = resetTimer; // DOM Events
 
   document.onmousemove = resetTimer;
   document.onkeypress = resetTimer;
@@ -59383,8 +59401,8 @@ window.inactivityTime = function () {
     var stay = $('#confirm_modal').find('.btn-primary');
     stay.text('Continue Session');
     var force_logout = setTimeout(function () {
-      location.href = '/';
-    }, 1000 * 60);
+      location.href = '/logout';
+    }, 1000 * 60 * 5);
     logout.on('click', function () {
       location.href = '/';
     });
@@ -59392,9 +59410,6 @@ window.inactivityTime = function () {
       clearTimeout(force_logout);
       resetTimer();
       $('#confirm_modal').modal('hide');
-    });
-    $('#confirm_modal').on('hide.bs.modal', function () {
-      location.href = '/';
     });
   }
 
@@ -59797,9 +59812,10 @@ $(function () {
     main_search($(this));
   });
   $(document).on('click', '.hide-search', hide_search);
-  $(document).on('click', '.search-results-row .list-group-item', function () {
-    window.open($(this).data('href'));
-  });
+  /* $(document).on('click', '.search-results-row .list-group-item', function() {
+      window.open($(this).data('href'));
+  }) */
+
   var top = $('#main_nav_bar').css('height');
   $('.main-search-results-div').css('top', top);
   var search_request = null;

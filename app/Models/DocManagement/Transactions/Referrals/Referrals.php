@@ -14,11 +14,16 @@ class Referrals extends Model
     public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            if(stristr(auth() -> user() -> group, 'agent')) {
-                $query -> where('Agent_ID', auth() -> user() -> user_id);
-            } else if(stristr(auth() -> user() -> group, 'transaction_coordinator')) {
-                $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
+            if(auth() -> user()) {
+                if(stristr(auth() -> user() -> group, 'agent')) {
+                    $query -> where('Agent_ID', auth() -> user() -> user_id);
+                } else if(stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+                    $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
+                }
+            } else {
+                abort(404);
             }
+
         });
     }
 

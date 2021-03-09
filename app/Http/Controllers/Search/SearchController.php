@@ -19,8 +19,13 @@ class SearchController extends Controller
         $value = $request -> value;
 
         $agent_ids = [];
-        if(Cookie::get('user_group') == 'admin') {
-            $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
+
+        if(Cookie::get('user_group')) {
+            if(Cookie::get('user_group') == 'admin') {
+                $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
+            }
+        } else {
+            abort(404);
         }
 
         $listings_select = [

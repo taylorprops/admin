@@ -5,47 +5,25 @@ namespace App\Http\Controllers\DocManagement\Review;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-// use File;
 use Config;
 use App\User;
-// use App\Models\CRM\CRMContacts;
 
 
 use App\Models\Employees\Agents;
-// use Illuminate\Support\Facades\Mail;
-// use App\Models\Resources\LocationData;
-// use Illuminate\Support\Facades\Storage;
-// use App\Models\DocManagement\Create\Fields\Fields;
 use App\Models\DocManagement\Create\Upload\Upload;
 use App\Models\DocManagement\Resources\ResourceItems;
-// use App\Models\DocManagement\Create\Fields\FieldInputs;
-// use App\Models\DocManagement\Create\Upload\UploadPages;
-// use App\Models\DocManagement\Checklists\Checklists;
-// use App\Models\DocManagement\Checklists\ChecklistsItems;
-// use App\Models\DocManagement\Create\Upload\UploadImages;
 use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
-// use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-// use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-// use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
-// use App\Models\DocManagement\Transactions\EditFiles\UserFieldsValues;
-// use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
-// use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-// use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
-// use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
 use App\Models\Admin\Resources\ResourceItemsAdmin;
-// use App\Models\BrightMLS\AgentRoster;
-// use App\Mail\DocManagement\Emails\Documents;
-// use App\Mail\DefaultEmail;
-// use Illuminate\Support\Facades\DB;
+
 
 class DocumentReviewController extends Controller
 {
@@ -64,9 +42,9 @@ class DocumentReviewController extends Controller
         $contract_ids = $contract_checklist_items -> pluck('Contract_ID');
         $referral_ids = $referral_checklist_items -> pluck('Referral_ID');
 
-        $listings = Listings::whereIn('Listing_ID', $listing_ids) -> get();
-        $contracts = Contracts::whereIn('Contract_ID', $contract_ids) -> get();
-        $referrals = Referrals::whereIn('Referral_ID', $referral_ids) -> get();
+        $listings = Listings::select('Listing_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode') -> whereIn('Listing_ID', $listing_ids) -> get();
+        $contracts = Contracts::select('Contract_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode') -> whereIn('Contract_ID', $contract_ids) -> get();
+        $referrals = Referrals::select('Referral_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode') -> whereIn('Referral_ID', $referral_ids) -> get();
 
         $checklist_item_docs = new TransactionChecklistItemsDocs();
         $checklist_item_notes = new TransactionChecklistItemsNotes();
@@ -86,7 +64,14 @@ class DocumentReviewController extends Controller
 
     }
 
+    public function save_earnest_and_title_details(Request $request) {
 
+        dd($request -> all());
+        $Contract_ID = $request -> Contract_ID;
+        $EarnestHeldBy = $request -> EarnestHeldBy;
+        $UsingHeritage = $request -> UsingHeritage;
+
+    }
 
     public function get_checklist(Request $request) {
 
@@ -153,12 +138,18 @@ class DocumentReviewController extends Controller
         $transaction_type = $request -> type;
         $id = $request -> id;
 
+        $select_listing = ['FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'SaleRent', 'Agent_ID', 'CoAgent_ID', 'PropertySubType', 'Status', 'TransactionCoordinator_ID', 'Team_ID', 'ListPrice', 'ListingId', 'MLSListDate', 'ExpirationDate', 'LeaseAmount', 'YearBuilt', 'PropertyType'];
+
+        $select_contract = ['FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'SaleRent', 'EarnestHeldBy', 'TitleCompany', 'UsingHeritage', 'Agent_ID', 'CoAgent_ID', 'PropertySubType', 'Status', 'TransactionCoordinator_ID', 'Team_ID', 'ListingId', 'ContractDate', 'CloseDate', 'ContractPrice', 'LeaseAmount', 'YearBuilt', 'PropertyType'];
+
+        $select_referral = ['FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode','Agent_ID', 'TransactionCoordinator_ID', 'Status'];
+
         if($transaction_type == 'listing') {
-            $property = Listings::find($id);
+            $property = Listings::with('agent', 'transaction_coordinator', 'status', 'team') -> find($id, $select_listing);
         } else if($transaction_type == 'contract') {
-            $property = Contracts::find($id);
+            $property = Contracts::with('agent', 'transaction_coordinator', 'status', 'team') -> find($id, $select_contract);
         } else if($transaction_type == 'referral') {
-            $property = Referrals::find($id);
+            $property = Referrals::with('agent', 'transaction_coordinator', 'status') -> find($id, $select_referral);
         }
 
         $address = ucwords(strtolower($property -> FullStreetAddress)).'<br>'.ucwords(strtolower($property -> City)).', '.$property -> StateOrProvince.' '.$property -> PostalCode;
@@ -181,29 +172,17 @@ class DocumentReviewController extends Controller
             $sale_rent = 'For Sale And Rent';
         }
 
-        $earnest_held_by = 'Taylor/Anne Arundel Properties';
-        if($property -> EarnestHeldBy == 'other_company') {
-            $earnest_held_by = $property -> Listing_ID > 0 ? $property -> BuyerOfficeName : $property -> ListOfficeName;
-        } else if($property -> EarnestHeldBy == 'heritage_title') {
-            $earnest_held_by =  'Heritage Title';
-        } else if($property -> EarnestHeldBy == 'title') {
-            $earnest_held_by =  $property -> TitleCompany;
-        } else if($property -> EarnestHeldBy == 'builder') {
-            $earnest_held_by = 'Builder';
-        }
 
-        $title_company = $property -> TitleCompany;
-        if($property -> UsingHeritage == 'yes') {
-            $title_company = 'Heritage Title';
+        $agent_details = $property -> agent;
+        $co_agent_details = null;
+        if($property -> CoAgent_ID) {
+            $co_agent_details = $property -> co_agent;
         }
-
-        $agent_details = Agents::find($property -> Agent_ID);
-        $co_agent_details = Agents::find($property -> CoAgent_ID);
 
         $cancel_pending_status_id = $resource_items -> GetResourceID('Cancel Pending', 'contract_status');
         $canceled_status_id = $resource_items -> GetResourceID('Canceled', 'contract_status');
 
-        return view('/doc_management/review/get_details_html', compact('transaction_type', 'id', 'members', 'property', 'address', 'sale_rent', 'for_sale', 'resource_items', 'agent_details', 'co_agent_details', 'earnest_held_by', 'title_company', 'cancel_pending_status_id', 'canceled_status_id'));
+        return view('/doc_management/review/get_details_html', compact('transaction_type', 'id', 'members', 'property', 'address', 'sale_rent', 'for_sale', 'resource_items', 'agent_details', 'co_agent_details', 'cancel_pending_status_id', 'canceled_status_id'));
 
     }
 
@@ -212,7 +191,7 @@ class DocumentReviewController extends Controller
         $checklist_item_id = $request -> checklist_item_id;
         $Agent_ID = $request -> Agent_ID;
 
-        $transaction_checklist_item_notes = TransactionChecklistItemsNotes::where('checklist_item_id', $checklist_item_id) -> orderBy('created_at', 'DESC') -> get();
+        $transaction_checklist_item_notes = TransactionChecklistItemsNotes::where('checklist_item_id', $checklist_item_id) -> with('user') -> orderBy('created_at', 'DESC') -> get();
 
         $users = User::get();
 

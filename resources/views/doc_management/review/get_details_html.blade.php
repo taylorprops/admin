@@ -89,13 +89,13 @@
                         @if($property -> TransactionCoordinator_ID > 0)
                         <tr>
                             <td class="text-gray text-right">Trans Coord.</td>
-                            <td class="font-weight-bold pl-2">{{ $property -> TransactionCoordinator_ID }}</td>
+                            <td class="font-weight-bold pl-2">{{ $property -> transaction_coordinator -> first_name. ' ' . $property -> transaction_coordinator -> last_name }}</td>
                         </tr>
                         @endif
                         @if($property -> Team_ID > 0)
                         <tr>
                             <td class="text-gray text-right">Team</td>
-                            <td class="font-weight-bold pl-2">{{ $property -> Team_ID }}</td>
+                            <td class="font-weight-bold pl-2">{{ $property -> team -> team_name }}</td>
                         </tr>
                         @endif
                         <tr>
@@ -103,7 +103,7 @@
                         </tr>
                         <tr>
                             <td class="text-gray text-right">Status</td>
-                            <td class="font-weight-bold pl-2">{{ $resource_items -> GetResourceName($property -> Status) }}</td>
+                            <td class="font-weight-bold pl-2">{{ $property -> status -> resource_name }}</td>
                         </tr>
                         @if($property -> ListingId)
                         <tr>
@@ -111,6 +111,11 @@
                             <td class="font-weight-bold pl-2">{{ $property -> ListingId }}</td>
                         </tr>
                         @endif
+
+                        <tr>
+                            <td class="text-gray text-right">Year Built</td>
+                            <td class="font-weight-bold pl-2">{{ $property -> YearBuilt }}</td>
+                        </tr>
 
                         @if($transaction_type == 'listing')
                             <tr>
@@ -142,12 +147,25 @@
                                     <td class="font-weight-bold pl-2">${{ number_format($property -> ContractPrice) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-gray text-right">Earnest Held By</td>
-                                    <td class="font-weight-bold pl-2">{{ $earnest_held_by }}</td>
+                                    <td class="text-gray text-right align-middle">Earnest Held By</td>
+                                    <td>
+                                        <select class="custom-form-element form-select" id="EarnestHeldBy" data-label="">
+                                            <option value="us" @if($property -> EarnestHeldBy == 'us') selected @endif>Taylor/Anne Arundel Properties</option>
+                                            <option value="other_company" @if($property -> EarnestHeldBy == 'other_company') selected @endif>Other Real Estate Company</option>
+                                            <option value="title" @if($property -> EarnestHeldBy == 'title') selected @endif>Title Company/Attorney</option>
+                                            <option value="heritage_title" @if($property -> EarnestHeldBy == 'heritage_title') selected @endif>Heritage Title</option>
+                                            <option value="builder" @if($property -> EarnestHeldBy == 'builder') selected @endif>Builder</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-gray text-right">Title company</td>
-                                    <td class="font-weight-bold pl-2">{{ $title_company ?? '' }}</td>
+                                    <td class="text-gray text-right align-middle">Using Heritage Title</td>
+                                    <td class="font-weight-bold pl-2">
+                                        <select class="custom-form-element form-select" id="UsingHeritage" data-label="">
+                                            <option value=""></option>
+                                            <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
+                                            <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>
+                                        </select></td>
                                 </tr>
                             @else
                                 <tr>
@@ -163,10 +181,7 @@
 
                         @endif
 
-                        <tr>
-                            <td class="text-gray text-right">Year Built</td>
-                            <td class="font-weight-bold pl-2">{{ $property -> YearBuilt }}</td>
-                        </tr>
+
 
                         <tr>
                             <td colspan="2" class="divider"></td>

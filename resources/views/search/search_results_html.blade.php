@@ -25,7 +25,7 @@
 
                                     <div class="col-5 col-md-8 col-lg-5"">
 
-                                        <div class="font-10 text-primary">
+                                        <div class="font-10">
                                             <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing">
                                                 {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                             </a>
@@ -137,7 +137,7 @@
 
                                 <div class="col-5 col-md-8 col-lg-5"">
 
-                                    <div class="font-10 text-primary">
+                                    <div class="font-10">
                                         <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
                                             {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                         </a>
