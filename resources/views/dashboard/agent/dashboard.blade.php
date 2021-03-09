@@ -282,7 +282,7 @@
 
                                         <div>
                                             @if($alert -> DocsMissingCount > 0)
-                                                <span class="text-danger">{{ $alert -> DocsMissingCount }} Missing Docs</span>
+                                                <span class="text-danger">Missing Docs - {{ $alert -> DocsMissingCount }}</span>
                                             @else
                                                 <span class="text-success"><i class="fal fa-check mr-2"></i> No Missing Docs</span>
                                             @endif
