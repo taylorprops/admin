@@ -51,7 +51,7 @@ $(function() {
         options.force_p_newlines = false;
         options.forced_root_block = '';
         options.branding = false;
-        options.toolbar = 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |';
+
 
         tinymce.remove(options.selector);
         tinymce.init(options);

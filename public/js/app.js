@@ -55228,7 +55228,8 @@ if (document.URL.match(/active_earnest/)) {
       menubar: false,
       statusbar: false,
       height: 370,
-      selector: '#email_agent_earnest_message'
+      selector: '#email_agent_earnest_message',
+      toolbar: 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |'
     };
     text_editor(options);
   });
@@ -59180,7 +59181,6 @@ $(function () {
     options.force_p_newlines = false;
     options.forced_root_block = '';
     options.branding = false;
-    options.toolbar = 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |';
     tinymce.remove(options.selector);
     tinymce.init(options);
   }; // send csrf with every ajax request

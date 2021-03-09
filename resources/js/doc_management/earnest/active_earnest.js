@@ -97,7 +97,8 @@ if(document.URL.match(/active_earnest/)) {
             menubar: false,
             statusbar: false,
             height: 370,
-            selector: '#email_agent_earnest_message'
+            selector: '#email_agent_earnest_message',
+            toolbar: 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |'
         }
         text_editor(options);
 
