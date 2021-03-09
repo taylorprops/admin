@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.2",
         "league/flysystem": "^1.0",
+        "magic-test/magic-test-laravel": "^0.13.0",
         "mikehaertl/php-pdftk": "^0.7.0",
         "mikehaertl/phpwkhtmltopdf": "^2.4",
         "socrata/soda-php": "dev-develop",
@@ -34,12 +35,13 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/dusk": "^6.13",
         "laravel/ui": "^3.2",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "oscarafdev/migrations-generator": "^2.0",
-        "phpunit/phpunit": "^9.3.3",
-        "fakerphp/faker": "^1.9.1"
+        "phpunit/phpunit": "^9.3.3"
     },
     "config": {
         "optimize-autoloader": true,
