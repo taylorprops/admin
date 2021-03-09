@@ -12,11 +12,11 @@ class UserFields extends Model
 
     public function user_field_inputs()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs', 'transaction_field_id', 'id');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs::class, 'transaction_field_id', 'id');
     }
 
     public function common_field()
     {
-        return $this->hasOne('App\Models\DocManagement\Create\Fields\CommonFields', 'id', 'common_field_id');
+        return $this->hasOne(\App\Models\DocManagement\Create\Fields\CommonFields::class, 'id', 'common_field_id');
     }
 }

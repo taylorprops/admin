@@ -13,6 +13,6 @@ class CommissionChecksIn extends Model
 
     public function agent()
     {
-        return $this->belongsTo('App\Models\Employees\Agents', 'Agent_ID');
+        return $this->belongsTo(\App\Models\Employees\Agents::class, 'Agent_ID');
     }
 }

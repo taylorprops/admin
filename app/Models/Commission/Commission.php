@@ -13,21 +13,21 @@ class Commission extends Model
 
     public function agent()
     {
-        return $this->belongsTo('App\Models\Employees\Agents', 'Agent_ID');
+        return $this->belongsTo(\App\Models\Employees\Agents::class, 'Agent_ID');
     }
 
     public function property_contract()
     {
-        return $this->belongsTo('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID');
+        return $this->belongsTo(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID');
     }
 
     public function property_referral()
     {
-        return $this->belongsTo('App\Models\DocManagement\Transactions\Referrals\Referrals', 'Referral_ID', 'Referral_ID');
+        return $this->belongsTo(\App\Models\DocManagement\Transactions\Referrals\Referrals::class, 'Referral_ID', 'Referral_ID');
     }
 
     public function other_checks()
     {
-        return $this->hasMany('App\Models\Commission\CommissionChecksIn', 'Commission_ID')/*  -> where('commission_checks_in.active', 'yes') */;
+        return $this->hasMany(\App\Models\Commission\CommissionChecksIn::class, 'Commission_ID')/*  -> where('commission_checks_in.active', 'yes') */;
     }
 }

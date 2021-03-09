@@ -18,12 +18,12 @@ class TransactionChecklistItems extends Model
 
     public function docs()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs', 'checklist_item_id', 'id');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs::class, 'checklist_item_id', 'id');
     }
 
     public function notes()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes', 'checklist_item_id', 'id')->orderBy('created_at', 'DESC');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes::class, 'checklist_item_id', 'id')->orderBy('created_at', 'DESC');
     }
 
     public function ScopeMakeClosingDocsRequired($query, $checklist_id)

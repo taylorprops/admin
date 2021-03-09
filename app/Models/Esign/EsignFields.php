@@ -13,6 +13,6 @@ class EsignFields extends Model
 
     public function signer()
     {
-        return $this->hasOne('App\Models\Esign\EsignSigners', 'id', 'signer_id');
+        return $this->hasOne(\App\Models\Esign\EsignSigners::class, 'id', 'signer_id');
     }
 }

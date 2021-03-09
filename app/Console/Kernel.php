@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\CheckEmailedDocuments',
-        'App\Console\Commands\DocManagement\ExpireListings',
+        \App\Console\Commands\CheckEmailedDocuments::class,
+        \App\Console\Commands\DocManagement\ExpireListings::class,
     ];
 
     /**

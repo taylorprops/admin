@@ -25,11 +25,11 @@ class TransactionDocuments extends Model
 
     public function images_converted()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages', 'document_id', 'id')->orderBy('page_number');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages::class, 'document_id', 'id')->orderBy('page_number');
     }
 
     public function esign_document()
     {
-        return $this->hasMany('App\Models\Esign\EsignDocuments', 'transaction_document_id', 'id')->with('envelope');
+        return $this->hasMany(\App\Models\Esign\EsignDocuments::class, 'transaction_document_id', 'id')->with('envelope');
     }
 }

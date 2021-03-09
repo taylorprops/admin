@@ -22,6 +22,6 @@ class TransactionChecklistItemsNotes extends Model
 
     public function user()
     {
-        return $this->hasOne('\App\User', 'id', 'note_user_id');
+        return $this->hasOne(\App\User::class, 'id', 'note_user_id');
     }
 }

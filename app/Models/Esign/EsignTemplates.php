@@ -34,16 +34,16 @@ class EsignTemplates extends Model
 
     public function envelopes()
     {
-        return $this->hasMany('App\Models\Esign\EsignEnvelopes', 'template_id', 'id')->with('documents')->with('signers');
+        return $this->hasMany(\App\Models\Esign\EsignEnvelopes::class, 'template_id', 'id')->with('documents')->with('signers');
     }
 
     public function fields()
     {
-        return $this->hasMany('App\Models\Esign\EsignFields', 'template_id', 'id');
+        return $this->hasMany(\App\Models\Esign\EsignFields::class, 'template_id', 'id');
     }
 
     public function signers()
     {
-        return $this->hasMany('App\Models\Esign\EsignSigners', 'template_id', 'id');
+        return $this->hasMany(\App\Models\Esign\EsignSigners::class, 'template_id', 'id');
     }
 }

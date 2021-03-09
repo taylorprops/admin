@@ -52,36 +52,36 @@ class EsignEnvelopes extends Model
 
     public function documents()
     {
-        return $this->hasMany('App\Models\Esign\EsignDocuments', 'envelope_id', 'id');
+        return $this->hasMany(\App\Models\Esign\EsignDocuments::class, 'envelope_id', 'id');
     }
 
     public function signers()
     {
-        return $this->hasMany('App\Models\Esign\EsignSigners', 'envelope_id', 'id');
+        return $this->hasMany(\App\Models\Esign\EsignSigners::class, 'envelope_id', 'id');
     }
 
     public function fields()
     {
-        return $this->hasMany('App\Models\Esign\EsignFields', 'envelope_id', 'id');
+        return $this->hasMany(\App\Models\Esign\EsignFields::class, 'envelope_id', 'id');
     }
 
     public function callbacks()
     {
-        return $this->hasMany('App\Models\Esign\EsignCallbacks', 'related_document_hash', 'document_hash');
+        return $this->hasMany(\App\Models\Esign\EsignCallbacks::class, 'related_document_hash', 'document_hash');
     }
 
     public function listing()
     {
-        return $this->hasOne('App\Models\DocManagement\Transactions\Listings\Listings', 'Listing_ID', 'Listing_ID')->where('Listing_ID', '>', 0);
+        return $this->hasOne(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_ID')->where('Listing_ID', '>', 0);
     }
 
     public function contract()
     {
-        return $this->hasOne('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Contract_ID', 'Contract_ID')->where('Contract_ID', '>', 0);
+        return $this->hasOne(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID')->where('Contract_ID', '>', 0);
     }
 
     public function referral()
     {
-        return $this->hasOne('App\Models\DocManagement\Transactions\Referrals\Referrals', 'Referral_ID', 'Referral_ID')->where('Referral_ID', '>', 0);
+        return $this->hasOne(\App\Models\DocManagement\Transactions\Referrals\Referrals::class, 'Referral_ID', 'Referral_ID')->where('Referral_ID', '>', 0);
     }
 }

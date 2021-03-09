@@ -16,12 +16,12 @@ class TransactionUpload extends Model
 
     public function images()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\Upload\TransactionUploadImages', 'file_id', 'file_id')->orderBy('page_number');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\Upload\TransactionUploadImages::class, 'file_id', 'file_id')->orderBy('page_number');
     }
 
     public function pages()
     {
-        return $this->hasMany('App\Models\DocManagement\Transactions\Upload\TransactionUploadPages', 'file_id', 'file_id')->orderBy('page_number');
+        return $this->hasMany(\App\Models\DocManagement\Transactions\Upload\TransactionUploadPages::class, 'file_id', 'file_id')->orderBy('page_number');
     }
 
     /* public function scopeFormGroupFiles($query, $location_id, $Listing_ID, $Contract_ID, $type) {

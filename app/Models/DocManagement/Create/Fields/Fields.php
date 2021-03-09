@@ -13,6 +13,6 @@ class Fields extends Model
 
     public function common_field()
     {
-        return $this->hasOne('App\Models\DocManagement\Create\Fields\CommonFields', 'id', 'common_field_id');
+        return $this->hasOne(\App\Models\DocManagement\Create\Fields\CommonFields::class, 'id', 'common_field_id');
     }
 }

@@ -13,6 +13,6 @@ class CommissionBreakdowns extends Model
 
     public function deductions()
     {
-        return $this->hasMany('App\Models\Commission\CommissionBreakdownsDeductions', 'commission_breakdown_id');
+        return $this->hasMany(\App\Models\Commission\CommissionBreakdownsDeductions::class, 'commission_breakdown_id');
     }
 }
