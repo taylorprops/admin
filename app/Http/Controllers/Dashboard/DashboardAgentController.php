@@ -152,6 +152,7 @@ class DashboardAgentController extends Controller
         $alerts = $alerts -> merge($missing_docs_listings) -> merge($expired_listings) -> merge($missing_earnest) -> merge($contracts_past_settle_date) -> merge($missing_docs_contracts) -> merge($missing_docs_referrals);
 
         // commission checks status
+        // unread messages
 
         $show_alerts = null;
         $alert_types = [];

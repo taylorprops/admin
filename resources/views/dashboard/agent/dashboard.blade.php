@@ -154,7 +154,7 @@
                 </div>
 
                 @if(count($contracts_closing_this_month) > 0)
-                    <div class="row">
+                    <div class="row mt-5">
 
                         <div class="col-12">
 
@@ -180,9 +180,15 @@
 
                                                 <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
 
-                                                {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}
+                                                <span>
+                                                    {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}
+                                                </span>
 
-                                                {{ date_mdy($contract -> CloseDate) }}
+                                                <span class="font-12 text-primary mx-3">|</span>
+
+                                                <div title="Settle Date" data-toggle="tooltip">
+                                                    SD - {{ date_mdy($contract -> CloseDate) }}
+                                                </div>
 
                                                 {!! $checklist_status !!}
 
@@ -194,7 +200,7 @@
                                                     @endif
                                                 </div>
 
-                                            </div>
+                                            </span>
 
                                         </div>
 
