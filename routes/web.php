@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Esign\EsignController;
 use App\Http\Controllers\Search\SearchController;
 use App\Http\Controllers\Dashboard\DashboardAdminController;
@@ -61,9 +62,12 @@ Route::get('/form_elements', function() {
     return view('/tests/form_elements');
 }); */
 
+/********** Email Routes ********/
+// Send Emails
+Route::post('/send_email', [EmailController::class, 'send_email']);
 
 // ######### ADMIN ONLY ##########//
-Route::middleware('admin') -> group(function () {
+Route::middleware(['admin']) -> group(function () {
 
     /* List of uploads */
     Route::get('/doc_management/create/upload/files', [UploadController::class, 'get_uploaded_files']) -> name('create.upload.files');
@@ -233,6 +237,20 @@ Route::middleware('admin') -> group(function () {
     // save edit check in
     Route::post('/doc_management/commission/save_edit_queue_check', [CommissionController::class, 'save_edit_queue_check']);
 
+
+    /**********  File review /**********/
+
+    // accept reject checklist items
+    Route::post('/agents/doc_management/transactions/set_checklist_item_review_status', [TransactionsDetailsController::class, 'set_checklist_item_review_status']);
+    // mark checklist items required or if applicable
+    Route::post('/agents/doc_management/transactions/mark_required', [TransactionsDetailsController::class, 'mark_required']);
+    // save add checklist item
+    Route::post('/agents/doc_management/transactions/save_add_checklist_item', [TransactionsDetailsController::class, 'save_add_checklist_item']);
+    // remove checklist item
+    Route::post('/agents/doc_management/transactions/remove_checklist_item', [TransactionsDetailsController::class, 'remove_checklist_item']);
+    // get email checklist html
+    Route::get('/agents/doc_management/transactions/get_email_checklist_html', [TransactionsDetailsController::class, 'get_email_checklist_html']);
+
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {
         return view('/tests/form_elements');
@@ -244,7 +262,7 @@ Route::middleware('admin') -> group(function () {
 
 
 // ***************************** AGENTS ********************************
-
+Route::middleware(['admin', 'agent']) -> group(function () {
 // ++++++ Doc Management ++++++ //
 
     // Global functions
@@ -521,122 +539,112 @@ Route::middleware('admin') -> group(function () {
     // get documents page
     Route::get('/documents/get_form_group_files', [DocumentsController::class, 'get_form_group_files']);
 
-///////////////////////////////// ADMIN ONLY //////////////////////////////////////////////
-/**********  File review /**********/
 
-Route::middleware('admin') -> group(function () {
 
-    // accept reject checklist items
-    Route::post('/agents/doc_management/transactions/set_checklist_item_review_status', [TransactionsDetailsController::class, 'set_checklist_item_review_status']);
-    // mark checklist items required or if applicable
-    Route::post('/agents/doc_management/transactions/mark_required', [TransactionsDetailsController::class, 'mark_required']);
-    // save add checklist item
-    Route::post('/agents/doc_management/transactions/save_add_checklist_item', [TransactionsDetailsController::class, 'save_add_checklist_item']);
-    // remove checklist item
-    Route::post('/agents/doc_management/transactions/remove_checklist_item', [TransactionsDetailsController::class, 'remove_checklist_item']);
-    // get email checklist html
-    Route::get('/agents/doc_management/transactions/get_email_checklist_html', [TransactionsDetailsController::class, 'get_email_checklist_html']);
+    // ****************** ESIGN **************** //
+
+
+    // esign
+    Route::get('/esign', [EsignController::class, 'esign']) -> name('esign');
+    // esign after sending docs for signatures
+    Route::get('/esign_show_sent', [EsignController::class, 'esign']);
+
+    // save as draft
+    Route::post('/esign/save_as_draft', [EsignController::class, 'save_as_draft']);
+
+    // delete draft
+    Route::post('/esign/delete_draft', [EsignController::class, 'delete_draft']);
+
+    // restore draft
+    Route::post('/esign/restore_draft', [EsignController::class, 'restore_draft']);
+
+    // save as template
+    Route::post('/esign/save_as_template', [EsignController::class, 'save_as_template']);
+
+    // delete template
+    Route::post('/esign/delete_template', [EsignController::class, 'delete_template']);
+
+    // restore template
+    Route::post('/esign/restore_template', [EsignController::class, 'restore_template']);
+
+    // delete system template
+    Route::post('/esign/delete_system_template', [EsignController::class, 'delete_system_template']);
+
+    // restore system template
+    Route::post('/esign/restore_system_template', [EsignController::class, 'restore_system_template']);
+
+    // cancel envelope
+    Route::post('/esign/cancel_envelope', [EsignController::class, 'cancel_envelope']);
+
+    // resend envelope
+    Route::post('/esign/resend_envelope', [EsignController::class, 'resend_envelope']);
+
+    // get esign dashboard tabs
+    Route::get('/esign/get_drafts', [EsignController::class, 'get_drafts']);
+    Route::get('/esign/get_deleted_drafts', [EsignController::class, 'get_deleted_drafts']);
+    Route::get('/esign/get_in_process', [EsignController::class, 'get_in_process']);
+    Route::get('/esign/get_completed', [EsignController::class, 'get_completed']);
+    Route::get('/esign/get_templates', [EsignController::class, 'get_templates']);
+    Route::get('/esign/get_deleted_templates', [EsignController::class, 'get_deleted_templates']);
+    Route::get('/esign/get_system_templates', [EsignController::class, 'get_system_templates']);
+    Route::get('/esign/get_deleted_system_templates', [EsignController::class, 'get_deleted_system_templates']);
+    Route::get('/esign/get_cancelled', [EsignController::class, 'get_cancelled']);
+
+    // add documents
+    Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', [EsignController::class, 'esign_add_documents']);
+    Route::get('/esign/esign_add_documents_from_uploads/{document_id}/{is_template}', [EsignController::class, 'esign_add_documents']);
+
+    Route::get('/esign/esign_add_template_documents/{template}', [EsignController::class, 'esign_add_documents']);
+
+    // create envelope and send to add signers
+    Route::post('/esign/esign_create_envelope', [EsignController::class, 'esign_create_envelope']);
+
+    // add signers
+    Route::get('/esign/esign_add_signers/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_signers']);
+
+    // add add signers to envelope
+    Route::post('/esign/esign_add_signers_to_envelope', [EsignController::class, 'esign_add_signers_to_envelope']);
+
+    // esign add fields
+    Route::get('/esign/esign_add_fields/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_fields']);
+    Route::get('/esign/esign_add_fields_from_draft/{envelope_id}/{is_draft?}', [EsignController::class, 'esign_add_fields']);
+
+    // send for signatures
+    Route::post('/esign/esign_send_for_signatures', [EsignController::class, 'esign_send_for_signatures']);
+
+    // upload docs for envelope
+    Route::post('/esign/upload', [EsignController::class, 'upload']);
+
+    // delete draft
+    Route::post('/agents/doc_management/transactions/esign/delete_draft', [TransactionsDetailsController::class, 'delete_draft']);
+
+    // restore draft
+    Route::post('/agents/doc_management/transactions/esign/restore_draft', [TransactionsDetailsController::class, 'restore_draft']);
+
+    // delete template
+    Route::post('/agents/doc_management/transactions/esign/delete_template', [TransactionsDetailsController::class, 'delete_template']);
+
+    // restore template
+    Route::post('/agents/doc_management/transactions/esign/restore_template', [TransactionsDetailsController::class, 'restore_template']);
+
+    // cancel envelope
+    Route::post('/agents/doc_management/transactions/esign/cancel_envelope', [TransactionsDetailsController::class, 'cancel_envelope']);
+
+    // resend envelope
+    Route::post('/agents/doc_management/transactions/esign/resend_envelope', [TransactionsDetailsController::class, 'resend_envelope']);
+
+    // get esign dashboard tabs
+    Route::get('/agents/doc_management/transactions/esign/get_drafts', [TransactionsDetailsController::class, 'get_drafts']);
+    Route::get('/agents/doc_management/transactions/esign/get_deleted_drafts', [TransactionsDetailsController::class, 'get_deleted_drafts']);
+    Route::get('/agents/doc_management/transactions/esign/get_in_process', [TransactionsDetailsController::class, 'get_in_process']);
+    Route::get('/agents/doc_management/transactions/esign/get_completed', [TransactionsDetailsController::class, 'get_completed']);
+    Route::get('/agents/doc_management/transactions/esign/get_cancelled', [TransactionsDetailsController::class, 'get_cancelled']);
+
+
 });
 
-
 // ****************** ESIGN **************** //
-
-// esign
-Route::get('/esign', [EsignController::class, 'esign']) -> name('esign');
-// esign after sending docs for signatures
-Route::get('/esign_show_sent', [EsignController::class, 'esign']);
 
 // callback url
 Route::post('/esign_callback', [EsignController::class, 'esign_callback']);
 Route::post('/oauth_callback', [EsignController::class, 'oauth_callback']);
-
-// save as draft
-Route::post('/esign/save_as_draft', [EsignController::class, 'save_as_draft']);
-
-// delete draft
-Route::post('/esign/delete_draft', [EsignController::class, 'delete_draft']);
-
-// restore draft
-Route::post('/esign/restore_draft', [EsignController::class, 'restore_draft']);
-
-// save as template
-Route::post('/esign/save_as_template', [EsignController::class, 'save_as_template']);
-
-// delete template
-Route::post('/esign/delete_template', [EsignController::class, 'delete_template']);
-
-// restore template
-Route::post('/esign/restore_template', [EsignController::class, 'restore_template']);
-
-// delete system template
-Route::post('/esign/delete_system_template', [EsignController::class, 'delete_system_template']);
-
-// restore system template
-Route::post('/esign/restore_system_template', [EsignController::class, 'restore_system_template']);
-
-// cancel envelope
-Route::post('/esign/cancel_envelope', [EsignController::class, 'cancel_envelope']);
-
-// resend envelope
-Route::post('/esign/resend_envelope', [EsignController::class, 'resend_envelope']);
-
-// get esign dashboard tabs
-Route::get('/esign/get_drafts', [EsignController::class, 'get_drafts']);
-Route::get('/esign/get_deleted_drafts', [EsignController::class, 'get_deleted_drafts']);
-Route::get('/esign/get_in_process', [EsignController::class, 'get_in_process']);
-Route::get('/esign/get_completed', [EsignController::class, 'get_completed']);
-Route::get('/esign/get_templates', [EsignController::class, 'get_templates']);
-Route::get('/esign/get_deleted_templates', [EsignController::class, 'get_deleted_templates']);
-Route::get('/esign/get_system_templates', [EsignController::class, 'get_system_templates']);
-Route::get('/esign/get_deleted_system_templates', [EsignController::class, 'get_deleted_system_templates']);
-Route::get('/esign/get_cancelled', [EsignController::class, 'get_cancelled']);
-
-// add documents
-Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', [EsignController::class, 'esign_add_documents']);
-Route::get('/esign/esign_add_documents_from_uploads/{document_id}/{is_template}', [EsignController::class, 'esign_add_documents']);
-
-Route::get('/esign/esign_add_template_documents/{template}', [EsignController::class, 'esign_add_documents']);
-
-// create envelope and send to add signers
-Route::post('/esign/esign_create_envelope', [EsignController::class, 'esign_create_envelope']);
-
-// add signers
-Route::get('/esign/esign_add_signers/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_signers']);
-
-// add add signers to envelope
-Route::post('/esign/esign_add_signers_to_envelope', [EsignController::class, 'esign_add_signers_to_envelope']);
-
-// esign add fields
-Route::get('/esign/esign_add_fields/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_fields']);
-Route::get('/esign/esign_add_fields_from_draft/{envelope_id}/{is_draft?}', [EsignController::class, 'esign_add_fields']);
-
-// send for signatures
-Route::post('/esign/esign_send_for_signatures', [EsignController::class, 'esign_send_for_signatures']);
-
-// upload docs for envelope
-Route::post('/esign/upload', [EsignController::class, 'upload']);
-
-// delete draft
-Route::post('/agents/doc_management/transactions/esign/delete_draft', [TransactionsDetailsController::class, 'delete_draft']);
-
-// restore draft
-Route::post('/agents/doc_management/transactions/esign/restore_draft', [TransactionsDetailsController::class, 'restore_draft']);
-
-// delete template
-Route::post('/agents/doc_management/transactions/esign/delete_template', [TransactionsDetailsController::class, 'delete_template']);
-
-// restore template
-Route::post('/agents/doc_management/transactions/esign/restore_template', [TransactionsDetailsController::class, 'restore_template']);
-
-// cancel envelope
-Route::post('/agents/doc_management/transactions/esign/cancel_envelope', [TransactionsDetailsController::class, 'cancel_envelope']);
-
-// resend envelope
-Route::post('/agents/doc_management/transactions/esign/resend_envelope', [TransactionsDetailsController::class, 'resend_envelope']);
-
-// get esign dashboard tabs
-Route::get('/agents/doc_management/transactions/esign/get_drafts', [TransactionsDetailsController::class, 'get_drafts']);
-Route::get('/agents/doc_management/transactions/esign/get_deleted_drafts', [TransactionsDetailsController::class, 'get_deleted_drafts']);
-Route::get('/agents/doc_management/transactions/esign/get_in_process', [TransactionsDetailsController::class, 'get_in_process']);
-Route::get('/agents/doc_management/transactions/esign/get_completed', [TransactionsDetailsController::class, 'get_completed']);
-Route::get('/agents/doc_management/transactions/esign/get_cancelled', [TransactionsDetailsController::class, 'get_cancelled']);

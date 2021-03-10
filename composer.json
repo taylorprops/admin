@@ -19,7 +19,6 @@
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.2",
         "league/flysystem": "^1.0",
-        "magic-test/magic-test-laravel": "^0.13.0",
         "mikehaertl/php-pdftk": "^0.7.0",
         "mikehaertl/phpwkhtmltopdf": "^2.4",
         "socrata/soda-php": "dev-develop",

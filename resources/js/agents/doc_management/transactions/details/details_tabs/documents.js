@@ -98,7 +98,6 @@ if (document.URL.match(/transaction_details/)) {
                 $(this).find('.individual-template-form').prop('disabled', true);
             });
 
-
             $('.add-to-checklist-button').off('click').on('click', show_add_to_checklist);
 
             $('.documents-container').find('modal').appendTo('body');
@@ -437,13 +436,12 @@ if (document.URL.match(/transaction_details/)) {
         });
 
         let formData = new FormData();
-        formData.append('type', 'documents');
         formData.append('from', from);
         formData.append('to_addresses', JSON.stringify(to_addresses));
         formData.append('subject', subject);
         formData.append('message', message);
         formData.append('attachments', JSON.stringify(attachments));
-        axios.post('/agents/doc_management/transactions/send_email', formData, axios_options)
+        axios.post('/send_email', formData, axios_options)
         .then(function (response) {
             if(response.data.fail) {
                 $('#modal_danger').modal().find('.modal-body').html('The attachments you are sending are too large. They must total less than 20MB and they are currently '+response.data.attachment_size+'MB');
@@ -508,6 +506,14 @@ if (document.URL.match(/transaction_details/)) {
                     $('#email_attachments').html('');
                     $('.new-address').remove();
                 });
+
+                let options = {
+                    menubar: false,
+                    statusbar: false,
+                    toolbar: false,
+                    selector: '#email_message'
+                }
+                text_editor(options);
 
                 $('.add-address-button').off('click').on('click', function() {
                     let new_address_row = ' \

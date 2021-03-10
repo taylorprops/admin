@@ -422,7 +422,7 @@
                                         </div>
                                     </div>
                                     <div class="col-10">
-                                        <textarea class="custom-form-element form-textarea" id="email_message" rows="4">&#13;&#10; &#13;&#10; Thank you,&#13;&#10; {{ \Auth::user() -> name }}</textarea>
+                                        <textarea class="text-editor" id="email_message"><br><br>{!! session('admin_details') -> signature !!}</textarea>
                                     </div>
                                 </div>
 

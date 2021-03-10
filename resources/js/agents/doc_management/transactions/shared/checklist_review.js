@@ -127,13 +127,12 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             reset_email();
 
             let formData = new FormData();
-            formData.append('type', 'checklist');
             formData.append('from', from);
             formData.append('to_addresses', JSON.stringify(to_addresses));
             formData.append('subject', subject);
             formData.append('message', message);
 
-            axios.post('/agents/doc_management/transactions/send_email', formData, axios_options)
+            axios.post('/send_email', formData, axios_options)
             .then(function (response) {
                 $('#send_email_agent_button').html('<i class="fad fa-share mr-2"></i> Send Email');
                 $('#email_agent_modal').modal('hide');

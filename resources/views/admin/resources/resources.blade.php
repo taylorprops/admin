@@ -63,7 +63,7 @@
 
                                     <span class="edit-resource-title list-item-handle float-left">@if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif</span>
 
-                                    <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fal fa-ban fa-lg"></i></a>
+                                    <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fad fa-trash fa-lg"></i></a>
 
                                     <a href="javascript: void(0)" class="edit-resource-button text-primary float-right" data-resource-type="{{ $resources_item -> resource_type }}"><i class="fad fa-edit fa-lg"></i></a>
 

@@ -25,6 +25,7 @@ if (document.URL.match(/transaction_required_details/)) {
         });
 
         $('#save_required_details').on('click', function(e) {
+            $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Saving Details...');
             e.preventDefault();
             save_transaction_required_details();
         });

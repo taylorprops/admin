@@ -45796,6 +45796,7 @@ if (document.URL.match(/transaction_required_details/)) {
       }
     });
     $('#save_required_details').on('click', function (e) {
+      $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Saving Details...');
       e.preventDefault();
       save_transaction_required_details();
     });
@@ -47928,13 +47929,12 @@ if (document.URL.match(/transaction_details/)) {
       });
     });
     var formData = new FormData();
-    formData.append('type', 'documents');
     formData.append('from', from);
     formData.append('to_addresses', JSON.stringify(to_addresses));
     formData.append('subject', subject);
     formData.append('message', message);
     formData.append('attachments', JSON.stringify(attachments));
-    axios.post('/agents/doc_management/transactions/send_email', formData, axios_options).then(function (response) {
+    axios.post('/send_email', formData, axios_options).then(function (response) {
       if (response.data.fail) {
         $('#modal_danger').modal().find('.modal-body').html('The attachments you are sending are too large. They must total less than 20MB and they are currently ' + response.data.attachment_size + 'MB');
       }
@@ -47989,6 +47989,13 @@ if (document.URL.match(/transaction_details/)) {
         $('#email_attachments').html('');
         $('.new-address').remove();
       });
+      var options = {
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        selector: '#email_message'
+      };
+      text_editor(options);
       $('.add-address-button').off('click').on('click', function () {
         var new_address_row = ' \
                     <div class="row to-addresses new-address"> \
@@ -51683,12 +51690,11 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
       tinymce.remove('#email_agent_message');
       reset_email();
       var formData = new FormData();
-      formData.append('type', 'checklist');
       formData.append('from', from);
       formData.append('to_addresses', JSON.stringify(to_addresses));
       formData.append('subject', subject);
       formData.append('message', message);
-      axios.post('/agents/doc_management/transactions/send_email', formData, axios_options).then(function (response) {
+      axios.post('/send_email', formData, axios_options).then(function (response) {
         $('#send_email_agent_button').html('<i class="fad fa-share mr-2"></i> Send Email');
         $('#email_agent_modal').modal('hide');
         toastr['success']('Agent Successfully Emailed');

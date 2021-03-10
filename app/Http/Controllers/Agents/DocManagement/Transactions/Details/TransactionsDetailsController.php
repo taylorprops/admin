@@ -2,84 +2,88 @@
 
 namespace App\Http\Controllers\Agents\DocManagement\Transactions\Details;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
-use App\Jobs\OldDB\Earnest\EscrowExportJob;
+use File;
+use Config;
+use App\User;
+use Eversign\Client;
+use App\Models\Jobs\Jobs;
 use App\Mail\DefaultEmail;
-use App\Mail\DocManagement\Emails\Documents;
-use App\Models\Admin\Resources\ResourceItemsAdmin;
-use App\Models\BrightMLS\AgentRoster;
-use App\Models\Commission\Commission;
-use App\Models\Commission\CommissionBreakdowns;
-use App\Models\Commission\CommissionBreakdownsDeductions;
-use App\Models\Commission\CommissionChecksIn;
-use App\Models\Commission\CommissionChecksInQueue;
-use App\Models\Commission\CommissionChecksOut;
-use App\Models\Commission\CommissionCommissionDeductions;
-use App\Models\Commission\CommissionIncomeDeductions;
-use App\Models\Commission\CommissionNotes;
+use Illuminate\Http\Request;
 use App\Models\CRM\CRMContacts;
-use App\Models\DocManagement\Checklists\Checklists;
-use App\Models\DocManagement\Checklists\ChecklistsItems;
-use App\Models\DocManagement\Create\Fields\CommonFields;
-use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
-use App\Models\DocManagement\Create\Fields\Fields;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Create\Upload\UploadImages;
-use App\Models\DocManagement\Create\Upload\UploadPages;
-use App\Models\DocManagement\Earnest\Earnest;
-use App\Models\DocManagement\Earnest\EarnestChecks;
-use App\Models\DocManagement\Earnest\EarnestNotes;
-use App\Models\DocManagement\Resources\ResourceItems;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
-use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Data\ListingsData;
-use App\Models\DocManagement\Transactions\Documents\InProcess;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
-use App\Models\DocManagement\Transactions\EditFiles\UserFields;
-use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Members\Members;
-use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
 use App\Models\Employees\Agents;
-use App\Models\Employees\AgentsNotes;
-use App\Models\Employees\AgentsTeams;
+use App\Models\Esign\EsignFields;
+use Illuminate\Http\UploadedFile;
+use App\Models\Esign\EsignSigners;
+use App\Http\Controllers\Controller;
 use App\Models\Esign\EsignCallbacks;
 use App\Models\Esign\EsignDocuments;
-use App\Models\Esign\EsignDocumentsImages;
 use App\Models\Esign\EsignEnvelopes;
-use App\Models\Esign\EsignFields;
-use App\Models\Esign\EsignSigners;
 use App\Models\Esign\EsignTemplates;
-use App\Models\Jobs\Jobs;
-use App\Models\Resources\LocationData;
-use App\User;
-use Config;
-use Eversign\Client;
-use File;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use App\Models\BrightMLS\AgentRoster;
+use App\Models\Commission\Commission;
+use App\Models\Employees\AgentsNotes;
+use App\Models\Employees\AgentsTeams;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Resources\LocationData;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\InHouseNotificationEmail;
+use App\Models\Commission\CommissionNotes;
+use App\Models\Esign\EsignDocumentsImages;
+use App\Jobs\OldDB\Earnest\EscrowExportJob;
+use App\Mail\DocManagement\Emails\Documents;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+use App\Models\Commission\CommissionChecksIn;
+use App\Models\DocManagement\Earnest\Earnest;
+use App\Models\Commission\CommissionChecksOut;
+use App\Models\Commission\CommissionBreakdowns;
+use App\Models\Admin\Resources\ResourceItemsAdmin;
+use App\Models\Commission\CommissionChecksInQueue;
+use App\Models\DocManagement\Create\Fields\Fields;
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Earnest\EarnestNotes;
+use App\Models\DocManagement\Checklists\Checklists;
+use App\Models\DocManagement\Earnest\EarnestChecks;
+use App\Models\Commission\CommissionIncomeDeductions;
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Create\Upload\UploadPages;
+use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Create\Fields\CommonFields;
+use App\Models\DocManagement\Create\Upload\UploadImages;
+use App\Models\Commission\CommissionBreakdownsDeductions;
+use App\Models\Commission\CommissionCommissionDeductions;
+use App\Models\DocManagement\Transactions\Members\Members;
+use App\Models\DocManagement\Transactions\Data\ListingsData;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Documents\InProcess;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use App\Models\DocManagement\Transactions\EditFiles\UserFields;
+use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
+use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+use App\Models\DocManagement\Transactions\Members\TransactionCoordinators;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsFolders;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
 
 class TransactionsDetailsController extends Controller
 {
+
+    use InHouseNotificationEmail;
     // Transaction Details
-    public function transaction_details(Request $request)
-    {
+    public function transaction_details(Request $request) {
+
+
         $transaction_type = $request -> transaction_type;
         $id = $request -> id;
 
@@ -4689,100 +4693,4 @@ class TransactionsDetailsController extends Controller
         return compact('agents');
     }
 
-    public function send_email(Request $request)
-    {
-        $type = $request -> type;
-        $email = [];
-        $from_address = $request -> from;
-        $from_name = '';
-
-        if (preg_match('/\<.*\>/', $from_address)) {
-            preg_match('/(.*)[\s]*\<(.*)\>/', $from_address, $match);
-            $from_name = $match[1];
-            $from_address = $match[2];
-        }
-
-        $email['from'] = ['address' => $from_address, 'name' => $from_name];
-
-        $email['subject'] = $request -> subject;
-        $email['message'] = $request -> message;
-
-        $email['tos_array'] = [];
-
-        foreach (json_decode($request -> to_addresses) as $to_address) {
-            $address = $to_address -> address;
-            // if separated by , or ;
-            if (preg_match('/[,;]+/', $address, $separator)) {
-                $addresses = explode($separator[0], $address);
-
-                foreach ($addresses as $address) {
-                    $to = [];
-                    $to['type'] = $to_address -> type;
-                    $to['address'] = trim($address);
-                    $email['tos_array'][] = $to;
-                }
-            } else {
-                $to = [];
-                $to['type'] = $to_address -> type;
-                $to['address'] = $to_address -> address;
-                $email['tos_array'][] = $to;
-            }
-        }
-
-        $email['attachments'] = [];
-        $attachment_size = 0;
-
-        if ($request -> attachments) {
-            foreach (json_decode($request -> attachments) as $attachment) {
-                $file = [];
-                $file['name'] = $attachment -> filename;
-                $file['location'] = $attachment -> file_location;
-                $email['attachments'][] = $file;
-                $attachment_size += filesize(Storage::disk('public') -> path($attachment -> file_location));
-            }
-
-            $attachment_size = get_mb($attachment_size);
-            if ($attachment_size > 20) {
-                $fail = json_encode(['fail' => true, 'attachment_size' => $attachment_size]);
-
-                return $fail;
-            }
-        }
-
-        $email['tos'] = [];
-        $email['ccs'] = [];
-        $email['bccs'] = [];
-
-        foreach ($email['tos_array'] as $to) {
-            $to_address = $to['address'];
-            $to_name = '';
-
-            if (preg_match('/\<.*\>/', $to['address'])) {
-                preg_match('/(.*)[\s]*\<(.*)\>/', $to['address'], $match);
-                $to_name = $match[1];
-                $to_address = $match[2];
-            }
-
-            if ($to['type'] == 'to') {
-                $email['tos'][] = ['name' => $to_name, 'email' => $to_address];
-            } elseif ($to['type'] == 'cc') {
-                $email['ccs'][] = ['name' => $to_name, 'email' => $to_address];
-            } elseif ($to['type'] == 'bcc') {
-                $email['bccs'][] = ['name' => $to_name, 'email' => $to_address];
-            }
-        }
-
-        if ($type == 'documents') {
-            $new_mail = new Documents($email);
-        } else {
-            $new_mail = new DefaultEmail($email);
-        }
-
-        //return ($new_mail) -> render();
-
-        Mail::to($email['tos'])
-            -> cc($email['ccs'])
-            -> bcc($email['bccs'])
-            -> send($new_mail);
-    }
 }

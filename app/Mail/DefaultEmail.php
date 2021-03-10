@@ -22,10 +22,10 @@ class DefaultEmail extends Mailable
 
     public function __construct($email)
     {
-        $this->email = $email;
-        $this->from = $email['from'];
-        $this->subject = $email['subject'];
-        $this->email_attachments = $email['attachments'] ?? null;
+        $this -> email = $email;
+        $this -> from = $email['from'];
+        $this -> subject = $email['subject'];
+        $this -> email_attachments = $email['attachments'] ?? null;
     }
 
     /**
@@ -35,12 +35,12 @@ class DefaultEmail extends Mailable
      */
     public function build()
     {
-        $mailer = $this->from($this->from['address'], $this->from['name'])
-            ->markdown('emails.default_email');
+        $mailer = $this -> from($this -> from['email'], $this -> from['name'])
+            -> markdown('emails.default_email');
 
-        if ($this->email_attachments) {
-            foreach ($this->email_attachments as $attachment) {
-                $mailer->attachFromStorageDisk('public', $attachment['location'], $attachment['name']);
+        if ($this -> email_attachments) {
+            foreach ($this -> email_attachments as $attachment) {
+                $mailer -> attachFromStorageDisk('public', $attachment['location'], $attachment['name']);
             }
         }
 
