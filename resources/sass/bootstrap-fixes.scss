@@ -1,6 +1,8 @@
 /// MODALS /////
 .modal {
 
+    padding-right: 0px !important;
+
     .modal-lg, .modal-xl {
         top: 25px;
 
@@ -202,9 +204,9 @@ body.modal-open {
 
 // datatables
 
-.table-responsive {
-    overflow: visible !important;
-}
+// .table-responsive {
+//     overflow: visible !important;
+// }
 
 .table.responsive {
     width: 100%;
@@ -219,23 +221,35 @@ body.modal-open {
 
     .dataTable {
 
+        border-radius: 10px;
+
         &.table {
-            border-left: none !important;
-            border-right: none !important;
+            border-radius: 10px;
+            // border-left: none !important;
+            // border-right: none !important;
 
             th {
-                //background: $blue-light;
+                background: $blue-light;
                 padding: .6rem 0rem .6rem 0.4rem;
                 color: $blue;
                 vertical-align: middle;
                 font-size: .9rem;
-                border-top: none;
-                border-left: none;
                 border-bottom: 1px solid $border-color;
                 font-weight: normal;
 
+                &:first-child {
+                    border-top-left-radius: 10px;
+                }
                 &:last-child {
-                    border-right: none;
+                    border-top-right-radius: 10px;
+                }
+
+                &:not(:first-child) {
+                    border-left: none !important;
+                }
+
+                &:not(:last-child) {
+                    border-right: none !important;
                 }
 
             }
@@ -245,12 +259,26 @@ body.modal-open {
                 font-size: .9rem;
                 color: $text-gray;
 
+                &:not(:first-child) {
+                    border-left: none !important;
+                }
+
+                &:not(:last-child) {
+                    border-right: none !important;
+                }
+
                 &.small {
                     font-size: .8rem !important;
                 }
 
+
+            }
+            tr:last-child td {
+                &:first-child {
+                    border-bottom-left-radius: 10px;
+                }
                 &:last-child {
-                    border-right: none;
+                    border-bottom-right-radius: 10px;
                 }
             }
 

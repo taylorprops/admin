@@ -339,6 +339,7 @@ if (document.URL.match(/transaction_required_details/)) {
         if($('#ContractDate').length > 0) {
             if($('#ContractDate').val() > $('#CloseDate').val()) {
                 $('#modal_danger').modal().find('.modal-body').html('Contract Date must be before Settlement Date');
+                $('#save_required_details').html('Continue <i class="fal fa-arrow-circle-right ml-3"></i>');
                 $('#ContractDate').addClass('invalid invalid-input');
                 $('#modal_danger').on('hidden.bs.modal', function() {
                     $('#ContractDate').focus().trigger('click');
@@ -359,6 +360,8 @@ if (document.URL.match(/transaction_required_details/)) {
             .catch(function (error) {
 
             });
+        } else {
+            $('#save_required_details').html('Continue <i class="fal fa-arrow-circle-right ml-3"></i>');
         }
 
     }

@@ -93,13 +93,13 @@ class EarnestController extends Controller
     {
 
         // get totals for all accounts
-        $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> orderBy('resource_order') -> get();
+        $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest') -> orderBy('resource_order') -> get();
 
         $earnest_old = OldEarnest::EarnestBalances();
 
         $earnest_account_totals = [];
         foreach ($accounts as $account) {
-            $account_total = Earnest::where('earnest_account_id', $account -> resource_id) -> where('amount_total', '>', 0) -> sum('amount_total');
+            $account_total = $account -> earnest -> where('amount_total', '>', 0) -> sum('amount_total');
 
             $company = stristr($account -> resource_name, 'taylor') ? 'TP' : 'AAP';
             $account_total += $earnest_old[$company.'_'.$account -> resource_state];

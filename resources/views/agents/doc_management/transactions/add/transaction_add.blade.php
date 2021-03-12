@@ -2,7 +2,7 @@
 @section('title', 'Add '.$transaction_type_header)
 @section('js_scripts')
 {{-- google address search --}}
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('global.vars.google_api_key') }}&libraries=places&outputFormat=json"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('global.google_api_key') }}&libraries=places&outputFormat=json"></script>
 @endsection
 @section('content')
 @php

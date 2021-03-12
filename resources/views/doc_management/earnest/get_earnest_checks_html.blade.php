@@ -1,7 +1,7 @@
 @foreach($accounts as $account)
 
     @php
-    $earnests = $account -> earnest() -> get();
+    $earnests = $account -> earnest();
     @endphp
 
     <div class="tab-pane fade pl-3 account-container @if($loop -> first) show active @endif"
@@ -36,10 +36,12 @@
 
                 <tbody>
 
-                @foreach($earnests as $earnest)
+                @foreach($earnests -> whereHas('checks', function($q){
+                    $q -> where('check_status', 'pending') -> where('check_type', 'in') -> where('active', 'yes');
+                }) -> get() as $earnest)
 
                     @php
-                    $checks = $earnest -> checks() -> where('check_status', 'pending') -> where('check_type', 'in') -> where('active', 'yes') -> orderBy('date_deposited', 'DESC') -> get();
+                    $checks = $earnest -> checks() -> orderBy('date_deposited', 'DESC') -> get();
                     $agent_name = $earnest -> agent() -> first() -> full_name;
                     $property = $earnest -> property() -> first();
                     $address = $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
@@ -112,10 +114,12 @@
 
                 <tbody>
 
-                @foreach($earnests as $earnest)
+                @foreach($earnests -> whereHas('checks', function($q){
+                    $q -> where('check_status', 'pending') -> where('check_type', 'out') -> where('active', 'yes');
+                }) -> get() as $earnest)
 
                     @php
-                    $checks = $earnest -> checks() -> where('check_status', 'pending') -> where('check_type', 'out') -> where('active', 'yes') -> orderBy('date_deposited', 'DESC') -> get();
+                    $checks = $earnest -> checks() -> orderBy('date_deposited', 'DESC') -> get();
                     $agent_name = $earnest -> agent() -> first() -> full_name;
                     $property = $earnest -> property() -> first();
                     $address = $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
@@ -182,10 +186,12 @@
 
                 <tbody>
 
-                @foreach($earnests as $earnest)
+                @foreach($earnests -> whereHas('checks', function($q){
+                    $q -> where('check_status', '!=', 'pending') -> where('check_type', 'in') -> where('active', 'yes');
+                }) -> get() as $earnest)
 
                     @php
-                    $checks = $earnest -> checks() -> where('check_status', '!=', 'pending') -> where('check_type', 'in') -> where('active', 'yes') -> orderBy('date_cleared', 'DESC') -> limit(500) -> get();
+                    $checks = $earnest -> checks() -> orderBy('date_cleared', 'DESC') -> limit(500) -> get();
                     $agent_name = $earnest -> agent() -> first() -> full_name;
                     $property = $earnest -> property() -> first();
                     $address = $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
@@ -259,10 +265,12 @@
 
                 <tbody>
 
-                @foreach($earnests as $earnest)
+                @foreach($earnests -> whereHas('checks', function($q){
+                    $q -> where('check_status', '!=', 'pending') -> where('check_type', 'out') -> where('active', 'yes');
+                }) -> get() as $earnest)
 
                     @php
-                    $checks = $earnest -> checks() -> where('check_status', '!=', 'pending') -> where('check_type', 'out') -> where('active', 'yes') -> orderBy('date_cleared', 'DESC') -> limit(500) -> get();
+                    $checks = $earnest -> checks() -> orderBy('date_cleared', 'DESC') -> limit(500) -> get();
                     $agent_name = $earnest -> agent() -> first() -> full_name;
                     $property = $earnest -> property() -> first();
                     $address = $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;

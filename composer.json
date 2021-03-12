@@ -19,8 +19,10 @@
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.2",
         "league/flysystem": "^1.0",
+        "maatwebsite/excel": "^3.1",
         "mikehaertl/php-pdftk": "^0.7.0",
         "mikehaertl/phpwkhtmltopdf": "^2.4",
+        "phpoffice/phpspreadsheet": "^1.17",
         "socrata/soda-php": "dev-develop",
         "symfony/http-foundation": "^5.1.4",
         "symfony/http-kernel": "5.1.5",
@@ -34,6 +36,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
+        "beyondcode/laravel-query-detector": "^1.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/dusk": "^6.13",
         "laravel/ui": "^3.2",

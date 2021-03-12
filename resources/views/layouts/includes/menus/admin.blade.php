@@ -50,6 +50,9 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="/doc_management/notifications" class="dropdown-item"> Notification Settings</a>
+                </li>
+                <li class="nav-item">
                     <a href="/doc_management/create/upload/files" class="dropdown-item"> Files</a>
                 </li>
                 <li class="nav-item">

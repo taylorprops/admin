@@ -65,7 +65,7 @@ class DashboardAdminController extends Controller
 
         // alerts
         $alert_type = 'missing-docs-listings';
-        $title = 'Missing Listing Documents';
+        $title = 'Missing Documents - Listings';
         $details = 'The listings below have required checklist items that you have not submitted yet.';
         $missing_docs_listings = Listings::select($listings_select)
             -> addSelect(DB::raw('"listing" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
@@ -116,7 +116,7 @@ class DashboardAdminController extends Controller
             -> get();
 
         $alert_type = 'missing-docs-contracts';
-        $title = 'Contracts Missing Documents';
+        $title = 'Missing Documents - Contracts';
         $details = 'The contracts below have required checklist items that you have not submitted yet.';
         $missing_docs_contracts = Contracts::select($contracts_select)
             -> addSelect(DB::raw('"contract" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
@@ -128,9 +128,9 @@ class DashboardAdminController extends Controller
         // non alerts
         $contracts_closing_this_month = Contracts::select($contracts_select)
             -> where('CloseDate', '<=', date('Y-m-t'))
-            -> where('CloseDate', '>=', date('Y-m-1'))
+            -> where('CloseDate', '>=', date('Y-m-d'))
             -> whereIn('Status', $active_contract_statuses)
-            -> orderBy('CloseDate', 'desc')
+            -> orderBy('CloseDate', 'asc')
             -> get();
 
         // REFERRALS

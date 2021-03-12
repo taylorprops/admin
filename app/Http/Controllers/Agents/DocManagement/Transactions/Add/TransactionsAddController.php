@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agents\DocManagement\Transactions\Add;
 
 use Config;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Models\CRM\CRMContacts;
 use App\Models\Employees\Agents;
@@ -18,9 +19,9 @@ use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Data\ListingsData;
 use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\Data\ListingsRemovedData;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
@@ -86,7 +87,7 @@ class TransactionsAddController extends Controller {
             $tax_id = $request -> tax_id;
         }
 
-        $select_columns_bright = config('global.vars.select_columns_bright');
+        $select_columns_bright = config('global.select_columns_bright');
         $select_columns_db = explode(',', $select_columns_bright);
         /* $select_columns_db_closed = 'AssociationFee,AssociationYN,AttachedGarageYN,BasementFinishedPercent,BasementYN,BathroomsTotalInteger,BedroomsTotal,City,CondoYN,County,FireplaceYN,FullStreetAddress,GarageYN,Heating,Latitude,ListingTaxID,ListPictureURL,Longitude,LotSizeAcres,LotSizeSquareFeet,NewConstructionYN,NumAttachedGarageSpaces,NumDetachedGarageSpaces,Pool,PostalCode,PropertySubType,PropertyType,StateOrProvince,StreetDirPrefix,StreetDirSuffix,StreetName,StreetNumber,StreetSuffix,StreetSuffixModifier,StructureDesignType,SubdivisionName,UnitBuildingType,UnitNumber,YearBuilt';
         $select_columns_db_closed = explode(',', $select_columns_db_closed); */
@@ -129,7 +130,7 @@ class TransactionsAddController extends Controller {
             $bright_db_search = $bright_db_search[0]-> toArray();
 
             // remove all fields that do not apply to current listing
-            //if ($bright_db_search['MlsStatus'] == 'CLOSED' && $bright_db_search['CloseDate'] < date("Y-m-d", strtotime("-1 year"))) {
+            //if ($bright_db_search['MlsStatus'] == 'CLOSED' && $bright_db_search['CloseDate'] <td date("Y-m-d", strtotime("-1 year"))) {
             $bright_db_search['MlsStatus'] = '';
             $bright_db_search['CloseDate'] = '';
             $bright_db_search['ListingId'] = '';
@@ -278,8 +279,8 @@ class TransactionsAddController extends Controller {
         $commission_breakdown -> save();
 
         // add email address
-        $address = preg_replace(config('global.vars.bad_characters'), '', $request -> street_number.ucwords(strtolower($request -> street_name)).$request -> street_dir.$request -> unit_number);
-        $email = $address.'_'.$Referral_ID.'R@'.config('global.vars.property_email');
+        $address = preg_replace(config('global.bad_characters'), '', $request -> street_number.ucwords(strtolower($request -> street_name)).$request -> street_dir.$request -> unit_number);
+        $email = $address.'_'.$Referral_ID.'R@'.config('global.property_email');
 
         $add_referral -> PropertyEmail = $email;
         $add_referral -> Commission_ID = $Commission_ID;
@@ -524,8 +525,8 @@ class TransactionsAddController extends Controller {
         }
 
         // add email address
-        $address = preg_replace(config('global.vars.bad_characters'), '', $street_address);
-        $email = $address.'_'.$code.'@'.config('global.vars.property_email');
+        $address = preg_replace(config('global.bad_characters'), '', $street_address);
+        $email = $address.'_'.$code.'@'.config('global.property_email');
 
         $new_transaction -> Commission_ID = $Commission_ID;
         $new_transaction -> Earnest_ID = $Earnest_ID;
@@ -604,26 +605,8 @@ class TransactionsAddController extends Controller {
 
         // get property details to add listing agent to members if contract
         if ($transaction_type == 'contract') {
+
             $listing_agent = new Members();
-            /* if($property -> PropertySubType != ResourceItems::GetResourceID('For Sale By Owner', 'checklist_property_sub_types') && $property -> ListAgentFirstName != '') {
-                $listing_agent -> first_name = $property -> ListAgentFirstName;
-                $listing_agent -> last_name = $property -> ListAgentLastName;
-                $listing_agent -> cell_phone = $property -> ListAgentPreferredPhone;
-                $listing_agent -> email = $property -> ListAgentEmail;
-                $listing_agent -> company = $property -> ListOfficeName;
-
-                $list_office_mls_id = $property -> ListOfficeMlsId ?? null;
-
-            } else {
-                $listing_agent -> first_name = $request -> ListAgentFirstName;
-                $listing_agent -> last_name = $request -> ListAgentLastName;
-                $listing_agent -> cell_phone = $request -> ListAgentPreferredPhone;
-                $listing_agent -> email = $request -> ListAgentEmail;
-                $listing_agent -> company = $request -> ListOfficeName;
-
-                $list_office_mls_id = $request -> ListOfficeMlsId ?? null;
-
-            } */
 
             $listing_agent -> first_name = $request -> ListAgentFirstName;
             $listing_agent -> last_name = $request -> ListAgentLastName;
@@ -658,10 +641,10 @@ class TransactionsAddController extends Controller {
             $buyers_agent -> email = $agent -> email;
             $buyers_agent -> company = $agent -> company;
             $buyers_agent -> bright_mls_id = $bright_mls_id;
-            $buyers_agent -> address_office_street = config('global.vars.company_street');
-            $buyers_agent -> address_office_city = config('global.vars.company_city');
-            $buyers_agent -> address_office_state = config('global.vars.company_state');
-            $buyers_agent -> address_office_zip = config('global.vars.company_zip');
+            $buyers_agent -> address_office_street = config('global.company_street');
+            $buyers_agent -> address_office_city = config('global.company_city');
+            $buyers_agent -> address_office_state = config('global.company_state');
+            $buyers_agent -> address_office_zip = config('global.company_zip');
             $buyers_agent -> Contract_ID = $Contract_ID;
             $buyers_agent -> Agent_ID = $Agent_ID;
             $buyers_agent -> member_type_id = ResourceItems::BuyerAgentResourceId();
@@ -692,18 +675,44 @@ class TransactionsAddController extends Controller {
                 $add_heritage_to_members -> save();
 
                 // notify heritage title
-                $to_addresses = [
-                    ['name' => '', 'email' => config('in_house_notification_routing.notification_email_title')]
-                ];
-                $from_address = 'DoNotReply@TaylorProps.com';
-                $from_name = 'Taylor Properties';
-                $subject = 'Agent Using Heritage Title Notification';
-                $message = $agent -> full_name.' has selected that they will be using Heritage Title for the following property.<br><br>'.$property -> FullStreetAddress.' '.$property -> City.' '.$property -> StateOrProvince.' '.$property -> PostalCode;
+                $send_to_emails = config('global_db.in_house_notification_emails_using_heritage_title_contract');
+                if(count($send_to_emails) > 0) {
+                    foreach($send_to_emails as $send_to_email) {
+                        $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                        $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                    }
+                    $from_address = 'DoNotReply@TaylorProps.com';
+                    $from_name = 'Taylor Properties';
+                    $subject = 'Agent Using Heritage Title Notification';
+                    $message = '
+                    <div style="font-size: 14px;">
+                    An agent from '.$agent -> company.' has selected that they will be using Heritage Title for their contract.
+                    <br><br>
+                    <span style="color: #900">* No contract has been submitted to the office yet</span>
+                    <br><br>
+                    <table>
+                        <tr>
+                            <td valign="top">Agent</td>
+                            <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                        </tr>
+                        <tr><td colspan="2" height="20"></td></tr>
+                        <tr>
+                            <td valign="top">Property</td>
+                            <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    Thank You,<br>
+                    Taylor Properties
+                    </div>';
 
-                $notify_title = $this -> InHouseNotificationEmail($to_addresses, $from_address, $from_name, $subject, $message);
+                    $notify_title = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+                }
 
             }
+
         } else {
+
             // add listing agent to members if just a listing
             $listing_agent = new Members();
             $listing_agent -> first_name = $agent -> first_name;
@@ -712,10 +721,10 @@ class TransactionsAddController extends Controller {
             $listing_agent -> email = $agent -> email;
             $listing_agent -> company = $agent -> company;
             $listing_agent -> bright_mls_id = $bright_mls_id;
-            $listing_agent -> address_office_street = config('global.vars.company_street');
-            $listing_agent -> address_office_city = config('global.vars.company_city');
-            $listing_agent -> address_office_state = config('global.vars.company_state');
-            $listing_agent -> address_office_zip = config('global.vars.company_zip');
+            $listing_agent -> address_office_street = config('global.company_street');
+            $listing_agent -> address_office_city = config('global.company_city');
+            $listing_agent -> address_office_state = config('global.company_state');
+            $listing_agent -> address_office_zip = config('global.company_zip');
             $listing_agent -> Listing_ID = $Listing_ID;
             $listing_agent -> Agent_ID = $Agent_ID;
             $listing_agent -> member_type_id = ResourceItems::ListingAgentResourceId();
@@ -725,10 +734,10 @@ class TransactionsAddController extends Controller {
 
             /* $broker = new Members();
             $broker -> company = $agent -> company;
-            $broker -> address_office_street = config('global.vars.company_street');
-            $broker -> address_office_city = config('global.vars.company_city');
-            $broker -> address_office_state = config('global.vars.company_state');
-            $broker -> address_office_zip = config('global.vars.company_zip');
+            $broker -> address_office_street = config('global.company_street');
+            $broker -> address_office_city = config('global.company_city');
+            $broker -> address_office_state = config('global.company_state');
+            $broker -> address_office_zip = config('global.company_zip');
             $broker -> Listing_ID = $Listing_ID;
             $broker -> Agent_ID = $Agent_ID;
             $broker -> member_type_id = ResourceItems::BrokerResourceId();
@@ -918,16 +927,55 @@ class TransactionsAddController extends Controller {
             $checklist_hoa_condo = $property -> HoaCondoFees;
             $checklist_year_built = $property -> YearBuilt;
 
-            // TODO: notify admin
+            // notify admin
             // if holding earnest
             // add earnest account id to earnest
             if ($request -> EarnestHeldBy == 'us') {
                 $earnest_account_id = ResourceItems::where('resource_type', 'earnest_accounts')
                     -> where('resource_state', $property -> StateOrProvince)
                     -> where('resource_name', $agent -> company)
-                    -> pluck('resource_id');
+                    -> value('resource_id');
 
-                $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id[0]]);
+                $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id]);
+
+                // notify earnest admin
+                $send_to_emails = config('global_db.in_house_notification_emails_holding_earnest');
+                if(count($send_to_emails) > 0) {
+                    foreach($send_to_emails as $send_to_email) {
+                        $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                        $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                    }
+                    $from_address = 'DoNotReply@TaylorProps.com';
+                    $from_name = 'Taylor Properties';
+                    $subject = 'New Earnest Deposit Notification';
+                    $message = '
+                    <div style="font-size: 14px;">
+                    '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
+                    <br><br>
+                    <span style="color: #900">* No contract has been submitted to the office yet. The agent just created the transaction.</span>
+                    <br><br>
+                    <table>
+                        <tr>
+                            <td valign="top">Agent</td>
+                            <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                        </tr>
+                        <tr><td colspan="2" height="20"></td></tr>
+                        <tr>
+                            <td valign="top">Property</td>
+                            <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'
+                            <br>
+                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$id.'/'.$transaction_type.'" target="_blank">View Transaction</a>
+                        </td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    Thank You,<br>
+                    Taylor Properties
+                    </div>';
+
+                    $notify_earnest_admin = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+                }
+
             }
         }
 
@@ -967,9 +1015,9 @@ class TransactionsAddController extends Controller {
             $street_dir_suffix_alt = '';
 
             // remove all suffixes and dir suffixes to get just street name. Save them for later
-            $street_suffixes_array = config('global.vars.street_suffixes');
+            $street_suffixes_array = config('global.street_suffixes');
 
-            $street_dir_suffixes_array = config('global.vars.street_dir_suffixes');
+            $street_dir_suffixes_array = config('global.street_dir_suffixes');
 
             $street_dir_suffixes_alt_array = [
                 ['orig' => 'E', 'alt' => 'EAST'],

@@ -52,49 +52,49 @@
             <div id="details_tabs" class="tab-content details-main-tabs">
                 <div id="details_tab" class="tab-pane fade active show">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="members_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="documents_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="esign_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="checklist_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="contracts_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 @if(auth() -> user() -> group == 'admin')
                 <div id="commission_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 <div id="earnest_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 @elseif(stristr(auth() -> user() -> group, 'agent'))
                 <div id="agent_commission_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
-                        {!! config('global.vars.loader') !!}
+                        {!! config('global.loader') !!}
                     </div>
                 </div>
                 @endif
@@ -422,7 +422,7 @@
                                         </div>
                                     </div>
                                     <div class="col-10">
-                                        <textarea class="text-editor" id="email_message"><br><br>{!! session('admin_details') -> signature !!}</textarea>
+                                        <textarea class="text-editor" id="email_message"><br><br>@if(session('admin_details')) {!! session('admin_details') -> signature !!} @endif</textarea>
                                     </div>
                                 </div>
 

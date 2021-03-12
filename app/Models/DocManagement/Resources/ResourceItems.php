@@ -19,12 +19,12 @@ class ResourceItems extends Model
 
     public function uploads()
     {
-        return $this->hasMany(\App\Models\DocManagement\Create\Upload\Upload::class, 'form_group_id', 'resource_id')->where(['published' => 'yes', 'active' => 'yes'])->orderBy('file_name_display');
+        return $this -> hasMany(\App\Models\DocManagement\Create\Upload\Upload::class, 'form_group_id', 'resource_id') -> where(['published' => 'yes', 'active' => 'yes']) -> orderBy('file_name_display');
     }
 
     public function earnest()
     {
-        return $this->hasMany(\App\Models\DocManagement\Earnest\Earnest::class, 'earnest_account_id', 'resource_id')->with('checks');
+        return $this -> hasMany(\App\Models\DocManagement\Earnest\Earnest::class, 'earnest_account_id', 'resource_id') -> with('checks');
     }
 
     // allow only active records on all queries
@@ -60,73 +60,73 @@ class ResourceItems extends Model
     } */
     public function scopeSellerResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Seller')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Seller') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function scopeBuyerResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Buyer')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Buyer') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function scopeBuyerAgentResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Buyer Agent')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Buyer Agent') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function scopeListingAgentResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Listing Agent')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Listing Agent') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function scopeTitleResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Title')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Title') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function scopeBrokerResourceId()
     {
-        $resource_id = self::select('resource_id')->where('resource_name', 'Broker')->first();
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Broker') -> first();
 
-        return $resource_id->resource_id;
+        return $resource_id -> resource_id;
     }
 
     public function getCountFormGroup($id)
     {
-        $uploads = Upload::where('form_group_id', $id)->get()->count();
+        $uploads = Upload::where('form_group_id', $id) -> get() -> count();
 
         return $uploads;
     }
 
     public function scopeGetLocation($query, $id)
     {
-        $location = $query->select('resource_name')->where('resource_id', $id)->first();
+        $location = $query -> select('resource_name') -> where('resource_id', $id) -> first();
 
-        return $location->resource_name;
+        return $location -> resource_name;
     }
 
     public function scopeGetState($query, $resource_id)
     {
-        $location = $query->select('resource_state')->where('resource_id', $resource_id)->first();
+        $location = $query -> select('resource_state') -> where('resource_id', $resource_id) -> first();
 
-        return $location->resource_state;
+        return $location -> resource_state;
     }
 
     public function scopeGetResourceName($query, $id)
     {
         if ($id) {
-            $resource = $query->select('resource_name')->where('resource_id', $id)->first();
+            $resource = $query -> select('resource_name') -> where('resource_id', $id) -> first();
 
-            return $resource->resource_name;
+            return $resource -> resource_name;
         }
 
         return false;
@@ -135,9 +135,9 @@ class ResourceItems extends Model
     public function scopeGetResourceID($query, $name, $type)
     {
         if ($name) {
-            $resource = $query->select('resource_id')->where('resource_name', $name)->where('resource_type', $type)->first();
+            $resource = $query -> select('resource_id') -> where('resource_name', $name) -> where('resource_type', $type) -> first();
 
-            return $resource->resource_id;
+            return $resource -> resource_id;
         }
 
         return false;
@@ -145,9 +145,9 @@ class ResourceItems extends Model
 
     public function scopeGetCategoryColor($query, $id)
     {
-        $tags = $query->select('resource_color')->where('resource_id', $id)->first();
+        $tags = $query -> select('resource_color') -> where('resource_id', $id) -> first();
 
-        return $tags->resource_color;
+        return $tags -> resource_color;
     }
 
     public function scopeGetActiveListingStatuses($query, $include_under_contract, $include_expired, $include_withdrawn)
@@ -162,7 +162,7 @@ class ResourceItems extends Model
         if ($include_withdrawn == 'yes') {
             $statuses[] = 'Withdrawn';
         }
-        $ids = $this->where('resource_type', 'listing_status')->whereIn('resource_name', $statuses)->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'listing_status') -> whereIn('resource_name', $statuses) -> pluck('resource_id');
 
         return $ids;
     }
@@ -171,7 +171,7 @@ class ResourceItems extends Model
     {
         $statuses = ['Closed', 'Withdrawn', 'Canceled'];
 
-        $ids = $this->where('resource_type', 'listing_status')->whereIn('resource_name', $statuses)->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'listing_status') -> whereIn('resource_name', $statuses) -> pluck('resource_id');
 
         return $ids;
     }
@@ -180,28 +180,28 @@ class ResourceItems extends Model
     {
         $statuses = ['Closed', 'Released', 'Cancel Pending', 'Canceled'];
 
-        $ids = $this->where('resource_type', 'listing_status')->whereIn('resource_name', $statuses)->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'listing_status') -> whereIn('resource_name', $statuses) -> pluck('resource_id');
 
         return $ids;
     }
 
     public function scopeGetActiveContractStatuses()
     {
-        $ids = $this->where('resource_type', 'contract_status')->where('resource_name', 'Active')->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'contract_status') -> where('resource_name', 'Active') -> pluck('resource_id');
 
         return $ids;
     }
 
     public function scopeGetActiveAndClosedContractStatuses()
     {
-        $ids = $this->where('resource_type', 'contract_status')->whereIn('resource_name', ['Active', 'Closed'])->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'contract_status') -> whereIn('resource_name', ['Active', 'Closed']) -> pluck('resource_id');
 
         return $ids;
     }
 
     public function scopeGetActiveReferralStatuses()
     {
-        $ids = $this->where('resource_type', 'referral_status')->where('resource_name', 'Active')->pluck('resource_id');
+        $ids = $this -> where('resource_type', 'referral_status') -> where('resource_name', 'Active') -> pluck('resource_id');
 
         return $ids;
     }

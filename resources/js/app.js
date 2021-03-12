@@ -23,6 +23,7 @@ require('./dashboard/agent.js');
 require('./doc_management/resources/resources.js');
 require('./doc_management/resources/common_fields.js');
 require('./admin/resources/resources.js');
+require('./doc_management/notifications/notifications.js');
 
 require('./doc_management/create/add_fields.js');
 require('./doc_management/create/files.js');
@@ -62,6 +63,9 @@ require('./esign/esign_add_fields.js');
 
 // review documents
 require('./doc_management/review/review.js');
+
+// CRM
+require('./CRM/contacts.js');
 
 // commission
 require('./doc_management/commission/commission_breakdowns.js');

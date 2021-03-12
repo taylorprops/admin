@@ -6,6 +6,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Esign\EsignController;
+use App\Http\Controllers\CRM\ContactsController;
 use App\Http\Controllers\Search\SearchController;
 use App\Http\Controllers\Dashboard\DashboardAdminController;
 use App\Http\Controllers\Dashboard\DashboardAgentController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\DocManagement\Checklists\ChecklistsController;
 use App\Http\Controllers\DocManagement\Commission\CommissionController;
 use App\Http\Controllers\DocManagement\Review\DocumentReviewController;
 use App\Http\Controllers\Agents\DocManagement\Documents\DocumentsController;
+use App\Http\Controllers\DocManagement\Notifications\NotificationsController;
 use App\Http\Controllers\Agents\DocManagement\Functions\GlobalFunctionsController;
 use App\Http\Controllers\Agents\DocManagement\Transactions\TransactionsController;
 use App\Http\Controllers\Agents\DocManagement\Transactions\Add\TransactionsAddController;
@@ -47,12 +49,14 @@ Route::view('login', '/auth/login');
 Auth::routes();
 Route::get('/logout', [LoginController::class, 'logout']);
 
-Route::get('/dashboard_admin', [DashboardAdminController::class, 'dashboard_admin']);
-Route::get('/dashboard_agent', [DashboardAgentController::class, 'dashboard_agent']);
+
+
 Route::get('/dashboard_agent_referral', [DashboardAgentReferralController::class, 'dashboard_agent_referral']);
 
 /********** Search Routes ********/
 Route::get('/search', [SearchController::class, 'search']);
+
+
 
 // Route::get('/test', 'Testcontroller@test');
 /* Route::get('/testing', function() {
@@ -68,6 +72,8 @@ Route::post('/send_email', [EmailController::class, 'send_email']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {
+
+    Route::get('/dashboard_admin', [DashboardAdminController::class, 'dashboard_admin']);
 
     /* List of uploads */
     Route::get('/doc_management/create/upload/files', [UploadController::class, 'get_uploaded_files']) -> name('create.upload.files');
@@ -138,6 +144,14 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/admin/resources/delete_deactivate', [ResourceItemsAdminController::class, 'delete_deactivate']);
     /* Reorder Resources */
     Route::post('/admin/resources/reorder', [ResourceItemsAdminController::class, 'resources_reorder']);
+
+    /* Notifications */
+    // get notifications
+    Route::get('/doc_management/notifications', [NotificationsController::class, 'notifications']);
+    // save notifications
+    Route::post('/doc_management/save_notifications', [NotificationsController::class, 'save_notifications']);
+    // reorder notifications
+    Route::post('/doc_management/reorder_notifications', [NotificationsController::class, 'reorder_notifications']);
 
     // Fields //
     Route::post('/doc_management/save_add_fields', [FieldsController::class, 'save_add_fields']);
@@ -262,8 +276,20 @@ Route::middleware(['admin']) -> group(function () {
 
 
 // ***************************** AGENTS ********************************
-Route::middleware(['admin', 'agent']) -> group(function () {
-// ++++++ Doc Management ++++++ //
+Route::middleware(['agent']) -> group(function () {
+
+    Route::get('/dashboard_agent', [DashboardAgentController::class, 'dashboard_agent']);
+
+    /********** Contacts ********/
+    Route::get('/contacts', [ContactsController::class, 'contacts']);
+    // get contacts
+    Route::get('/contacts/get_contacts', [ContactsController::class, 'get_contacts']);
+    // delete contacts
+    Route::post('/contacts/delete', [ContactsController::class, 'delete']);
+    // save add/edit contacts
+    Route::post('/contacts/save', [ContactsController::class, 'save']);
+    // import contacts from excel
+    Route::post('/contacts/import_from_excel', [ContactsController::class, 'import_from_excel']);
 
     // Global functions
     Route::get('/agents/doc_management/global_functions/get_location_details', [GlobalFunctionsController::class, 'get_location_details']);

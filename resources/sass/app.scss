@@ -28,8 +28,7 @@
 
 // ++++++ Pages ++++++ //
 
-@import 'dashboard/admin.scss';
-@import 'dashboard/agent.scss';
+@import 'dashboard/dashboard.scss';
 
 // ++++++ doc_management ++++++ //
 @import 'doc_management/create/files.scss';
@@ -54,11 +53,17 @@
 // Admin //
 @import 'admin/resources/resources.scss';
 
+// Notifications //
+@import 'doc_management/notifications/notifications.scss';
+
 // Document Review
 @import 'doc_management/review/review.scss';
 
 // Commission
 @import 'doc_management/commission/commission.scss';
+
+// Contacts
+@import 'contacts/contacts.scss';
 
 // Balance Earnest
 @import 'doc_management/earnest/balance_earnest.scss';

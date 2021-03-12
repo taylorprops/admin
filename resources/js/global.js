@@ -154,6 +154,7 @@ $(function() {
 
     window.datatable_settings = {
         "bAutoWidth": true,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         //"responsive": false,
         "destroy": true,
         "language": {
@@ -180,8 +181,9 @@ $(function() {
         show_paging = true/false
         */
 
+        datatable_settings.pageLength = parseInt(10);
         if(page_length != '') {
-            datatable_settings.pageLength = page_length;
+            datatable_settings.pageLength = parseInt(page_length);
         }
 
         if(sort_by.length > 0) {

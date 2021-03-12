@@ -15,8 +15,8 @@ class Agent
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()) {
-            if (stristr(auth()->user()->group, 'agent') || auth()->user()->group == 'admin') {
+        if (auth() -> user()) {
+            if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'admin') {
                 return $next($request);
             }
         }

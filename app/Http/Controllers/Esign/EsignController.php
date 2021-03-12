@@ -1038,7 +1038,7 @@ class EsignController extends Controller
         $file_to_sign -> setCustomRequesterName(auth() -> user() -> name);
         $file_to_sign -> setCustomRequesterEmail(auth() -> user() -> email);
 
-        $days = config('global.vars.app_stage') == 'development' ? 'P1D' : 'P7D';
+        $days = config('global.app_stage') == 'development' ? 'P1D' : 'P7D';
         $date = new \DateTime();
         $date -> add(new \DateInterval($days));
         $file_to_sign -> setExpires($date);

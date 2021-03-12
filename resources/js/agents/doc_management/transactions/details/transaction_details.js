@@ -906,7 +906,7 @@ if (document.URL.match(/transaction_details/)) {
 
     window.show_title_fields = function() {
 
-        if($('#required_fields_using_heritage').val() == 'yes') {
+        if($('#required_fields_using_heritage').val() == 'yes' || $('#required_fields_using_heritage').val() == '') {
             $('.not-using-heritage').hide();
             $('#required_fields_title_company').val('');
             $('#required_fields_title_company').prop('required', false).removeClass('required');

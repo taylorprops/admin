@@ -36,7 +36,7 @@ if (document.URL.match(/documents$/)) {
                 if(form_group_id == 0) {
                     length = 10;
                 }
-                let dt = data_table(length, $('.documents-table'), [0, 'asc'], [0], [], false, true, true, true, true);
+                let dt = data_table(length, $('.documents-table'), [1, 'asc'], [0], [], false, true, true, true, true);
 
             })
             .catch(function (error) {

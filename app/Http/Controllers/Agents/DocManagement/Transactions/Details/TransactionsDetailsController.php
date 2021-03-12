@@ -80,6 +80,7 @@ class TransactionsDetailsController extends Controller
 {
 
     use InHouseNotificationEmail;
+
     // Transaction Details
     public function transaction_details(Request $request) {
 
@@ -326,9 +327,9 @@ class TransactionsDetailsController extends Controller
 
         $agents = Agents::where('active', 'yes') -> orderBy('last_name') -> get();
         $teams = AgentsTeams::where('active', 'yes') -> orderBy('team_name') -> get();
-        $street_suffixes = config('global.vars.street_suffixes');
-        $street_dir_suffixes = config('global.vars.street_dir_suffixes');
-        $states_active = config('global.vars.active_states');
+        $street_suffixes = config('global.street_suffixes');
+        $street_dir_suffixes = config('global.street_dir_suffixes');
+        $states_active = config('global.active_states');
         $states = LocationData::AllStates();
 
         $property_state = $property -> StateOrProvince;
@@ -353,7 +354,7 @@ class TransactionsDetailsController extends Controller
     {
 
         // search database first
-        $select_columns_db = explode(',', config('global.vars.select_columns_bright'));
+        $select_columns_db = explode(',', config('global.select_columns_bright'));
         $mls_search_details = ListingsData::select($select_columns_db) -> where('ListingId', $request -> ListingId) -> first();
 
         // if not found search bright mls
@@ -496,7 +497,7 @@ class TransactionsDetailsController extends Controller
                 if (isset($property -> $col)) {
                     if ($property -> $col != $val && $val != '') {
                         // if a name field only replace if blank
-                        if (in_array($property -> $col, config('global.vars.select_columns_bright_agents'))) {
+                        if (in_array($property -> $col, config('global.select_columns_bright_agents'))) {
                             if ($val == '') {
                                 $property -> $col = $val;
                             }
@@ -4271,6 +4272,8 @@ class TransactionsDetailsController extends Controller
 
         $Agent_ID = $listing -> Agent_ID;
 
+        $agent = Agents::find($Agent_ID);
+
         // update listing
         /* $listing -> BuyerAgentFirstName = $agent_first;
         $listing -> BuyerAgentLastName = $agent_last;
@@ -4337,8 +4340,8 @@ class TransactionsDetailsController extends Controller
         $new_transaction = Contracts::find($Contract_ID);
 
         $code = $Contract_ID.'C';
-        $address = preg_replace(config('global.vars.bad_characters'), '', $FullStreetAddress);
-        $email = $address.'_'.$code.'@'.config('global.vars.property_email');
+        $address = preg_replace(config('global.bad_characters'), '', $FullStreetAddress);
+        $email = $address.'_'.$code.'@'.config('global.property_email');
 
         // add to commission and get commission id
         $commission = new Commission();
@@ -4409,8 +4412,6 @@ class TransactionsDetailsController extends Controller
         }
 
         // if using heritage add them to members
-
-        // TODO: notify title if using them
         if ($using_heritage == 'yes') {
             $add_heritage_to_members = new Members();
             $add_heritage_to_members -> member_type_id = ResourceItems::TitleResourceId();
@@ -4419,10 +4420,86 @@ class TransactionsDetailsController extends Controller
             $add_heritage_to_members -> Agent_ID = $Agent_ID;
             $add_heritage_to_members -> transaction_type = 'contract';
             $add_heritage_to_members -> save();
+
+            // notify heritage title
+            $send_to_emails = config('global_db.in_house_notification_emails_using_heritage_title_listing');
+            if(count($send_to_emails) > 0) {
+                foreach($send_to_emails as $send_to_email) {
+                    $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                    $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                }
+                $from_address = 'DoNotReply@TaylorProps.com';
+                $from_name = 'Taylor Properties';
+                $subject = 'Agent Using Heritage Title Notification';
+                $message = '
+                <div style="font-size: 14px;">
+                An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
+                <br><br>
+                <table>
+                    <tr>
+                        <td valign="top">Agent</td>
+                        <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                    </tr>
+                    <tr><td colspan="2" height="20"></td></tr>
+                    <tr>
+                        <td valign="top">Property</td>
+                        <td>'.$listing -> FullStreetAddress.'<br>'.$listing -> City.', '.$listing -> StateOrProvince.' '.$listing -> PostalCode.'
+                            <br>
+                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                        </td>
+                    </tr>
+                </table>
+                <br><br>
+                Thank You,<br>
+                Taylor Properties
+                </div>';
+
+                $notify_title = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+            }
+
         }
-        // TODO: if earnest
+
         // if holding earnest
-        // notify
+        if($earnest_held_by == 'us') {
+
+            // notify earnest admin
+            $send_to_emails = config('global_db.in_house_notification_emails_holding_earnest');
+            if(count($send_to_emails) > 0) {
+                foreach($send_to_emails as $send_to_email) {
+                    $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                    $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                }
+                $from_address = 'DoNotReply@TaylorProps.com';
+                $from_name = 'Taylor Properties';
+                $subject = 'New Earnest Deposit Notification';
+                $message = '
+                <div style="font-size: 14px;">
+                '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
+                <br><br>
+                <table>
+                    <tr>
+                        <td valign="top">Agent</td>
+                        <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                    </tr>
+                    <tr><td colspan="2" height="20"></td></tr>
+                    <tr>
+                        <td valign="top">Property</td>
+                        <td>'.$listing -> FullStreetAddress.'<br>'.$listing -> City.', '.$listing -> StateOrProvince.' '.$listing -> PostalCode.'
+                        <br>
+                        <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                    </td>
+                    </tr>
+                </table>
+                <br><br>
+                Thank You,<br>
+                Taylor Properties
+                </div>';
+
+                $notify_earnest_admin = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+            }
+        }
+
+
         // add checklist
         $checklist_represent = 'buyer';
 

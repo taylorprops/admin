@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-container page-dashboard-admin-container pt-5">
+<div class="container page-container page-dashboard pt-5">
 
     <div class="row mt-5">
 
@@ -154,6 +154,7 @@
                 </div>
 
                 @if(count($contracts_closing_this_month) > 0)
+
                     <div class="row mt-5">
 
                         <div class="col-12">
@@ -162,15 +163,15 @@
 
                                 <div class="font-11 text-orange">Upcoming Closings</div>
 
-                                <div class="list-group">
+                                <div class="list-group upcoming-closings-container">
 
                                     @foreach($contracts_closing_this_month as $contract)
 
                                         @php
                                         if($contract -> DocsMissingCount > 0) {
-                                            $checklist_status = '<span class="text-danger"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
+                                            $checklist_status = '<span class="text-danger font-8"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
                                         } else {
-                                            $checklist_status = '<span class="text-success"><i class="fal fa-check mr-2"></i> Complete</span>';
+                                            $checklist_status = '<span class="text-success font-8"><i class="fal fa-check mr-2"></i> Complete</span>';
                                         }
                                         @endphp
 
@@ -178,29 +179,40 @@
 
                                             <div class="d-flex justify-content-between align-items-center">
 
-                                                <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
+                                                <div class="d-flex justify-content-start align-items-center w-75">
 
-                                                <span>
-                                                    {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}
-                                                </span>
+                                                    <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
 
-                                                <span class="font-12 text-primary mx-3">|</span>
+                                                    <div class="ml-2">
+                                                        {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}
+                                                    </div>
 
-                                                <div title="Settle Date" data-toggle="tooltip">
-                                                    SD - {{ date_mdy($contract -> CloseDate) }}
+                                                    <span class="font-12 text-primary mx-3">|</span>
+
+                                                    <div title="Settle Date" data-toggle="tooltip">
+                                                        SD - {{ date_mdy($contract -> CloseDate) }}
+                                                    </div>
+
                                                 </div>
 
-                                                {!! $checklist_status !!}
 
-                                                <div class="">
-                                                    @if($contract -> ListPictureURL)
-                                                        <img src="{{ $contract -> ListPictureURL }}" height="50" class="img-responsive">
-                                                    @else
-                                                        <i class="fad fa-home fa-3x text-primary"></i>
-                                                    @endif
+                                                <div class="d-flex align-items-center w-25">
+
+                                                    <div class="w-50">{!! $checklist_status !!}</div>
+
+                                                    <div class="d-flex justify-content-around align-items-center w-50">
+                                                        @if($contract -> ListPictureURL)
+                                                            <img src="{{ $contract -> ListPictureURL }}" class="img-responsive upcoming-closing-image">
+                                                        @else
+                                                            <i class="fad fa-home fa-3x text-primary"></i>
+                                                        @endif
+                                                    </div>
+
                                                 </div>
 
-                                            </span>
+
+
+                                            </div>
 
                                         </div>
 
@@ -240,7 +252,7 @@
 
                         <div class="text-gray font-10 mb-3" id="alert_details_modal_details"></div>
 
-                        <div class="list-group border-top">
+                        <div class="list-group border-top alert-details-container">
 
                             @foreach($alerts as $alert)
 

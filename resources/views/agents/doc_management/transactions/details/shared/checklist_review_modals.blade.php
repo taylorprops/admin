@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-10 pl-0">
                             <div id="email_agent_message" class="text-editor font-9">
-                                <br><br>{!! session('admin_details') -> signature !!}
+                                <br><br>@if(session('admin_details')) {!! session('admin_details') -> signature !!} @endif
                             </div>
                         </div>
                     </div>
