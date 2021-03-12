@@ -41,7 +41,7 @@
                             * The first line of the spreadsheet should contain the column names.<br>
                             * The columns must be in the correct order. The order is: <br><br>
                             First Name, Last Name, Company, Cell Phone, Home Phone, Street, City, State, Zip.<br><br>
-                            View example <a href="storage/docs/excel_import/import_template.xls" target="_blank">Here</a>
+                            View example <a href="storage/public_docs/excel_import/import_template.xls" target="_blank">Here</a>
                         </div>
                     </div>
                 </div>
