@@ -56,7 +56,7 @@ class EarnestController extends Controller
             $contracts = Contracts::select($contracts_select)
                 -> where('EarnestHeldBy', 'us')
                 -> whereIn('Status', $active_status_ids)
-                -> with('status:resource_id,resource_name');
+                -> with(['status:resource_id,resource_name']);
         } elseif ($tab == 'waiting') {
 
             // waiting for release
@@ -68,7 +68,7 @@ class EarnestController extends Controller
                 -> whereIn('Status', $waiting_status_ids);
         }
 
-        $contracts = $contracts -> with('agent:id,full_name')
+        $contracts = $contracts -> with('agent:id,full_name','earnest.earnest_account', 'earnest.notes')
             -> whereHas('earnest', function (Builder $query) use ($account_id, $tab) {
                 if ($account_id != 'all') {
                     $query -> where('earnest_account_id', $account_id);
@@ -118,7 +118,7 @@ class EarnestController extends Controller
 
     public function get_earnest_checks(Request $request)
     {
-        $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest') -> orderBy('resource_order') -> get();
+        $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest.checks','earnest.agent:id,full_name','earnest.property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> orderBy('resource_order') -> get();
 
         return view('/doc_management/earnest/get_earnest_checks_html', compact('accounts'));
     }

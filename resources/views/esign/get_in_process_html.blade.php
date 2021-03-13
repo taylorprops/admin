@@ -38,9 +38,7 @@
 
                             $callback_signer = $callbacks -> where('signer_id', $signer -> id) -> last();
                             $event_type = $callback_signer ? $callback_signer -> event_type : null;
-                            /* echo '<pre>';
-                            dump($callback_signer);
-                            echo '</pre>'; */
+
                             $signer_status = [
                                 'document_sent' => '
                                 <div class="text-primary no-wrap">'.$signer -> signer_name.'</div>

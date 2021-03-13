@@ -20,12 +20,12 @@ class Contracts extends Model
     {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            if (auth()->user()) {
-                if (stristr(auth()->user()->group, 'agent')) {
-                    $query->where('Agent_ID', auth()->user()->user_id)
-                        ->orWhere('CoAgent_ID', auth()->user()->user_id);
-                } elseif (stristr(auth()->user()->group, 'transaction_coordinator')) {
-                    $query->where('TransactionCoordinator_ID', auth()->user()->user_id);
+            if (auth() -> user()) {
+                if (stristr(auth() -> user() -> group, 'agent')) {
+                    $query -> where('Agent_ID', auth() -> user() -> user_id)
+                        -> orWhere('CoAgent_ID', auth() -> user() -> user_id);
+                } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+                    $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
             }
         });
@@ -33,42 +33,42 @@ class Contracts extends Model
 
     public function agent()
     {
-        return $this->hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
+        return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
     }
 
     public function co_agent()
     {
-        return $this->hasOne(\App\Models\Employees\Agents::class, 'id', 'CoAgent_ID');
+        return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'CoAgent_ID');
     }
 
     public function team()
     {
-        return $this->hasOne(\App\Models\Employees\AgentsTeams::class, 'id', 'Team_ID');
+        return $this -> hasOne(\App\Models\Employees\AgentsTeams::class, 'id', 'Team_ID');
     }
 
     public function transaction_coordinator()
     {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
     }
 
     public function earnest()
     {
-        return $this->hasOne(\App\Models\DocManagement\Earnest\Earnest::class, 'Contract_ID', 'Contract_ID');
+        return $this -> hasOne(\App\Models\DocManagement\Earnest\Earnest::class, 'Contract_ID', 'Contract_ID');
     }
 
     public function listing()
     {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_ID');
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_ID');
     }
 
     public function status()
     {
-        return $this->hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'Status');
+        return $this -> hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'Status');
     }
 
     public function checklist()
     {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Contract_ID', 'Contract_ID');
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Contract_ID', 'Contract_ID');
     }
 
     public function ScopeContractColumnsNotInListings()
