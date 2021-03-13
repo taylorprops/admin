@@ -12909,12 +12909,6 @@ body.modal-open {
 .dataTables_wrapper .dataTable.table th:last-child {
   border-top-right-radius: 10px;
 }
-.dataTables_wrapper .dataTable.table th:not(:first-child) {
-  border-left: none !important;
-}
-.dataTables_wrapper .dataTable.table th:not(:last-child) {
-  border-right: none !important;
-}
 .dataTables_wrapper .dataTable.table td {
   padding: 0.4rem;
   vertical-align: middle;
@@ -16480,6 +16474,7 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 
 #add_template_modal .modal-body {
   height: 80VH;
+  overflow: auto;
 }
 
 .page-esign-add-fields {

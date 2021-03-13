@@ -138,7 +138,9 @@ class EsignController extends Controller
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
+
         $signers = $document -> getSigners();
+
         $signer = null;
         foreach ($signers as $signer) {
             if ($signer -> getStatus() == 'waiting_for_signature') {
@@ -309,7 +311,7 @@ class EsignController extends Controller
             }
         }
 
-        $templates = EsignTemplates::get();
+        $templates = EsignTemplates::with('signers') -> get();
 
         return view('/esign/esign_add_documents', compact('is_template', 'from_upload', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
     }

@@ -244,13 +244,13 @@ body.modal-open {
                     border-top-right-radius: 10px;
                 }
 
-                &:not(:first-child) {
-                    border-left: none !important;
-                }
+                // &:not(:first-child) {
+                //     border-left: none !important;
+                // }
 
-                &:not(:last-child) {
-                    border-right: none !important;
-                }
+                // &:not(:last-child) {
+                //     border-right: none !important;
+                // }
 
             }
             td {

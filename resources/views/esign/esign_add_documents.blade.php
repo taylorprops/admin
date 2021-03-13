@@ -143,7 +143,7 @@
 <input type="hidden" id="document_ids" value="{{ implode(',', $document_ids) }}">
 
 <div class="modal fade draggable" id="add_template_modal" tabindex="-1" role="dialog" aria-labelledby="add_template_modal_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_template_modal_title">Add Template</h4>
@@ -157,7 +157,7 @@
 
                         <div class="font-10 text-gray my-3">Select the Template you want to apply</div>
 
-                        <div class="table-responsive text-nowrap">
+                        <div class="table-responsive">
 
                             <table id="templates_table" class="table table-bordered table-sm" width="100%">
 
@@ -166,7 +166,7 @@
                                         <th></th>
                                         <th>Template Name</th>
                                         <th>Signers</th>
-                                        <th>Created</th>
+                                        <th>Type</th>
                                     </tr>
                                 </thead>
 
@@ -185,7 +185,7 @@
                                             <td><button type="button" class="btn btn-sm btn-primary apply-template-button" data-template-id="{{ $template -> id }}"><i class="fa fa-plus mr-sm-2"></i> <span class="d-none d-sm-inline-block">Apply</span></button></td>
                                             <td>{{ $template -> template_name }}</td>
                                             <td>{!! implode(', ', $recipients) !!}</td>
-                                            <td>{{ date('M jS, Y', strtotime($template -> created_at)) }}</td>
+                                            <td>{{ $template -> is_system_template == 'yes' ? 'System' : 'User' }}</td>
                                         </tr>
                                     @endforeach
 

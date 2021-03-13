@@ -32,7 +32,7 @@
                 <tr>
                     <td>{{ $envelope -> status }}</td>
                     <td>{{ $envelope -> subject }}</td>
-                    <td>
+                    <td class="pr-4">
                         @php
                         foreach($signers as $signer) {
 
