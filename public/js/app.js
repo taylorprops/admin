@@ -16512,7 +16512,7 @@ window.inactivityTime = function () {
   document.onkeypress = resetTimer;
 
   function logout() {
-    $('#confirm_modal').modal().find('.modal-title').html('Session Expired!');
+    $('#confirm_modal').modal('show').find('.modal-title').html('Session Expired!');
     $('#confirm_modal').find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><div><i class="fad fa-exclamation-circle fa-2x text-danger mr-3"></i></div><div>Your session has expired due to inactivity.</div></div>');
     $('#confirm_modal').find('.modal-sm').removeClass('modal-sm').find('.modal-header').addClass('bg-danger');
     var logout = $('#confirm_modal').find('.btn-danger');

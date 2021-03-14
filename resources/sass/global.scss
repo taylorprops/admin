@@ -10,7 +10,7 @@ html {
     overflow-x: hidden;
 }
 
-.page-container {
+.page-container:not(.page-document-review) {
     padding-bottom: 200px;
 }
 

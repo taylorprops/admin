@@ -60,7 +60,7 @@
 
 {{-- Confirm Modal --}}
 <div class="modal fade draggable" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="confirm_title"></h4>

@@ -5,7 +5,7 @@
 
 <div class="container-fluid page-container page-document-review px-0">
 
-    <div class="row no-gutters vh-100">
+    <div class="row no-gutters">
 
         <div class="col-3">
 
