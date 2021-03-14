@@ -1,4 +1,4 @@
-<div class="table-responsive text-nowrap">
+<div class="table-responsive">
     <table class="table table-bordered table-sm" id="listings_table">
         <thead>
             <th width="100"></th>

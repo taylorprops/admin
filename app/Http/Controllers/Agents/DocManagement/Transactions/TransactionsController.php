@@ -13,20 +13,18 @@ use Yajra\Datatables\Facades\Datatables;
 
 class TransactionsController extends Controller
 {
-    public function transactions_all(Request $request)
-    {
+    public function transactions_all(Request $request) {
         $agent_referral = null;
-        if (stristr(auth()->user()->group, 'referral')) {
+        if (stristr(auth() -> user() -> group, 'referral')) {
             $agent_referral = 'yes';
         }
 
         return view('/agents/doc_management/transactions/transactions_all', compact('agent_referral'));
     }
 
-    public function get_transactions(Request $request)
-    {
-        $type = $request->type;
-        $status = $request->status;
+    public function get_transactions(Request $request) {
+        $type = $request -> type;
+        $status = $request -> status;
 
         $select_listings = [
             'City',
@@ -79,36 +77,36 @@ class TransactionsController extends Controller
             'Status',
         ];
 
-        $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no')->toArray();
+        $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no') -> toArray();
         $closed_status_listing = ResourceItems::GetResourceID('Closed', 'listing_status');
-        $active_contract_statuses = ResourceItems::GetActiveContractStatuses()->toArray();
+        $active_contract_statuses = ResourceItems::GetActiveContractStatuses() -> toArray();
         $closed_status_contract = ResourceItems::GetResourceID('Closed', 'contract_status');
-        $active_referral_statuses = ResourceItems::GetActiveReferralStatuses()->toArray();
+        $active_referral_statuses = ResourceItems::GetActiveReferralStatuses() -> toArray();
         $closed_status_referral = ResourceItems::GetResourceID('Closed', 'referral_status');
 
         if ($type == 'listings') {
-            $transactions = Listings::select($select_listings)->with('contract:Contract_ID,CloseDate');
+            $transactions = Listings::select($select_listings) -> with('contract:Contract_ID,CloseDate');
             if ($status == 'active') {
-                $transactions = $transactions->whereIn('Status', $active_listing_statuses);
+                $transactions = $transactions -> whereIn('Status', $active_listing_statuses);
             } elseif ($status == 'closed') {
-                $transactions = $transactions->where('Status', $closed_status_listing);
+                $transactions = $transactions -> where('Status', $closed_status_listing);
             }
         } elseif ($type == 'contracts') {
-            $transactions = Contracts::select($select_contracts)->with('listing:Listing_ID,SellerOneFullName,SellerTwoFullName');
+            $transactions = Contracts::select($select_contracts) -> with('listing:Listing_ID,SellerOneFullName,SellerTwoFullName');
             if ($status == 'active') {
-                $transactions = $transactions->whereIn('Status', $active_contract_statuses);
+                $transactions = $transactions -> whereIn('Status', $active_contract_statuses);
             } elseif ($status == 'closed') {
-                $transactions = $transactions->where('Status', $closed_status_contract);
+                $transactions = $transactions -> where('Status', $closed_status_contract);
             }
         } elseif ($type == 'referrals') {
-            $transactions = Referrals::select($select_referrals)->with('agent:id,full_name');
+            $transactions = Referrals::select($select_referrals) -> with('agent:id,full_name');
             if ($status == 'active') {
-                $transactions = $transactions->whereIn('Status', $active_referral_statuses);
+                $transactions = $transactions -> whereIn('Status', $active_referral_statuses);
             } elseif ($status == 'closed') {
-                $transactions = $transactions->where('Status', $closed_status_referral);
+                $transactions = $transactions -> where('Status', $closed_status_referral);
             }
         }
-        $transactions = $transactions->with('status')->with('checklist')->orderBy('Status')->get();
+        $transactions = $transactions -> with('status') -> with('checklist') -> orderBy('Status') -> get();
 
         $contract_closed_status = ResourceItems::GetResourceId('Closed', 'contract_status');
 

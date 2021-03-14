@@ -8,9 +8,8 @@ use Illuminate\Http\Request;
 
 class DashboardAgentReferralController extends Controller
 {
-    public function dashboard_agent_referral(Request $request)
-    {
-        $Agent_ID = auth()->user()->user_id;
+    public function dashboard_agent_referral(Request $request) {
+        $Agent_ID = auth() -> user() -> user_id;
 
         $resource_items = new ResourceItems();
 

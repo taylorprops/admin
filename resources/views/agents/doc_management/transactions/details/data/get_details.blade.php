@@ -138,7 +138,7 @@
                                             <select class="custom-form-element form-select required" @if(Auth::user() -> group == 'agent') disabled @endif data-label="Listing Agent" name="Agent_ID" id="Agent_ID">
                                                 <option value=""></option>
                                                 @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> firstt_name . ' ' . $agent -> last_name }}</option>
+                                                <option value="{{ $agent -> id }}" @if($property -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> first_name . ' ' . $agent -> last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

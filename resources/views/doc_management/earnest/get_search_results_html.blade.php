@@ -34,9 +34,9 @@
                                     @foreach($checks_in as $check)
 
                                         @php
-                                        $agent_name = $check -> agent() -> first() -> full_name;
-                                        $property = $check -> property() -> first();
-                                        $earnest = $check -> earnest() -> with('earnest_account') -> first();
+                                        $agent_name = $check -> agent -> full_name;
+                                        $property = $check -> property;
+                                        $earnest = $check -> earnest;
                                         $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                                         @endphp
                                         <tr>
@@ -95,9 +95,9 @@
                                     @foreach($checks_out as $check)
 
                                         @php
-                                        $agent_name = $check -> agent() -> first() -> full_name;
-                                        $property = $check -> property() -> first();
-                                        $earnest = $check -> earnest() -> with('earnest_account') -> first();
+                                        $agent_name = $check -> agent -> full_name;
+                                        $property = $check -> property;
+                                        $earnest = $check -> earnest;
                                         $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                                         @endphp
                                         <tr>

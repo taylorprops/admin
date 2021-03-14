@@ -8,19 +8,17 @@ use Illuminate\Http\Request;
 
 class GlobalFunctionsController extends Controller
 {
-    public function get_location_details(Request $request)
-    {
-        $zip = $request->zip;
-        $location_details = LocationData::select('city', 'state', 'county')->where('zip', $zip)->first();
+    public function get_location_details(Request $request) {
+        $zip = $request -> zip;
+        $location_details = LocationData::select('city', 'state', 'county') -> where('zip', $zip) -> first();
         if ($location_details) {
-            return $location_details->toJson();
+            return $location_details -> toJson();
         }
 
         return null;
     }
 
-    public function tax_records($street_number, $street_name, $unit, $zip, $tax_id, $state)
-    {
+    public function tax_records($street_number, $street_name, $unit, $zip, $tax_id, $state) {
         $details = '';
         // only able to get tax records for MD at this point
         if ($state == 'MD') {
@@ -56,7 +54,7 @@ class GlobalFunctionsController extends Controller
 
             $err = curl_error($curl);
             if ($err) {
-                return response()->json([
+                return response() -> json([
                     'error' => 'yes',
                     'curl' => $err,
                 ]);
@@ -67,7 +65,7 @@ class GlobalFunctionsController extends Controller
             // if no response from searching by tax id
             if (! stristr($response, 'account_id_mdp_field_acctid') && $tax_id != '') {
                 // search again by address
-                $this->tax_records($street_number, $street_name, $unit, $zip, '', $state);
+                $this -> tax_records($street_number, $street_name, $unit, $zip, '', $state);
 
             // if no response after searching by address
             } elseif (! stristr($response, 'account_id_mdp_field_acctid') && $tax_id == '') {
@@ -121,21 +119,21 @@ class GlobalFunctionsController extends Controller
                         $link = $property['real_property_search_link']['url'];
                         $page = new \DOMDocument();
                         libxml_use_internal_errors(true);
-                        $page->loadHTMLFile($link);
+                        $page -> loadHTMLFile($link);
                         //echo $page -> saveHTML();
 
-                        $owner1 = $page->getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName_0');
+                        $owner1 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName_0');
                         if (! $owner1) {
-                            $owner1 = $page->getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName_0');
+                            $owner1 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName_0');
                         }
 
-                        $owner2 = $page->getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName2_0');
+                        $owner2 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName2_0');
                         if (! $owner2) {
-                            $owner2 = $page->getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName2_0');
+                            $owner2 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName2_0');
                         }
 
-                        $details['Owner1'] = htmlspecialchars($this->extractText($owner1));
-                        $details['Owner2'] = htmlspecialchars($this->extractText($owner2));
+                        $details['Owner1'] = htmlspecialchars($this -> extractText($owner1));
+                        $details['Owner2'] = htmlspecialchars($this -> extractText($owner2));
 
                         /* $details['frederick_city'] = 'no';
                         if(stristr($property['town_code_mdp_field_towncode_desctown_sdat_field_36'], 'Frederick')) { //MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblSpecTaxTown_0
@@ -147,7 +145,7 @@ class GlobalFunctionsController extends Controller
                         } */
                     }
                 } else {
-                    return response()->json([
+                    return response() -> json([
                         'error' => 'yes',
                         'found' => count($properties),
                     ]);
@@ -158,18 +156,17 @@ class GlobalFunctionsController extends Controller
         return $details;
     }
 
-    public function extractText($node)
-    {
-        if (XML_TEXT_NODE === $node->nodeType || XML_CDATA_SECTION_NODE === $node->nodeType) {
-            return $node->nodeValue;
-        } elseif (XML_ELEMENT_NODE === $node->nodeType || XML_DOCUMENT_NODE === $node->nodeType || XML_DOCUMENT_FRAG_NODE === $node->nodeType) {
-            if ('script' === $node->nodeName) {
+    public function extractText($node) {
+        if (XML_TEXT_NODE === $node -> nodeType || XML_CDATA_SECTION_NODE === $node -> nodeType) {
+            return $node -> nodeValue;
+        } elseif (XML_ELEMENT_NODE === $node -> nodeType || XML_DOCUMENT_NODE === $node -> nodeType || XML_DOCUMENT_FRAG_NODE === $node -> nodeType) {
+            if ('script' === $node -> nodeName) {
                 return '';
             }
 
             $text = '';
-            foreach ($node->childNodes as $childNode) {
-                $text .= $this->extractText($childNode);
+            foreach ($node -> childNodes as $childNode) {
+                $text .= $this -> extractText($childNode);
             }
 
             return $text;

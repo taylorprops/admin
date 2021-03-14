@@ -10,11 +10,10 @@ class Checklists extends Model
     public $table = 'docs_checklists';
     protected $guarded = [];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            $query->where('checklist_active', 'yes');
+            $query -> where('checklist_active', 'yes');
         });
     }
 
@@ -26,13 +25,12 @@ class Checklists extends Model
         return false;
     } */
 
-    public function scopeGetChecklistsByPropertyType($query, $checklist_property_type_id, $checklist_location_id, $checklist_type)
-    {
-        $checklists = $query->where('checklist_location_id', $checklist_location_id)->where('checklist_property_type_id', $checklist_property_type_id);
+    public function scopeGetChecklistsByPropertyType($query, $checklist_property_type_id, $checklist_location_id, $checklist_type) {
+        $checklists = $query -> where('checklist_location_id', $checklist_location_id) -> where('checklist_property_type_id', $checklist_property_type_id);
         if ($checklist_type != '') {
-            $checklists = $query->where('checklist_type', $checklist_type);
+            $checklists = $query -> where('checklist_type', $checklist_type);
         }
-        $checklists = $query->orderBy('checklist_order')->get();
+        $checklists = $query -> orderBy('checklist_order') -> get();
 
         return $checklists;
     }

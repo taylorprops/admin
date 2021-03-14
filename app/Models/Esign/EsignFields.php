@@ -11,8 +11,7 @@ class EsignFields extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function signer()
-    {
-        return $this->hasOne(\App\Models\Esign\EsignSigners::class, 'id', 'signer_id');
+    public function signer() {
+        return $this -> hasOne(\App\Models\Esign\EsignSigners::class, 'id', 'signer_id');
     }
 }

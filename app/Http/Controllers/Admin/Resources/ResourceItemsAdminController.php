@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 
 class ResourceItemsAdminController extends Controller
 {
-    public function resources_admin()
-    {
+    public function resources_admin() {
         $states = LocationData::ActiveStates();
 
         $resources_items_model = new ResourceItemsAdmin();
@@ -20,8 +19,7 @@ class ResourceItemsAdminController extends Controller
         return view('/admin/resources/resources', compact('resources', 'resources_items', 'states', 'resources_items_model'));
     }
 
-    public function resources_reorder(Request $request)
-    {
+    public function resources_reorder(Request $request) {
         $data = json_decode($request['data'], true);
         $data = $data['resource'];
 
@@ -34,8 +32,7 @@ class ResourceItemsAdminController extends Controller
         }
     }
 
-    public function resources_add(Request $request)
-    {
+    public function resources_add(Request $request) {
         $resource_type = $request -> resource_type;
         $resource_type_title = ucwords(str_replace('_', ' ', $resource_type));
         $resource_name = $request -> resource_name;
@@ -58,8 +55,7 @@ class ResourceItemsAdminController extends Controller
         return $resource_item -> resource_id;
     }
 
-    public function resources_edit(Request $request)
-    {
+    public function resources_edit(Request $request) {
         $resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> first();
         $resource_item -> resource_name = $request -> resource_name;
         $resource_item -> resource_state = $request -> resource_state;
@@ -67,8 +63,7 @@ class ResourceItemsAdminController extends Controller
         $resource_item -> save();
     }
 
-    public function delete_deactivate(Request $request)
-    {
+    public function delete_deactivate(Request $request) {
         if ($request -> action == 'delete') {
             $resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> delete();
         } elseif ($request -> action == 'deactivate') {

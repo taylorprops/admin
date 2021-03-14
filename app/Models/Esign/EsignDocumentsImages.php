@@ -11,8 +11,7 @@ class EsignDocumentsImages extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function images()
-    {
-        return $this->hasMany(self::class, 'document_id', 'id');
+    public function images() {
+        return $this -> hasMany(self::class, 'document_id', 'id');
     }
 }

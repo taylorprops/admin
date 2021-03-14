@@ -19,8 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TransactionsEditFilesController extends Controller
 {
-    public function convert_to_pdf(Request $request)
-    {
+    public function convert_to_pdf(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -217,8 +216,7 @@ class TransactionsEditFilesController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function file_view(Request $request)
-    {
+    public function file_view(Request $request) {
         $document_id = $request -> document_id;
         $document = TransactionDocuments::whereId($document_id) -> first();
         $file_type = $document -> file_type;
@@ -238,8 +236,7 @@ class TransactionsEditFilesController extends Controller
         return view('/agents/doc_management/transactions/edit_files/file', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'file_id', 'document_id', 'file_type', 'page_width', 'page_height', 'page_size'));
     }
 
-    public function get_edit_file_docs(Request $request)
-    {
+    public function get_edit_file_docs(Request $request) {
         $document_id = $request -> document_id;
         $document = TransactionDocuments::whereId($document_id) -> first();
         $file_type = $document -> file_type;
@@ -259,8 +256,7 @@ class TransactionsEditFilesController extends Controller
         return view('/agents/doc_management/transactions/edit_files/get_edit_file_docs_html', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'images', 'user_fields', 'file_id', 'document_id', 'file_type'));
     }
 
-    public function rotate_document(Request $request)
-    {
+    public function rotate_document(Request $request) {
         $file_id = $request -> file_id;
         $file_type = $request -> file_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
@@ -287,8 +283,7 @@ class TransactionsEditFilesController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_edit_system_inputs(Request $request)
-    {
+    public function save_edit_system_inputs(Request $request) {
 
         // update system input values
         $inputs = $request -> inputs;
@@ -299,8 +294,7 @@ class TransactionsEditFilesController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_edit_user_fields(Request $request)
-    {
+    public function save_edit_user_fields(Request $request) {
         DB::transaction(function () use ($request) {
 
             // add and update user input values

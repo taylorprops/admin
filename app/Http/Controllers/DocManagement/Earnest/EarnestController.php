@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\Mail;
 
 class EarnestController extends Controller
 {
-    public function active_earnest(Request $request)
-    {
+    public function active_earnest(Request $request) {
         $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts')
             -> orderBy('resource_order')
             -> get();
@@ -26,8 +25,7 @@ class EarnestController extends Controller
         return view('/doc_management/earnest/active_earnest', compact('earnest_accounts'));
     }
 
-    public function get_earnest_deposits(Request $request)
-    {
+    public function get_earnest_deposits(Request $request) {
         $account_id = $request -> account_id;
         $tab = $request -> tab;
 
@@ -84,13 +82,11 @@ class EarnestController extends Controller
         return view('/doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));
     }
 
-    public function balance_earnest(Request $request)
-    {
+    public function balance_earnest(Request $request) {
         return view('/doc_management/earnest/balance_earnest');
     }
 
-    public function get_earnest_totals(Request $request)
-    {
+    public function get_earnest_totals(Request $request) {
 
         // get totals for all accounts
         $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest') -> orderBy('resource_order') -> get();
@@ -116,15 +112,13 @@ class EarnestController extends Controller
         return view('/doc_management/earnest/get_earnest_totals_html', compact('earnest_account_totals'));
     }
 
-    public function get_earnest_checks(Request $request)
-    {
+    public function get_earnest_checks(Request $request) {
         $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest.checks','earnest.agent:id,full_name','earnest.property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> orderBy('resource_order') -> get();
 
         return view('/doc_management/earnest/get_earnest_checks_html', compact('accounts'));
     }
 
-    public function search_earnest_checks(Request $request)
-    {
+    public function search_earnest_checks(Request $request) {
         $value = $request -> value;
 
         $agent_ids = Agents::where('first_name', 'like', '%'.$value.'%')
@@ -144,7 +138,7 @@ class EarnestController extends Controller
                     -> orWhere('check_amount', 'like', '%'.$value.'%')
                     -> orWhere('payable_to', 'like', '%'.$value.'%');
             })
-            -> with('agent:full_name') -> with('property:FullStreetAddress,City,StateOrProvince,PostalCode') -> with('earnest')
+            -> with('agent:id,full_name') -> with('property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> with('earnest.earnest_account')
             -> get();
 
         $checks_in = $checks -> where('check_type', 'in');
@@ -153,8 +147,7 @@ class EarnestController extends Controller
         return view('/doc_management/earnest/get_search_results_html', compact('checks_in', 'checks_out'));
     }
 
-    public function email_agents_missing_earnest(Request $request)
-    {
+    public function email_agents_missing_earnest(Request $request) {
         $contract_ids = explode(',', $request -> contract_ids);
 
         $subject = $request -> subject;

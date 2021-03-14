@@ -211,8 +211,7 @@ class TransactionsDetailsController extends Controller
     }
 
     // Transaction Details Header
-    public function transaction_details_header(Request $request)
-    {
+    public function transaction_details_header(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -275,8 +274,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted'));
     }
 
-    public function set_status_to_waiting_for_release(Request $request)
-    {
+    public function set_status_to_waiting_for_release(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $status = ResourceItems::GetResourceID('Waiting For Release', 'contract_status');
         $contract = Contracts::find($Contract_ID) -> update(['Status' => $status]);
@@ -288,8 +286,7 @@ class TransactionsDetailsController extends Controller
 
     // Details Tab
 
-    public function get_details(Request $request)
-    {
+    public function get_details(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -350,8 +347,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_details', compact('transaction_type', 'property', 'contract_closed', 'listing_closed', 'for_sale', 'list_agent', 'agents', 'teams', 'street_suffixes', 'street_dir_suffixes', 'states_active', 'states', 'counties', 'trans_coords', 'has_listing', 'details_type'));
     }
 
-    public function mls_search(Request $request)
-    {
+    public function mls_search(Request $request) {
 
         // search database first
         $select_columns_db = explode(',', config('global.select_columns_bright'));
@@ -382,8 +378,7 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function save_mls_search(Request $request)
-    {
+    public function save_mls_search(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $MLS_ID = $request -> ListingId;
@@ -527,8 +522,7 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function save_details(Request $request)
-    {
+    public function save_details(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -633,8 +627,7 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function save_required_fields(Request $request)
-    {
+    public function save_required_fields(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $property = Contracts::find($Contract_ID);
         $property -> UsingHeritage = $request -> required_fields_using_heritage;
@@ -650,8 +643,7 @@ class TransactionsDetailsController extends Controller
 
     // Members Tab
 
-    public function get_members(Request $request)
-    {
+    public function get_members(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -685,8 +677,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_members', compact('members', 'contact_types', 'resource_items', 'states', 'for_sale'));
     }
 
-    public function add_member_html(Request $request)
-    {
+    public function add_member_html(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -710,8 +701,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/add_member_html', compact('for_sale', 'contact_types', 'states'));
     }
 
-    public function delete_member(Request $request)
-    {
+    public function delete_member(Request $request) {
         if ($member = Members::find($request -> id) -> delete()) {
             if ($request -> transaction_type == 'listing') {
                 $this -> update_transaction_members($request -> Listing_ID, 'listing');
@@ -725,8 +715,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function save_member(Request $request)
-    {
+    public function save_member(Request $request) {
         $new_member = null;
         if ($request -> id && $request -> id != 'undefined') {
             $member = Members::find($request -> id);
@@ -764,8 +753,7 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function update_transaction_members($id, $type)
-    {
+    public function update_transaction_members($id, $type) {
         $field = 'Listing_ID';
 
         if ($type == 'contract') {
@@ -930,8 +918,7 @@ class TransactionsDetailsController extends Controller
 
     // Documents Tab
 
-    public function get_documents(Request $request)
-    {
+    public function get_documents(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -991,8 +978,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_documents', compact('transaction_type', 'property', 'Agent_ID', 'Listing_ID', 'Contract_ID', 'checklist_id', 'documents', 'folders', 'available_files', 'property_email', 'for_sale'));
     }
 
-    public function in_process_esign(Request $request)
-    {
+    public function in_process_esign(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -1035,8 +1021,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['esign_documents' => $esign_documents]);
     }
 
-    public function in_process(Request $request)
-    {
+    public function in_process(Request $request) {
         $document_ids = explode(',', $request -> document_ids);
 
         $in_process = [];
@@ -1059,8 +1044,7 @@ class TransactionsDetailsController extends Controller
             ]);
     }
 
-    public function add_folder(Request $request)
-    {
+    public function add_folder(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1089,8 +1073,7 @@ class TransactionsDetailsController extends Controller
         $folder -> save();
     }
 
-    public function delete_folder(Request $request)
-    {
+    public function delete_folder(Request $request) {
         $folder_id = $request -> folder_id;
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
@@ -1109,8 +1092,7 @@ class TransactionsDetailsController extends Controller
         $delete_folder = TransactionDocumentsFolders::where('id', $folder_id) -> delete();
     }
 
-    public function get_emailed_documents(Request $request)
-    {
+    public function get_emailed_documents(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1146,8 +1128,7 @@ class TransactionsDetailsController extends Controller
         return $emailed_documents;
     }
 
-    public function add_emailed_documents(Request $request)
-    {
+    public function add_emailed_documents(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1184,8 +1165,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_emailed_document(Request $request)
-    {
+    public function delete_emailed_document(Request $request) {
         $document_id = $request -> document_id;
         $emailed_document = TransactionDocumentsEmailed::find($document_id);
         $emailed_document -> update(['active' => 'no']);
@@ -1193,8 +1173,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function duplicate_document(Request $request)
-    {
+    public function duplicate_document(Request $request) {
         $document_id = $request -> document_id;
         $file_type = $request -> file_type;
         // get document details
@@ -1325,8 +1304,7 @@ class TransactionsDetailsController extends Controller
         } */
     }
 
-    public function email_get_documents(Request $request)
-    {
+    public function email_get_documents(Request $request) {
         $docs_type = $request -> docs_type;
 
         $filenames = [];
@@ -1355,8 +1333,7 @@ class TransactionsDetailsController extends Controller
         return compact('file_locations', 'filenames');
     }
 
-    public function get_split_document_html(Request $request)
-    {
+    public function get_split_document_html(Request $request) {
         $transaction_type = $request -> transaction_type;
         $checklist_id = $request -> checklist_id;
         $document_id = $request -> document_id;
@@ -1386,8 +1363,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_split_document_html', compact('document_id', 'file_id', 'file_type', 'file_name', 'document', 'document_images', 'checklist_items', 'checklist_groups', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal'));
     }
 
-    public function merge_documents(Request $request)
-    {
+    public function merge_documents(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1424,15 +1400,13 @@ class TransactionsDetailsController extends Controller
         return compact('file_location', 'filename', 'single_documents');
     }
 
-    public function move_documents_to_folder(Request $request)
-    {
+    public function move_documents_to_folder(Request $request) {
         $folder_id = $request -> folder_id;
         $document_ids = explode(',', $request -> document_ids);
         $update_folder = TransactionDocuments::whereIn('id', $document_ids) -> update(['folder' => $folder_id]);
     }
 
-    public function move_documents_to_trash(Request $request)
-    {
+    public function move_documents_to_trash(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1452,8 +1426,7 @@ class TransactionsDetailsController extends Controller
         $update_folder = TransactionDocuments::whereIn('id', $document_ids) -> update(['folder' => $trash_folder -> id]);
     }
 
-    public function reorder_documents(Request $request)
-    {
+    public function reorder_documents(Request $request) {
         $data = json_decode($request['data'], true);
         $data = $data['document'];
 
@@ -1470,8 +1443,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function save_add_template_documents(Request $request)
-    {
+    public function save_add_template_documents(Request $request) {
         $Agent_ID = $request -> Agent_ID;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1844,8 +1816,8 @@ class TransactionsDetailsController extends Controller
 
     } */
 
-    public function save_assign_documents_to_checklist(Request $request)
-    {
+    public function save_assign_documents_to_checklist(Request $request) {
+
         $checklist_items = json_decode($request['checklist_items']);
 
         $Agent_ID = $request -> Agent_ID;
@@ -1895,7 +1867,48 @@ class TransactionsDetailsController extends Controller
         }
 
         if ($release_submitted == true) {
-            // TODO: notify delia
+
+            $agent = Agents::find($Agent_ID);
+            $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
+            // notify earnest admin
+            $send_to_emails = config('global_db.in_house_notification_emails_release_submitted');
+            if(count($send_to_emails) > 0) {
+                foreach($send_to_emails as $send_to_email) {
+                    $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                    $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                }
+                $from_address = 'DoNotReply@TaylorProps.com';
+                $from_name = 'Taylor Properties';
+                $subject = 'Release Submitted Notification';
+                $message = '
+                <div style="font-size: 14px;">
+                '.$agent -> full_name.' has submitted a release for review.
+                <br><br>
+                <table>
+                    <tr>
+                        <td valign="top">Agent</td>
+                        <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                    </tr>
+                    <tr><td colspan="2" height="20"></td></tr>
+                    <tr>
+                        <td valign="top">Property</td>
+                        <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'
+                        <br>
+                        <a href="'.config('app.url').'/doc_management/document_review" target="_blank">Review Release</a>
+                        <br>
+                        <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                    </td>
+                    </tr>
+                </table>
+                <br><br>
+                Thank You,<br>
+                Taylor Properties
+                </div>';
+
+                $notify_earnest_admin = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+
+            }
 
             return response() -> json([
                 'release_submitted' => 'yes',
@@ -1903,8 +1916,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function save_rename_document(Request $request)
-    {
+    public function save_rename_document(Request $request) {
         $new_name = $request -> new_name;
         $document_id = $request -> document_id;
         $document = TransactionDocuments::where('id', $document_id) -> first();
@@ -1936,8 +1948,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function save_split_document(Request $request)
-    {
+    public function save_split_document(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2178,8 +2189,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function upload_documents(Request $request)
-    {
+    public function upload_documents(Request $request) {
         $file = $request -> file('file');
         $Agent_ID = $request -> Agent_ID;
         $Listing_ID = $request -> Listing_ID ?? 0;
@@ -2397,8 +2407,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function convert_pdf_to_standard_size($page_width, $page_height, $folder, $file_name, $upload)
-    {
+    public function convert_pdf_to_standard_size($page_width, $page_height, $folder, $file_name, $upload) {
 
         // letter
         // 612 +- 10 [592 622] | 792 +- 15 [787 807]
@@ -2457,13 +2466,11 @@ class TransactionsDetailsController extends Controller
 
     // Esign Tab
 
-    public function get_esign(Request $request)
-    {
+    public function get_esign(Request $request) {
         return view('/agents/doc_management/transactions/details/data/get_esign');
     }
 
-    public function get_in_process(Request $request)
-    {
+    public function get_in_process(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2482,8 +2489,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_in_process_html', compact('envelopes'));
     }
 
-    public function get_completed(Request $request)
-    {
+    public function get_completed(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2500,8 +2506,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_completed_html', compact('envelopes'));
     }
 
-    public function get_drafts(Request $request)
-    {
+    public function get_drafts(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2518,8 +2523,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_drafts_html', compact('drafts'));
     }
 
-    public function get_deleted_drafts(Request $request)
-    {
+    public function get_deleted_drafts(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2537,8 +2541,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
     }
 
-    public function get_cancelled(Request $request)
-    {
+    public function get_cancelled(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2555,8 +2558,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_cancelled_html', compact('envelopes'));
     }
 
-    public function cancel_envelope(Request $request)
-    {
+    public function cancel_envelope(Request $request) {
         $envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
 
@@ -2565,8 +2567,7 @@ class TransactionsDetailsController extends Controller
         $client -> cancelDocument($document);
     }
 
-    public function resend_envelope(Request $request)
-    {
+    public function resend_envelope(Request $request) {
         $signer_id = $request -> signer_id;
         $envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
@@ -2586,8 +2587,8 @@ class TransactionsDetailsController extends Controller
 
     // Checklist Tab
 
-    public function get_checklist(Request $request)
-    {
+    public function get_checklist(Request $request) {
+
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -2608,17 +2609,18 @@ class TransactionsDetailsController extends Controller
             $id = $Referral_ID;
         }
 
-        $checklist_items_model = new ChecklistsItems();
         $transaction_checklist_items_model = new TransactionChecklistItems();
-        $users = User::get();
 
-        /* $agent = Agents::find($Agent_ID); */
+        $transaction_checklist = TransactionChecklists::where($field, $id)
+            -> with(['checklist_items' => function($query) {
+                $query -> orderBy('checklist_item_order');
+            }])
+            -> with('checklist_items.notes','checklist_items.docs','checklist_items.upload','checklist')
+            -> first();
 
-        $transaction_checklist = TransactionChecklists::where($field, $id) -> first();
         $transaction_checklist_id = $transaction_checklist -> id;
-        $original_checklist_id = $transaction_checklist -> checklist_id;
 
-        $checklist = Checklists::where('id', $original_checklist_id) -> first();
+        $checklist = $transaction_checklist -> checklist;
 
         $checklist_types = ['listing', 'both'];
 
@@ -2628,7 +2630,7 @@ class TransactionsDetailsController extends Controller
             $checklist_types = ['referral'];
         }
 
-        $transaction_checklist_items = $transaction_checklist_items_model -> where('checklist_id', $transaction_checklist_id) -> with('notes', 'docs') -> orderBy('checklist_item_order') -> get();
+        $transaction_checklist_items = $transaction_checklist -> checklist_items;
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
@@ -2649,11 +2651,10 @@ class TransactionsDetailsController extends Controller
             $checklist_type = 'Lease';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'checklist_items_model', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'users', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
+        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
     }
 
-    public function get_add_document_to_checklist_documents_html(Request $request)
-    {
+    public function get_add_document_to_checklist_documents_html(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -2688,8 +2689,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_add_document_to_checklist_documents_html', compact('documents_available', 'folders'));
     }
 
-    public function release_address_submitted(Request $request)
-    {
+    public function release_address_submitted(Request $request) {
         $checklist_item_ids = $request -> checklist_item_ids;
         if (! is_array($checklist_item_ids)) {
             if (stristr($checklist_item_ids, ',')) {
@@ -2719,8 +2719,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'ok']);
     }
 
-    public function add_release_address(Request $request)
-    {
+    public function add_release_address(Request $request) {
         $earnest_id = $request -> earnest_id;
         $release_to_street = $request -> release_to_street;
         $release_to_city = $request -> release_to_city;
@@ -2732,8 +2731,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function add_document_to_checklist_item(Request $request)
-    {
+    public function add_document_to_checklist_item(Request $request) {
         $document_id = $request -> document_id;
         $checklist_id = $request -> checklist_id;
         $checklist_item_id = $request -> checklist_item_id;
@@ -2792,7 +2790,46 @@ class TransactionsDetailsController extends Controller
                 $contract -> Status = ResourceItems::GetResourceID('Cancel Pending', 'contract_status');
                 $contract -> save();
 
-                // TODO: notify delia
+            $agent = Agents::find($Agent_ID);
+
+            // notify earnest admin
+            $send_to_emails = config('global_db.in_house_notification_emails_release_submitted');
+            if(count($send_to_emails) > 0) {
+                foreach($send_to_emails as $send_to_email) {
+                    $name = User::where('email', $send_to_email) -> first() -> name ?? null;
+                    $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
+                }
+                $from_address = 'DoNotReply@TaylorProps.com';
+                $from_name = 'Taylor Properties';
+                $subject = 'Release Submitted Notification';
+                $message = '
+                <div style="font-size: 14px;">
+                '.$agent -> full_name.' has submitted a release for review.
+                <br><br>
+                <table>
+                    <tr>
+                        <td valign="top">Agent</td>
+                        <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                    </tr>
+                    <tr><td colspan="2" height="20"></td></tr>
+                    <tr>
+                        <td valign="top">Property</td>
+                        <td>'.$contract -> FullStreetAddress.'<br>'.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode.'
+                        <br>
+                        <a href="'.config('app.url').'/doc_management/document_review" target="_blank">Review Release</a>
+                        <br>
+                        <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                    </td>
+                    </tr>
+                </table>
+                <br><br>
+                Thank You,<br>
+                Taylor Properties
+                </div>';
+
+                $notify_earnest_admin = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
+
+            }
 
                 return response() -> json([
                     'release_submitted' => 'yes',
@@ -2801,8 +2838,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function add_document_to_checklist_item_html(Request $request)
-    {
+    public function add_document_to_checklist_item_html(Request $request) {
         $transaction_type = $request -> transaction_type;
         $checklist_id = $request -> checklist_id;
         $document_ids = $request -> document_ids;
@@ -2829,8 +2865,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/add_document_to_checklist_item_html', compact('checklist_id', 'documents', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal', 'upload', 'transaction_documents_model', 'checklist_items', 'checklist_groups'));
     }
 
-    public function add_notes_to_checklist_item(Request $request)
-    {
+    public function add_notes_to_checklist_item(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -2862,8 +2897,7 @@ class TransactionsDetailsController extends Controller
         $add_notes -> save();
     }
 
-    public function change_checklist(Request $request)
-    {
+    public function change_checklist(Request $request) {
         $checklist_id = $request -> checklist_id;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2896,8 +2930,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function get_email_checklist_html(Request $request)
-    {
+    public function get_email_checklist_html(Request $request) {
         $checklist_id = $request -> checklist_id;
         $transaction_type = $request -> transaction_type;
 
@@ -2920,13 +2953,11 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_email_checklist_html', compact('transaction_checklist_items', 'checklist_groups', 'checklist_items_model', 'transaction_checklist_items_model', 'transaction_checklist_item_notes'));
     }
 
-    public function mark_note_read(Request $request)
-    {
+    public function mark_note_read(Request $request) {
         $mark_read = TransactionChecklistItemsNotes::where('id', $request -> note_id) -> update(['note_status' => 'read']);
     }
 
-    public function mark_required(Request $request)
-    {
+    public function mark_required(Request $request) {
         $checklist_item_id = $request -> checklist_item_id;
         $required = $request -> required;
 
@@ -2956,8 +2987,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function remove_checklist_item(Request $request)
-    {
+    public function remove_checklist_item(Request $request) {
 
         // remove from items, item_docs and item_notes. then mark all transaction_docs unassigned
         $checklist_item_id = $request -> checklist_item_id;
@@ -2996,8 +3026,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function remove_document_from_checklist_item(Request $request)
-    {
+    public function remove_document_from_checklist_item(Request $request) {
         $document_id = $request -> document_id;
         $transaction_type = $request -> transaction_type;
         $Contract_ID = $request -> Contract_ID;
@@ -3021,8 +3050,7 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function save_add_checklist_item(Request $request)
-    {
+    public function save_add_checklist_item(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
@@ -3070,8 +3098,7 @@ class TransactionsDetailsController extends Controller
         $property -> save();
     }
 
-    public function set_checklist_item_review_status(Request $request)
-    {
+    public function set_checklist_item_review_status(Request $request) {
         $Agent_ID = $request -> Agent_ID ?? 0;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -3212,8 +3239,7 @@ class TransactionsDetailsController extends Controller
 
     // Contracts tab
 
-    public function get_contracts(Request $request)
-    {
+    public function get_contracts(Request $request) {
         $Listing_ID = $request -> Listing_ID ?? 0;
         $contracts = Contracts::where('Listing_ID', $Listing_ID) -> orderBy('Contract_ID', 'DESC') -> get();
         $resource_items = new ResourceItems();
@@ -3227,8 +3253,7 @@ class TransactionsDetailsController extends Controller
 
     // Commission Tab
 
-    public function get_commission(Request $request)
-    {
+    public function get_commission(Request $request) {
         $Commission_ID = $request -> Commission_ID;
         //$commission = Commission::find($Commission_ID);
 
@@ -3273,8 +3298,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));
     }
 
-    public function save_commission(Request $request)
-    {
+    public function save_commission(Request $request) {
         $commission_fields = $request -> all();
         $Commission_ID = $request -> Commission_ID;
         $commission = Commission::find($Commission_ID);
@@ -3330,8 +3354,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['result' => 'success']);
     }
 
-    public function get_commission_notes(Request $request)
-    {
+    public function get_commission_notes(Request $request) {
         $Commission_ID = $request -> Commission_ID;
         $notes = CommissionNotes::where('Commission_ID', $Commission_ID)
             -> with('user')
@@ -3341,8 +3364,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_commission_notes_html', compact('notes'));
     }
 
-    public function add_commission_notes(Request $request)
-    {
+    public function add_commission_notes(Request $request) {
         $notes = new CommissionNotes();
         $notes -> Commission_ID = $request -> Commission_ID;
         $notes -> user_id = auth() -> user() -> id;
@@ -3352,8 +3374,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['response' => 'success']);
     }
 
-    public function get_agent_details(Request $request)
-    {
+    public function get_agent_details(Request $request) {
         $Agent_ID = $request -> Agent_ID;
 
         $agent_details = Agents::find($Agent_ID);
@@ -3363,8 +3384,7 @@ class TransactionsDetailsController extends Controller
         return view('agents/doc_management/transactions/details/data/get_agent_details_html', compact('agent_details', 'agent_notes', 'teams'));
     }
 
-    public function get_agent_commission_details(Request $request)
-    {
+    public function get_agent_commission_details(Request $request) {
         $Commission_ID = $request -> Commission_ID;
 
         $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> with('deductions:commission_breakdown_id,description,amount') -> first();
@@ -3409,8 +3429,7 @@ class TransactionsDetailsController extends Controller
         return view('agents/doc_management/transactions/details/data/get_agent_commission_details_html', compact('breakdown', 'is_referral_company', 'referral_company_deduction', 'holding_earnest', 'for_sale', 'is_rental', 'agent_commission_deduction_percent'));
     }
 
-    public function get_agent_commission(Request $request)
-    {
+    public function get_agent_commission(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $Referral_ID = $request -> Referral_ID;
         $Agent_ID = $request -> Agent_ID;
@@ -3483,8 +3502,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states'));
     }
 
-    public function save_commission_agent(Request $request)
-    {
+    public function save_commission_agent(Request $request) {
         $data = $request -> all();
 
         $breakdown = CommissionBreakdowns::where('Commission_ID', $request -> Commission_ID) -> first();
@@ -3531,8 +3549,7 @@ class TransactionsDetailsController extends Controller
 
     // Checks
 
-    public function get_check_details(Request $request)
-    {
+    public function get_check_details(Request $request) {
         $check = $request -> file('check_in_upload') ?? $request -> file('check_out_upload') ?? $request -> file('add_earnest_check_upload');
 
         $new_file_name = str_replace('.pdf', '', $check -> getClientOriginalName());
@@ -3617,15 +3634,13 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function get_checks_in(Request $request)
-    {
+    public function get_checks_in(Request $request) {
         $checks_in = CommissionChecksIn::where('Commission_ID', $request -> Commission_ID) -> orderBy('active', 'DESC') -> orderBy('created_at', 'DESC') -> get();
 
         return view('/agents/doc_management/transactions/details/data/get_checks_in_html', compact('checks_in'));
     }
 
-    public function save_add_check_in(Request $request)
-    {
+    public function save_add_check_in(Request $request) {
         $Commission_ID = $request -> Commission_ID ?? null;
         $file = $request -> file('check_in_upload');
         $page = $request -> page; // details or commission
@@ -3712,8 +3727,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_edit_check_in(Request $request)
-    {
+    public function save_edit_check_in(Request $request) {
         $check_id = $request -> edit_check_in_id;
 
         $check = CommissionChecksIn::find($check_id);
@@ -3728,8 +3742,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['success' => true]);
     }
 
-    public function save_delete_check_in(Request $request)
-    {
+    public function save_delete_check_in(Request $request) {
         if ($request -> type == 'sale') {
             $check = CommissionChecksInQueue::find($request -> check_id) -> update(['active' => 'no']);
         } elseif ($request -> type == 'other') {
@@ -3739,8 +3752,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['response' => 'success']);
     }
 
-    public function undo_delete_check_in(Request $request)
-    {
+    public function undo_delete_check_in(Request $request) {
         $type = $request -> type ?? null;
         if ($type && $type == 'sale') {
             $check = CommissionChecksInQueue::find($request -> check_id) -> update(['active' => 'yes']);
@@ -3751,15 +3763,13 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['response' => 'success']);
     }
 
-    public function get_checks_out(Request $request)
-    {
+    public function get_checks_out(Request $request) {
         $checks_out = CommissionChecksOut::where('Commission_ID', $request -> Commission_ID) -> orderBy('active', 'DESC') -> orderBy('created_at', 'DESC') -> get();
 
         return view('/agents/doc_management/transactions/details/data/get_checks_out_html', compact('checks_out'));
     }
 
-    public function save_add_check_out(Request $request)
-    {
+    public function save_add_check_out(Request $request) {
         $Commission_ID = $request -> Commission_ID;
         $file = $request -> file('check_out_upload');
 
@@ -3806,8 +3816,7 @@ class TransactionsDetailsController extends Controller
         $add_check -> save();
     }
 
-    public function save_edit_check_out(Request $request)
-    {
+    public function save_edit_check_out(Request $request) {
         $check_id = $request -> edit_check_out_id;
 
         $check = CommissionChecksOut::find($check_id);
@@ -3828,30 +3837,26 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['success' => true]);
     }
 
-    public function save_delete_check_out(Request $request)
-    {
+    public function save_delete_check_out(Request $request) {
         $check = CommissionChecksOut::find($request -> check_id) -> update(['active' => 'no']);
 
         return response() -> json(['response' => 'success']);
     }
 
-    public function undo_delete_check_out(Request $request)
-    {
+    public function undo_delete_check_out(Request $request) {
         $check = CommissionChecksOut::find($request -> check_id) -> update(['active' => 'yes']);
 
         return response() -> json(['response' => 'success']);
     }
 
-    public function get_checks_in_queue(Request $request)
-    {
+    public function get_checks_in_queue(Request $request) {
         $Agent_ID = $request -> Agent_ID;
         $checks_in_queue = CommissionChecksInQueue::where('Agent_ID', $Agent_ID) -> where('active', 'yes') -> where('exported', 'no') -> get();
 
         return view('agents/doc_management/transactions/details/data/get_checks_in_queue_html', compact('checks_in_queue'));
     }
 
-    public function re_queue_check(Request $request)
-    {
+    public function re_queue_check(Request $request) {
         $check_id = $request -> check_id;
         $check_in = CommissionChecksIn::find($check_id);
 
@@ -3867,8 +3872,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function import_check_in(Request $request)
-    {
+    public function import_check_in(Request $request) {
         $check_id = $request -> check_id;
         $Commission_ID = $request -> Commission_ID;
 
@@ -3917,24 +3921,21 @@ class TransactionsDetailsController extends Controller
 
     // Income Deductions
 
-    public function get_income_deductions(Request $request)
-    {
+    public function get_income_deductions(Request $request) {
         $Commission_ID = $request -> Commission_ID;
         $deductions = CommissionIncomeDeductions::where('Commission_ID', $Commission_ID) -> orderBy('created_at', 'DESC') -> get();
 
         return compact('deductions');
     }
 
-    public function delete_income_deduction(Request $request)
-    {
+    public function delete_income_deduction(Request $request) {
         $deduction_id = $request -> deduction_id;
         $delete = CommissionIncomeDeductions::find($deduction_id) -> delete();
 
         return response() -> json(['success' => true]);
     }
 
-    public function save_add_income_deduction(Request $request)
-    {
+    public function save_add_income_deduction(Request $request) {
         $deduction = new CommissionIncomeDeductions();
         $deduction -> Commission_ID = $request -> Commission_ID;
         $deduction -> amount = preg_replace('/[\$,]+/', '', $request -> amount);
@@ -3946,24 +3947,21 @@ class TransactionsDetailsController extends Controller
 
     // Commission Deductions
 
-    public function get_commission_deductions(Request $request)
-    {
+    public function get_commission_deductions(Request $request) {
         $Commission_ID = $request -> Commission_ID;
         $deductions = CommissionCommissionDeductions::where('Commission_ID', $Commission_ID) -> orderBy('created_at', 'DESC') -> get();
 
         return compact('deductions');
     }
 
-    public function delete_commission_deduction(Request $request)
-    {
+    public function delete_commission_deduction(Request $request) {
         $deduction_id = $request -> deduction_id;
         $delete = CommissionCommissionDeductions::find($deduction_id) -> delete();
 
         return response() -> json(['success' => true]);
     }
 
-    public function save_add_commission_deduction(Request $request)
-    {
+    public function save_add_commission_deduction(Request $request) {
         $deduction = new CommissionCommissionDeductions();
         $deduction -> Commission_ID = $request -> Commission_ID;
         $deduction -> amount = preg_replace('/[\$,]+/', '', $request -> amount);
@@ -3977,8 +3975,7 @@ class TransactionsDetailsController extends Controller
 
     // Earnest Tab
 
-    public function get_earnest(Request $request)
-    {
+    public function get_earnest(Request $request) {
         $Contract_ID = $request -> Contract_ID;
 
         $earnest = Earnest::where('Contract_ID', $Contract_ID) -> first();
@@ -4018,8 +4015,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting'));
     }
 
-    public function get_earnest_checks(Request $request)
-    {
+    public function get_earnest_checks(Request $request) {
         $check_type = $request -> check_type;
         $Earnest_ID = $request -> Earnest_ID;
 
@@ -4028,8 +4024,7 @@ class TransactionsDetailsController extends Controller
         return view('/agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type'));
     }
 
-    public function save_earnest(Request $request)
-    {
+    public function save_earnest(Request $request) {
 
         // update earnest
         $earnest = Earnest::find($request -> Earnest_ID);
@@ -4041,16 +4036,15 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_earnest_amounts(Request $request)
-    {
+    public function save_earnest_amounts(Request $request) {
 
         // update earnest amounts
-        $earnest = Earnest::find($request -> Earnest_ID);
+        $earnest = Earnest::with('checks') -> find($request -> Earnest_ID);
         /* $amount_total = $request -> amount_total;
         $amount_received = $request -> amount_received;
         $amount_released = $request -> amount_released; */
 
-        $checks = $earnest -> checks() -> get();
+        $checks = $earnest -> checks;
 
         $amount_received = 0;
         $amount_released = 0;
@@ -4091,8 +4085,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_add_earnest_check(Request $request)
-    {
+    public function save_add_earnest_check(Request $request) {
         $Earnest_ID = $request -> Earnest_ID;
         $Agent_ID = $request -> Agent_ID;
         $Contract_ID = $request -> Contract_ID;
@@ -4152,8 +4145,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_edit_earnest_check(Request $request)
-    {
+    public function save_edit_earnest_check(Request $request) {
         $check_id = $request -> edit_earnest_check_id;
         $check_name = $request -> edit_earnest_check_name;
         $payable_to = $request -> edit_earnest_payable_to;
@@ -4178,8 +4170,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function clear_bounce_earnest_check(Request $request)
-    {
+    public function clear_bounce_earnest_check(Request $request) {
         $check_id = $request -> check_id;
         $status = $request -> status;
 
@@ -4195,29 +4186,25 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_earnest_check(Request $request)
-    {
+    public function delete_earnest_check(Request $request) {
         $delete_check = EarnestChecks::find($request -> check_id) -> update(['active' => 'no']);
 
         return response() -> json(['response' => 'success']);
     }
 
-    public function undo_delete_earnest_check(Request $request)
-    {
+    public function undo_delete_earnest_check(Request $request) {
         $undo_delete_check = EarnestChecks::find($request -> check_id) -> update(['active' => 'yes']);
 
         return response() -> json(['response' => 'success']);
     }
 
-    public function get_earnest_notes(Request $request)
-    {
+    public function get_earnest_notes(Request $request) {
         $notes = EarnestNotes::where('Earnest_ID', $request -> Earnest_ID) -> orderBy('created_at', 'desc') -> get();
 
         return view('/agents/doc_management/transactions/details/data/get_earnest_notes_html', compact('notes'));
     }
 
-    public function save_add_earnest_notes(Request $request)
-    {
+    public function save_add_earnest_notes(Request $request) {
         $add_notes = new EarnestNotes();
         $add_notes -> Earnest_ID = $request -> Earnest_ID;
         $add_notes -> notes = $request -> notes;
@@ -4227,8 +4214,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_note(Request $request)
-    {
+    public function delete_note(Request $request) {
         $note = EarnestNotes::find($request -> note_id) -> delete();
 
         return response() -> json(['status' => 'success']);
@@ -4238,8 +4224,7 @@ class TransactionsDetailsController extends Controller
 
     /////////////// END TABS //////////////
 
-    public function update_contract_status(Request $request)
-    {
+    public function update_contract_status(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $status = $request -> status;
         $status = ResourceItems::GetResourceID($status, 'contract_status');
@@ -4247,8 +4232,7 @@ class TransactionsDetailsController extends Controller
     }
 
     // accept contract
-    public function accept_contract(Request $request)
-    {
+    public function accept_contract(Request $request) {
         $buyer_one_first = $request -> buyer_one_first;
         $buyer_one_last = $request -> buyer_one_last;
         $buyer_two_first = $request -> buyer_two_first;
@@ -4529,8 +4513,7 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function merge_listing_and_contract(Request $request)
-    {
+    public function merge_listing_and_contract(Request $request) {
         $contract = Contracts::find($request -> Contract_ID);
 
         $street_number = $contract -> StreetNumber;
@@ -4559,8 +4542,7 @@ class TransactionsDetailsController extends Controller
         return $listings;
     }
 
-    public function save_merge_listing_and_contract(Request $request)
-    {
+    public function save_merge_listing_and_contract(Request $request) {
         $Listing_ID = $request -> Listing_ID;
         $Contract_ID = $request -> Contract_ID;
 
@@ -4578,8 +4560,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function save_undo_merge_listing_and_contract(Request $request)
-    {
+    public function save_undo_merge_listing_and_contract(Request $request) {
         $Listing_ID = $request -> Listing_ID;
         $Contract_ID = $request -> Contract_ID;
 
@@ -4596,15 +4577,13 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function cancel_listing(Request $request)
-    {
+    public function cancel_listing(Request $request) {
         $listing = Listings::find($request -> Listing_ID) -> update(['Status' => ResourceItems::GetResourceID('Canceled', 'listing_status')]);
 
         return response() -> json(['status' => 'success']);
     }
 
-    public function cancel_contract(Request $request)
-    {
+    public function cancel_contract(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $contract_submitted = $request -> contract_submitted;
         $contract = Contracts::find($Contract_ID);
@@ -4646,8 +4625,7 @@ class TransactionsDetailsController extends Controller
         return true;
     }
 
-    public function undo_cancel_listing(Request $request)
-    {
+    public function undo_cancel_listing(Request $request) {
         $Listing_ID = $request -> Listing_ID;
         $Agent_ID = $request -> Agent_ID;
         $status = 'Active';
@@ -4665,8 +4643,7 @@ class TransactionsDetailsController extends Controller
         return response() -> json(['expired' => $expired]);
     }
 
-    public function undo_cancel_contract(Request $request)
-    {
+    public function undo_cancel_contract(Request $request) {
         $Contract_ID = $request -> Contract_ID;
         $contract = Contracts::find($Contract_ID);
         $Listing_ID = $contract -> Listing_ID;
@@ -4712,22 +4689,19 @@ class TransactionsDetailsController extends Controller
         }
     }
 
-    public function cancel_referral(Request $request)
-    {
+    public function cancel_referral(Request $request) {
         $Referral_ID = $request -> Referral_ID;
         $status = ResourceItems::GetResourceID('Canceled', 'referral_status');
         $referral = Referrals::find($Referral_ID) -> update(['status' => $status]);
     }
 
-    public function undo_cancel_referral(Request $request)
-    {
+    public function undo_cancel_referral(Request $request) {
         $Referral_ID = $request -> Referral_ID;
         $status = ResourceItems::GetResourceID('Active', 'referral_status');
         $referral = Referrals::find($Referral_ID) -> update(['status' => $status]);
     }
 
-    public function check_docs_submitted_and_accepted(Request $request)
-    {
+    public function check_docs_submitted_and_accepted(Request $request) {
         $Listing_ID = $request -> Listing_ID;
         $Contract_ID = $request -> Contract_ID;
 
@@ -4748,14 +4722,12 @@ class TransactionsDetailsController extends Controller
         ]);
     }
 
-    public function get_path($url)
-    {
+    public function get_path($url) {
         return Storage::disk('public') -> path(preg_replace('/^.*\/storage\//', '', $url));
     }
 
     // search bright mls agents
-    public function search_bright_agents(Request $request)
-    {
+    public function search_bright_agents(Request $request) {
         $val = $request -> val;
 
         $agents = AgentRoster::where('MemberLastName', 'like', '%'.$val.'%')

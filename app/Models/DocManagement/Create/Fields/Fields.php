@@ -11,8 +11,7 @@ class Fields extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    public function common_field()
-    {
-        return $this->hasOne(\App\Models\DocManagement\Create\Fields\CommonFields::class, 'id', 'common_field_id');
+    public function common_field() {
+        return $this -> hasOne(\App\Models\DocManagement\Create\Fields\CommonFields::class, 'id', 'common_field_id');
     }
 }

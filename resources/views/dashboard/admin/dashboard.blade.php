@@ -181,7 +181,7 @@
 
                                                 <div class="d-flex justify-content-start align-items-center w-75">
 
-                                                    <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a>
+                                                    <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="btn btn-primary">View</a>
 
                                                     <div class="ml-2">
                                                         {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}

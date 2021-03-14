@@ -14,8 +14,7 @@ class OldEarnest extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    public function ScopeEarnestBalances($query)
-    {
+    public function ScopeEarnestBalances($query) {
         $earnest = [];
 
         $tp_md = self::select(
@@ -50,8 +49,8 @@ class OldEarnest extends Model
                 THEN ck3_out_amount
                 ELSE 0
             END) AS check3_out_cleared"))
-        ->whereRaw("(transfer2_state = 'MD' or (transfer_state = 'MD' and (transfer2_state = '' or transfer2_state is null)) or (state = 'MD' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
-        ->get();
+        -> whereRaw("(transfer2_state = 'MD' or (transfer_state = 'MD' and (transfer2_state = '' or transfer2_state is null)) or (state = 'MD' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
+        -> get();
 
         $tp_md = $tp_md[0];
 
@@ -91,8 +90,8 @@ class OldEarnest extends Model
                 THEN ck3_out_amount
                 ELSE 0
             END) AS check3_out_cleared"))
-        ->whereRaw("(transfer2_state = 'VA' or (transfer_state = 'VA' and (transfer2_state = '' or transfer2_state is null)) or (state = 'VA' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
-        ->get();
+        -> whereRaw("(transfer2_state = 'VA' or (transfer_state = 'VA' and (transfer2_state = '' or transfer2_state is null)) or (state = 'VA' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
+        -> get();
 
         $tp_va = $tp_va[0];
 
@@ -132,8 +131,8 @@ class OldEarnest extends Model
                 THEN ck3_out_amount
                 ELSE 0
             END) AS check3_out_cleared"))
-        ->whereRaw("(transfer2_state = 'PA' or (transfer_state = 'PA' and (transfer2_state = '' or transfer2_state is null)) or (state = 'PA' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
-        ->get();
+        -> whereRaw("(transfer2_state = 'PA' or (transfer_state = 'PA' and (transfer2_state = '' or transfer2_state is null)) or (state = 'PA' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
+        -> get();
 
         $tp_pa = $tp_pa[0];
 
@@ -173,8 +172,8 @@ class OldEarnest extends Model
                 THEN ck3_out_amount
                 ELSE 0
             END) AS check3_out_cleared"))
-        ->whereRaw("(transfer2_state = 'DC' or (transfer_state = 'DC' and (transfer2_state = '' or transfer2_state is null)) or (state = 'DC' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
-        ->get();
+        -> whereRaw("(transfer2_state = 'DC' or (transfer_state = 'DC' and (transfer2_state = '' or transfer2_state is null)) or (state = 'DC' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Taylor Properties'")
+        -> get();
 
         $tp_dc = $tp_dc[0];
 
@@ -214,8 +213,8 @@ class OldEarnest extends Model
                 THEN ck3_out_amount
                 ELSE 0
             END) AS check3_out_cleared"))
-        ->whereRaw("(transfer2_state = 'MD' or (transfer_state = 'MD' and (transfer2_state = '' or transfer2_state is null)) or (state = 'MD' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Anne Arundel Properties'")
-        ->get();
+        -> whereRaw("(transfer2_state = 'MD' or (transfer_state = 'MD' and (transfer2_state = '' or transfer2_state is null)) or (state = 'MD' and (transfer_state = '' or transfer_state is null) and (transfer2_state = '' or transfer2_state is null))) and company = 'Anne Arundel Properties'")
+        -> get();
 
         $aap_md = $aap_md[0];
 

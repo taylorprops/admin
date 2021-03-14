@@ -12,32 +12,29 @@ class ResourceItemsAdmin extends Model
     protected $guarded = [];
     public $timestamps = false;
 
-    public function scopeGetResourceName($query, $id)
-    {
+    public function scopeGetResourceName($query, $id) {
         if ($id) {
-            $resource = $query->where('resource_id', $id)->first();
+            $resource = $query -> where('resource_id', $id) -> first();
 
-            return $resource->resource_name;
+            return $resource -> resource_name;
         }
 
         return false;
     }
 
-    public function scopeGetResourceID($query, $name, $type)
-    {
+    public function scopeGetResourceID($query, $name, $type) {
         if ($name) {
-            $resource = $query->where('resource_name', $name)->where('resource_type', $type)->first();
+            $resource = $query -> where('resource_name', $name) -> where('resource_type', $type) -> first();
 
-            return $resource->resource_id;
+            return $resource -> resource_id;
         }
 
         return false;
     }
 
-    public function scopeGetCategoryColor($query, $id)
-    {
-        $tags = $query->where('resource_id', $id)->first();
+    public function scopeGetCategoryColor($query, $id) {
+        $tags = $query -> where('resource_id', $id) -> first();
 
-        return $tags->resource_color;
+        return $tags -> resource_color;
     }
 }

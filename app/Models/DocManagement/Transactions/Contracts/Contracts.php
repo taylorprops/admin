@@ -16,8 +16,7 @@ class Contracts extends Model
     //public $timestamps = false;
     protected $guarded = [];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
             if (auth() -> user()) {
@@ -31,48 +30,39 @@ class Contracts extends Model
         });
     }
 
-    public function agent()
-    {
+    public function agent() {
         return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
     }
 
-    public function co_agent()
-    {
+    public function co_agent() {
         return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'CoAgent_ID');
     }
 
-    public function team()
-    {
+    public function team() {
         return $this -> hasOne(\App\Models\Employees\AgentsTeams::class, 'id', 'Team_ID');
     }
 
-    public function transaction_coordinator()
-    {
+    public function transaction_coordinator() {
         return $this -> hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
     }
 
-    public function earnest()
-    {
+    public function earnest() {
         return $this -> hasOne(\App\Models\DocManagement\Earnest\Earnest::class, 'Contract_ID', 'Contract_ID');
     }
 
-    public function listing()
-    {
+    public function listing() {
         return $this -> hasOne(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_ID');
     }
 
-    public function status()
-    {
+    public function status() {
         return $this -> hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'Status');
     }
 
-    public function checklist()
-    {
+    public function checklist() {
         return $this -> hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Contract_ID', 'Contract_ID');
     }
 
-    public function ScopeContractColumnsNotInListings()
-    {
+    public function ScopeContractColumnsNotInListings() {
         $listing_columns = Schema::getColumnListing('docs_transactions_listings');
         $contract_columns = Schema::getColumnListing('docs_transactions_contracts');
 

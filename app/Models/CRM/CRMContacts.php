@@ -13,8 +13,7 @@ class CRMContacts extends Model
     public $table = 'crm_contacts';
     protected $guarded = [];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
             if(config('app.env') == 'development') {
@@ -27,8 +26,7 @@ class CRMContacts extends Model
         });
     }
 
-    public function members()
-    {
+    public function members() {
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Members\Members::class, 'CRMContact_ID', 'id');
     }
 

@@ -39,27 +39,23 @@ class EsignController extends Controller
 {
     ///////////// Dashboard //////////////
 
-    public function esign(Request $request)
-    {
+    public function esign(Request $request) {
         return view('/esign/esign');
     }
 
-    public function get_drafts(Request $request)
-    {
+    public function get_drafts(Request $request) {
         $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_drafts_html', compact('drafts'));
     }
 
-    public function get_deleted_drafts(Request $request)
-    {
+    public function get_deleted_drafts(Request $request) {
         $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
     }
 
-    public function get_in_process(Request $request)
-    {
+    public function get_in_process(Request $request) {
         $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Viewed', 'Signed'])
             -> with('signers')
             -> with('callbacks')
@@ -72,22 +68,19 @@ class EsignController extends Controller
         return view('/esign/get_in_process_html', compact('envelopes'));
     }
 
-    public function get_completed(Request $request)
-    {
+    public function get_completed(Request $request) {
         $envelopes = EsignEnvelopes::where('status', 'completed') -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_completed_html', compact('envelopes'));
     }
 
-    public function get_templates(Request $request)
-    {
+    public function get_templates(Request $request) {
         $templates = EsignTemplates::where('upload_file_id', '0') -> orWhereNull('upload_file_id') -> orWhere('upload_file_id', '') -> with('signers') -> get();
 
         return view('/esign/get_templates_html', compact('templates'));
     }
 
-    public function get_deleted_templates(Request $request)
-    {
+    public function get_deleted_templates(Request $request) {
         $deleted_templates = EsignTemplates::onlyTrashed()
             -> where(function ($query) {
                 $query -> where('upload_file_id', '0')
@@ -99,29 +92,25 @@ class EsignController extends Controller
         return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
     }
 
-    public function get_system_templates(Request $request)
-    {
+    public function get_system_templates(Request $request) {
         $templates = EsignTemplates::where('upload_file_id', '>', '0') -> with('signers') -> get();
 
         return view('/esign/get_system_templates_html', compact('templates'));
     }
 
-    public function get_deleted_system_templates(Request $request)
-    {
+    public function get_deleted_system_templates(Request $request) {
         $deleted_templates = EsignTemplates::onlyTrashed() -> where('upload_file_id', '>', '0') -> with('signers') -> get();
 
         return view('/esign/get_deleted_system_templates_html', compact('deleted_templates'));
     }
 
-    public function get_cancelled(Request $request)
-    {
+    public function get_cancelled(Request $request) {
         $envelopes = EsignEnvelopes::whereIn('status', ['Cancelled', 'Expired']) -> with('signers') -> with('documents') -> get();
 
         return view('/esign/get_cancelled_html', compact('envelopes'));
     }
 
-    public function cancel_envelope(Request $request)
-    {
+    public function cancel_envelope(Request $request) {
         $envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
 
@@ -130,8 +119,7 @@ class EsignController extends Controller
         $client -> cancelDocument($document);
     }
 
-    public function resend_envelope(Request $request)
-    {
+    public function resend_envelope(Request $request) {
         $signer_id = $request -> signer_id;
         $envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
@@ -151,8 +139,7 @@ class EsignController extends Controller
 
     ////  Drafts ////
 
-    public function save_as_draft(Request $request)
-    {
+    public function save_as_draft(Request $request) {
         $envelope_id = $request -> envelope_id;
         $draft_name = $request -> draft_name;
         $envelope = EsignEnvelopes::find($envelope_id) -> update(['is_draft' => 'yes', 'draft_name' => $draft_name]);
@@ -160,16 +147,14 @@ class EsignController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_draft(Request $request)
-    {
+    public function delete_draft(Request $request) {
         $envelope_id = $request -> envelope_id;
         $delete_draft = EsignEnvelopes::find($envelope_id) -> delete();
 
         return response() -> json(['status' => 'success']);
     }
 
-    public function restore_draft(Request $request)
-    {
+    public function restore_draft(Request $request) {
         $envelope_id = $request -> envelope_id;
         $restore_draft = EsignEnvelopes::withTrashed() -> where('id', $envelope_id) -> restore();
 
@@ -178,8 +163,7 @@ class EsignController extends Controller
 
     //// Template ////
 
-    public function save_as_template(Request $request)
-    {
+    public function save_as_template(Request $request) {
         $template_id = $request -> template_id;
         $template_name = $request -> template_name;
 
@@ -188,32 +172,28 @@ class EsignController extends Controller
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_template(Request $request)
-    {
+    public function delete_template(Request $request) {
         $template_id = $request -> template_id;
         $delete_template = EsignTemplates::find($template_id) -> delete();
 
         return response() -> json(['status' => 'success']);
     }
 
-    public function restore_template(Request $request)
-    {
+    public function restore_template(Request $request) {
         $template_id = $request -> template_id;
         $restore_template = EsignTemplates::withTrashed() -> where('id', $template_id) -> restore();
 
         return response() -> json(['status' => 'success']);
     }
 
-    public function delete_system_template(Request $request)
-    {
+    public function delete_system_template(Request $request) {
         $template_id = $request -> template_id;
         $delete_template = EsignTemplates::find($template_id) -> delete();
 
         return response() -> json(['status' => 'success']);
     }
 
-    public function restore_system_template(Request $request)
-    {
+    public function restore_system_template(Request $request) {
         $template_id = $request -> template_id;
         $restore_template = EsignTemplates::withTrashed() -> where('id', $template_id) -> restore();
 
@@ -222,8 +202,7 @@ class EsignController extends Controller
 
     ///////////// End Dashboard //////////////
 
-    public function esign_add_documents(Request $request)
-    {
+    public function esign_add_documents(Request $request) {
         $is_template = 'no';
         if ($request -> template || $request -> is_template == 'yes') {
             $is_template = 'yes';
@@ -322,8 +301,7 @@ class EsignController extends Controller
 
     } */
 
-    public function upload(Request $request)
-    {
+    public function upload(Request $request) {
         $files = $request -> file('esign_file_upload');
 
         $User_ID = $request -> User_ID;
@@ -376,8 +354,7 @@ class EsignController extends Controller
         return compact('docs_to_display');
     }
 
-    public function esign_create_envelope(Request $request)
-    {
+    public function esign_create_envelope(Request $request) {
         $files = json_decode($request -> file_data, true);
 
         $is_template = $request -> is_template;
@@ -691,8 +668,7 @@ class EsignController extends Controller
         return compact('envelope_id', 'is_template', 'template_id');
     }
 
-    public function esign_add_signers(Request $request)
-    {
+    public function esign_add_signers(Request $request) {
         $is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
         $template_id = $request -> template_id;
@@ -759,8 +735,7 @@ class EsignController extends Controller
         return view('/esign/esign_add_signers', compact('is_template', 'template_id', 'envelope_id', 'envelope', 'members', 'signers', 'recipients', 'resource_items', 'template_name'));
     }
 
-    public function esign_add_signers_to_envelope(Request $request)
-    {
+    public function esign_add_signers_to_envelope(Request $request) {
         $is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
         $template_id = $request -> template_id;
@@ -903,8 +878,7 @@ class EsignController extends Controller
         return compact('envelope_id');
     }
 
-    public function esign_add_fields(Request $request)
-    {
+    public function esign_add_fields(Request $request) {
         $is_draft = $request -> is_draft;
         $is_template = $request -> is_template;
         $template_id = $request -> template_id;
@@ -969,8 +943,7 @@ class EsignController extends Controller
         return view('/esign/esign_add_fields', compact('is_draft', 'is_template', 'template_id', 'envelope_id', 'template_name', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'signer_options_template', 'error'));
     }
 
-    public function esign_send_for_signatures(Request $request)
-    {
+    public function esign_send_for_signatures(Request $request) {
         $envelope_id = $request -> envelope_id ?? 0;
         $template_id = $request -> template_id ?? 0;
         $document_ids = explode(',', $request -> document_ids);
@@ -1180,8 +1153,7 @@ class EsignController extends Controller
 
     ////////////////////// Callbacks //////////////////////////////////
 
-    public function esign_callback(Request $request)
-    {
+    public function esign_callback(Request $request) {
         $json = json_decode($request, true);
 
         $event_time = $request -> event_time;
@@ -1263,7 +1235,6 @@ class EsignController extends Controller
         return true;
     }
 
-    public function oauth_callback(Request $request)
-    {
+    public function oauth_callback(Request $request) {
     }
 }

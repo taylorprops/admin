@@ -10,11 +10,10 @@ class LoanOfficers extends Model
     public $table = 'emp_loan_officers';
     protected $guarded = [];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            $query->where('id', '!=', '95');
+            $query -> where('id', '!=', '95');
         });
     }
 }

@@ -16,60 +16,51 @@ class Listings extends Model
     //public $timestamps = false;
     protected $guarded = [];
 
-    public static function boot()
-    {
+    public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            if (auth()->user()) {
-                if (stristr(auth()->user()->group, 'agent')) {
-                    $query->where(function ($query) {
-                        $query->where('Agent_ID', auth()->user()->user_id)
-                        ->orWhere('CoAgent_ID', auth()->user()->user_id);
+            if (auth() -> user()) {
+                if (stristr(auth() -> user() -> group, 'agent')) {
+                    $query -> where(function ($query) {
+                        $query -> where('Agent_ID', auth() -> user() -> user_id)
+                        -> orWhere('CoAgent_ID', auth() -> user() -> user_id);
                     });
-                } elseif (auth()->user()->group == 'transaction_coordinator') {
-                    $query->where('TransactionCoordinator_ID', auth()->user()->user_id);
+                } elseif (auth() -> user() -> group == 'transaction_coordinator') {
+                    $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
             }
         });
     }
 
-    public function agent()
-    {
-        return $this->hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
+    public function agent() {
+        return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
     }
 
-    public function co_agent()
-    {
-        return $this->hasOne(\App\Models\Employees\Agents::class, 'id', 'CoAgent_ID');
+    public function co_agent() {
+        return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'CoAgent_ID');
     }
 
-    public function team()
-    {
-        return $this->hasOne(\App\Models\Employees\AgentsTeams::class, 'id', 'Team_ID');
+    public function team() {
+        return $this -> hasOne(\App\Models\Employees\AgentsTeams::class, 'id', 'Team_ID');
     }
 
-    public function transaction_coordinator()
-    {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
+    public function transaction_coordinator() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
     }
 
-    public function status()
-    {
-        return $this->hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'Status');
+    public function status() {
+        return $this -> hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'Status');
     }
 
-    public function contract()
-    {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID');
+    public function contract() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID');
     }
 
-    public function checklist()
-    {
-        return $this->hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Listing_ID', 'Listing_ID');
+    public function checklist() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Listing_ID', 'Listing_ID');
     }
 
-    public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null)
-    {
+    public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null) {
         if (is_array($id)) {
             if ($transaction_type == 'listing') {
                 $id = $id[0];
@@ -88,7 +79,7 @@ class Listings extends Model
             $property = Referrals::find($id);
         }
         if ($select) {
-            $property = $property->select($select);
+            $property = $property -> select($select);
         }
 
         return $property;

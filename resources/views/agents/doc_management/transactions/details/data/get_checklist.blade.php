@@ -64,16 +64,14 @@
 
                                 if($checklist_item -> checklist_form_id > 0) {
 
-                                    $checklist_item_name = $checklist_items_model -> GetFormName($checklist_item -> checklist_form_id);
+                                    $upload = $checklist_item -> upload;
+                                    $checklist_item_name = $upload -> file_name_display;
 
                                     // details for helper popup
-                                    $form_help_details = $checklist_items_model -> GetFormHelpDetails($checklist_item -> checklist_form_id);
-                                    $form_help_details = $form_help_details['details'];
-
-                                    $form_help_html = $form_help_details -> helper_text;
-                                    if($form_help_details -> file_location != '') {
+                                    $form_help_html = $upload -> helper_text;
+                                    if($upload -> file_location != '') {
                                         $form_help_html .= '
-                                        <hr>View Sample File<br><a href="'.$form_help_details -> file_location.'" class="btn btn-primary" target="_blank">Open File</a>';
+                                        <hr>View Sample File<br><a href="'.$upload -> file_location.'" class="btn btn-primary" target="_blank">Open File</a>';
                                     }
 
                                 } else {

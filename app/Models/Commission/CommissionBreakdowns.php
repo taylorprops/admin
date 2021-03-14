@@ -11,8 +11,7 @@ class CommissionBreakdowns extends Model
     protected $_primaryKey = 'id';
     protected $guarded = [];
 
-    public function deductions()
-    {
-        return $this->hasMany(\App\Models\Commission\CommissionBreakdownsDeductions::class, 'commission_breakdown_id');
+    public function deductions() {
+        return $this -> hasMany(\App\Models\Commission\CommissionBreakdownsDeductions::class, 'commission_breakdown_id');
     }
 }

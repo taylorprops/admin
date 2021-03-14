@@ -34,8 +34,7 @@ class TransactionsAddController extends Controller {
 
     use InHouseNotificationEmail;
 
-    public function add_transaction(Request $request)
-    {
+    public function add_transaction(Request $request) {
         $transaction_type = $request -> type;
 
         $agents = Agents::where('active', 'yes');
@@ -57,8 +56,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_add', compact('transaction_type', 'transaction_type_header', 'states', 'agents'));
     }
 
-    public function transaction_add_details_existing(Request $request)
-    {
+    public function transaction_add_details_existing(Request $request) {
         $transaction_type = strtolower($request -> transaction_type);
         $bright_type = $request -> bright_type;
         $bright_id = $request -> bright_id;
@@ -238,8 +236,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
-    public function transaction_add_details_referral(Request $request)
-    {
+    public function transaction_add_details_referral(Request $request) {
         $status = ResourceItems::GetResourceID('Active', 'referral_status');
         $property_details = [
             'FullStreetAddress' => $request -> street_number.' '.ucwords(strtolower($request -> street_name)).' '.$request -> street_dir.' '.$request -> unit_number,
@@ -289,8 +286,7 @@ class TransactionsAddController extends Controller {
         return response() -> json(['Referral_ID' => $Referral_ID]);
     }
 
-    public function transaction_required_details_referral(Request $request)
-    {
+    public function transaction_required_details_referral(Request $request) {
         $Referral_ID = $request -> Referral_ID;
         $referral = Referrals::find($Referral_ID);
         $states = LocationData::AllStates();
@@ -298,8 +294,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_required_details_referral', compact('referral', 'states'));
     }
 
-    public function transaction_save_details_referral(Request $request)
-    {
+    public function transaction_save_details_referral(Request $request) {
         $Referral_ID = $request -> Referral_ID;
         $Agent_ID = $request -> Agent_ID;
         $data = $request -> all();
@@ -335,8 +330,7 @@ class TransactionsAddController extends Controller {
         return true;
     }
 
-    public function transaction_add_details_new(Request $request)
-    {
+    public function transaction_add_details_new(Request $request) {
         $transaction_type = $request -> transaction_type;
         $Agent_ID = $request -> Agent_ID;
         $agent = Agents::find($Agent_ID);
@@ -396,8 +390,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
-    public function transaction_required_details(Request $request)
-    {
+    public function transaction_required_details(Request $request) {
         $transaction_type = $request -> transaction_type;
         $id = $request -> id;
 
@@ -436,8 +429,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
     }
 
-    public function save_add_transaction(Request $request)
-    {
+    public function save_add_transaction(Request $request) {
         $property_details = (object) session('property_details');
         $transaction_type = $request -> transaction_type;
         unset($property_details -> transaction_type);
@@ -1000,8 +992,7 @@ class TransactionsAddController extends Controller {
         ]);
     }
 
-    public function get_property_info(Request $request)
-    {
+    public function get_property_info(Request $request) {
         $street_number = $street_name = $unit = $zip = $tax_id = $state = '';
 
         if ($request -> mls) {
@@ -1272,8 +1263,7 @@ class TransactionsAddController extends Controller {
         return $property_details;
     }
 
-    public function update_county_select(Request $request)
-    {
+    public function update_county_select(Request $request) {
         $counties = LocationData::select('county') -> where('state', $request -> state) -> groupBy('county') -> orderBy('county') -> get() -> toJson();
 
         return $counties;
