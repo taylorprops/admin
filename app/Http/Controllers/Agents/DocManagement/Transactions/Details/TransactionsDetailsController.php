@@ -14,6 +14,7 @@ use App\Models\Employees\Agents;
 use App\Models\Esign\EsignFields;
 use Illuminate\Http\UploadedFile;
 use App\Models\Esign\EsignSigners;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Esign\EsignCallbacks;
 use App\Models\Esign\EsignDocuments;
@@ -1009,7 +1010,7 @@ class TransactionsDetailsController extends Controller
             if ($esign_document) {
                 $envelope = $esign_document -> envelope;
                 if ($envelope) {
-                    if ($envelope -> status == 'Sent') {
+                    if (in_array($envelope -> status, ['Created', 'Viewed', 'Sent', 'Signed'])) {
                         $esign_documents['sent'][] = $esign_document -> transaction_document_id;
                     } elseif ($envelope -> status == 'Completed') {
                         $esign_documents['completed'][] = $esign_document -> transaction_document_id;
@@ -1444,6 +1445,7 @@ class TransactionsDetailsController extends Controller
     }
 
     public function save_add_template_documents(Request $request) {
+
         $Agent_ID = $request -> Agent_ID;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -1456,135 +1458,154 @@ class TransactionsDetailsController extends Controller
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
 
         foreach ($files as $file) {
-            $file_id = $file['file_id'];
-            $add_documents = new TransactionDocuments();
-            $add_documents -> Agent_ID = $Agent_ID;
 
-            if ($transaction_type == 'contract') {
-                $add_documents -> Contract_ID = $Contract_ID;
-            } elseif ($transaction_type == 'listing') {
-                $add_documents -> Listing_ID = $Listing_ID;
-            } elseif ($transaction_type == 'referral') {
-                $add_documents -> Referral_ID = $Referral_ID;
+            DB::beginTransaction();
+            try {
+
+                $file_id = $file['file_id'];
+                $add_documents = new TransactionDocuments();
+                $add_documents -> Agent_ID = $Agent_ID;
+
+                if ($transaction_type == 'contract') {
+                    $add_documents -> Contract_ID = $Contract_ID;
+                } elseif ($transaction_type == 'listing') {
+                    $add_documents -> Listing_ID = $Listing_ID;
+                } elseif ($transaction_type == 'referral') {
+                    $add_documents -> Referral_ID = $Referral_ID;
+                }
+
+                $add_documents -> folder = $folder;
+                $add_documents -> doc_order = $file['order'];
+                $add_documents -> orig_file_id = $file_id;
+                $add_documents -> template_id = $file['template_id'];
+                $add_documents -> file_type = 'system';
+                $add_documents -> file_name = $file['file_name'];
+                $add_documents -> file_name_display = $file['file_name_display'];
+                $add_documents -> pages_total = $file['pages_total'];
+                $add_documents -> file_location = $file['file_location'];
+                $add_documents -> page_width = $file['page_width'];
+                $add_documents -> page_height = $file['page_height'];
+                $add_documents -> page_size = $file['page_size'];
+                $add_documents -> transaction_type = $transaction_type;
+                $add_documents -> save();
+
+                $new_document_id = $add_documents -> id;
+
+                $upload = Upload::where('file_id', $file_id) -> first();
+
+                // create new upload
+                $upload_copy = $upload -> replicate();
+                $upload_copy -> orig_file_id = $file_id;
+                $upload_copy -> file_type = 'system';
+                $upload_copy -> Transaction_Docs_ID = $new_document_id;
+                $upload_copy -> file_name_display = $upload -> file_name_display;
+                $upload_copy -> Agent_ID = $Agent_ID;
+                $upload_copy -> Listing_ID = $Listing_ID;
+                $upload_copy -> Contract_ID = $Contract_ID;
+                $upload_copy -> Referral_ID = $Referral_ID;
+                $upload_copy -> page_width = $file['page_width'];
+                $upload_copy -> page_height = $file['page_height'];
+                $upload_copy -> page_size = $file['page_size'];
+                $upload_new = $upload_copy -> toArray();
+                $upload_new = TransactionUpload::create($upload_new);
+
+                $new_file_id = $upload_new -> file_id;
+
+                // update file_id in docs
+                $add_documents -> file_id = $new_file_id;
+                $add_documents -> save();
+
+                $base_path = base_path();
+                $storage_path = $base_path.'/storage/app/public/';
+
+                if ($transaction_type == 'listing') {
+                    $path = 'listings/'.$Listing_ID;
+                } elseif ($transaction_type == 'contract') {
+                    $path = 'contracts/'.$Contract_ID;
+                } else {
+                    $path = 'referrals/'.$Referral_ID;
+                }
+
+                $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id;
+
+                $copy_from = $storage_path.'doc_management/uploads/'.$file_id.'/*';
+                $copy_to = $storage_path.$files_path.'_system';
+                Storage::disk('public') -> makeDirectory($files_path.'_system/converted');
+                Storage::disk('public') -> makeDirectory($files_path.'_system/converted_images');
+                Storage::disk('public') -> makeDirectory($files_path.'_system/layers');
+                Storage::disk('public') -> makeDirectory($files_path.'_system/combined');
+
+                exec('chmod 0775 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+
+                $copy_to_file = $copy_to.'/converted/'.$file['file_name'];
+                $copy = exec('cp -r '.$copy_from.' '.$copy_to);
+                $copy_converted = exec('cp '.$storage_path.$files_path.'_system/'.$file['file_name'].' '.$copy_to_file);
+                exec('chmod 664 '.$copy_to_file);
+
+                if(!file_exists($copy_to_file)) {
+                    throw new \Exception('File not found');
+                }
+
+
+
+                $filename = $file['file_name'];
+                $image_filename = str_replace('.pdf', '.jpg', $file['file_name']);
+                $source = $copy_to.'/converted/'.$filename;
+                $destination = $copy_to.'/converted_images';
+                $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $new_document_id);
+
+                $add_documents -> file_location = '/storage/'.$files_path.'_system/'.$filename;
+                $add_documents -> file_location_converted = '/storage/'.$files_path.'_system/converted/'.$filename;
+                $add_documents -> save();
+
+                $upload_images = UploadImages::where('file_id', $file_id) -> get();
+                $upload_pages = UploadPages::where('file_id', $file_id) -> get();
+
+                foreach ($upload_images as $upload_image) {
+                    $copy = $upload_image -> replicate();
+                    $copy -> file_id = $new_file_id;
+                    $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_system/', $upload_image -> file_location);
+                    $copy -> file_location = $new_path;
+                    $copy -> Agent_ID = $Agent_ID;
+                    $copy -> Listing_ID = $Listing_ID;
+                    $copy -> Contract_ID = $Contract_ID;
+                    $copy -> Referral_ID = $Referral_ID;
+                    $new = $copy -> toArray();
+                    TransactionUploadImages::create($new);
+                }
+
+                foreach ($upload_pages as $upload_page) {
+                    $copy = $upload_page -> replicate();
+                    $copy -> file_id = $new_file_id;
+                    $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_user/', $upload_page -> file_location);
+                    $copy -> file_location = $new_path;
+                    $copy -> Agent_ID = $Agent_ID;
+                    $copy -> Listing_ID = $Listing_ID;
+                    $copy -> Contract_ID = $Contract_ID;
+                    $copy -> Referral_ID = $Referral_ID;
+                    $new = $copy -> toArray();
+                    TransactionUploadPages::create($new);
+                }
+
+                $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
+                AddFieldAndInputs::dispatch($file_id, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $property, 'system');
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+
+                exec('rm -r '.$copy_to.'/');
+                DB::rollBack();
+
+                return response() -> json([
+                    'status' => 'error',
+                    'message' => $e -> getMessage()
+                ]);
+
             }
 
-            $add_documents -> folder = $folder;
-            $add_documents -> doc_order = $file['order'];
-            $add_documents -> orig_file_id = $file_id;
-            $add_documents -> template_id = $file['template_id'];
-            $add_documents -> file_type = 'system';
-            $add_documents -> file_name = $file['file_name'];
-            $add_documents -> file_name_display = $file['file_name_display'];
-            $add_documents -> pages_total = $file['pages_total'];
-            $add_documents -> file_location = $file['file_location'];
-            $add_documents -> page_width = $file['page_width'];
-            $add_documents -> page_height = $file['page_height'];
-            $add_documents -> page_size = $file['page_size'];
-            $add_documents -> transaction_type = $transaction_type;
-            $add_documents -> save();
-
-            $new_document_id = $add_documents -> id;
-
-            $upload = Upload::where('file_id', $file_id) -> first();
-
-            // create new upload
-            $upload_copy = $upload -> replicate();
-            $upload_copy -> orig_file_id = $file_id;
-            $upload_copy -> file_type = 'system';
-            $upload_copy -> Transaction_Docs_ID = $new_document_id;
-            $upload_copy -> file_name_display = $upload -> file_name_display;
-            $upload_copy -> Agent_ID = $Agent_ID;
-            $upload_copy -> Listing_ID = $Listing_ID;
-            $upload_copy -> Contract_ID = $Contract_ID;
-            $upload_copy -> Referral_ID = $Referral_ID;
-            $upload_copy -> page_width = $file['page_width'];
-            $upload_copy -> page_height = $file['page_height'];
-            $upload_copy -> page_size = $file['page_size'];
-            $upload_new = $upload_copy -> toArray();
-            $upload_new = TransactionUpload::create($upload_new);
-
-            $new_file_id = $upload_new -> file_id;
-
-            // update file_id in docs
-            $add_documents -> file_id = $new_file_id;
-            $add_documents -> save();
-
-            $base_path = base_path();
-            $storage_path = $base_path.'/storage/app/public/';
-
-            if ($transaction_type == 'listing') {
-                $path = 'listings/'.$Listing_ID;
-            } elseif ($transaction_type == 'contract') {
-                $path = 'contracts/'.$Contract_ID;
-            } else {
-                $path = 'referrals/'.$Referral_ID;
-            }
-
-            $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id;
-
-            $copy_from = $storage_path.'doc_management/uploads/'.$file_id.'/*';
-            $copy_to = $storage_path.$files_path.'_system';
-            Storage::disk('public') -> makeDirectory($files_path.'_system/converted');
-            Storage::disk('public') -> makeDirectory($files_path.'_system/converted_images');
-            Storage::disk('public') -> makeDirectory($files_path.'_system/layers');
-            Storage::disk('public') -> makeDirectory($files_path.'_system/combined');
-
-            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
-
-            $copy = exec('cp -r '.$copy_from.' '.$copy_to);
-            $copy_converted = exec('cp '.$storage_path.$files_path.'_system/'.$file['file_name'].' '.$copy_to.'/converted/'.$file['file_name']);
-
-            $filename = $file['file_name'];
-            $image_filename = str_replace('.pdf', '.jpg', $file['file_name']);
-            $source = $copy_to.'/converted/'.$filename;
-            $destination = $copy_to.'/converted_images';
-            $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $new_document_id);
-
-            $add_documents -> file_location = '/storage/'.$files_path.'_system/'.$filename;
-            $add_documents -> file_location_converted = '/storage/'.$files_path.'_system/converted/'.$filename;
-            $add_documents -> save();
-
-            $upload_images = UploadImages::where('file_id', $file_id) -> get();
-            $upload_pages = UploadPages::where('file_id', $file_id) -> get();
-
-            foreach ($upload_images as $upload_image) {
-                $copy = $upload_image -> replicate();
-                $copy -> file_id = $new_file_id;
-                $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_system/', $upload_image -> file_location);
-                $copy -> file_location = $new_path;
-                $copy -> Agent_ID = $Agent_ID;
-                $copy -> Listing_ID = $Listing_ID;
-                $copy -> Contract_ID = $Contract_ID;
-                $copy -> Referral_ID = $Referral_ID;
-                $new = $copy -> toArray();
-                TransactionUploadImages::create($new);
-            }
-
-            foreach ($upload_pages as $upload_page) {
-                $copy = $upload_page -> replicate();
-                $copy -> file_id = $new_file_id;
-                $new_path = str_replace('/uploads/'.$file_id.'/', '/transactions/'.$path.'/'.$new_file_id.'_user/', $upload_page -> file_location);
-                $copy -> file_location = $new_path;
-                $copy -> Agent_ID = $Agent_ID;
-                $copy -> Listing_ID = $Listing_ID;
-                $copy -> Contract_ID = $Contract_ID;
-                $copy -> Referral_ID = $Referral_ID;
-                $new = $copy -> toArray();
-                TransactionUploadPages::create($new);
-            }
-
-            $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
-
-            AddFieldAndInputs::dispatch($file_id, $new_file_id, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $property, 'system');
-
-            // get queue id
-            /* $job = Jobs::where('queue', $queue_name) -> where('payload', 'like', '%i:'.$new_document_id.'%') -> first();
-            $queue_id = $job -> id;
-            $add_documents -> queue_id = $queue_id;
-            $add_documents -> save(); */
         }
-
-        //Artisan::call('queue:work --queue='.$queue_name);
 
         return true;
     }
@@ -2471,6 +2492,7 @@ class TransactionsDetailsController extends Controller
     }
 
     public function get_in_process(Request $request) {
+
         $transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2480,13 +2502,14 @@ class TransactionsDetailsController extends Controller
             -> where('Listing_ID', $Listing_ID)
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
-            -> whereIn('status', ['Sent', 'Signed'])
+            -> whereIn('status', ['Created', 'Viewed', 'Sent', 'Signed'])
             -> with('signers')
             -> with('callbacks')
             -> with('documents')
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
+
     }
 
     public function get_completed(Request $request) {
@@ -2551,8 +2574,9 @@ class TransactionsDetailsController extends Controller
             -> where('Listing_ID', $Listing_ID)
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
-            -> whereIn('status', ['Cancelled', 'Expired'])
-            -> with('signers')
+            -> whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired'])
+            -> with('signers', 'documents')
+            -> orderBy('created_at', 'desc')
             -> get();
 
         return view('/esign/get_cancelled_html', compact('envelopes'));

@@ -30,7 +30,7 @@
                 foreach($signers as $signer) {
                     $recipients[] = $signer -> signer_name;
                 }
-                $documents = $envelope -> documents;
+                $documents = $draft -> documents;
                 @endphp
                 <tr>
                     <td><a href="/esign/esign_add_fields_from_draft/{{ $draft -> id }}/yes" class="btn btn-primary" target="_blank">Open <i class="fal fa-arrow-right ml-2"></i></a></td>

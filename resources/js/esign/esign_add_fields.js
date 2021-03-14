@@ -351,16 +351,26 @@ if(document.URL.match(/esign_add_fields/)) {
                 axios.post('/esign/esign_send_for_signatures', formData, axios_options)
                 .then(function (response) {
 
+                    if(response.data.status == 'error') {
+
+                        $('#modal_danger').modal().find('.modal-body').html('There was an error sending the documents for signatures. Please try again.');
+
+                    } else {
+
+                        if(!is_draft && !is_template) {
+                            setTimeout(function() {
+                                window.location = '/esign_show_sent';
+                            }, 1000);
+                        }
+
+                    }
+
                 })
                 .catch(function (error) {
 
                 });
 
-                if(!is_draft && !is_template) {
-                    setTimeout(function() {
-                        window.location = '/esign_show_sent';
-                    }, 1000);
-                }
+
 
 
 

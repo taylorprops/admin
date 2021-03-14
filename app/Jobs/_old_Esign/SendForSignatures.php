@@ -92,7 +92,7 @@ class SendForSignatures implements ShouldQueue
         $file_to_sign -> setCustomRequesterName($user_name);
         $file_to_sign -> setCustomRequesterEmail($user_email);
 
-        $days = config('global.app_stage') == 'development' ? 'P1D' : 'P7D';
+        $days = config('global.app_stage') == 'development' ? 'PT1200S' : 'P7D';
         $date = new \DateTime();
         $date -> add(new \DateInterval($days));
         $file_to_sign -> setExpires($date);

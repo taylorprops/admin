@@ -57,7 +57,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 if(tab == 'drafts') {
 
-                    data_table('10', $('#drafts_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
+                    data_table('10', $('#drafts_table'), [4, 'desc'], [0,5], [], false, true, true, true, true);
 
                     $('.delete-draft-button').off('click').on('click', function() {
                         delete_draft($(this));
@@ -65,7 +65,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'deleted_drafts') {
 
-                    data_table('10', $('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+                    data_table('10', $('#deleted_drafts_table'), [4, 'desc'], [0], [], false, true, true, true, true);
 
                     $('.restore-draft-button').off('click').on('click', function() {
                         restore_draft($(this));
@@ -82,7 +82,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'in_process') {
 
-                    data_table('10', $('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
+                    data_table('10', $('#in_process_table'), [4, 'desc'], [5], [], false, true, true, true, true);
                     $('.cancel-envelope-button').off('click').on('click', function() {
                         cancel_envelope($(this));
                     });
@@ -93,11 +93,11 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'completed') {
 
-                    data_table('10', $('#completed_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
+                data_table('10', $('#completed_table'), [4, 'desc'], [0,5], [], false, true, true, true, true);
 
                 } else if(tab == 'templates') {
 
-                    data_table('10', $('#templates_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
+                    data_table('10', $('#templates_table'), [4, 'desc'], [0,5], [], false, true, true, true, true);
 
                     $('.delete-template-button').off('click').on('click', function() {
                         delete_template($(this));
@@ -105,7 +105,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'deleted_templates') {
 
-                    data_table('10', $('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+                    data_table('10', $('#deleted_templates_table'), [4, 'desc'], [0], [], false, true, true, true, true);
 
                     $('.restore-template-button').off('click').on('click', function() {
                         restore_template($(this));
@@ -147,7 +147,7 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
 
                 } else if(tab == 'cancelled') {
 
-                    data_table('10', $('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+                    data_table('10', $('#cancelled_table'), [4, 'desc'], [0], [], false, true, true, true, true);
 
                 }
 
@@ -307,12 +307,17 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                 formData.append('singer_id', singer_id);
                 axios.post('/esign/resend_envelope', formData, axios_options)
                 .then(function (response) {
-                    setTimeout(function() {
-                        load_tab('in_process');
-                        $('#resend_envelope_modal').modal('hide');
-                        $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
-                    }, 1000);
-                    toastr['success']('Signature Request Resent');
+                    load_tab('in_process');
+                    $('#resend_envelope_modal').modal('hide');
+                    $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
+
+
+                    if(response.data.status == 'document_deleted') {
+                        $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+                    } else {
+                        toastr['success']('Signature Request Resent');
+                    }
+
                 })
                 .catch(function (error) {
                     console.log(error);

@@ -179,12 +179,17 @@ if (document.URL.match(/transaction_details/)) {
             formData.append('singer_id', singer_id);
             axios.post('/agents/doc_management/transactions/esign/resend_envelope', formData, axios_options)
             .then(function (response) {
-                setTimeout(function() {
-                    load_tab('in_process');
-                    $('#resend_envelope_modal').modal('hide');
-                    $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
-                }, 1000);
-                toastr['success']('Signature Request Resent');
+
+                load_tab('in_process');
+                $('#resend_envelope_modal').modal('hide');
+                $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
+
+                if(response.data.status == 'document_deleted') {
+                    $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+                } else {
+                    toastr['success']('Signature Request Resent');
+                }
+
             })
             .catch(function (error) {
                 console.log(error);

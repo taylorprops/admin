@@ -5136,8 +5136,12 @@ if (document.URL.match(/transaction_details/)) {
       } else if (id == 'add_checklist_template_button') {
         show_add_checklist_template();
       } else if (id == 'save_add_checklist_template_button') {
-        $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
-        save_add_template_documents('checklist');
+        if ($('.checklist-template-form:checked').length > 0) {
+          $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
+          save_add_template_documents('checklist');
+        } else {
+          $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
+        }
       } else if (id == 'add_individual_template_button') {
         show_add_individual_template();
       } else if (id == 'save_add_individual_template_button') {
@@ -6160,22 +6164,20 @@ if (document.URL.match(/transaction_details/)) {
           reorder_documents(sortables);
           $('#save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function () {
             if ($('.checklist-template-form:checked').length > 0) {
-              $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
+              $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
               save_add_template_documents('checklist');
             } else {
               $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
             }
           });
-          $('#save_add_individual_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function () {
-            if ($('.individual-template-form:checked').length > 0) {
-              $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
-              save_add_template_documents('individual');
-            } else {
-              $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
-            }
-          });
           global_loading_off();
-          toastr['success']('Documents Successfully Added');
+
+          if (response.data.status == 'error') {
+            $('#modal_danger').modal().find('.modal-body').html('There was an error importing the documents, please try again.');
+          } else {
+            toastr['success']('Documents Successfully Added');
+          }
+
           $('.progress-bar').css({
             width: '0%'
           });
@@ -6188,6 +6190,7 @@ if (document.URL.match(/transaction_details/)) {
 
   window.file_progress = function (files) {
     // file_name_display and file_size
+    $('.almost-complete').remove();
     global_loading_off();
     var loading_html = ' \
         <div class="h5 text-white mb-3">Importing Documents...</div> \
@@ -6232,7 +6235,9 @@ if (document.URL.match(/transaction_details/)) {
           }
         }
 
-        document.getElementById('progress_' + index).scrollIntoView();
+        if (document.getElementById('progress_' + index).length > 0) {
+          document.getElementById('progress_' + index).scrollIntoView();
+        }
       }, index * 1000);
     });
     var almost_complete_interval = setInterval(function () {
@@ -6251,14 +6256,14 @@ if (document.URL.match(/transaction_details/)) {
                 ';
         $('#loading_div').append(first_notification);
         clearInterval(almost_complete_interval);
-        setTimeout(function () {
-          var final_notification = ' \
-                    <div class="text-yellow w-100 p-1 almost-complete"> \
-                        <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
-                    </div> \
-                    ';
-          $('#loading_div').append(final_notification);
-        }, 10000);
+        /* setTimeout(function() {
+            let final_notification = ' \
+            <div class="text-yellow w-100 p-1 almost-complete"> \
+                <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
+            </div> \
+            ';
+            $('#loading_div').append(final_notification);
+        }, 10000); */
       }
     }, 1000);
   };
@@ -7020,12 +7025,15 @@ if (document.URL.match(/transaction_details/)) {
       formData.append('envelope_id', envelope_id);
       formData.append('singer_id', singer_id);
       axios.post('/agents/doc_management/transactions/esign/resend_envelope', formData, axios_options).then(function (response) {
-        setTimeout(function () {
-          load_tab('in_process');
-          $('#resend_envelope_modal').modal('hide');
-          $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
-        }, 1000);
-        toastr['success']('Signature Request Resent');
+        load_tab('in_process');
+        $('#resend_envelope_modal').modal('hide');
+        $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
+
+        if (response.data.status == 'document_deleted') {
+          $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+        } else {
+          toastr['success']('Signature Request Resent');
+        }
       })["catch"](function (error) {
         console.log(error);
       });
@@ -14048,12 +14056,12 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
         $('#' + tab + '_div').html(response.data);
 
         if (tab == 'drafts') {
-          data_table('10', $('#drafts_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#drafts_table'), [4, 'desc'], [0, 5], [], false, true, true, true, true);
           $('.delete-draft-button').off('click').on('click', function () {
             delete_draft($(this));
           });
         } else if (tab == 'deleted_drafts') {
-          data_table('10', $('#deleted_drafts_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#deleted_drafts_table'), [4, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-draft-button').off('click').on('click', function () {
             restore_draft($(this));
           });
@@ -14067,7 +14075,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'in_process') {
-          data_table('10', $('#in_process_table'), [3, 'desc'], [4], [], false, true, true, true, true);
+          data_table('10', $('#in_process_table'), [4, 'desc'], [5], [], false, true, true, true, true);
           $('.cancel-envelope-button').off('click').on('click', function () {
             cancel_envelope($(this));
           });
@@ -14075,14 +14083,14 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             resend_envelope($(this));
           });
         } else if (tab == 'completed') {
-          data_table('10', $('#completed_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#completed_table'), [4, 'desc'], [0, 5], [], false, true, true, true, true);
         } else if (tab == 'templates') {
-          data_table('10', $('#templates_table'), [3, 'desc'], [0, 4], [], false, true, true, true, true);
+          data_table('10', $('#templates_table'), [4, 'desc'], [0, 5], [], false, true, true, true, true);
           $('.delete-template-button').off('click').on('click', function () {
             delete_template($(this));
           });
         } else if (tab == 'deleted_templates') {
-          data_table('10', $('#deleted_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#deleted_templates_table'), [4, 'desc'], [0], [], false, true, true, true, true);
           $('.restore-template-button').off('click').on('click', function () {
             restore_template($(this));
           });
@@ -14115,7 +14123,7 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
           }, 200);
         } else if (tab == 'cancelled') {
-          data_table('10', $('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+          data_table('10', $('#cancelled_table'), [4, 'desc'], [0], [], false, true, true, true, true);
         }
       })["catch"](function (error) {
         console.log(error);
@@ -14235,12 +14243,15 @@ if (document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
         formData.append('envelope_id', envelope_id);
         formData.append('singer_id', singer_id);
         axios.post('/esign/resend_envelope', formData, axios_options).then(function (response) {
-          setTimeout(function () {
-            load_tab('in_process');
-            $('#resend_envelope_modal').modal('hide');
-            $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
-          }, 1000);
-          toastr['success']('Signature Request Resent');
+          load_tab('in_process');
+          $('#resend_envelope_modal').modal('hide');
+          $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
+
+          if (response.data.status == 'document_deleted') {
+            $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+          } else {
+            toastr['success']('Signature Request Resent');
+          }
         })["catch"](function (error) {
           console.log(error);
         });
@@ -14714,13 +14725,17 @@ if (document.URL.match(/esign_add_fields/)) {
         formData.append('fields', fields);
         formData.append('is_draft', is_draft);
         formData.append('is_template', is_template);
-        axios.post('/esign/esign_send_for_signatures', formData, axios_options).then(function (response) {})["catch"](function (error) {});
-
-        if (!is_draft && !is_template) {
-          setTimeout(function () {
-            window.location = '/esign_show_sent';
-          }, 1000);
-        }
+        axios.post('/esign/esign_send_for_signatures', formData, axios_options).then(function (response) {
+          if (response.data.status == 'error') {
+            $('#modal_danger').modal().find('.modal-body').html('There was an error sending the documents for signatures. Please try again.');
+          } else {
+            if (!is_draft && !is_template) {
+              setTimeout(function () {
+                window.location = '/esign_show_sent';
+              }, 1000);
+            }
+          }
+        })["catch"](function (error) {});
       }
     }
 
@@ -15251,6 +15266,7 @@ if (document.URL.match(/esign_add_signers/)) {
       var name = '';
       var email = '';
       var hidden = '';
+      var required = 'required';
       var other_selected = 'no';
 
       if ($('#is_template').val() == 'yes') {
@@ -15258,6 +15274,7 @@ if (document.URL.match(/esign_add_signers/)) {
         template_role = form.find('.add-' + type + '-role').val();
         role = form.find('.add-' + type + '-role').val().replace(/\s(One|Two)/, '');
         hidden = 'hidden';
+        required = '';
         display_role = template_role;
       } else {
         if ($('.' + type + '-select').length > 0 && $('.' + type + '-select').val() != '') {
@@ -15291,7 +15308,7 @@ if (document.URL.match(/esign_add_signers/)) {
                         <div class="col-1"><span class="' + type + '-count font-11 text-orange"></span></div> \
                         <div class="col-3 ' + hidden + ' font-weight-bold">' + name + '</div> \
                         <div class="col-3">' + display_role + '</div> \
-                        <div class="col-4 ' + hidden + '"><input type="text" class="custom-form-element form-input signer-email required" data-type="' + type + '" value="' + email + '" data-label="Email"></div> \
+                        <div class="col-4 ' + hidden + '"><input type="text" class="custom-form-element form-input signer-email ' + required + '" data-type="' + type + '" value="' + email + '" data-label="Email"></div> \
                     </div> \
                     <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="' + type + '"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';

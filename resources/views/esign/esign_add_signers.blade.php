@@ -301,7 +301,7 @@
                         @elseif($is_template == 'yes')
 
                             <div class="col-12 col-sm-6 add-template-recipient-fields">
-                                <select class="custom-form-element form-select form-select-no-search add-recipient-role add-recipient-field required" data-label="Role">
+                                <select class="custom-form-element form-select form-select-no-search add-recipient-role add-recipient-field" data-label="Role">
                                     <option value=""></option>
                                     <option value="Seller One">Seller One</option>
                                     <option value="Seller Two">Seller Two</option>

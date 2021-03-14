@@ -26,7 +26,15 @@
                 $signers = $envelope -> signers;
                 $recipients = [];
                 foreach($signers as $signer) {
-                    $recipients[] = $signer -> signer_name;
+                    if($signer -> signer_status == 'Declined') {
+                        $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Declined</span></span>';
+                    } else if($signer -> signer_status == 'Bounced') {
+                        $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Bounced</span></span>';
+                    } else if($signer -> signer_status == 'Expired') {
+                        $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Expired</span></span>';
+                    } else {
+                        $recipients[] = $signer -> signer_name;
+                    }
                 }
                 $documents = $envelope -> documents;
                 @endphp

@@ -24,7 +24,7 @@
                     foreach($signers as $signer) {
                         $recipients[] = $signer -> signer_name;
                     }
-                    $documents = $envelope -> documents;
+                    $documents = $draft -> documents;
                     @endphp
                     <tr>
                         <td><a href="javascript:void(0)" class="btn btn-primary restore-draft-button" data-envelope-id="{{ $draft -> id }}">Restore Draft <i class="fal fa-undo ml-2"></i></a></td>

@@ -189,6 +189,7 @@ if(document.URL.match(/esign_add_signers/)) {
             let name = '';
             let email = '';
             let hidden = '';
+            let required = 'required';
             let other_selected = 'no';
 
             if($('#is_template').val() == 'yes') {
@@ -197,6 +198,7 @@ if(document.URL.match(/esign_add_signers/)) {
                 template_role = form.find('.add-'+type+'-role').val();
                 role = form.find('.add-'+type+'-role').val().replace(/\s(One|Two)/, '');
                 hidden = 'hidden';
+                required = '';
                 display_role = template_role;
 
             } else {
@@ -234,7 +236,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         <div class="col-1"><span class="'+type+'-count font-11 text-orange"></span></div> \
                         <div class="col-3 '+hidden+' font-weight-bold">'+name+'</div> \
                         <div class="col-3">'+display_role+'</div> \
-                        <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email required" data-type="'+type+'" value="'+email+'" data-label="Email"></div> \
+                        <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email '+required+'" data-type="'+type+'" value="'+email+'" data-label="Email"></div> \
                     </div> \
                     <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button></div> \
                 </div>';

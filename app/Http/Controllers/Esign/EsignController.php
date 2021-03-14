@@ -2,61 +2,68 @@
 
 namespace App\Http\Controllers\Esign;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\Esign\SendForSignatures;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Resources\ResourceItems;
-/* use Eversign\File;
+use Throwable;
+use Eversign\File;
 use Eversign\Field;
-
+use Eversign\Client;
 use Eversign\Signer;
 use Eversign\Document;
+
 use Eversign\Recipient;
+use Eversign\TextField;
 use Eversign\InitialsField;
 use Eversign\SignatureField;
-use Eversign\TextField;
-use Eversign\DateSignedField; */
+use Illuminate\Http\Request;
+use Eversign\DateSignedField;
+use App\Models\Esign\EsignFields;
 
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Members\Members;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+use App\Models\Esign\EsignSigners;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
 use App\Models\Esign\EsignCallbacks;
 use App\Models\Esign\EsignDocuments;
-use App\Models\Esign\EsignDocumentsImages;
 use App\Models\Esign\EsignEnvelopes;
-use App\Models\Esign\EsignFields;
-use App\Models\Esign\EsignSigners;
 use App\Models\Esign\EsignTemplates;
-use Eversign\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
+// use App\Jobs\Esign\SendForSignatures;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Esign\EsignDocumentsImages;
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Transactions\Members\Members;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
 
 class EsignController extends Controller
 {
     ///////////// Dashboard //////////////
 
     public function esign(Request $request) {
+
         return view('/esign/esign');
     }
 
     public function get_drafts(Request $request) {
-        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
+
+        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_drafts_html', compact('drafts'));
     }
 
     public function get_deleted_drafts(Request $request) {
-        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> with('documents') -> get();
+
+        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
+
     }
 
     public function get_in_process(Request $request) {
-        $envelopes = EsignEnvelopes::whereIn('status', ['Sent', 'Viewed', 'Signed'])
+
+        $envelopes = EsignEnvelopes::whereIn('status', ['Created', 'Viewed', 'Sent', 'Signed'])
             -> with('signers')
             -> with('callbacks')
             -> with('listing')
@@ -66,6 +73,7 @@ class EsignController extends Controller
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
+
     }
 
     public function get_completed(Request $request) {
@@ -105,7 +113,7 @@ class EsignController extends Controller
     }
 
     public function get_cancelled(Request $request) {
-        $envelopes = EsignEnvelopes::whereIn('status', ['Cancelled', 'Expired']) -> with('signers') -> with('documents') -> get();
+        $envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired']) -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_cancelled_html', compact('envelopes'));
     }
@@ -120,21 +128,31 @@ class EsignController extends Controller
     }
 
     public function resend_envelope(Request $request) {
+
         $signer_id = $request -> signer_id;
         $envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
-
         $signers = $document -> getSigners();
 
         $signer = null;
         foreach ($signers as $signer) {
             if ($signer -> getStatus() == 'waiting_for_signature') {
-                $client -> sendReminderForDocument($document, $signer);
+                try {
+                    $client -> sendReminderForDocument($document, $signer);
+                } catch (\Exception $e) {
+                    if(stristr($e -> getMessage(), 'document_deleted')) {
+                        $envelope -> status = 'Cancelled';
+                        $envelope -> save();
+                        return response() -> json(['status' => 'document_deleted']);
+                    }
+                    return $e -> getMessage();
+                }
             }
         }
+
     }
 
     ////  Drafts ////
@@ -944,52 +962,212 @@ class EsignController extends Controller
     }
 
     public function esign_send_for_signatures(Request $request) {
-        $envelope_id = $request -> envelope_id ?? 0;
-        $template_id = $request -> template_id ?? 0;
-        $document_ids = explode(',', $request -> document_ids);
 
-        $subject = $request -> subject;
-        $message = $request -> message;
-        $user_name = auth() -> user() -> name;
-        $user_email = auth() -> user() -> email;
+        DB::beginTransaction();
+        try {
 
-        $fields = json_decode($request -> fields, true);
-        $fields = collect($fields) -> map(function ($fields) {
-            return (object) $fields;
-        });
+            $envelope_id = $request -> envelope_id ?? 0;
+            $template_id = $request -> template_id ?? 0;
+            $document_ids = explode(',', $request -> document_ids);
 
-        if ($template_id > 0) {
-            $delete_current_fields = EsignFields::where('template_id', $template_id) -> delete();
-        } else {
-            $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
+            $subject = $request -> subject;
+            $message = $request -> message;
+            $user_name = auth() -> user() -> name;
+            $user_email = auth() -> user() -> email;
+
+            $fields = json_decode($request -> fields, true);
+            $fields = collect($fields) -> map(function ($fields) {
+                return (object) $fields;
+            });
+
+            if ($template_id > 0) {
+                $delete_current_fields = EsignFields::where('template_id', $template_id) -> delete();
+            } else {
+                $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
+            }
+
+            // add fields to db
+            foreach ($fields as $field) {
+                $add_field = new EsignFields();
+                $add_field -> envelope_id = $envelope_id;
+                $add_field -> template_id = $template_id;
+                $add_field -> document_id = $field -> document_id;
+                $add_field -> signer_id = $field -> signer_id ?? 0;
+                $add_field -> field_id = $field -> field_id;
+                $add_field -> field_type = $field -> field_type;
+                $add_field -> field_value = $field -> field_value ?? null;
+                $add_field -> required = $field -> required;
+                $add_field -> page = $field -> page;
+                $add_field -> left_perc = $field -> left_perc;
+                $add_field -> top_perc = $field -> top_perc;
+                $add_field -> height_perc = $field -> height_perc;
+                $add_field -> width_perc = $field -> width_perc;
+                $add_field -> save();
+            }
+
+            if ($request -> is_draft == 'yes') {
+                return response() -> json(['status' => 'draft saved']);
+            } elseif ($request -> is_template == 'yes') {
+                return response() -> json(['status' => 'template saved']);
+            }
+
+            //SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields, $user_name, $user_email);
+
+
+
+
+            // update esign_envelope table with subject and message
+            $envelope = EsignEnvelopes::find($envelope_id) -> update([
+                'subject' => $subject,
+                'message' => $message,
+                'is_draft' => 'no',
+                'draft_name' => '',
+            ]);
+
+            $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+
+            $file_to_sign = new document();
+            $file_to_sign -> setSandbox(true);
+            $file_to_sign -> setTitle($subject);
+            $file_to_sign -> setMessage($message);
+            //$file_to_sign -> setEmbeddedSigningEnabled(true);
+            //$file_to_sign -> setFlexibleSigning(false); // remove all fields to try this
+            //$file_to_sign -> setUseHiddenTags(true);
+            $file_to_sign -> setRequireAllSigners(true);
+            $file_to_sign -> setUseSignerOrder(true);
+            $file_to_sign -> setCustomRequesterName($user_name);
+            $file_to_sign -> setCustomRequesterEmail($user_email);
+
+            $days = config('global.app_stage') == 'development' ? 'PT1200S' : 'P7D';
+            $date = new \DateTime();
+            $date -> add(new \DateInterval($days));
+            $file_to_sign -> setExpires($date);
+
+            // Add Signers
+            $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
+
+            foreach ($signers as $signer) {
+                $add_signer = new Signer();
+                $add_signer -> setId($signer -> id);
+                $add_signer -> setName($signer -> signer_name);
+                $add_signer -> setEmail($signer -> signer_email);
+                $add_signer -> setRole($signer -> signer_role);
+                $add_signer -> setDeliverEmail(true);
+                //$signer -> setLanguage('en');
+                $file_to_sign -> appendSigner($add_signer);
+            }
+
+            // Add Recipients
+            $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
+
+            foreach ($recipients as $recipient) {
+                $add_recipient = new Recipient();
+                $add_recipient -> setName($recipient -> signer_name);
+                $add_recipient -> setEmail($recipient -> signer_email);
+                //$add_recipient -> setLanguage('en');
+                $file_to_sign -> appendRecipient($add_recipient);
+            }
+
+            $file_index = 0;
+
+            foreach ($document_ids as $document_id) {
+                $document = EsignDocuments::where('id', $document_id) -> first();
+
+                if (count($fields -> where('document_id', $document_id)) > 0) {
+
+                    //Add a File to the Document
+                    $file = new File();
+                    $file -> setName($document -> file_name);
+                    $file -> setFilePath(Storage::disk('public') -> path(str_replace('/storage/', '', $document -> file_location)));
+                    $file_to_sign -> appendFile($file);
+
+                    $c = 0;
+
+                    $width = $document -> width;
+                    $height = $document -> height;
+
+                    foreach ($fields -> where('document_id', $document_id) as $field) {
+
+                        // increase move down and right
+                        $x = ($field -> left_perc / 100) * $width;
+                        $y = ($field -> top_perc / 100) * $height;
+                        $w = ($field -> width_perc / 100) * $width;
+                        $h = ($field -> height_perc / 100) * $height;
+
+                        if ($field -> field_type == 'signature') {
+                            $document_field = new SignatureField();
+                            $document_field -> setSigner($field -> signer_id);
+                            $document_field -> setRequired($field -> required);
+                            $document_field -> setY($y + 3);
+                        } elseif ($field -> field_type == 'initials') {
+                            $document_field = new InitialsField();
+                            $document_field -> setSigner($field -> signer_id);
+                            $document_field -> setRequired($field -> required);
+                            $document_field -> setY($y);
+                        } elseif ($field -> field_type == 'date') {
+                            $document_field = new DateSignedField();
+                            $document_field -> setSigner($field -> signer_id);
+                            $document_field -> setTextSize(10);
+                            //$dateSignedField -> setTextStyle('U');
+                            $document_field -> setY($y + 2);
+                        } elseif ($field -> field_type == 'name') {
+                            $document_field = new TextField();
+                            $document_field -> setSigner($field -> signer_id);
+                            $document_field -> setValue($field -> signer);
+                            $document_field -> setTextSize(9);
+                            $document_field -> setY($y + 3);
+                            $document_field -> setRequired(0);
+                        } elseif ($field -> field_type == 'text') {
+                            $document_field = new TextField();
+                            $document_field -> setSigner('OWNER');
+                            $document_field -> setReadonly(1);
+                            $document_field -> setValue($field -> field_value);
+                            $document_field -> setTextSize(9);
+                            $document_field -> setY($y + 3);
+                            $document_field -> setRequired(0);
+                        }
+
+                        $document_field -> setIdentifier($document_id.$c);
+                        $document_field -> setFileIndex($file_index);
+                        $document_field -> setPage($field -> page);
+                        $document_field -> setX($x);
+                        $document_field -> setWidth($w);
+                        $document_field -> setHeight($h);
+
+                        $file_to_sign -> appendFormField($document_field, $c);
+
+                        $c += 1;
+                    }
+
+                    $file_index += 1;
+                }
+            }
+
+            //Saving the created file_to_sign to the API.
+            $newlyCreatedDocument = $client -> createDocument($file_to_sign);
+            $hash = $newlyCreatedDocument -> getDocumentHash();
+
+            // update esign_envelope table with new hash
+            $envelope = EsignEnvelopes::find($envelope_id) -> update([
+                'document_hash' => $hash,
+            ]);
+
+            DB::commit();
+
+            return response() -> json(['status' => 'sent']);
+
+        } catch (Throwable $e) {
+
+            DB::rollBack();
+
+            return response() -> json([
+                'status' => 'error',
+                'message' => $e -> getMessage()
+            ]);
+
         }
 
-        // add fields to db
-        foreach ($fields as $field) {
-            $add_field = new EsignFields();
-            $add_field -> envelope_id = $envelope_id;
-            $add_field -> template_id = $template_id;
-            $add_field -> document_id = $field -> document_id;
-            $add_field -> signer_id = $field -> signer_id ?? 0;
-            $add_field -> field_id = $field -> field_id;
-            $add_field -> field_type = $field -> field_type;
-            $add_field -> field_value = $field -> field_value ?? null;
-            $add_field -> required = $field -> required;
-            $add_field -> page = $field -> page;
-            $add_field -> left_perc = $field -> left_perc;
-            $add_field -> top_perc = $field -> top_perc;
-            $add_field -> height_perc = $field -> height_perc;
-            $add_field -> width_perc = $field -> width_perc;
-            $add_field -> save();
-        }
 
-        if ($request -> is_draft == 'yes') {
-            return response() -> json(['status' => 'draft saved']);
-        } elseif ($request -> is_template == 'yes') {
-            return response() -> json(['status' => 'template saved']);
-        }
-
-        SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields, $user_name, $user_email);
 
         /* // update esign_envelope table with subject and message
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
@@ -1146,14 +1324,16 @@ class EsignController extends Controller
         // update esign_envelope table with new hash
         $envelope = EsignEnvelopes::find($envelope_id) -> update([
             'document_hash' => $hash
-        ]); */
+        ]);
 
-        return response() -> json(['status' => 'sent']);
+        return response() -> json(['status' => 'sent']); */
     }
 
     ////////////////////// Callbacks //////////////////////////////////
 
     public function esign_callback(Request $request) {
+
+        $response_content = $request -> getContent();
         $json = json_decode($request, true);
 
         $event_time = $request -> event_time;
@@ -1162,9 +1342,24 @@ class EsignController extends Controller
         $related_document_hash = $request -> meta['related_document_hash'];
         $related_user_id = $request -> meta['related_user_id'];
 
+        $status = [
+            'document_created' => 'Sent',
+            'document_viewed' => 'Viewed',
+            'document_sent' => 'Sent',
+            'document_signed' => 'Signed',
+            'document_declined' => 'Declined',
+            'document_forwarded' => 'Forwarded',
+            'signer_removed' => 'Signer Removed',
+            'signer_bounced' => 'Signer Bounced',
+            'document_completed' => 'Completed',
+            'document_expired' => 'Expired',
+            'document_cancelled' => 'Cancelled',
+        ][$event_type] ?? null;
+
         //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {
 
         $esign_callback = new EsignCallbacks();
+        $esign_callback -> response_content = $response_content;
         $esign_callback -> event_time = $event_time;
         $esign_callback -> event_type = $event_type;
         $esign_callback -> event_hash = $event_hash;
@@ -1172,17 +1367,25 @@ class EsignController extends Controller
         $esign_callback -> related_user_id = $related_user_id;
 
         if ($request -> signer) {
+
             $signer_id = $request -> signer['id'];
             $signer_name = $request -> signer['name'];
             $signer_email = $request -> signer['email'];
             $signer_role = $request -> signer['role'];
             $signer_order = $request -> signer['order'];
 
+            if($status == 'Declined') {
+                $signer = EsignSigners::find($signer_id) -> update([
+                    'signer_status' => 'Declined'
+                ]);
+            }
+
             $esign_callback -> signer_id = $signer_id;
             $esign_callback -> signer_name = $signer_name;
             $esign_callback -> signer_email = $signer_email;
             $esign_callback -> signer_role = $signer_role;
             $esign_callback -> signer_order = $signer_order;
+
         }
 
         $esign_callback -> save();
@@ -1191,25 +1394,18 @@ class EsignController extends Controller
         //     echo 'error '.hash_hmac('sha256', $event_time . $event_type, config('esign.key')).' = '.$request -> event_hash;
         // }
 
-        $status = [
-            'document_sent' => 'Sent',
-            'document_viewed' => 'Viewed',
-            'document_signed' => 'Signed',
-            'document_declined' => 'Declined',
-            'signer_bounced' => 'Bounced',
-            'document_completed' => 'Completed',
-            'document_expired' => 'Expired',
-            'document_cancelled' => 'Cancelled',
-        ][$event_type] ?? null;
+
 
         if ($status) {
+
             $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> with('documents') -> first();
+
+            $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+            $document = $client -> getDocumentByHash($related_document_hash);
 
             $envelope -> status = $status;
 
             if ($status == 'Completed') {
-                $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
-                $document = $client -> getDocumentByHash($related_document_hash);
 
                 $subject = sanitize($envelope -> subject);
                 $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
@@ -1230,6 +1426,7 @@ class EsignController extends Controller
             }
 
             $envelope -> save();
+
         }
 
         return true;

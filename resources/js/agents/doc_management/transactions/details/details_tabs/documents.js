@@ -54,8 +54,12 @@ if (document.URL.match(/transaction_details/)) {
             } else if(id == 'add_checklist_template_button') {
                 show_add_checklist_template();
             } else if(id == 'save_add_checklist_template_button') {
-                $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
-                save_add_template_documents('checklist');
+                if($('.checklist-template-form:checked').length > 0) {
+                    $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
+                    save_add_template_documents('checklist');
+                } else {
+                    $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
+                }
             } else if(id == 'add_individual_template_button') {
                 show_add_individual_template();
             } else if(id == 'save_add_individual_template_button') {
@@ -1287,6 +1291,7 @@ if (document.URL.match(/transaction_details/)) {
             form = $('#add_individual_template_form');
         }
 
+
         let formData = new FormData();
         formData.append('Agent_ID', Agent_ID);
         formData.append('Listing_ID', Listing_ID);
@@ -1338,24 +1343,20 @@ if (document.URL.match(/transaction_details/)) {
 
                         $('#save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
                             if($('.checklist-template-form:checked').length > 0) {
-                                $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
+                                $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
                                 save_add_template_documents('checklist');
                             } else {
                                 $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
                             }
                         });
 
-                        $('#save_add_individual_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
-                            if($('.individual-template-form:checked').length > 0) {
-                                $('#save_add_individual_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
-                                save_add_template_documents('individual');
-                            } else {
-                                $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
-                            }
-                        });
-
                         global_loading_off();
-                        toastr['success']('Documents Successfully Added');
+
+                        if(response.data.status == 'error') {
+                            $('#modal_danger').modal().find('.modal-body').html('There was an error importing the documents, please try again.');
+                        } else {
+                            toastr['success']('Documents Successfully Added');
+                        }
 
                         $('.progress-bar').css({ width: '0%' });
                         $('.individual-template-form').prop('checked', false);
@@ -1372,6 +1373,8 @@ if (document.URL.match(/transaction_details/)) {
     }
 
     window.file_progress = function(files) { // file_name_display and file_size
+
+        $('.almost-complete').remove();
 
         global_loading_off();
 
@@ -1417,7 +1420,9 @@ if (document.URL.match(/transaction_details/)) {
                         progress_bar.css({ width: width + '%' }).attr('aria-valuenow', width);
                     }
                 }
-                document.getElementById('progress_'+index).scrollIntoView();
+                if(document.getElementById('progress_'+index).length > 0) {
+                    document.getElementById('progress_'+index).scrollIntoView();
+                }
             }, index * 1000);
 
         });
@@ -1439,14 +1444,14 @@ if (document.URL.match(/transaction_details/)) {
                 $('#loading_div').append(first_notification);
                 clearInterval(almost_complete_interval);
 
-                setTimeout(function() {
+                /* setTimeout(function() {
                     let final_notification = ' \
                     <div class="text-yellow w-100 p-1 almost-complete"> \
                         <span class="spinner-border spinner-border-sm mr-2"></span> Almost complete, please wait... \
                     </div> \
                     ';
                     $('#loading_div').append(final_notification);
-                }, 10000);
+                }, 10000); */
             }
 
         }, 1000);
