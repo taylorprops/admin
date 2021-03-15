@@ -1,6 +1,6 @@
 <div class="h4 text-orange my-3">Deleted Templates</div>
 
-<div class="table-responsive text-nowrap">
+<div class="table-responsive">
 
     <table id="deleted_templates_table" class="table table-bordered" width="100%">
 

@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="mb-5 table-responsive text-nowrap">
+<div class="mb-5 table-responsive">
 
     <table id="templates_table" class="table table-bordered" width="100%">
 

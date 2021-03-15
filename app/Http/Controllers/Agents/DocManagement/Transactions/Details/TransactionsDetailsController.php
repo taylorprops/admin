@@ -2503,9 +2503,7 @@ class TransactionsDetailsController extends Controller
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
             -> whereIn('status', ['Created', 'Viewed', 'Sent', 'Signed'])
-            -> with('signers')
-            -> with('callbacks')
-            -> with('documents')
+            -> with(['signers', 'callbacks', 'documents'])
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
@@ -2523,7 +2521,7 @@ class TransactionsDetailsController extends Controller
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
             -> where('status', 'Completed')
-            -> with('signers')
+            -> with(['signers', 'documents'])
             -> get();
 
         return view('/esign/get_completed_html', compact('envelopes'));
@@ -2540,7 +2538,7 @@ class TransactionsDetailsController extends Controller
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
             -> where('is_draft', 'yes')
-            -> with('signers')
+            -> with(['signers', 'documents'])
             -> get();
 
         return view('/esign/get_drafts_html', compact('drafts'));
@@ -2558,7 +2556,7 @@ class TransactionsDetailsController extends Controller
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
             -> where('is_draft', 'yes')
-            -> with('signers')
+            -> with(['signers', 'documents'])
             -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
@@ -2575,7 +2573,7 @@ class TransactionsDetailsController extends Controller
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
             -> whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired'])
-            -> with('signers', 'documents')
+            -> with(['signers', 'documents'])
             -> orderBy('created_at', 'desc')
             -> get();
 

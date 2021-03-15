@@ -48,14 +48,14 @@ class EsignController extends Controller
 
     public function get_drafts(Request $request) {
 
-        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
+        $drafts = EsignEnvelopes::where('is_draft', 'yes') -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_drafts_html', compact('drafts'));
     }
 
     public function get_deleted_drafts(Request $request) {
 
-        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
+        $deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
 
@@ -64,12 +64,7 @@ class EsignController extends Controller
     public function get_in_process(Request $request) {
 
         $envelopes = EsignEnvelopes::whereIn('status', ['Created', 'Viewed', 'Sent', 'Signed'])
-            -> with('signers')
-            -> with('callbacks')
-            -> with('listing')
-            -> with('contract')
-            -> with('referral')
-            -> with('documents')
+            -> with(['signers', 'callbacks', 'listing', 'contract', 'referral', 'documents'])
             -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_in_process_html', compact('envelopes'));
@@ -77,7 +72,7 @@ class EsignController extends Controller
     }
 
     public function get_completed(Request $request) {
-        $envelopes = EsignEnvelopes::where('status', 'completed') -> with('signers') -> with('documents') -> get();
+        $envelopes = EsignEnvelopes::where('status', 'completed') -> with(['signers', 'documents']) -> get();
 
         return view('/esign/get_completed_html', compact('envelopes'));
     }
@@ -95,25 +90,25 @@ class EsignController extends Controller
                     -> orWhere('upload_file_id', '')
                     -> orWhereNull('upload_file_id');
             })
-            -> with('signers') -> get();
+            -> with(['envelopes', 'signers']) -> get();
 
         return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
     }
 
     public function get_system_templates(Request $request) {
-        $templates = EsignTemplates::where('upload_file_id', '>', '0') -> with('signers') -> get();
+        $templates = EsignTemplates::where('upload_file_id', '>', '0') -> with(['envelopes', 'signers']) -> get();
 
         return view('/esign/get_system_templates_html', compact('templates'));
     }
 
     public function get_deleted_system_templates(Request $request) {
-        $deleted_templates = EsignTemplates::onlyTrashed() -> where('upload_file_id', '>', '0') -> with('signers') -> get();
+        $deleted_templates = EsignTemplates::onlyTrashed() -> where('upload_file_id', '>', '0') -> with(['envelopes', 'signers']) -> get();
 
         return view('/esign/get_deleted_system_templates_html', compact('deleted_templates'));
     }
 
     public function get_cancelled(Request $request) {
-        $envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired']) -> with('signers') -> with('documents') -> orderBy('created_at', 'desc') -> get();
+        $envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired']) -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
 
         return view('/esign/get_cancelled_html', compact('envelopes'));
     }
@@ -1333,103 +1328,112 @@ class EsignController extends Controller
 
     public function esign_callback(Request $request) {
 
-        $response_content = $request -> getContent();
-        $json = json_decode($request, true);
+        if($request -> event_time) {
 
-        $event_time = $request -> event_time;
-        $event_type = $request -> event_type;
-        $event_hash = $request -> event_hash;
-        $related_document_hash = $request -> meta['related_document_hash'];
-        $related_user_id = $request -> meta['related_user_id'];
+            $response_content = $request -> getContent();
+            $json = json_decode($request, true);
 
-        $status = [
-            'document_created' => 'Sent',
-            'document_viewed' => 'Viewed',
-            'document_sent' => 'Sent',
-            'document_signed' => 'Signed',
-            'document_declined' => 'Declined',
-            'document_forwarded' => 'Forwarded',
-            'signer_removed' => 'Signer Removed',
-            'signer_bounced' => 'Signer Bounced',
-            'document_completed' => 'Completed',
-            'document_expired' => 'Expired',
-            'document_cancelled' => 'Cancelled',
-        ][$event_type] ?? null;
+            $event_time = $request -> event_time;
+            $event_type = $request -> event_type;
+            $event_hash = $request -> event_hash;
+            $related_document_hash = $request -> meta['related_document_hash'];
+            $related_user_id = $request -> meta['related_user_id'];
 
-        //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {
+            $status = [
+                'document_created' => 'Sent',
+                'document_viewed' => 'Viewed',
+                'document_sent' => 'Sent',
+                'document_signed' => 'Signed',
+                'document_declined' => 'Declined',
+                'document_forwarded' => 'Forwarded',
+                'signer_removed' => 'Signer Removed',
+                'signer_bounced' => 'Signer Bounced',
+                'document_completed' => 'Completed',
+                'document_expired' => 'Expired',
+                'document_cancelled' => 'Cancelled',
+            ][$event_type] ?? null;
 
-        $esign_callback = new EsignCallbacks();
-        $esign_callback -> response_content = $response_content;
-        $esign_callback -> event_time = $event_time;
-        $esign_callback -> event_type = $event_type;
-        $esign_callback -> event_hash = $event_hash;
-        $esign_callback -> related_document_hash = $related_document_hash;
-        $esign_callback -> related_user_id = $related_user_id;
+            //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {
 
-        if ($request -> signer) {
+            $esign_callback = new EsignCallbacks();
+            $esign_callback -> response_content = $response_content;
+            $esign_callback -> event_time = $event_time;
+            $esign_callback -> event_type = $event_type;
+            $esign_callback -> event_hash = $event_hash;
+            $esign_callback -> related_document_hash = $related_document_hash;
+            $esign_callback -> related_user_id = $related_user_id;
 
-            $signer_id = $request -> signer['id'];
-            $signer_name = $request -> signer['name'];
-            $signer_email = $request -> signer['email'];
-            $signer_role = $request -> signer['role'];
-            $signer_order = $request -> signer['order'];
+            if ($request -> signer) {
 
-            if($status == 'Declined') {
-                $signer = EsignSigners::find($signer_id) -> update([
-                    'signer_status' => 'Declined'
-                ]);
+                $signer_id = $request -> signer['id'];
+                $signer_name = $request -> signer['name'];
+                $signer_email = $request -> signer['email'];
+                $signer_role = $request -> signer['role'];
+                $signer_order = $request -> signer['order'];
+
+                if($status == 'Declined') {
+                    $signer = EsignSigners::find($signer_id) -> update([
+                        'signer_status' => 'Declined'
+                    ]);
+                }
+
+                $esign_callback -> signer_id = $signer_id;
+                $esign_callback -> signer_name = $signer_name;
+                $esign_callback -> signer_email = $signer_email;
+                $esign_callback -> signer_role = $signer_role;
+                $esign_callback -> signer_order = $signer_order;
+
             }
 
-            $esign_callback -> signer_id = $signer_id;
-            $esign_callback -> signer_name = $signer_name;
-            $esign_callback -> signer_email = $signer_email;
-            $esign_callback -> signer_role = $signer_role;
-            $esign_callback -> signer_order = $signer_order;
+            $esign_callback -> save();
 
-        }
-
-        $esign_callback -> save();
-
-        // } else {
-        //     echo 'error '.hash_hmac('sha256', $event_time . $event_type, config('esign.key')).' = '.$request -> event_hash;
-        // }
+            // } else {
+            //     echo 'error '.hash_hmac('sha256', $event_time . $event_type, config('esign.key')).' = '.$request -> event_hash;
+            // }
 
 
 
-        if ($status) {
+            if ($status) {
 
-            $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> with('documents') -> first();
+                $envelope = EsignEnvelopes::where('document_hash', $related_document_hash) -> with('documents') -> first();
 
-            $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
-            $document = $client -> getDocumentByHash($related_document_hash);
+                $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+                $document = $client -> getDocumentByHash($related_document_hash);
 
-            $envelope -> status = $status;
+                $envelope -> status = $status;
 
-            if ($status == 'Completed') {
+                if ($status == 'Completed') {
 
-                $subject = sanitize($envelope -> subject);
-                $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
-                $file_location = $path.'/'.$subject.'.pdf';
-                $public_link = '/storage/esign/'.$envelope -> id.'/'.$subject.'.pdf';
+                    $subject = sanitize($envelope -> subject);
+                    $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
+                    $file_location = $path.'/'.$subject.'.pdf';
+                    $public_link = '/storage/esign/'.$envelope -> id.'/'.$subject.'.pdf';
 
-                $client -> downloadFinalDocumentToPath($document, $file_location, true);
+                    $client -> downloadFinalDocumentToPath($document, $file_location, true);
 
-                $envelope -> file_location = $public_link;
+                    $envelope -> file_location = $public_link;
 
-                // update transaction docs with completed link and set status to signed
-                $documents = $envelope -> documents;
-                if ($documents) {
-                    foreach ($documents as $document) {
-                        $update_transaction_docs = TransactionDocuments::where('id', $document -> transaction_document_id) -> update(['signed' => 'yes', 'file_location_converted' => $public_link]);
+                    // update transaction docs with completed link and set status to signed
+                    $documents = $envelope -> documents;
+                    if ($documents) {
+                        foreach ($documents as $document) {
+                            $update_transaction_docs = TransactionDocuments::where('id', $document -> transaction_document_id) -> update(['signed' => 'yes', 'file_location_converted' => $public_link]);
+                        }
                     }
                 }
+
+                $envelope -> save();
+
             }
 
-            $envelope -> save();
+            return true;
+
+        } else {
+
+            return 'who dis new phone';
 
         }
 
-        return true;
     }
 
     public function oauth_callback(Request $request) {

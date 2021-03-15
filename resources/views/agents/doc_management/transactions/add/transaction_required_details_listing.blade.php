@@ -146,7 +146,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div class="table-responsive text-nowrap">
+                        <div class="table-responsive">
                             <table id="contacts_table" class="table table-hover table-bordered table-sm" width="100%">
                                 <thead>
                                     <tr>

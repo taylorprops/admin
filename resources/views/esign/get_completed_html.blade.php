@@ -4,7 +4,7 @@
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Completed" data-content="These are your completed envelopes. They have been sgined by all parties."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
-<div class="mb-5 table-responsive text-nowrap">
+<div class="mb-5 table-responsive">
 
     <table id="completed_table" class="table table-bordered" width="100%">
 
@@ -37,7 +37,7 @@
                     <td>{!! implode(', ', $recipients) !!}</td>
                     <td>
                         @foreach($documents as $document)
-                            <a href="{{ $document -> file_location }}" target="_blank">{{ shorten_text($document -> file_name, 45) }}</a>
+                            {{ shorten_text($document -> file_name, 45) }}
                             @if(!$loop -> last)<br> @endif
                         @endforeach
                     </td>

@@ -1,4 +1,4 @@
-<div class="table-responsive text-nowrap">
+<div class="table-responsive">
 
     <table class="table table-bordered table-sm earnest-table {{ $tab }}" id="earnest_table_{{ $tab}}" width="100%">
 

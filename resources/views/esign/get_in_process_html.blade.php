@@ -4,7 +4,7 @@
     <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="In Process" data-content="These are your active envelopes. They have been sent for signatures but have not been signed by all parties yet."><i class="fad fa-question-circle ml-2"></i></a>
 </div>
 
-<div class="mb-5 table-responsive text-nowrap">
+<div class="mb-5 table-responsive">
 
     <table id="in_process_table" class="table table-bordered" width="100%">
 

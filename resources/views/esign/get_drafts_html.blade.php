@@ -5,7 +5,7 @@
 </div>
 
 
-<div class="mb-5 table-responsive text-nowrap">
+<div class="mb-5 table-responsive">
 
     <table id="drafts_table" class="table table-bordered" width="100%">
 

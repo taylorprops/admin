@@ -178,8 +178,9 @@ if (document.URL.match(/transaction_details/)) {
         axios.post('/agents/doc_management/transactions/in_process_esign', formData, axios_options)
         .then(function (response) {
 
-            $('.document-div.sent, .document-div.completed').removeClass('sent completed').find('button').prop('disabled', false);
-            $('.sent-info, .completed-info').hide();
+            let orig_sent_count = $('.document-div.sent').length;
+
+            $('.document-div.sent, .document-div.completed').removeClass('sent completed');
 
             response.data.esign_documents.sent.forEach(function(id) {
                 $('.document-div[data-document-id="'+id+'"]').addClass('sent');
@@ -187,6 +188,17 @@ if (document.URL.match(/transaction_details/)) {
             response.data.esign_documents.completed.forEach(function(id) {
                 $('.document-div[data-document-id="'+id+'"]').addClass('completed');
             });
+
+            let new_sent_count = $('.document-div.sent').length;
+
+            // load tab to get new link for signed docs
+            if(orig_sent_count > 0 && new_sent_count < orig_sent_count) {
+                load_tabs('documents');
+            }
+
+            $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
+            $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
+            $('.document-div').not('.sent').not('.completed').find('.sent-info, .completed-info').hide();
 
             $('.document-div.sent').find('button').prop('disabled', true);
             $('.document-div.sent').find('.sent-info').show();
@@ -1341,14 +1353,9 @@ if (document.URL.match(/transaction_details/)) {
                         let sortables = $('.document-div[data-folder-id="' + folder + '"]');
                         reorder_documents(sortables);
 
-                        $('#save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').off('click').on('click', function() {
-                            if($('.checklist-template-form:checked').length > 0) {
-                                $('#save_add_checklist_template_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding Documents...').prop('disabled', true);
-                                save_add_template_documents('checklist');
-                            } else {
-                                $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
-                            }
-                        });
+                        $('#save_add_checklist_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').prop('disabled', false);
+                        $('#save_add_individual_template_button').html('<i class="fal fa-check mr-2"></i> Add Documents').prop('disabled', false);
+
 
                         global_loading_off();
 
