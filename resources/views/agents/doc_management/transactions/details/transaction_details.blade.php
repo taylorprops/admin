@@ -34,7 +34,7 @@
                     @php
                     // agent and admin have different commission tabs
                     $commission = 'commission';
-                    if(stristr(auth() -> user() -> group, 'agent')) {
+                    if(stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
                         $commission = 'agent_commission';
                     }
                     @endphp
@@ -91,7 +91,7 @@
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                @elseif(stristr(auth() -> user() -> group, 'agent'))
+                @elseif(stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator')
                 <div id="agent_commission_tab" class="tab-pane fade">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}

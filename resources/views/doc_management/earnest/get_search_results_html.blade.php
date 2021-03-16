@@ -12,7 +12,7 @@
 
                         <div class="table-responsive-lg font-8">
 
-                            <table class="table table-bordered table-sm">
+                            <table class="table table-hover table-bordered table-sm">
 
                                 <thead>
                                     <tr>
@@ -76,7 +76,7 @@
 
                         <div class="table-responsive-lg font-8">
 
-                            <table class="table table-bordered table-sm">
+                            <table class="table table-hover table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th></th>

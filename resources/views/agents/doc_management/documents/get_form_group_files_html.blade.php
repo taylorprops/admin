@@ -1,4 +1,4 @@
-<table class="table table-bordered table-sm documents-table">
+<table class="table table-hover table-bordered table-sm documents-table">
 
     <thead>
         <th width="120"></th>

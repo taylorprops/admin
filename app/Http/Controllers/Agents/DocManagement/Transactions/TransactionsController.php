@@ -14,7 +14,8 @@ use Yajra\Datatables\Facades\Datatables;
 class TransactionsController extends Controller
 {
     public function transactions_all(Request $request) {
-        $agent_referral = null;
+
+		$agent_referral = null;
         if (stristr(auth() -> user() -> group, 'referral')) {
             $agent_referral = 'yes';
         }
@@ -23,7 +24,8 @@ class TransactionsController extends Controller
     }
 
     public function get_transactions(Request $request) {
-        $type = $request -> type;
+
+		$type = $request -> type;
         $status = $request -> status;
 
         $select_listings = [

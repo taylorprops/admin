@@ -19,7 +19,7 @@
 
         <div class="table-responsive-lg">
 
-            <table class="earnest-checks-table-in table table-bordered table-sm">
+            <table class="earnest-checks-table-in table table-hover table-bordered table-sm">
 
                 <thead>
                     <tr>
@@ -97,7 +97,7 @@
 
         <div class="table-responsive-lg">
 
-            <table class="earnest-checks-table-out table table-bordered table-sm">
+            <table class="earnest-checks-table-out table table-hover table-bordered table-sm">
 
                 <thead>
                     <tr>
@@ -166,7 +166,7 @@
 
         <div class="table-responsive-lg">
 
-            <table class="earnest-checks-table-in-recent table table-bordered table-sm">
+            <table class="earnest-checks-table-in-recent table table-hover table-bordered table-sm">
 
                 <thead>
                     <tr>
@@ -244,7 +244,7 @@
 
         <div class="table-responsive-lg">
 
-            <table class="earnest-checks-table-out-recent table table-bordered table-sm">
+            <table class="earnest-checks-table-out-recent table table-hover table-bordered table-sm">
 
                 <thead>
                     <tr>

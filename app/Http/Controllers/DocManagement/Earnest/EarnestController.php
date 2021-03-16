@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Mail;
 class EarnestController extends Controller
 {
     public function active_earnest(Request $request) {
-        $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts')
+
+		$earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts')
             -> orderBy('resource_order')
             -> get();
 
@@ -26,7 +27,8 @@ class EarnestController extends Controller
     }
 
     public function get_earnest_deposits(Request $request) {
-        $account_id = $request -> account_id;
+
+		$account_id = $request -> account_id;
         $tab = $request -> tab;
 
         $contracts_select = [
@@ -83,7 +85,8 @@ class EarnestController extends Controller
     }
 
     public function balance_earnest(Request $request) {
-        return view('/doc_management/earnest/balance_earnest');
+
+		return view('/doc_management/earnest/balance_earnest');
     }
 
     public function get_earnest_totals(Request $request) {
@@ -113,13 +116,15 @@ class EarnestController extends Controller
     }
 
     public function get_earnest_checks(Request $request) {
-        $accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest.checks','earnest.agent:id,full_name','earnest.property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> orderBy('resource_order') -> get();
+
+		$accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest.checks','earnest.agent:id,full_name','earnest.property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> orderBy('resource_order') -> get();
 
         return view('/doc_management/earnest/get_earnest_checks_html', compact('accounts'));
     }
 
     public function search_earnest_checks(Request $request) {
-        $value = $request -> value;
+
+		$value = $request -> value;
 
         $agent_ids = Agents::where('first_name', 'like', '%'.$value.'%')
             -> orWhere('last_name', 'like', '%'.$value.'%')
@@ -148,7 +153,8 @@ class EarnestController extends Controller
     }
 
     public function email_agents_missing_earnest(Request $request) {
-        $contract_ids = explode(',', $request -> contract_ids);
+
+		$contract_ids = explode(',', $request -> contract_ids);
 
         $subject = $request -> subject;
         $message = $request -> message;

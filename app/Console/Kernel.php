@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\CheckEmailedDocuments::class,
         \App\Console\Commands\DocManagement\ExpireListings::class,
+        \App\Console\Commands\DatabaseBackUp::class,
     ];
 
     /**
@@ -25,6 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+        // get docs emailed for transactions
         $schedule -> command('doc_management:check_emailed_documents') -> everyMinute() -> withoutOverlapping(1);
 
         // clear temp files
@@ -35,6 +38,8 @@ class Kernel extends ConsoleKernel
         // set listings to expired
         $schedule -> command('doc_management:expire_listings') -> dailyAt('00:01');
 
+        // mysql backup locally
+        $schedule -> command('database:backup') -> daily();
     }
 
     /**

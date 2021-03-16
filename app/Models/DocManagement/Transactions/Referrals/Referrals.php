@@ -31,7 +31,7 @@ class Referrals extends Model
     }
 
     public function transaction_coordinator() {
-        return $this -> hasOne(\App\Models\DocManagement\Transactions\Members\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
+        return $this -> hasOne(\App\Models\Employees\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
     }
 
     public function status() {

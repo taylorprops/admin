@@ -1946,6 +1946,66 @@ if (document.URL.match(/contacts/)) {
 
 /***/ }),
 
+/***/ "./resources/js/admin/permissions/permissions.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/admin/permissions/permissions.js ***!
+  \*******************************************************/
+/***/ (() => {
+
+if (document.URL.match(/permissions/)) {
+  $(function () {
+    var options = {
+      selector: '.permission-text-editor',
+      inline: true,
+      menubar: false,
+      statusbar: false,
+      toolbar: 'backcolor forecolor | bold italic underline'
+    };
+    text_editor(options);
+    $('.list-group').sortable({
+      handle: '.list-group-handle',
+      stop: function stop(event, ui) {
+        var items = [];
+        $('.list-group-item').each(function () {
+          var config_id = $(this).data('config-id');
+          var order = $(this).index();
+          items.push({
+            config_id: config_id,
+            order: order
+          });
+        });
+        items = JSON.stringify(items);
+        var formData = new FormData();
+        formData.append('items', items);
+        axios.post('/permissions/reorder_permissions', formData, axios_options).then(function (response) {
+          toastr['success']('Reorder Successfully');
+        })["catch"](function (error) {});
+      }
+    }); //$('.list-group').disableSelection();
+
+    $('.save-config-button').on('click', function () {
+      var type = $(this).data('type');
+      var container = $(this).closest('.permission-container');
+      var config_id = $(this).data('config-id');
+      var title = container.find('.permission-text-editor[data-field="title"]').html();
+      var description = container.find('.permission-text-editor[data-field="description"]').html();
+      var emails = container.find('.emails').val();
+      var formData = new FormData();
+      formData.append('config_id', config_id);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('emails', emails);
+      axios.post('/permissions/save_permissions', formData, axios_options).then(function (response) {
+        toastr['success']('Changes Successfully Saved');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    });
+  });
+}
+
+/***/ }),
+
 /***/ "./resources/js/admin/resources/resources.js":
 /*!***************************************************!*\
   !*** ./resources/js/admin/resources/resources.js ***!
@@ -9961,6 +10021,8 @@ __webpack_require__(/*! ./doc_management/resources/common_fields.js */ "./resour
 
 __webpack_require__(/*! ./admin/resources/resources.js */ "./resources/js/admin/resources/resources.js");
 
+__webpack_require__(/*! ./admin/permissions/permissions.js */ "./resources/js/admin/permissions/permissions.js");
+
 __webpack_require__(/*! ./doc_management/notifications/notifications.js */ "./resources/js/doc_management/notifications/notifications.js");
 
 __webpack_require__(/*! ./doc_management/create/add_fields.js */ "./resources/js/doc_management/create/add_fields.js");
@@ -10033,7 +10095,10 @@ __webpack_require__(/*! ./doc_management/earnest/balance_earnest.js */ "./resour
 __webpack_require__(/*! ./doc_management/earnest/active_earnest.js */ "./resources/js/doc_management/earnest/active_earnest.js"); // documents
 
 
-__webpack_require__(/*! ./agents/doc_management/documents/documents.js */ "./resources/js/agents/doc_management/documents/documents.js");
+__webpack_require__(/*! ./agents/doc_management/documents/documents.js */ "./resources/js/agents/doc_management/documents/documents.js"); // employees
+
+
+__webpack_require__(/*! ./employees/employees.js */ "./resources/js/employees/employees.js");
 
 /***/ }),
 
@@ -14001,6 +14066,75 @@ if (document.URL.match(/document_review/)) {
       }, 1500);
     })["catch"](function (error) {});
   };
+}
+
+/***/ }),
+
+/***/ "./resources/js/employees/employees.js":
+/*!*********************************************!*\
+  !*** ./resources/js/employees/employees.js ***!
+  \*********************************************/
+/***/ (() => {
+
+if (document.URL.match(/employees/)) {
+  var get_employees = function get_employees(type, active) {
+    axios.get('/employees/get_employees', {
+      params: {
+        type: type,
+        active: active
+      }
+    }).then(function (response) {
+      $('#' + type + '_div').html(response.data);
+      data_table(25, $('.employees-table'), [1, 'asc'], [0, 6], [], true, true, true, true, true);
+    })["catch"](function (error) {});
+  };
+
+  var edit_employee = function edit_employee(ele) {
+    $('#edit_employee_modal').find('input, select').val('');
+    $('#edit_employee_modal').modal('show');
+
+    if (ele) {
+      $('#edit_employee_modal_title').text('Edit Employee');
+      $.each(ele.data(), function (index, value) {
+        $('#' + index).val(value);
+      });
+      $('.edit-col').show();
+    } else {
+      $('#edit_employee_modal_title').text('Add Employee');
+      $('.edit-col').hide();
+    }
+
+    $('#save_edit_employee_button').off('click').on('click', save_employee);
+  };
+
+  var save_employee = function save_employee() {
+    var form = $('#edit_employee_form');
+    var validate = validate_form(form);
+
+    if (validate == 'yes') {
+      var formData = new FormData(form[0]);
+      axios.post('/employees/save_employee', formData, axios_options).then(function (response) {
+        $('#edit_employee_modal').modal('hide');
+        toastr['success']('Employee Successfully Saved');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  };
+
+  $(function () {
+    get_employees('in_house', 'yes');
+    get_employees('transaction_coordinators', 'yes');
+    $(document).on('click', '#add_employee_button', function () {
+      edit_employee(null);
+    });
+    $(document).on('click', '.edit-employee-button', function () {
+      edit_employee($(this));
+    });
+    $('#show_active').on('change', function () {
+      get_employees($('#employee_tabs .nav-link.active').data('type'), $(this).val());
+    });
+  });
 }
 
 /***/ }),

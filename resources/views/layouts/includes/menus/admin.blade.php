@@ -30,6 +30,10 @@
             </ul>
         </li>
 
+        <li>
+            <a href="/documents" class="dropdown-item"> Documents</a>
+        </li>
+
         <li class="nav-item dropdown">
             <a class="dropdown-item dropdown-toggle" href="javascript: void(0)" id="management_dropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -49,9 +53,7 @@
                         <li><a href="/admin/resources/resources_admin" class="dropdown-item"> Admin Resources</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="/doc_management/notifications" class="dropdown-item"> Notification Settings</a>
-                </li>
+
                 <li class="nav-item">
                     <a href="/doc_management/create/upload/files" class="dropdown-item"> Files</a>
                 </li>
@@ -67,9 +69,7 @@
 
 </li>
 
-<li class="nav-item mx-2">
-    <a href="/documents" class="nav-link"> Documents</a>
-</li>
+
 
 <li class="nav-item dropdown mx-2">
 
@@ -109,4 +109,38 @@
 
 <li class="nav-item mx-2">
     <a href="/esign" class="nav-link"> E-Sign</a>
+</li>
+
+
+
+
+
+<li class="nav-item dropdown mx-2">
+
+    <a class="nav-link dropdown-toggle" href="javascript: void(0)" id="settings_dropdown" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Settings
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="settings_dropdown">
+
+        @if(stristr(config('global_db.permission_edit_employees'), auth() -> user() -> email))
+        <li>
+            <a href="/employees" class="dropdown-item"> Employees</a>
+        </li>
+        @endif
+
+        @if(stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email) || auth() -> user() -> super_user == 'yes')
+        <li>
+            <a href="/permissions/permissions" class="dropdown-item">Permissions</a>
+        </li>
+        @endif
+
+        @if(stristr(config('global_db.permission_edit_notifications'), auth() -> user() -> email))
+        <li class="nav-item">
+            <a href="/doc_management/notifications" class="dropdown-item"> Notification Settings</a>
+        </li>
+        @endif
+
+    </ul>
+
 </li>

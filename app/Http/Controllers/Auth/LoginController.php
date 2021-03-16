@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\Employees\Agents;
-use App\Models\Employees\InHouse;
 use Auth;
 use Cookie;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Models\Employees\Agents;
+use App\Models\Employees\InHouse;
+use App\Http\Controllers\Controller;
+use App\Models\Employees\TransactionCoordinators;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -62,14 +63,29 @@ class LoginController extends Controller
             }
         } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
         } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+
+            session(['header_logo_src' => '/images/logo/logos.png']);
+            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+
+            $user_id = auth() -> user() -> user_id;
+
+            // get admin details and add to session
+            $transaction_coordinator_details = TransactionCoordinators::whereId($user_id) -> first();
+            session(['transaction_coordinator_details' => $transaction_coordinator_details]);
+
         }
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
+
         // redirect to page requested or dashboard
         if ($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === false && $path != '/' && ! preg_match('/dashboard/', $path)) {
             $this -> redirectTo = $this -> previous_url;
         } else {
-            $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
+            if(auth() -> user() -> group == 'transaction_coordinator') {
+                $this -> redirectTo = 'dashboard_agent';
+            } else {
+                $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
+            }
         }
 
         $maxlifetime = ini_get('session.gc_maxlifetime');
@@ -85,7 +101,8 @@ class LoginController extends Controller
      * @return void
      */
     public function __construct(Request $request) {
-        $this -> previous_url = $request -> previous_url;
+
+		$this -> previous_url = $request -> previous_url;
         $this -> middleware('guest') -> except(['logout', 'login']);
     }
 }

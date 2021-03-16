@@ -21,7 +21,8 @@ use mikehaertl\wkhtmlto\Pdf;
 class FieldsController extends Controller
 {
     public function delete_page(Request $request) {
-        $file_id = $request -> file_id;
+
+		$file_id = $request -> file_id;
         $page = $request -> page;
 
         $upload = Upload::where('file_id', $file_id) -> first();
@@ -44,7 +45,8 @@ class FieldsController extends Controller
     }
 
     public function get_edit_properties_html(Request $request) {
-        $file_id = $request -> file_id;
+
+		$file_id = $request -> file_id;
         $field_id = $request -> field_id;
         $field_category = $request -> field_category;
         $group_id = $request -> group_id;
@@ -104,18 +106,21 @@ class FieldsController extends Controller
     }
 
     public function get_custom_names(Request $request) {
-        $val = $request -> val;
+
+		$val = $request -> val;
         $custom_names = Fields::select('field_name_display') -> where('field_name_display', 'like', '%'.$val.'%') -> where('field_name_type', 'custom') -> groupBy('field_name_display') -> orderBy('field_name_display') -> get();
 
         return compact('custom_names');
     }
 
     /* public function get_common_fields(Request $request) {
-        return CommonFields::getCommonFields();
+
+		return CommonFields::getCommonFields();
     } */
 
     public function add_fields(Request $request) {
-        $file = Upload::whereFileId($request -> file_id) -> first();
+
+		$file = Upload::whereFileId($request -> file_id) -> first();
         $file_name = $file -> file_name_display;
         $published = $file -> published;
         $images = UploadImages::where('file_id', $request -> file_id) -> orderBy('page_number') -> get();
@@ -128,7 +133,8 @@ class FieldsController extends Controller
     }
 
     public function save_add_fields(Request $request) {
-        $fields = json_decode($request['data'], true);
+
+		$fields = json_decode($request['data'], true);
 
         $file_id = $fields[0]['file_id'];
 
@@ -180,8 +186,10 @@ class FieldsController extends Controller
 
 
     public function save_pdf_client_side(Request $request) {
-        if ($request) {
-            $file_id = $request['file_id'];
+
+		if ($request) {
+
+		$file_id = $request['file_id'];
 
             $upload_dir = 'doc_management/uploads/'.$file_id;
             // create or clear out directories if they already exist

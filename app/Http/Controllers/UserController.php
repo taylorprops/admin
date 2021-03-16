@@ -14,7 +14,7 @@ class UserController extends Controller
 
     /* public function dashboard(Request $request) {
 
-        if (Auth::check()) {
+		if (Auth::check()) {
 
             if (auth() -> user() -> group == 'admin') {
 

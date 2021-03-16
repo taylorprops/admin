@@ -13,7 +13,7 @@ class ContactsController extends Controller {
 
     public function contacts(Request $request) {
 
-        $states = LocationData::AllStates();
+		$states = LocationData::AllStates();
 
         return view('/CRM/contacts', compact('states'));
 
@@ -21,7 +21,7 @@ class ContactsController extends Controller {
 
     public function get_contacts(Request $request) {
 
-        $contacts = CRMContacts::where('contact_active', 'yes') -> with('members') -> get();
+		$contacts = CRMContacts::where('contact_active', 'yes') -> with('members') -> get();
 
         return view('/CRM/get_contacts_html', compact('contacts'));
 
@@ -29,7 +29,7 @@ class ContactsController extends Controller {
 
     public function delete(Request $request) {
 
-        $contact_ids = explode(',', $request -> contact_ids);
+		$contact_ids = explode(',', $request -> contact_ids);
         $delete_contacts = CRMContacts::whereIn('id', $contact_ids) -> update(['contact_active' => 'no']);
 
         return response() -> json(['status' => 'success']);
@@ -38,7 +38,7 @@ class ContactsController extends Controller {
 
     public function save(Request $request) {
 
-        $contact = CRMContacts::firstOrCreate([
+		$contact = CRMContacts::firstOrCreate([
             'id' => $request -> contact_id
         ]);
 
@@ -53,7 +53,7 @@ class ContactsController extends Controller {
 
     public function import_from_excel(Request $request) {
 
-        $Agent_ID = auth() -> user() -> user_id;
+		$Agent_ID = auth() -> user() -> user_id;
         $import = Excel::import(new ContactsImport($Agent_ID), request() -> file('contacts_file'));
         dump($import);
 

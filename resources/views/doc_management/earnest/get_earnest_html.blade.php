@@ -1,6 +1,6 @@
 <div class="table-responsive">
 
-    <table class="table table-bordered table-sm earnest-table {{ $tab }}" id="earnest_table_{{ $tab}}" width="100%">
+    <table class="table table-hover table-bordered table-sm earnest-table {{ $tab }}" id="earnest_table_{{ $tab}}" width="100%">
 
         <thead>
             <tr>
@@ -98,10 +98,14 @@
 
                                     <div class="p-2">
 
-                                        <div class="d-flex justify-content-end">
+                                        <div class="d-flex justify-content-between align-items-center">
+
+                                            <div class="font-10">{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</div>
+
                                             <a class="btn btn-danger" data-toggle="collapse" href="#notes_section_{{ $contract -> Contract_ID }}" role="button" aria-expanded="false" aria-controls="notes_section_{{ $contract -> Contract_ID }}">
                                                 <i class="fa fa-times fa-lg"></i>
                                             </a>
+
                                         </div>
 
                                         <div class="px-3 pb-3 border-bottom">

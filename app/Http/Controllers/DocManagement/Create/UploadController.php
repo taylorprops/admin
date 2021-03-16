@@ -22,7 +22,8 @@ use thiagoalessio\TesseractOCR\TesseractOCR;
 class UploadController extends Controller
 {
     public function add_form_get_checklist_items(Request $request) {
-        $file_id = $request -> file_id;
+
+		$file_id = $request -> file_id;
         // get form details just to display
         $uploaded_file = Upload::where('file_id', $file_id) -> first();
         $checklist_id = $request -> checklist_id;
@@ -44,14 +45,16 @@ class UploadController extends Controller
     }
 
     public function activate_upload(Request $request) {
-        $upload_id = $request -> upload_id;
+
+		$upload_id = $request -> upload_id;
         $upload = Upload::where('file_id', $upload_id) -> first();
         $upload -> active = $request -> active;
         $upload -> save();
     }
 
     public function delete_upload(Request $request) {
-        $upload_id = $request -> upload_id;
+
+		$upload_id = $request -> upload_id;
         $upload = Upload::where('file_id', $upload_id) -> delete();
         $upload = Fields::where('file_id', $upload_id) -> delete();
         $upload = FieldInputs::where('file_id', $upload_id) -> delete();
@@ -61,7 +64,8 @@ class UploadController extends Controller
     }
 
     public function duplicate_upload(Request $request) {
-        $upload_id = $request -> upload_id;
+
+		$upload_id = $request -> upload_id;
 
         // insert copy to get new id to use to create folder. update file location after
         $upload = Upload::find($upload_id);
@@ -111,7 +115,8 @@ class UploadController extends Controller
     }
 
     public function get_add_to_checklists_details(Request $request) {
-        $file_id = $request -> form_id;
+
+		$file_id = $request -> form_id;
         // get form details just to display
         $uploaded_file = Upload::where('file_id', $file_id) -> first();
         // to run functions from ResourceItems
@@ -145,7 +150,8 @@ class UploadController extends Controller
     }
 
     public function get_form_group_files(Request $request) {
-        $form_group_id = $request -> form_group_id;
+
+		$form_group_id = $request -> form_group_id;
         $state = $request -> state;
         $order = $request -> order ?? null;
 
@@ -167,7 +173,8 @@ class UploadController extends Controller
     }
 
     public function get_manage_upload_details(Request $request) {
-        $file_id = $request -> form_id;
+
+		$file_id = $request -> form_id;
         // get form details just to display
         $uploaded_file = Upload::where('file_id', $file_id) -> first();
         // all forms to select replacement from
@@ -199,14 +206,16 @@ class UploadController extends Controller
     }
 
     public function get_upload_details(Request $request) {
-        $upload_id = $request -> upload_id;
+
+		$upload_id = $request -> upload_id;
         $upload = Upload::where('file_id', $upload_id) -> first();
 
         return $upload;
     }
 
     public function get_uploaded_files(Request $request) {
-        $form_group_id = $request -> form_group_id ?: null;
+
+		$form_group_id = $request -> form_group_id ?: null;
         //$files = Upload::groupBy('file_id', 'file_name_orig') -> get();
         $upload = new Upload();
         $files = $upload -> orderBy('file_name_display') -> get();
@@ -224,14 +233,16 @@ class UploadController extends Controller
     }
 
     public function publish_upload(Request $request) {
-        $upload_id = $request -> upload_id;
+
+		$upload_id = $request -> upload_id;
         $upload = Upload::where('file_id', $upload_id) -> first();
         $upload -> published = 'yes';
         $upload -> save();
     }
 
     public function remove_upload(Request $request) {
-        $form_id = $request -> form_id;
+
+		$form_id = $request -> form_id;
         $checklist_items_model = new ChecklistsItems();
 
         $checklist_items = $checklist_items_model -> where('checklist_form_id', $form_id) -> get();
@@ -244,7 +255,8 @@ class UploadController extends Controller
     }
 
     public function replace_upload(Request $request) {
-        $old_id = $request -> old_form_id;
+
+		$old_id = $request -> old_form_id;
         $new_id = $request -> new_form_id;
 
         ChecklistsItems::where('checklist_form_id', $old_id)
@@ -252,7 +264,8 @@ class UploadController extends Controller
     }
 
     public function save_add_non_form(Request $request) {
-        $file_name_display = $request -> no_form_file_name_display;
+
+		$file_name_display = $request -> no_form_file_name_display;
         $state = $request -> no_form_state;
         $helper_text = $request -> no_form_helper_text;
         $form_group_id = $request -> no_form_form_group_id;
@@ -274,7 +287,8 @@ class UploadController extends Controller
     }
 
     public function save_add_to_checklists(Request $request) {
-        $file_id = $request -> file_id;
+
+		$file_id = $request -> file_id;
         $checklists = json_decode($request -> checklists);
         $checklists = $checklists -> checklist;
         $required = $request -> required;
@@ -314,7 +328,8 @@ class UploadController extends Controller
     }
 
     public function save_file_edit(Request $request) {
-        $file_id = $request -> edit_file_id;
+
+		$file_id = $request -> edit_file_id;
         $form_group_id = $request -> edit_form_group_id;
         $checklist_group_id = $request -> edit_checklist_group_id;
         $file_name_display = $request -> edit_file_name_display;
@@ -337,7 +352,8 @@ class UploadController extends Controller
     }
 
     public function get_upload_text(Request $request) {
-        $upload = $request -> file('file_upload');
+
+		$upload = $request -> file('file_upload');
 
         $new_file_name = str_replace('.pdf', '', $upload -> getClientOriginalName());
         $new_file_name_pdf = date('YmdHis').'_'.sanitize($new_file_name).'.pdf';
@@ -394,7 +410,8 @@ class UploadController extends Controller
     }
 
     public function upload_file(Request $request) {
-        $file = $request -> file('file_upload');
+
+		$file = $request -> file('file_upload');
 
         if ($file) {
             $page_width = get_width_height($file)['width'];

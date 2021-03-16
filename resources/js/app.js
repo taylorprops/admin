@@ -23,6 +23,7 @@ require('./dashboard/dashboard_agent.js');
 require('./doc_management/resources/resources.js');
 require('./doc_management/resources/common_fields.js');
 require('./admin/resources/resources.js');
+require('./admin/permissions/permissions.js');
 require('./doc_management/notifications/notifications.js');
 
 require('./doc_management/create/add_fields.js');
@@ -76,6 +77,9 @@ require('./doc_management/earnest/active_earnest.js');
 
 // documents
 require('./agents/doc_management/documents/documents.js');
+
+// employees
+require('./employees/employees.js');
 
 
 

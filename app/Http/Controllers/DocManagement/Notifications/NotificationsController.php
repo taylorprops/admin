@@ -11,8 +11,8 @@ class NotificationsController extends Controller {
 
     public function notifications(Request $request) {
 
-        $categories = Config::orderBy('category') -> groupBy('category') -> pluck('category');
-        $config_options = Config::orderBy('category') -> orderBy('order') -> get();
+		$categories = Config::where('config_role', 'notification_documents') -> orderBy('category') -> groupBy('category') -> pluck('category');
+        $config_options = Config::where('config_role', 'notification_documents') -> orderBy('category') -> orderBy('order') -> get();
         $in_house_employees = InHouse::orderBy('emp_type') -> get();
 
         return view('doc_management/notifications/notifications', compact('categories', 'config_options', 'in_house_employees'));
@@ -21,7 +21,7 @@ class NotificationsController extends Controller {
 
     public function reorder_notifications(Request $request) {
 
-        $items = json_decode($request -> items, true);
+		$items = json_decode($request -> items, true);
 
         foreach ($items as $item) {
             $item = Config::find($item['config_id']) -> update(['order' => $item['order']]);
@@ -33,7 +33,7 @@ class NotificationsController extends Controller {
 
     public function save_notifications(Request $request) {
 
-        $config_id = $request -> config_id;
+		$config_id = $request -> config_id;
         $title = $request -> title;
         $description = $request -> description;
         $emails = $request -> emails ?? null;

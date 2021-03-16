@@ -19,7 +19,14 @@
 
                 @if(auth() -> user())
 
-                @include('layouts.includes/menus/'.auth() -> user() -> group)
+                @php
+                $group = auth() -> user() -> group;
+                if(auth() -> user() -> group == 'transaction_coordinator') {
+                    $group = 'agent';
+                }
+                @endphp
+
+                @include('layouts.includes/menus/'.$group)
 
                 @endif
 

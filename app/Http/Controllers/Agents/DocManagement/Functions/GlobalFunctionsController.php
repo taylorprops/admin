@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class GlobalFunctionsController extends Controller
 {
     public function get_location_details(Request $request) {
-        $zip = $request -> zip;
+
+		$zip = $request -> zip;
         $location_details = LocationData::select('city', 'state', 'county') -> where('zip', $zip) -> first();
         if ($location_details) {
             return $location_details -> toJson();

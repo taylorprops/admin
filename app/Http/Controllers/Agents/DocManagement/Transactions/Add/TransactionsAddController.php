@@ -35,7 +35,9 @@ class TransactionsAddController extends Controller {
     use InHouseNotificationEmail;
 
     public function add_transaction(Request $request) {
-        $transaction_type = $request -> type;
+
+		$transaction_type = $request -> type;
+        session(['property_details' => '']);
 
         $agents = Agents::where('active', 'yes');
 
@@ -57,7 +59,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_add_details_existing(Request $request) {
-        $transaction_type = strtolower($request -> transaction_type);
+
+		$transaction_type = strtolower($request -> transaction_type);
         $bright_type = $request -> bright_type;
         $bright_id = $request -> bright_id;
         $state = $request -> state;
@@ -237,7 +240,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_add_details_referral(Request $request) {
-        $status = ResourceItems::GetResourceID('Active', 'referral_status');
+
+		$status = ResourceItems::GetResourceID('Active', 'referral_status');
         $property_details = [
             'FullStreetAddress' => $request -> street_number.' '.ucwords(strtolower($request -> street_name)).' '.$request -> street_dir.' '.$request -> unit_number,
             'StreetNumber' => $request -> street_number,
@@ -287,7 +291,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_required_details_referral(Request $request) {
-        $Referral_ID = $request -> Referral_ID;
+
+		$Referral_ID = $request -> Referral_ID;
         $referral = Referrals::find($Referral_ID);
         $states = LocationData::AllStates();
 
@@ -295,7 +300,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_save_details_referral(Request $request) {
-        $Referral_ID = $request -> Referral_ID;
+
+		$Referral_ID = $request -> Referral_ID;
         $Agent_ID = $request -> Agent_ID;
         $data = $request -> all();
         $referral = Referrals::find($Referral_ID);
@@ -331,7 +337,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_add_details_new(Request $request) {
-        $transaction_type = $request -> transaction_type;
+
+		$transaction_type = $request -> transaction_type;
         $Agent_ID = $request -> Agent_ID;
         $agent = Agents::find($Agent_ID);
         $state = $request -> state;
@@ -391,10 +398,13 @@ class TransactionsAddController extends Controller {
     }
 
     public function transaction_required_details(Request $request) {
-        $transaction_type = $request -> transaction_type;
+
+		$transaction_type = $request -> transaction_type;
         $id = $request -> id;
 
+
         $property = Listings::GetPropertyDetails($transaction_type, $id);
+        $Agent_ID = $property -> Agent_ID;
 
         $office = null;
         if ($property -> ListOfficeMlsId != '') {
@@ -411,8 +421,8 @@ class TransactionsAddController extends Controller {
         $statuses = ResourceItems::where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
         $contacts = [];
-        if (stristr(auth() -> user() -> group, 'agent')) {
-            $contacts = CRMContacts::where('Agent_ID', auth() -> user() -> user_id) -> get();
+        if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
+            $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
         } elseif (auth() -> user() -> group == 'admin') {
             $contacts = CRMContacts::get();
         }
@@ -430,7 +440,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function save_add_transaction(Request $request) {
-        $property_details = (object) session('property_details');
+
+		$property_details = (object) session('property_details');
         $transaction_type = $request -> transaction_type;
         unset($property_details -> transaction_type);
         $resource_items = new ResourceItems();
@@ -475,6 +486,10 @@ class TransactionsAddController extends Controller {
 
         foreach ($property_details as $key => $val) {
             $new_transaction -> $key = $val ?? null;
+        }
+
+        if (auth() -> user() -> group == 'transaction_coordinator') {
+            $new_transaction -> TransactionCoordinator_ID = auth() -> user() -> user_id;
         }
 
         $new_transaction -> save();
@@ -569,7 +584,7 @@ class TransactionsAddController extends Controller {
 
     public function save_transaction_required_details(Request $request) {
 
-        $Listing_ID = $request -> Listing_ID ?? null;
+		$Listing_ID = $request -> Listing_ID ?? null;
         $Contract_ID = $request -> Contract_ID ?? null;
         $Agent_ID = $request -> Agent_ID;
         $transaction_type = $request -> transaction_type;
@@ -993,7 +1008,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function get_property_info(Request $request) {
-        $street_number = $street_name = $unit = $zip = $tax_id = $state = '';
+
+		$street_number = $street_name = $unit = $zip = $tax_id = $state = '';
 
         if ($request -> mls) {
             $ListingId = $request -> mls;
@@ -1264,7 +1280,8 @@ class TransactionsAddController extends Controller {
     }
 
     public function update_county_select(Request $request) {
-        $counties = LocationData::select('county') -> where('state', $request -> state) -> groupBy('county') -> orderBy('county') -> get() -> toJson();
+
+		$counties = LocationData::select('county') -> where('state', $request -> state) -> groupBy('county') -> orderBy('county') -> get() -> toJson();
 
         return $counties;
     }

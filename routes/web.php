@@ -8,10 +8,12 @@ use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Esign\EsignController;
 use App\Http\Controllers\CRM\ContactsController;
 use App\Http\Controllers\Search\SearchController;
+use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Dashboard\DashboardAdminController;
 use App\Http\Controllers\Dashboard\DashboardAgentController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
 use App\Http\Controllers\DocManagement\Create\UploadController;
+use App\Http\Controllers\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\DocManagement\Earnest\EarnestController;
 use App\Http\Controllers\Dashboard\DashboardAgentReferralController;
 use App\Http\Controllers\DocManagement\Resources\ResourcesController;
@@ -145,6 +147,15 @@ Route::middleware(['admin']) -> group(function () {
     /* Reorder Resources */
     Route::post('/admin/resources/reorder', [ResourceItemsAdminController::class, 'resources_reorder']);
 
+    /* Permissions */
+    // get permissions
+    Route::get('/permissions/permissions', [PermissionsController::class, 'permissions']);
+    // save permissions
+    Route::post('/permissions/save_permissions', [PermissionsController::class, 'save_permissions']);
+    // reorder permissions
+    Route::post('/permissions/reorder_permissions', [NotificationsController::class, 'reorder_permissions']);
+
+
     /* Notifications */
     // get notifications
     Route::get('/doc_management/notifications', [NotificationsController::class, 'notifications']);
@@ -264,6 +275,12 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/agents/doc_management/transactions/remove_checklist_item', [TransactionsDetailsController::class, 'remove_checklist_item']);
     // get email checklist html
     Route::get('/agents/doc_management/transactions/get_email_checklist_html', [TransactionsDetailsController::class, 'get_email_checklist_html']);
+
+
+    /************ Employees ************/
+    Route::get('/employees', [EmployeesController::class, 'employees']);
+    Route::get('/employees/get_employees', [EmployeesController::class, 'get_employees']);
+    Route::post('/employees/save_employee', [EmployeesController::class, 'save_employee']);
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {

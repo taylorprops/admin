@@ -7,7 +7,7 @@
             </div>
             <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Commission Checks" data-content="These are checks for commissions paid on Sales Contracts, Lease Agreements and Referral Agreements.<br><br>Checks in this list are waiting for a property to be added to the system. Once the property has been added you can easily import this check by adding a check in the Commission tab."><i class="fad fa-question-circle ml-2"></i></a>
         </div>
-        <table class="table table-bordered table-sm checks-queue-table">
+        <table class="table table-hover table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
                     <th class="wpx-80 text-primary">Edit</th>
@@ -67,7 +67,7 @@
             </div>
             <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Other Checks" data-content="These are checks for anything not involving commission for a property that was for sale or lease.<br><br>Once the Agent has been added an option to open the Commission Breakdown will be available.<br><br>Once the checks out have been written and the remainder of this check is $0, it will no longer appear in this list."><i class="fad fa-question-circle ml-2"></i></a>
         </div>
-        <table class="table table-bordered table-sm checks-queue-table">
+        <table class="table table-hover table-bordered table-sm checks-queue-table">
             <thead>
                 <tr>
                     <th class="wpx-100 text-primary">View</th>

@@ -24,7 +24,8 @@ use Illuminate\Http\Request;
 class DocumentReviewController extends Controller
 {
     public function document_review(Request $request) {
-        $Contract_ID = $request -> Contract_ID ?? null;
+
+		$Contract_ID = $request -> Contract_ID ?? null;
 
         $cancel_request_ids = Upload::PendingReleases();
         $cancel_requests = Contracts::whereIn('Contract_ID', $cancel_request_ids) -> get();
@@ -58,14 +59,16 @@ class DocumentReviewController extends Controller
     }
 
     public function save_earnest_and_title_details(Request $request) {
-        dd($request -> all());
+
+		dd($request -> all());
         $Contract_ID = $request -> Contract_ID;
         $EarnestHeldBy = $request -> EarnestHeldBy;
         $UsingHeritage = $request -> UsingHeritage;
     }
 
     public function get_checklist(Request $request) {
-        $transaction_type = $request -> type;
+
+		$transaction_type = $request -> type;
         $id = $request -> id;
 
         $checklist_types = ['listing', 'both'];
@@ -105,7 +108,8 @@ class DocumentReviewController extends Controller
     }
 
     public function get_documents(Request $request) {
-        $checklist_item_id = $request -> checklist_item_id;
+
+		$checklist_item_id = $request -> checklist_item_id;
         $checklist_item_name = $request -> checklist_item_name;
 
         $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
@@ -120,7 +124,8 @@ class DocumentReviewController extends Controller
     }
 
     public function get_details(Request $request) {
-        $transaction_type = $request -> type;
+
+		$transaction_type = $request -> type;
         $id = $request -> id;
 
         $select_listing = ['FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode', 'SaleRent', 'Agent_ID', 'CoAgent_ID', 'PropertySubType', 'Status', 'TransactionCoordinator_ID', 'Team_ID', 'ListPrice', 'ListingId', 'MLSListDate', 'ExpirationDate', 'LeaseAmount', 'YearBuilt', 'PropertyType'];
@@ -169,7 +174,8 @@ class DocumentReviewController extends Controller
     }
 
     public function get_notes(Request $request) {
-        $checklist_item_id = $request -> checklist_item_id;
+
+		$checklist_item_id = $request -> checklist_item_id;
         $Agent_ID = $request -> Agent_ID;
 
         $transaction_checklist_item_notes = TransactionChecklistItemsNotes::where('checklist_item_id', $checklist_item_id) -> with('user') -> orderBy('created_at', 'DESC') -> get();
@@ -182,7 +188,8 @@ class DocumentReviewController extends Controller
     }
 
     public function delete_note(Request $request) {
-        $note_id = $request -> note_id;
+
+		$note_id = $request -> note_id;
         $note = TransactionChecklistItemsNotes::find($note_id) -> delete();
     }
 }

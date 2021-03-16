@@ -1,6 +1,6 @@
 <div class="table-responsive">
 
-    <table class="table table-bordered table-sm" style="width: 100%;" id="contracts_table">
+    <table class="table table-hover table-bordered table-sm" style="width: 100%;" id="contracts_table">
         <thead>
             <th width="100"></th>
             <th>Status</th>

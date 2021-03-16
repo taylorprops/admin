@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 class ChecklistsController extends Controller
 {
     public function duplicate_checklist(Request $request) {
-        $checklist_id = $request -> checklist_id;
+
+		$checklist_id = $request -> checklist_id;
         $checklist = Checklists::where('id', $checklist_id) -> first();
         $duplicate = $checklist -> replicate();
         $duplicate -> save();
@@ -28,7 +29,8 @@ class ChecklistsController extends Controller
     }
 
     public function save_copy_checklists(Request $request) {
-        $copy_from_location_id = $request -> location_id;
+
+		$copy_from_location_id = $request -> location_id;
         $checklist_type = $request -> checklist_type;
         $copy_to_checklist_location_ids = explode(',', $request -> checklist_location_ids);
         $checklists_to_copy_ids = explode(',', $request -> checklists_to_copy_ids);
@@ -70,7 +72,8 @@ class ChecklistsController extends Controller
     }
 
     public function get_copy_checklists(Request $request) {
-        $location_id = $request -> location_id;
+
+		$location_id = $request -> location_id;
         $checklist_type = $request -> checklist_type;
 
         $resource_items = new ResourceItems();
@@ -84,13 +87,15 @@ class ChecklistsController extends Controller
     }
 
     public function get_checklist_item_details(Request $request) {
-        $details = ChecklistsItems::where('checklist_form_id', $request -> form_id) -> first();
+
+		$details = ChecklistsItems::where('checklist_form_id', $request -> form_id) -> first();
 
         return $details ?? null;
     }
 
     public function get_checklist_items(Request $request) {
-        $checklist_id = $request -> checklist_id;
+
+		$checklist_id = $request -> checklist_id;
 
         $files = new Upload();
         $resource_items = new ResourceItems();
@@ -121,7 +126,8 @@ class ChecklistsController extends Controller
     }
 
     public function get_checklists(Request $request) {
-        $checklist_location_id = $request -> checklist_location_id;
+
+		$checklist_location_id = $request -> checklist_location_id;
         $checklist_type = $request -> checklist_type;
 
         $checklists_model = new Checklists();
@@ -139,7 +145,8 @@ class ChecklistsController extends Controller
     }
 
     public function add_checklist_items(Request $request) {
-        $checklist_id = $request -> checklist_id;
+
+		$checklist_id = $request -> checklist_id;
         // delete current checklist items
         $delete_checklist_items = ChecklistsItems::where('checklist_id', $checklist_id) -> delete();
 
@@ -168,7 +175,8 @@ class ChecklistsController extends Controller
     }
 
     public function add_checklist_referral(Request $request) {
-        $checklist = new Checklists();
+
+		$checklist = new Checklists();
         $checklist -> checklist_location_id = $request -> checklist_location_id;
         $checklist -> checklist_type = $request -> checklist_type;
         $checklist -> checklist_state = $request -> checklist_state;
@@ -177,7 +185,8 @@ class ChecklistsController extends Controller
     }
 
     public function add_checklist(Request $request) {
-        $checklist_property_sub_type_id = 0;
+
+		$checklist_property_sub_type_id = 0;
         if ($request -> checklist_property_sub_type_id) {
             $checklist_property_sub_type_id = $request -> checklist_property_sub_type_id;
         }
@@ -194,7 +203,8 @@ class ChecklistsController extends Controller
     }
 
     public function edit_checklist(Request $request) {
-        $checklist = Checklists::where('id', $request -> checklist_id) -> first();
+
+		$checklist = Checklists::where('id', $request -> checklist_id) -> first();
         $checklist -> checklist_location_id = $request -> checklist_location_id;
         $checklist -> checklist_represent = $request -> checklist_represent;
         $checklist -> checklist_type = $request -> checklist_type;
@@ -206,7 +216,8 @@ class ChecklistsController extends Controller
     }
 
     public function delete_checklist(Request $request) {
-        $checklist_id = $request -> checklist_id;
+
+		$checklist_id = $request -> checklist_id;
         if ($checklist_id) {
             $checklist = Checklists::where('id', $checklist_id) -> delete();
             $checklist_items = ChecklistsItems::where('checklist_id', $checklist_id) -> delete();
@@ -214,7 +225,8 @@ class ChecklistsController extends Controller
     }
 
     public function reorder_checklists(Request $request) {
-        $data = json_decode($request['data'], true);
+
+		$data = json_decode($request['data'], true);
         $data = $data['checklist'];
 
         foreach ($data as $item) {

@@ -49,7 +49,7 @@
 
                                 <div class="collapse" id="deleted_checks_div">
 
-                                    <table class="table table-bordered table-sm" id="deleted_checks_table">
+                                    <table class="table table-hover table-bordered table-sm" id="deleted_checks_table">
                                         <thead>
                                             <tr>
                                                 <th class="text-primary">View</th>

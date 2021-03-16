@@ -6,7 +6,7 @@
 
 <div class="mb-5 table-responsive">
 
-    <table id="in_process_table" class="table table-bordered" width="100%">
+    <table id="in_process_table" class="table table-hover table-bordered" width="100%">
 
         <thead>
             <tr>

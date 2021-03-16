@@ -25,7 +25,8 @@ class CommissionController extends Controller
     }
 
     public function get_commissions_pending(Request $request) {
-        $select = ['id', 'commission_type', 'Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'total_left'];
+
+		$select = ['id', 'commission_type', 'Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'total_left'];
         $commission_contracts = Commission::select($select)
             -> where(function ($query) {
                 $query -> where('total_left', '>', '0')
@@ -49,7 +50,8 @@ class CommissionController extends Controller
     }
 
     public function get_checks_queue(Request $request) {
-        $checks = CommissionChecksInQueue::whereNull('Commission_ID')
+
+		$checks = CommissionChecksInQueue::whereNull('Commission_ID')
             -> where('exported', 'no')
             -> with('agent:id,first_name,last_name,full_name')
             -> orderBy('created_at', 'DESC')
@@ -69,7 +71,8 @@ class CommissionController extends Controller
     }
 
     public function search_deleted_checks(Request $request) {
-        $val = $request -> val;
+
+		$val = $request -> val;
 
         $select_cols = ['id', 'agent_name', 'date_received', 'check_date', 'check_number', 'check_amount', 'client_name', 'street', 'city', 'state', 'zip', 'file_location'];
         $checks_in = CommissionChecksIn::select($select_cols) -> where('check_type', 'other')
@@ -106,7 +109,8 @@ class CommissionController extends Controller
     }
 
     public function commission_other_details(Request $request) {
-        $Commission_ID = $request -> Commission_ID;
+
+		$Commission_ID = $request -> Commission_ID;
         $commission = Commission::find($Commission_ID);
 
         $commission_percentages = Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
@@ -124,7 +128,8 @@ class CommissionController extends Controller
     }
 
     public function save_edit_queue_check(Request $request) {
-        $check_id = $request -> edit_queue_check_id;
+
+		$check_id = $request -> edit_queue_check_id;
 
         if ($request -> edit_queue_check_type == 'sale') {
             $check = CommissionChecksInQueue::find($check_id);

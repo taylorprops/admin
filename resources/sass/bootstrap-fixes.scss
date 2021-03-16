@@ -228,6 +228,10 @@ body.modal-open {
             // border-left: none !important;
             // border-right: none !important;
 
+            &.table-hover tbody tr:hover {
+                background-color: $blue-light;
+            }
+
             th {
                 background: $blue-light;
                 padding: .6rem 0rem .6rem 0.4rem;

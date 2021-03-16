@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Cookie;
 class SearchController extends Controller
 {
     public function search(Request $request) {
-        $value = $request -> value;
+
+		$value = $request -> value;
 
         $agent_ids = [];
 

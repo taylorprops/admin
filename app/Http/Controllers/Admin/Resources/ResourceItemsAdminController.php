@@ -20,7 +20,8 @@ class ResourceItemsAdminController extends Controller
     }
 
     public function resources_reorder(Request $request) {
-        $data = json_decode($request['data'], true);
+
+		$data = json_decode($request['data'], true);
         $data = $data['resource'];
 
         foreach ($data as $item) {
@@ -33,7 +34,8 @@ class ResourceItemsAdminController extends Controller
     }
 
     public function resources_add(Request $request) {
-        $resource_type = $request -> resource_type;
+
+		$resource_type = $request -> resource_type;
         $resource_type_title = ucwords(str_replace('_', ' ', $resource_type));
         $resource_name = $request -> resource_name;
         $resource_state = $request -> resource_state;
@@ -56,7 +58,8 @@ class ResourceItemsAdminController extends Controller
     }
 
     public function resources_edit(Request $request) {
-        $resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> first();
+
+		$resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> first();
         $resource_item -> resource_name = $request -> resource_name;
         $resource_item -> resource_state = $request -> resource_state;
         $resource_item -> resource_color = $request -> resource_color;
@@ -64,7 +67,8 @@ class ResourceItemsAdminController extends Controller
     }
 
     public function delete_deactivate(Request $request) {
-        if ($request -> action == 'delete') {
+
+		if ($request -> action == 'delete') {
             $resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> delete();
         } elseif ($request -> action == 'deactivate') {
             $resource_item = ResourceItemsAdmin::whereResourceId($request -> resource_id) -> first();

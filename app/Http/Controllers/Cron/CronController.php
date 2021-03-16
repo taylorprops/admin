@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Storage;
 class CronController extends Controller
 {
     public function update_tables_agents(Request $request) {
-        $delete_agents = Agents::truncate();
+
+		$delete_agents = Agents::truncate();
         $delete_users = User::where('group', 'agent') -> delete();
 
         $agents = OldAgents::where('active', 'yes') -> get();
@@ -96,7 +97,8 @@ class CronController extends Controller
     }
 
     public function update_tables_other(Request $request) {
-        $delete_agents_licenses = AgentsLicenses::truncate();
+
+		$delete_agents_licenses = AgentsLicenses::truncate();
         $delete_agents_teams = AgentsTeams::truncate();
         $delete_agents_notes = AgentsNotes::truncate();
 

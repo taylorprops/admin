@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Storage;
 class TestController extends Controller
 {
     public function test(Request $request) {
-        $upload = Upload::get();
+
+		$upload = Upload::get();
 
         foreach ($upload as $upload) {
             $file_location = Storage::disk('public') -> path(str_replace('/storage/', '', $upload -> file_location));

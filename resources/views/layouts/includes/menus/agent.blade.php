@@ -30,7 +30,7 @@
     <a href="/documents" class="nav-link"> Documents</a>
 </li>
 
-
+@if(auth() -> user() -> group == 'agent')
 <li class="nav-item mx-2">
     <a href="/esign" class="nav-link"> E-Sign</a>
 </li>
@@ -38,3 +38,4 @@
 <li class="nav-item mx-2">
     <a href="/contacts" class="nav-link"> Contacts</a>
 </li>
+@endif

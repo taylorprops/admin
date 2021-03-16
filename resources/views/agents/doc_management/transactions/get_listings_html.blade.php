@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-bordered table-sm" id="listings_table">
+    <table class="table table-hover table-bordered table-sm" id="listings_table">
         <thead>
             <th width="100"></th>
             <th>Status</th>

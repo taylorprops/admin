@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\DB;
 class ResourcesController extends Controller
 {
     public function common_fields(Request $request) {
-        $common_fields_groups = CommonFieldsGroups::orderBy('group_order')
+
+		$common_fields_groups = CommonFieldsGroups::orderBy('group_order')
             -> with('sub_groups')
             -> get();
 
@@ -29,7 +30,8 @@ class ResourcesController extends Controller
     }
 
     public function get_common_fields(Request $request) {
-        $common_fields_groups = CommonFieldsGroups::with('common_fields:id,field_type,group_id,sub_group_id,field_name,db_column_name')
+
+		$common_fields_groups = CommonFieldsGroups::with('common_fields:id,field_type,group_id,sub_group_id,field_name,db_column_name')
             -> with('sub_groups')
             -> orderBy('group_order')
             -> get();
@@ -45,7 +47,8 @@ class ResourcesController extends Controller
     }
 
     public function save_add_common_field(Request $request) {
-        $field_name = $request -> field_name;
+
+		$field_name = $request -> field_name;
         $field_type = $request -> field_type;
         $group_id = $request -> group_id;
         $sub_group_id = $request -> sub_group_id;
@@ -63,7 +66,8 @@ class ResourcesController extends Controller
     }
 
     public function save_edit_common_field(Request $request) {
-        $id = $request -> id;
+
+		$id = $request -> id;
         $field_name = $request -> field_name;
         $field_type = $request -> field_type;
         $group_id = $request -> group_id;
@@ -80,7 +84,8 @@ class ResourcesController extends Controller
     }
 
     public function reorder_common_fields(Request $request) {
-        $fields = json_decode($request -> fields, true);
+
+		$fields = json_decode($request -> fields, true);
 
         foreach ($fields as $field) {
             $field = CommonFields::find($field['field_id']) -> update(['field_order' => $field['order']]);
@@ -99,7 +104,8 @@ class ResourcesController extends Controller
     }
 
     public function resources_reorder(Request $request) {
-        $data = json_decode($request['data'], true);
+
+		$data = json_decode($request['data'], true);
         $data = $data['resource'];
 
         foreach ($data as $item) {
@@ -112,7 +118,8 @@ class ResourcesController extends Controller
     }
 
     public function resources_add(Request $request) {
-        $resource_type = $request -> resource_type;
+
+		$resource_type = $request -> resource_type;
         $resource_type_title = ucwords(str_replace('_', ' ', $resource_type));
         $resource_name = $request -> resource_name;
         $resource_state = $request -> resource_state;
@@ -143,7 +150,8 @@ class ResourcesController extends Controller
     }
 
     public function resources_edit(Request $request) {
-        $resource_item = ResourceItems::whereResourceId($request -> resource_id) -> first();
+
+		$resource_item = ResourceItems::whereResourceId($request -> resource_id) -> first();
         $resource_item -> resource_name = $request -> resource_name;
         $resource_item -> resource_state = $request -> resource_state;
         $resource_item -> resource_color = $request -> resource_color;
@@ -155,7 +163,8 @@ class ResourcesController extends Controller
     }
 
     public function delete_deactivate(Request $request) {
-        if ($request -> action == 'delete') {
+
+		if ($request -> action == 'delete') {
             $resource_item = ResourceItems::whereResourceId($request -> resource_id) -> delete();
         } elseif ($request -> action == 'deactivate') {
             $resource_item = ResourceItems::whereResourceId($request -> resource_id) -> first();

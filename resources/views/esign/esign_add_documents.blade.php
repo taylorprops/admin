@@ -159,7 +159,7 @@
 
                         <div class="table-responsive">
 
-                            <table id="templates_table" class="table table-bordered table-sm" width="100%">
+                            <table id="templates_table" class="table table-hover table-bordered table-sm" width="100%">
 
                                 <thead>
                                     <tr>

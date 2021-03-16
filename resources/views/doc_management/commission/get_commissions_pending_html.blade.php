@@ -7,7 +7,7 @@
             </div>
             <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Pending Commission Breakdowns" data-content="These are commissions that have been added to the system but have not been paid out to the agent yet. This includes all commissions for all checks received whether they are sales commission, rental commission, referral commission, BPO payments, etc."><i class="fad fa-question-circle ml-2"></i></a>
         </div>
-        <table class="table table-bordered table-sm commissions-pending-table">
+        <table class="table table-hover table-bordered table-sm commissions-pending-table">
             <thead>
                 <tr>
                     <th class="wpx-125 text-primary">View</th>

@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class DocumentsController extends Controller
 {
     public function documents(Request $request) {
-        $custom_form_group_id = ResourceItems::GetResourceID('Custom', 'form_groups');
+
+		$custom_form_group_id = ResourceItems::GetResourceID('Custom', 'form_groups');
         $non_form_items_form_group_id = ResourceItems::GetResourceID('Non Form Items', 'form_groups');
 
         $form_groups = ResourceItems::where('resource_type', 'form_groups')
@@ -21,7 +22,8 @@ class DocumentsController extends Controller
     }
 
     public function get_form_group_files(Request $request) {
-        $form_group_id = $request -> form_group_id;
+
+		$form_group_id = $request -> form_group_id;
 
         $custom_form_group_id = ResourceItems::GetResourceID('Custom', 'form_groups');
         $non_form_items_form_group_id = ResourceItems::GetResourceID('Non Form Items', 'form_groups');

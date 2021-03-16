@@ -89,7 +89,7 @@
                                 $notes_count = count($notes);
 
                                 $notes_count_unread = $notes -> where('note_status', 'unread');
-                                if(stristr(auth() -> user() -> group, 'agent')) {
+                                if(stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
                                     $notes_count_unread = $notes_count_unread -> where('note_user_id', '!=', auth() -> user() -> id) -> count();
                                 } else if(auth() -> user() -> group == 'admin') {
                                     $notes_count_unread = $notes_count_unread -> where('Agent_ID', '>', '0') -> count();

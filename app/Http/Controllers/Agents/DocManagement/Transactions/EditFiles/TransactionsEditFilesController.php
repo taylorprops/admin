@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Storage;
 class TransactionsEditFilesController extends Controller
 {
     public function convert_to_pdf(Request $request) {
-        $Listing_ID = $request -> Listing_ID ?? 0;
+
+		$Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
         $Referral_ID = $request -> Referral_ID ?? 0;
         $transaction_type = $request -> transaction_type;
@@ -217,7 +218,8 @@ class TransactionsEditFilesController extends Controller
     }
 
     public function file_view(Request $request) {
-        $document_id = $request -> document_id;
+
+		$document_id = $request -> document_id;
         $document = TransactionDocuments::whereId($document_id) -> first();
         $file_type = $document -> file_type;
         $file_id = $document -> file_id;
@@ -237,7 +239,8 @@ class TransactionsEditFilesController extends Controller
     }
 
     public function get_edit_file_docs(Request $request) {
-        $document_id = $request -> document_id;
+
+		$document_id = $request -> document_id;
         $document = TransactionDocuments::whereId($document_id) -> first();
         $file_type = $document -> file_type;
         $file_id = $document -> file_id;
@@ -257,7 +260,8 @@ class TransactionsEditFilesController extends Controller
     }
 
     public function rotate_document(Request $request) {
-        $file_id = $request -> file_id;
+
+		$file_id = $request -> file_id;
         $file_type = $request -> file_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -295,7 +299,8 @@ class TransactionsEditFilesController extends Controller
     }
 
     public function save_edit_user_fields(Request $request) {
-        DB::transaction(function () use ($request) {
+
+		DB::transaction(function () use ($request) {
 
             // add and update user input values
             $user_fields = $request -> user_fields;

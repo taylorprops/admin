@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\DB;
 class DashboardAgentController extends Controller
 {
     public function dashboard_agent(Request $request) {
-        $listings_select = [
+
+		$listings_select = [
             'Agent_ID',
             'City',
             'CloseDate',
