@@ -39,6 +39,7 @@ class TransactionsController extends Controller
             'ListPictureURL',
             'MlsListDate',
             'PostalCode',
+            'SaleRent',
             'SellerOneFullName',
             'SellerTwoFullName',
             'StateOrProvince',
@@ -59,6 +60,7 @@ class TransactionsController extends Controller
             'Listing_ID',
             'ListPictureURL',
             'PostalCode',
+            'SaleRent',
             'StateOrProvince',
             'Status',
         ];

@@ -333,6 +333,7 @@ if (document.URL.match(/transaction_required_details/)) {
                 $('#modal_danger').on('hidden.bs.modal', function() {
                     $('#MLSListDate').focus().trigger('click');
                 });
+                $('#save_required_details').html('Continue <i class="fal fa-arrow-circle-right ml-3"></i>');
                 return false;
             }
         }

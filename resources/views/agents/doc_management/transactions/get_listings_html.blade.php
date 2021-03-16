@@ -39,7 +39,8 @@
                 @endphp
                 <tr>
                     <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Listing_ID }}/listing" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a></td>
-                    <td style="color: {{ $color }}">{!! $status !!}</td>
+                    <td><span style="color: {{ $color }}">{!! $status !!}</span>
+                    <br>{{ ucwords($transaction -> SaleRent) }}</td>
                     <td>{{ $transaction -> ListAgentFullName }}</td>
                     <td>{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</td>
                     <td>{{ date_mdy($transaction -> MlsListDate) }}</td>
