@@ -49,7 +49,8 @@
                 @endphp
                 <tr>
                     <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Contract_ID }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a></td>
-                    <td style="color: {{ $color }}">{!! $status !!}</td>
+                    <td><span style="color: {{ $color }}">{!! $status !!}</span>
+                        <br>{{ ucwords($transaction -> SaleRent) }}</td>
                     <td>{{ $our_agent }}</td>
                     <td>{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</td>
                     <td>{{ date_mdy($transaction -> ContractDate) }}</td>
