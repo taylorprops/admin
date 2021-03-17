@@ -34,10 +34,12 @@ class TransactionChecklists extends Model
 
     public function ScopeCreateTransactionChecklist($request, $checklist_id, $Listing_ID, $Contract_ID, $Referral_ID, $Agent_ID, $checklist_represent, $checklist_type, $checklist_property_type_id, $checklist_property_sub_type_id, $checklist_sale_rent, $checklist_state, $checklist_location_id, $checklist_hoa_condo, $checklist_year_built) {
 
+        $sale_rent = null;
         if ($checklist_type == 'referral') {
             $where = [['checklist_type', 'referral']];
         } else {
             if ($checklist_sale_rent == 'both') {
+                $sale_rent = 'yes';
                 $checklist_sale_rent = 'sale';
             } elseif ($checklist_sale_rent == 'rental') {
                 $checklist_property_sub_type_id = 0;
@@ -195,7 +197,7 @@ class TransactionChecklists extends Model
         }
 
         // if both listing and contract require rental listing agreement too
-        if ($checklist_sale_rent == 'both') {
+        if ($sale_rent == 'yes' || $checklist_sale_rent == 'rental') {
             $if_applicable['rental_listing_agreement']['required'] = true;
         }
 
@@ -212,12 +214,14 @@ class TransactionChecklists extends Model
 
                 // see if required form tag matches checklist item form_tag
                 if ($if_applicable[$form_tag -> resource_name]['id'] == $form_tag_id) {
+
                     if ($if_applicable[$form_tag -> resource_name]['required']) {
                         $transaction_checklist_item -> checklist_item_required = 'yes';
                         $transaction_checklist_item -> save();
                     } else {
                         $transaction_checklist_item -> delete();
                     }
+
                 }
 
             }

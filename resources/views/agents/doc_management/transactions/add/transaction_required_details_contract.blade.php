@@ -374,7 +374,7 @@ if($property -> Owner2 != '') {
                                 <tbody>
                                     @foreach($contacts as $contact)
                                     <tr>
-                                        <td>
+                                        <td class="w-10">
                                             <a href="javascript: void(0)"
                                             class="btn btn-sm btn-primary add-contact-button"
                                             data-contact-id="{{ $contact -> id }}"
@@ -391,7 +391,7 @@ if($property -> Owner2 != '') {
                                         </td>
                                         <td>{{ $contact -> contact_last }}</td>
                                         <td>{{ $contact -> contact_first }}</td>
-                                        <td>{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
+                                        <td class="w-60">{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -136,7 +136,7 @@
 
 
     <div class="modal fade draggable" id="import_contact_modal" tabindex="-1" role="dialog" aria-labelledby="import_contact_modal_title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="import_contact_modal_title">Select Contacts</h4>
@@ -159,7 +159,7 @@
                                 <tbody>
                                     @foreach($contacts as $contact)
                                     <tr>
-                                        <td>
+                                        <td class="w-10">
                                             <a href="javascript: void(0)"
                                             class="btn btn-sm btn-primary add-contact-button"
                                             data-contact-id="{{ $contact -> id }}"
@@ -176,7 +176,7 @@
                                         </td>
                                         <td>{{ $contact -> contact_last }}</td>
                                         <td>{{ $contact -> contact_first }}</td>
-                                        <td>{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
+                                        <td class="w-60">{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
