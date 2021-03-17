@@ -2437,34 +2437,6 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
     }, 500);
   };
 
-  var create_transaction = function create_transaction() {
-    var transaction_type = $('#transaction_type').val();
-    var street_number = $('#enter_street_number').val();
-    var street_name = $('#enter_street_name').val();
-    var street_dir = $('#enter_street_dir').val();
-    var unit_number = $('#enter_unit').val();
-    var city = $('#enter_city').val();
-    var state = $('#enter_state').val();
-    var zip = $('#enter_zip').val();
-    var county = $('#enter_county').val();
-    var Agent_ID = $('#Agent_ID').val();
-    var params = encodeURI(Agent_ID + '/' + transaction_type + '/' + street_number + '/' + street_name + '/' + city + '/' + state + '/' + zip + '/' + county + '/' + street_dir + '/' + unit_number);
-    window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_new/' + params;
-  };
-
-  var found_transaction = function found_transaction(bright_type, bright_id, tax_id, state) {
-    var Agent_ID = $('#Agent_ID').val();
-
-    if (tax_id == '' || tax_id == 'undefined') {
-      tax_id = 0;
-    }
-
-    var transaction_type = $('#transaction_type').val();
-    var params = encodeURI(Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id);
-    global_loading_off();
-    window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
-  };
-
   var show_property = function show_property(response, type, street_number, street_name, zip) {
     // results_bright_type = db_active|db_closed|bright, results_bright_id, results_tax_id
     // if multiple - require unit number be entered and search again
@@ -2495,7 +2467,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
       var County = '';
 
       if (response.data.County) {
-        County = response.data.County;
+        County = response.data.County || null;
       }
 
       if (StateOrProvince == 'MD' && County != '') {
@@ -2506,8 +2478,16 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
       var YearBuilt = response.data.YearBuilt;
       var Owner1 = response.data.Owner1;
       var Owner2 = response.data.Owner2;
-      var BathroomsTotalInteger = response.data.BathroomsTotalInteger;
-      var BedroomsTotal = response.data.BedroomsTotal;
+      var BathroomsTotalInteger = BedroomsTotal = '';
+
+      if (response.data.BathroomsTotalInteger != '') {
+        BathroomsTotalInteger = response.data.BathroomsTotalInteger;
+      }
+
+      if (response.data.BedroomsTotal != '') {
+        BedroomsTotal = response.data.BedroomsTotal;
+      }
+
       $('#property_details_photo').prop('src', ListPictureURL);
       $('#property_details_address').html(FullStreetAddress + '<br>' + City + ', ' + StateOrProvince + ' ' + PostalCode + '<br><span class="h5 mt-1 text-secondary">' + County.toUpperCase() + '</span>');
       $('#property_details_year_built').text(YearBuilt);
@@ -2522,37 +2502,39 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         $('.beds-baths').show();
         $('#property_details_beds').text(BedroomsTotal);
         $('#property_details_baths').text(BathroomsTotalInteger);
-      } // show only if active in mls
+      }
 
+      if (response.data.results_bright_type == 'db_active' || response.data.results_bright_type == 'bright') {
+        // show only if active in mls
+        //get all active and include listings that have closed in the past 180 days
+        var ListingId = response.data.ListingId; // show certain details only if active listing in mls
 
-      var MlsStatus = response.data.MlsStatus;
-      var ListingId = response.data.ListingId;
-      var CloseDate = response.data.CloseDate;
-      var ListPrice = response.data.ListPrice;
-      var PropertyType = response.data.PropertyType;
-      var ListOfficeName = response.data.ListOfficeName;
-      var MLSListDate = response.data.MLSListDate;
-      var ListAgentFirstName = response.data.ListAgentFirstName;
-      var ListAgentLastName = response.data.ListAgentLastName; // show certain details only if active listing in mls
+        var Today = new Date();
+        var CloseDate = response.data.CloseDate;
+        CloseDate = new Date(CloseDate);
+        var MlsStatus = response.data.MlsStatus;
 
-      var Today = new Date();
-      CloseDate = new Date(CloseDate); // get all active and include listings that have closed in the past 180 days
+        if (response.data.results_bright_type == 'db_active' || response.data.results_bright_type == 'bright' && MlsStatus.match(/(CLOSED|)/) && global_date_diff(CloseDate, Today) < 180 || MlsStatus.match(/(ACTIVE|PENDING)/)) {
+          $('.active-listing-div').show();
+          var _ListingId = response.data.ListingId;
+          var ListPrice = response.data.ListPrice;
+          var PropertyType = response.data.PropertyType;
+          var ListOfficeName = response.data.ListOfficeName;
+          var MLSListDate = response.data.MLSListDate;
+          var ListAgentFirstName = response.data.ListAgentFirstName;
+          var ListAgentLastName = response.data.ListAgentLastName;
+          $('#property_details_status').text(MlsStatus);
+          $('#property_details_mls_id').text(_ListingId);
 
-      if (response.data.results_bright_type == 'db_active' ||
-      /* response.data.results_bright_type == 'db_closed' ||  */
-      response.data.results_bright_type == 'bright' && MlsStatus.match(/(CLOSED)/) && global_date_diff(CloseDate, Today) < 180) {
-        $('.active-listing-div').show();
-        $('#property_details_status').text(MlsStatus);
-        $('#property_details_mls_id').text(ListingId);
+          if (ListPrice) {
+            $('#property_details_list_price').text('$' + global_format_number(ListPrice));
+          }
 
-        if (ListPrice) {
-          $('#property_details_list_price').text('$' + global_format_number(ListPrice));
+          $('#property_details_property_type').text(PropertyType);
+          $('#property_details_listing_office').text(ListOfficeName);
+          $('#property_details_list_date').text(MLSListDate);
+          $('#property_details_listing_agent').text(ListAgentFirstName + ' ' + ListAgentLastName);
         }
-
-        $('#property_details_property_type').text(PropertyType);
-        $('#property_details_listing_office').text(ListOfficeName);
-        $('#property_details_list_date').text(MLSListDate);
-        $('#property_details_listing_agent').text(ListAgentFirstName + ' ' + ListAgentLastName);
       }
 
       $('.property-loading-div').hide();
@@ -2595,6 +2577,33 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         create_transaction();
       }
     }
+  };
+
+  var create_transaction = function create_transaction() {
+    var transaction_type = $('#transaction_type').val();
+    var street_number = $('#enter_street_number').val();
+    var street_name = $('#enter_street_name').val();
+    var street_dir = $('#enter_street_dir').val();
+    var unit_number = $('#enter_unit').val();
+    var city = $('#enter_city').val();
+    var state = $('#enter_state').val();
+    var zip = $('#enter_zip').val();
+    var county = $('#enter_county').val();
+    var Agent_ID = $('#Agent_ID').val();
+    var params = encodeURI(Agent_ID + '/' + transaction_type + '/' + street_number + '/' + street_name + '/' + city + '/' + state + '/' + zip + '/' + county + '/' + street_dir + '/' + unit_number);
+    window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_new/' + params;
+  };
+
+  var found_transaction = function found_transaction(bright_type, bright_id, tax_id, state) {
+    var Agent_ID = $('#Agent_ID').val();
+
+    if (tax_id == '' || tax_id == 'undefined') {
+      tax_id = 0;
+    }
+
+    var transaction_type = $('#transaction_type').val();
+    var params = Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id;
+    window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
   };
 
   var fill_location = function fill_location(zip) {
@@ -2706,7 +2715,35 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
     }
   };
 
-  var search_address_continue = function search_address_continue() {
+  var update_county_select = function update_county_select(state) {
+    axios.get('/agents/doc_management/transactions/update_county_select', {
+      params: {
+        state: state
+      }
+    }).then(function (response) {
+      var counties = response.data;
+      $('#enter_county').html('').prop('disabled', false);
+      $('#enter_county').append('<option value=""></option>');
+      $.each(counties, function (k, v) {
+        $('#enter_county').append('<option value="' + v.county.toUpperCase() + '">' + v.county + '</option>');
+      });
+      setTimeout(function () {//select_refresh();
+      }, 500);
+    })["catch"](function (error) {});
+  };
+
+  var autofill_manual_entry = function autofill_manual_entry(street_number, street_name, zip) {
+    var unit = $('#address_search_unit').val();
+    $('#enter_street_number').val(street_number);
+    $('#enter_street_name').val(street_name);
+    $('#enter_zip').val(zip);
+    $('#enter_unit').val(unit);
+    setTimeout(function () {
+      fill_location($('#enter_zip').val());
+    }, 500);
+  };
+
+  $(function () {
     // search input
     var address_search_street = document.getElementById('address_search_street'); // select all text on focus
 
@@ -2756,9 +2793,18 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         if ($(this).val() == '') {
           $('.address-search-continue-div').hide();
         }
-      }); // show results container or send to referral details page
+      }); // search address in google
+
+      var search_request = null; // show results container or send to referral details page
 
       $('#address_search_continue').off('click').on('click', function () {
+        // cancel  previous ajax if exists
+        if (search_request) {
+          search_request.cancel();
+        } // creates a new token for upcoming ajax (overwrite the previous one)
+
+
+        search_request = axios.CancelToken.source();
         var transaction_type = $('#transaction_type').val();
 
         if (transaction_type == 'referral') {
@@ -2777,9 +2823,9 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             window.location = '/agents/doc_management/transactions/add/transaction_required_details_referral/' + Referral_ID;
           })["catch"](function (error) {});
         } else {
-          show_loader(); //$('.address-container').collapse('hide');
-
+          show_loader();
           axios.get('/agents/doc_management/transactions/get_property_info', {
+            cancelToken: search_request.token,
             params: {
               street_number: street_number,
               street_name: street_name,
@@ -2795,40 +2841,6 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         }
       });
     });
-  };
-
-  var update_county_select = function update_county_select(state) {
-    axios.get('/agents/doc_management/transactions/update_county_select', {
-      params: {
-        state: state
-      }
-    }).then(function (response) {
-      var counties = response.data;
-      $('#enter_county').html('').prop('disabled', false);
-      $('#enter_county').append('<option value=""></option>');
-      $.each(counties, function (k, v) {
-        $('#enter_county').append('<option value="' + v.county.toUpperCase() + '">' + v.county + '</option>');
-      });
-      setTimeout(function () {//select_refresh();
-      }, 500);
-    })["catch"](function (error) {});
-  };
-
-  var autofill_manual_entry = function autofill_manual_entry(street_number, street_name, zip) {
-    var unit = $('#address_search_unit').val();
-    $('#enter_street_number').val(street_number);
-    $('#enter_street_name').val(street_name);
-    $('#enter_zip').val(zip);
-    $('#enter_unit').val(unit);
-    setTimeout(function () {
-      fill_location($('#enter_zip').val());
-    }, 500);
-  };
-
-  $(function () {
-    //form_elements();
-    // search address in google
-    search_address_continue();
     $('#enter_state').on('change', function () {
       update_county_select($(this).val());
     });
@@ -2883,6 +2895,8 @@ if (document.URL.match(/transaction_add_details_/)) {
       axios.post('/agents/doc_management/transactions/save_add_transaction', formData, axios_options).then(function (response) {
         window.location = '/agents/doc_management/transactions/add/transaction_required_details/' + response.data.id + '/' + transaction_type;
       })["catch"](function (error) {});
+    } else {
+      $('#submit_details_form_button').html('');
     }
   };
 
@@ -2982,6 +2996,7 @@ if (document.URL.match(/transaction_add_details_/)) {
 
     $('#submit_details_form_button').off('click').on('click', function (e) {
       e.preventDefault();
+      $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Creating Transaction...');
       save_add_transaction();
     });
   });
@@ -14095,7 +14110,7 @@ if (document.URL.match(/employees/)) {
     $('#edit_employee_modal').modal('show');
 
     if (ele) {
-      $('#edit_employee_modal_title').text('Edit Employee');
+      $('#edit_employee_modal_title').html('Edit Employee - <span class="text-gray">' + ele.data('first_name') + ' ' + ele.data('last_name') + '</span>');
       $.each(ele.data(), function (index, value) {
         $('#' + index).val(value);
       });
@@ -14113,10 +14128,13 @@ if (document.URL.match(/employees/)) {
     var validate = validate_form(form);
 
     if (validate == 'yes') {
+      var type = $('#emp_type').find('option:selected').data('type');
       var formData = new FormData(form[0]);
       axios.post('/employees/save_employee', formData, axios_options).then(function (response) {
         $('#edit_employee_modal').modal('hide');
         toastr['success']('Employee Successfully Saved');
+        console.log(type);
+        get_employees(type, 'yes');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -14133,7 +14151,7 @@ if (document.URL.match(/employees/)) {
       edit_employee($(this));
     });
     $('#show_active').on('change', function () {
-      get_employees($('#employee_tabs .nav-link.active').data('type'), $(this).val());
+      get_employees($('.employee-nav-link.active').data('type'), $(this).val());
     });
   });
 }

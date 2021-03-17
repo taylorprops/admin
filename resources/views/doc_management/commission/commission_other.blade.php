@@ -22,9 +22,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_check_in_modal_title">Edit Check</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="edit_check_in_form">
@@ -76,9 +76,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_check_out_modal_title">Edit Check</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="edit_check_out_form">
@@ -192,9 +192,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_check_out_modal_title">Add Check Out</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="add_check_out_form" enctype="multipart/form-data">

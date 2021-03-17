@@ -209,9 +209,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="confirm_delete_deactivate_resource_modal_title"></h3>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times fa-2x"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <span class="confirm-delete-deactivate-resource-text"></span>

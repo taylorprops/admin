@@ -13,7 +13,7 @@ if(document.URL.match(/employees/)) {
         });
 
         $('#show_active').on('change', function() {
-            get_employees($('#employee_tabs .nav-link.active').data('type'), $(this).val());
+            get_employees($('.employee-nav-link.active').data('type'), $(this).val());
         });
 
     });
@@ -47,7 +47,7 @@ if(document.URL.match(/employees/)) {
 
         if(ele) {
 
-            $('#edit_employee_modal_title').text('Edit Employee');
+            $('#edit_employee_modal_title').html('Edit Employee - <span class="text-gray">'+ele.data('first_name')+' '+ele.data('last_name')+'</span>');
             $.each(ele.data(), function(index, value) {
                 $('#'+index).val(value);
             });
@@ -72,11 +72,15 @@ if(document.URL.match(/employees/)) {
 
         if(validate == 'yes') {
 
+            let type = $('#emp_type').find('option:selected').data('type');
+
             let formData = new FormData(form[0]);
             axios.post('/employees/save_employee', formData, axios_options)
             .then(function (response) {
                 $('#edit_employee_modal').modal('hide');
-                toastr['success']('Employee Successfully Saved')
+                toastr['success']('Employee Successfully Saved');
+                console.log(type);
+                get_employees(type, 'yes');
             })
             .catch(function (error) {
                 console.log(error);

@@ -4,9 +4,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="docs_complete_modal_title">All Documents Submitted</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -27,9 +27,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="email_agent_modal_title">Email Agent</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="email_agent_form">
@@ -118,9 +118,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="remove_checklist_item_title">Remove Checklist Item</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -149,9 +149,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="add_checklist_item_modal_title">Add Checklist Item</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="add_checklist_item_form">
@@ -261,9 +261,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="reject_document_modal_title">Reject Document</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <div class="row">

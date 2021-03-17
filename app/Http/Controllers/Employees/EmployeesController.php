@@ -37,7 +37,7 @@ class EmployeesController extends Controller {
 
     public function save_employee(Request $request) {
 
-        if($request -> emp_type == 'transaction_coordinator') {
+        if($request -> emp_type == 'transaction_coordinators') {
             $employee = TransactionCoordinators::firstOrCreate([
                 'id' => $request -> id
             ]);

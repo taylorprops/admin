@@ -4,10 +4,127 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
 
     $(function() {
 
-        //form_elements();
+        // search input
+        let address_search_street = document.getElementById('address_search_street');
 
-        // search address in google
-        search_address_continue();
+        // select all text on focus
+        $(address_search_street).on('focus', function () { $(this).select(); });
+        // google address search
+        let places = new google.maps.places.Autocomplete(address_search_street);
+        google.maps.event.addListener(places, 'place_changed', function () {
+
+            //$('#address_search_unit').val('');
+            let address_details = places.getPlace();
+            let street_number = street_name = city = county = state = zip = '';
+            let county = '';
+            address_details.address_components.forEach(function (address) {
+                if (address.types.includes('street_number')) {
+                    street_number = address.long_name;
+                } else if (address.types.includes('route')) {
+                    street_name = address.long_name;
+                } else if (address.types.includes('locality')) {
+                    city = address.long_name;
+                } else if (address.types.includes('administrative_area_level_2')) {
+                    county = address.long_name.replace(/'/, '');
+                    county = county.replace(/\sCounty/, '');
+                } else if (address.types.includes('administrative_area_level_1')) {
+                    state = address.short_name;
+                } else if (address.types.includes('postal_code')) {
+                    zip = address.long_name;
+                }
+            });
+
+            let unit_number = $('#address_search_unit').val();
+
+
+            $('#enter_manually_button').off('click').on('click', function () {
+                autofill_manual_entry(street_number, street_name, zip);
+            });
+
+            // show continue button once address selected
+            $('.address-search-error').hide();
+            if (street_number != '') {
+                $('.address-search-continue-div').show();
+            } else {
+                $('.address-search-continue-div').hide();
+                $('.address-search-error').show();
+                let search_val = $(address_search_street).val().replace(/^[0-9]+\s/, '');
+                $(address_search_street).val(search_val)
+            }
+
+            $('#address_search_street').on('keyup change', function () {
+                if ($(this).val() == '') {
+                    $('.address-search-continue-div').hide();
+                }
+            });
+
+            // search address in google
+            let search_request = null;
+
+            // show results container or send to referral details page
+            $('#address_search_continue').off('click').on('click', function () {
+
+                // cancel  previous ajax if exists
+                if (search_request) {
+                    search_request.cancel();
+                }
+
+                // creates a new token for upcoming ajax (overwrite the previous one)
+                search_request = axios.CancelToken.source();
+
+                let transaction_type = $('#transaction_type').val();
+
+                if(transaction_type == 'referral') {
+
+                    let Agent_ID = $('#Agent_ID').val();
+                    let formData = new FormData();
+                    formData.append('street_number', street_number);
+                    formData.append('street_name', street_name);
+                    formData.append('unit_number', unit_number);
+                    formData.append('city', city);
+                    formData.append('state', state);
+                    formData.append('zip', zip);
+                    formData.append('county', county);
+                    formData.append('Agent_ID', Agent_ID);
+                    axios.post('/agents/doc_management/transactions/add/transaction_add_details_referral', formData, axios_options)
+                    .then(function (response) {
+                        let Referral_ID = response.data.Referral_ID;
+                        window.location = '/agents/doc_management/transactions/add/transaction_required_details_referral/'+Referral_ID;
+                    })
+                    .catch(function (error) {
+
+                    });
+
+                } else {
+
+                    show_loader();
+
+                    axios.get('/agents/doc_management/transactions/get_property_info', {
+                        cancelToken: search_request.token,
+                        params: {
+                            street_number: street_number,
+                            street_name: street_name,
+                            unit: unit_number,
+                            city: city,
+                            state: state,
+                            zip: zip,
+                            county: county
+                        }
+                    })
+                    .then(function (response) {
+                        show_property(response, 'search', street_number, street_name, zip);
+                    })
+                    .catch(function (error) {
+
+                    });
+
+                }
+
+            });
+
+        });
+
+
 
         $('#enter_state').on('change', function () {
             update_county_select($(this).val());
@@ -63,37 +180,13 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         }, 500);
     }
 
-    function create_transaction() {
-
-        let transaction_type = $('#transaction_type').val();
-        let street_number = $('#enter_street_number').val();
-        let street_name = $('#enter_street_name').val();
-        let street_dir = $('#enter_street_dir').val();
-        let unit_number = $('#enter_unit').val();
-        let city = $('#enter_city').val();
-        let state = $('#enter_state').val();
-        let zip = $('#enter_zip').val();
-        let county = $('#enter_county').val();
-        let Agent_ID = $('#Agent_ID').val();
-        let params = encodeURI(Agent_ID + '/' + transaction_type + '/' +street_number + '/' + street_name + '/' + city + '/' + state + '/' + zip + '/' + county + '/' + street_dir + '/' + unit_number);
-        window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_new/' + params;
-    }
-
-    function found_transaction(bright_type, bright_id, tax_id, state) {
-        let Agent_ID = $('#Agent_ID').val();
-        if(tax_id == '' || tax_id == 'undefined') {
-            tax_id = 0;
-        }
-        let transaction_type = $('#transaction_type').val();
-        let params = encodeURI(Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id);
-        global_loading_off();
-        window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
-    }
 
     function show_property(response, type, street_number, street_name, zip) {
 
+
         // results_bright_type = db_active|db_closed|bright, results_bright_id, results_tax_id
         // if multiple - require unit number be entered and search again
+
         if(response.data != '' && response.data.multiple == true) {
 
             $('.property-loading-div').hide();
@@ -106,6 +199,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
 
         // single result returned
         } else if(response.data != '' && response.data.multiple == false) {
+
             // clear fields that may not contain data
             $('#property_details_owner1, #property_details_owner2, #property_details_beds, #property_details_baths').text('');
             $('.owner-div, .beds-baths-div, .active-listing-div').hide();
@@ -122,18 +216,24 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             let StateOrProvince = response.data.StateOrProvince;
             let County = '';
             if(response.data.County) {
-                County = response.data.County;
+                County = response.data.County || null;
             }
             if(StateOrProvince == 'MD' && County != '') {
                 County += ' County';
             }
+
             let PostalCode = response.data.PostalCode;
             let YearBuilt = response.data.YearBuilt;
             let Owner1 = response.data.Owner1;
             let Owner2 = response.data.Owner2;
-            let BathroomsTotalInteger = response.data.BathroomsTotalInteger;
-            let BedroomsTotal = response.data.BedroomsTotal;
 
+            let BathroomsTotalInteger = BedroomsTotal = '';
+            if(response.data.BathroomsTotalInteger != '') {
+                BathroomsTotalInteger = response.data.BathroomsTotalInteger;
+            }
+            if(response.data.BedroomsTotal != '') {
+                BedroomsTotal = response.data.BedroomsTotal;
+            }
 
             $('#property_details_photo').prop('src', ListPictureURL);
             $('#property_details_address').html(FullStreetAddress+'<br>'+City+', '+StateOrProvince+' '+PostalCode+'<br><span class="h5 mt-1 text-secondary">'+County.toUpperCase()+'</span>');
@@ -150,44 +250,60 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             }
 
 
-            // show only if active in mls
-            let MlsStatus = response.data.MlsStatus;
-            let ListingId = response.data.ListingId;
-            let CloseDate = response.data.CloseDate;
-            let ListPrice = response.data.ListPrice;
-            let PropertyType = response.data.PropertyType;
-            let ListOfficeName = response.data.ListOfficeName;
-            let MLSListDate = response.data.MLSListDate;
-            let ListAgentFirstName = response.data.ListAgentFirstName;
-            let ListAgentLastName = response.data.ListAgentLastName;
+            if(response.data.results_bright_type == 'db_active' || response.data.results_bright_type == 'bright') {
 
-            // show certain details only if active listing in mls
-            let Today = new Date();
-            CloseDate = new Date(CloseDate);
-            // get all active and include listings that have closed in the past 180 days
-            if(
-                (response.data.results_bright_type == 'db_active')
-                || (
-                    (/* response.data.results_bright_type == 'db_closed' ||  */response.data.results_bright_type == 'bright')
-                    && MlsStatus.match(/(CLOSED)/) && global_date_diff(CloseDate, Today) < 180
-                )
-            ) {
-                $('.active-listing-div').show();
-                $('#property_details_status').text(MlsStatus);
-                $('#property_details_mls_id').text(ListingId);
-                if(ListPrice) {
-                    $('#property_details_list_price').text('$'+global_format_number(ListPrice));
+                // show only if active in mls
+                //get all active and include listings that have closed in the past 180 days
+                let ListingId = response.data.ListingId;
+                // show certain details only if active listing in mls
+                let Today = new Date();
+                let CloseDate = response.data.CloseDate;
+                CloseDate = new Date(CloseDate);
+                let MlsStatus = response.data.MlsStatus;
+
+                if(
+                    (response.data.results_bright_type == 'db_active')
+                    || (
+                        (response.data.results_bright_type == 'bright')
+                        &&
+                            (MlsStatus.match(/(CLOSED|)/) && global_date_diff(CloseDate, Today) < 180)
+                            ||
+                            MlsStatus.match(/(ACTIVE|PENDING)/)
+                    )
+                ) {
+
+                    $('.active-listing-div').show();
+
+                    let ListingId = response.data.ListingId;
+                    let ListPrice = response.data.ListPrice;
+                    let PropertyType = response.data.PropertyType;
+                    let ListOfficeName = response.data.ListOfficeName;
+                    let MLSListDate = response.data.MLSListDate;
+                    let ListAgentFirstName = response.data.ListAgentFirstName;
+                    let ListAgentLastName = response.data.ListAgentLastName;
+
+
+
+                    $('#property_details_status').text(MlsStatus);
+                    $('#property_details_mls_id').text(ListingId);
+                    if(ListPrice) {
+                        $('#property_details_list_price').text('$'+global_format_number(ListPrice));
+                    }
+                    $('#property_details_property_type').text(PropertyType);
+                    $('#property_details_listing_office').text(ListOfficeName);
+                    $('#property_details_list_date').text(MLSListDate);
+                    $('#property_details_listing_agent').text(ListAgentFirstName + ' ' + ListAgentLastName);
+
                 }
-                $('#property_details_property_type').text(PropertyType);
-                $('#property_details_listing_office').text(ListOfficeName);
-                $('#property_details_list_date').text(MLSListDate);
-                $('#property_details_listing_agent').text(ListAgentFirstName + ' ' + ListAgentLastName);
+
             }
+
 
             $('.property-loading-div').hide();
             $('.property-results-container').fadeIn();
 
             $('#found_property_submit_button').off('click').on('click', function() {
+
                 $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span> Getting Details');
                 // send directly to add details page
                 let results_bright_type = results_bright_id = results_tax_id = '';
@@ -204,6 +320,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
 
                 found_transaction(results_bright_type, results_bright_id, results_tax_id, StateOrProvince);
                 //results_bright_type = db_active|db_closed|bright
+
             });
             $('#not_my_listing_button').off('click').on('click', function() {
                 $('#address_enter_continue').data('go-to-details', 'yes');
@@ -229,6 +346,36 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
             }
         }
     }
+
+
+    function create_transaction() {
+
+        let transaction_type = $('#transaction_type').val();
+        let street_number = $('#enter_street_number').val();
+        let street_name = $('#enter_street_name').val();
+        let street_dir = $('#enter_street_dir').val();
+        let unit_number = $('#enter_unit').val();
+        let city = $('#enter_city').val();
+        let state = $('#enter_state').val();
+        let zip = $('#enter_zip').val();
+        let county = $('#enter_county').val();
+        let Agent_ID = $('#Agent_ID').val();
+        let params = encodeURI(Agent_ID + '/' + transaction_type + '/' +street_number + '/' + street_name + '/' + city + '/' + state + '/' + zip + '/' + county + '/' + street_dir + '/' + unit_number);
+        window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_new/' + params;
+    }
+
+    function found_transaction(bright_type, bright_id, tax_id, state) {
+        let Agent_ID = $('#Agent_ID').val();
+        if(tax_id == '' || tax_id == 'undefined') {
+            tax_id = 0;
+        }
+        let transaction_type = $('#transaction_type').val();
+        let params = Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id;
+
+        window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
+    }
+
+
 
     function fill_location(zip) {
         if(zip.length == 5) {
@@ -366,117 +513,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         }
     }
 
-    function search_address_continue() {
 
-        // search input
-        let address_search_street = document.getElementById('address_search_street');
-
-        // select all text on focus
-        $(address_search_street).on('focus', function () { $(this).select(); });
-        // google address search
-        let places = new google.maps.places.Autocomplete(address_search_street);
-        google.maps.event.addListener(places, 'place_changed', function () {
-
-            //$('#address_search_unit').val('');
-            let address_details = places.getPlace();
-            let street_number = street_name = city = county = state = zip = '';
-            let county = '';
-            address_details.address_components.forEach(function (address) {
-                if (address.types.includes('street_number')) {
-                    street_number = address.long_name;
-                } else if (address.types.includes('route')) {
-                    street_name = address.long_name;
-                } else if (address.types.includes('locality')) {
-                    city = address.long_name;
-                } else if (address.types.includes('administrative_area_level_2')) {
-                    county = address.long_name.replace(/'/, '');
-                    county = county.replace(/\sCounty/, '');
-                } else if (address.types.includes('administrative_area_level_1')) {
-                    state = address.short_name;
-                } else if (address.types.includes('postal_code')) {
-                    zip = address.long_name;
-                }
-            });
-
-            let unit_number = $('#address_search_unit').val();
-
-
-            $('#enter_manually_button').off('click').on('click', function () {
-                autofill_manual_entry(street_number, street_name, zip);
-            });
-
-            // show continue button once address selected
-            $('.address-search-error').hide();
-            if (street_number != '') {
-                $('.address-search-continue-div').show();
-            } else {
-                $('.address-search-continue-div').hide();
-                $('.address-search-error').show();
-                let search_val = $(address_search_street).val().replace(/^[0-9]+\s/, '');
-                $(address_search_street).val(search_val)
-            }
-
-            $('#address_search_street').on('keyup change', function () {
-                if ($(this).val() == '') {
-                    $('.address-search-continue-div').hide();
-                }
-            });
-            // show results container or send to referral details page
-            $('#address_search_continue').off('click').on('click', function () {
-
-                let transaction_type = $('#transaction_type').val();
-
-                if(transaction_type == 'referral') {
-
-                    let Agent_ID = $('#Agent_ID').val();
-                    let formData = new FormData();
-                    formData.append('street_number', street_number);
-                    formData.append('street_name', street_name);
-                    formData.append('unit_number', unit_number);
-                    formData.append('city', city);
-                    formData.append('state', state);
-                    formData.append('zip', zip);
-                    formData.append('county', county);
-                    formData.append('Agent_ID', Agent_ID);
-                    axios.post('/agents/doc_management/transactions/add/transaction_add_details_referral', formData, axios_options)
-                    .then(function (response) {
-                        let Referral_ID = response.data.Referral_ID;
-                        window.location = '/agents/doc_management/transactions/add/transaction_required_details_referral/'+Referral_ID;
-                    })
-                    .catch(function (error) {
-
-                    });
-
-                } else {
-
-                    show_loader();
-                    //$('.address-container').collapse('hide');
-
-                    axios.get('/agents/doc_management/transactions/get_property_info', {
-                        params: {
-                            street_number: street_number,
-                            street_name: street_name,
-                            unit: unit_number,
-                            city: city,
-                            state: state,
-                            zip: zip,
-                            county: county
-                        }
-                    })
-                    .then(function (response) {
-                        show_property(response, 'search', street_number, street_name, zip);
-                    })
-                    .catch(function (error) {
-
-                    });
-
-                }
-
-            });
-
-        });
-
-    }
 
     function update_county_select(state) {
         axios.get('/agents/doc_management/transactions/update_county_select', {

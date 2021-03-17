@@ -37,7 +37,7 @@ class TransactionsAddController extends Controller {
     public function add_transaction(Request $request) {
 
 		$transaction_type = $request -> type;
-        session(['property_details' => '']);
+
 
         $agents = Agents::where('active', 'yes');
 
@@ -90,18 +90,12 @@ class TransactionsAddController extends Controller {
 
         $select_columns_bright = config('global.select_columns_bright');
         $select_columns_db = explode(',', $select_columns_bright);
-        /* $select_columns_db_closed = 'AssociationFee,AssociationYN,AttachedGarageYN,BasementFinishedPercent,BasementYN,BathroomsTotalInteger,BedroomsTotal,City,CondoYN,County,FireplaceYN,FullStreetAddress,GarageYN,Heating,Latitude,ListingTaxID,ListPictureURL,Longitude,LotSizeAcres,LotSizeSquareFeet,NewConstructionYN,NumAttachedGarageSpaces,NumDetachedGarageSpaces,Pool,PostalCode,PropertySubType,PropertyType,StateOrProvince,StreetDirPrefix,StreetDirSuffix,StreetName,StreetNumber,StreetSuffix,StreetSuffixModifier,StructureDesignType,SubdivisionName,UnitBuildingType,UnitNumber,YearBuilt';
-        $select_columns_db_closed = explode(',', $select_columns_db_closed); */
+
 
         if ($bright_type == 'db_active') {
             $bright_db_search = ListingsData::select($select_columns_db) -> where('ListingId', $bright_id) -> first() -> toArray();
-
             $mls_verified = 'yes';
-        } /* elseif ($bright_type == 'db_closed') {
-
-            $bright_db_search = ListingsRemovedData::select($select_columns_db_closed) -> where('ListingId', $bright_id) -> first() -> toArray();
-
-        } */ elseif ($bright_type == 'bright') {
+        } elseif ($bright_type == 'bright') {
             $rets_config = new \PHRETS\Configuration;
             $rets_config -> setLoginUrl(config('rets.rets.url'))
                 -> setUsername(config('rets.rets.username'))
@@ -175,7 +169,7 @@ class TransactionsAddController extends Controller {
                 $bright_db_search['BuyerOfficeMlsId'] = $office_bright_mls_id;
                 $bright_db_search['BuyerOfficeName'] = $office_name;
             }
-            //}
+
 
             $rets -> disconnect();
         }
@@ -201,7 +195,7 @@ class TransactionsAddController extends Controller {
             $property_details = array_merge($tax_record_search, $bright_db_search);
         }
 
-        if (! $bright_db_search || $bright_type == 'db_active'/*  || $bright_type == 'db_closed' */) {
+        if (!$bright_db_search || $bright_type == 'db_active') {
             if ($transaction_type == 'listing') {
                 $property_details['ListAgentEmail'] = $agent -> email;
                 $property_details['ListAgentFirstName'] = $agent -> first_name;
@@ -906,6 +900,7 @@ class TransactionsAddController extends Controller {
             $checklist_location_id = $property -> Location_ID;
             $checklist_hoa_condo = $property -> HoaCondoFees;
             $checklist_year_built = $property -> YearBuilt;
+
         } elseif ($transaction_type == 'contract') {
 
             // update contract
@@ -1009,6 +1004,8 @@ class TransactionsAddController extends Controller {
 
     public function get_property_info(Request $request) {
 
+        $request -> session() -> forget('property_details');
+
 		$street_number = $street_name = $unit = $zip = $tax_id = $state = '';
 
         if ($request -> mls) {
@@ -1102,6 +1099,7 @@ class TransactionsAddController extends Controller {
             $bright_db_search = ListingsData::select($select_columns_db) -> ListingSearch($state, $zip, $street_number, $street_name, $unit, $street_dir_suffix, $street_dir_suffix_alt);
         }
 
+
         if (count($bright_db_search) > 0) {
             $results['results_bright_type'] = 'db_active';
             if (count($bright_db_search) > 1) {
@@ -1181,39 +1179,6 @@ class TransactionsAddController extends Controller {
 
         ///// END BRIGHT SEARCH /////
 
-        ///// DATABASE SEARCH FOR OLD PROPERTIES /////
-        /* if (count($bright_db_search) == 0) {
-
-            if ($request -> mls) {
-
-                $bright_db_search = ListingsRemovedData::select($select_columns_db) -> where('ListingId', $ListingId) -> get() -> toArray();
-
-            } else {
-
-                $bright_db_search = ListingsRemovedData::select($select_columns_db) -> ListingSearch($state, $zip, $street_number, $street_name, $unit, $street_dir_suffix, $street_dir_suffix_alt);
-
-            }
-
-            if (count($bright_db_search) > 0) {
-                $results['results_bright_type'] = 'db_closed';
-                if (count($bright_db_search) > 1) {
-
-                    // see if results have different unit numbers
-                    if ($bright_db_search[0]['UnitNumber'] != $bright_db_search[1]['UnitNumber']) {
-                        $property_details['multiple'] = true;
-                        return $property_details;
-                        die();
-                    } else {
-                        $results['results_bright_id'] = $bright_db_search[0]['ListingId'];
-                    }
-
-                } else {
-                    $results['results_bright_id'] = $bright_db_search[0]['ListingId'];
-                }
-
-            }
-
-        } */
 
         ///// END DATABASE SEARCH FOR OLD PROPERTIES /////
 

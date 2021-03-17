@@ -17,13 +17,9 @@ class Checklists extends Model
         });
     }
 
-    /* public function scopeIsChecklistInUse($query, $checklist_id) {
-        $checklist_items = ChecklistsItems::where('checklist_id', $checklist_id) -> first();
-        if(count($checklist_items) > 0) {
-            return true;
-        }
-        return false;
-    } */
+    public function checklist_items() {
+        return $this -> hasMany(\App\Models\DocManagement\Checklists\ChecklistsItems::class, 'checklist_id', 'id') -> orderBy('checklist_item_order');
+    }
 
     public function scopeGetChecklistsByPropertyType($query, $checklist_property_type_id, $checklist_location_id, $checklist_type) {
         $checklists = $query -> where('checklist_location_id', $checklist_location_id) -> where('checklist_property_type_id', $checklist_property_type_id);

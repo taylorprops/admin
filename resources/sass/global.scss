@@ -197,7 +197,7 @@ div[class*='container-'] {
     padding-right: 10px !important;
 }
 
-@for $i from 1 through 50 {
+@for $i from 1 through 100 {
     .wpx-#{$i * 5} {
         width: #{$i * 5}px;
     }

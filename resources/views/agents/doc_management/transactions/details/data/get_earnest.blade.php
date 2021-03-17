@@ -6,7 +6,7 @@
 
             <div class="d-flex justify-content-start align-items-center bg-blue-light p-3 rounded earnest-questions">
 
-                <div class="mr-4 wpx-250">
+                <div class="mr-4 wpx-300">
 
                     <select class="custom-form-element form-select" id="earnest_held_by" name="earnest_held_by" data-label="Earnest Held By">
                         <option value=""></option>
@@ -19,7 +19,7 @@
 
                 </div>
 
-                <div class="mr-2 wpx-250">
+                <div class="mr-2 wpx-350">
 
                     <select class="custom-form-element form-select" id="earnest_account_id" name="earnest_account_id" data-label="Earnest Account">
                         <option value=""></option>

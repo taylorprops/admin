@@ -351,6 +351,10 @@ body.modal-open {
     }
 }
 
+.modal-1000 {
+    max-width: 1000px !important;
+}
+
 @media(max-width: 1200px) {
     .modal-xl {
         max-width: 95% !important;

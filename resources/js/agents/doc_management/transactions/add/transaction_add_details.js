@@ -32,6 +32,7 @@ if (document.URL.match(/transaction_add_details_/)) {
 
         $('#submit_details_form_button').off('click').on('click', function(e) {
             e.preventDefault();
+            $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Creating Transaction...');
             save_add_transaction();
         });
 
@@ -63,6 +64,8 @@ if (document.URL.match(/transaction_add_details_/)) {
             .catch(function (error) {
 
             });
+        } else {
+            $('#submit_details_form_button').html('');
         }
 
     }

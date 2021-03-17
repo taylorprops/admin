@@ -33,13 +33,12 @@ class TransactionChecklists extends Model
     }
 
     public function ScopeCreateTransactionChecklist($request, $checklist_id, $Listing_ID, $Contract_ID, $Referral_ID, $Agent_ID, $checklist_represent, $checklist_type, $checklist_property_type_id, $checklist_property_sub_type_id, $checklist_sale_rent, $checklist_state, $checklist_location_id, $checklist_hoa_condo, $checklist_year_built) {
-        $for_sale_and_rent = false;
+
         if ($checklist_type == 'referral') {
             $where = [['checklist_type', 'referral']];
         } else {
             if ($checklist_sale_rent == 'both') {
                 $checklist_sale_rent = 'sale';
-                $for_sale_and_rent = true;
             } elseif ($checklist_sale_rent == 'rental') {
                 $checklist_property_sub_type_id = 0;
             }
@@ -55,7 +54,7 @@ class TransactionChecklists extends Model
         }
 
         // get checklist
-        $checklist = Checklists::where($where) -> first();
+        $checklist = Checklists::where($where) -> with('checklist_items') -> first();
 
         /* $checklist = Checklists::where($where);
         dd(vsprintf(str_replace('?', '%s', $checklist -> toSql()), collect($checklist -> getBindings()) -> map(function($binding){
@@ -63,7 +62,7 @@ class TransactionChecklists extends Model
         }) -> toArray())); */
 
         // get checklist items
-        $items = ChecklistsItems::where('checklist_id', $checklist -> id) -> orderBy('checklist_item_order') -> get();
+        $items = $checklist -> checklist_items;
 
         // some items and docs from old checklist will be kept and added to the new
         $remove_ids = [];
@@ -120,12 +119,15 @@ class TransactionChecklists extends Model
 
         // if not an item from old checklist that is transferred to new, add to new checklist
         $required_count = 0;
+
         foreach ($items as $item) {
+
             if ($item -> checklist_item_required == 'yes') {
                 $required_count += 1;
             }
 
             if (! in_array($item -> checklist_form_id, $keep_form_ids)) {
+
                 $add_checklist_items = new TransactionChecklistItems();
                 $add_checklist_items -> checklist_id = $checklist_id;
                 $add_checklist_items -> Listing_ID = $Listing_ID;
@@ -141,7 +143,9 @@ class TransactionChecklists extends Model
                 } */
 
                 $add_checklist_items -> save();
+
             }
+
         }
 
         // update required items if lead, hoa, etc
@@ -191,18 +195,21 @@ class TransactionChecklists extends Model
         }
 
         // if both listing and contract require rental listing agreement too
-        if ($for_sale_and_rent) {
+        if ($checklist_sale_rent == 'both') {
             $if_applicable['rental_listing_agreement']['required'] = true;
         }
+
 
         $transaction_checklist_items = TransactionChecklistItems::where('checklist_id', $checklist_id) -> get();
 
         // mark all if applicable items required or remove
         $transaction_checklist_items -> map(function ($transaction_checklist_item) use ($if_applicable, $form_tags, $ignore_tags) {
+
             $upload = Upload::where('file_id', $transaction_checklist_item -> checklist_form_id) -> first();
             $form_tag_id = $upload -> form_tags;
 
             foreach ($form_tags -> whereNotIn('resource_name', $ignore_tags) as $form_tag) {
+
                 // see if required form tag matches checklist item form_tag
                 if ($if_applicable[$form_tag -> resource_name]['id'] == $form_tag_id) {
                     if ($if_applicable[$form_tag -> resource_name]['required']) {
@@ -212,7 +219,9 @@ class TransactionChecklists extends Model
                         $transaction_checklist_item -> delete();
                     }
                 }
+
             }
+
         });
     }
 }

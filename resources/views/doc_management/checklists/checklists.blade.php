@@ -98,9 +98,9 @@
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="confirm_copy_title">Confirm Copy</h4>
-                    <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                        <i class="fal fa-times mt-2"></i>
-                    </button>
+                    <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                        <i class="fal fa-times mt-2 fa-lg"></i>
+                    </a>
                 </div>
                 <div class="modal-body py-5">
                     <div class="text-center"><i class="fad fa-exclamation-circle fa-2x mr-2 text-danger"></i> This will replace all checklists in all locations selected. Continue?</div>
@@ -119,9 +119,9 @@
                 <form id="copy_checklists_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="copy_checklists_modal_title">Copy Checklists To Another Form Group</h4>
-                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                            <i class="fal fa-times mt-2"></i>
-                        </button>
+                        <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                            <i class="fal fa-times mt-2 fa-lg"></i>
+                        </a>
                     </div>
                     <div class="modal-body">
                         <div id="copy_checklists_div"></div>
@@ -142,9 +142,9 @@
                 <form id="checklist_items_form">
                     <div class="modal-header d-flex justify-content-between">
                         <h4 class="modal-title" id="checklist_items_modal_title"></h4>
-                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                            <i class="fal fa-times fa-2x"></i>
-                        </button>
+                        <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                            <i class="fal fa-times mt-2 fa-lg"></i>
+                        </a>
                     </div>
                     <div class="modal-body">
                         @csrf
@@ -168,9 +168,9 @@
                 <form id="checklist_form">
                     <div class="modal-header draggable-handle">
                         <h4 class="modal-title" id="checklist_modal_title">Add/Edit Checklist</h4>
-                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                            <i class="fal fa-times mt-2"></i>
-                        </button>
+                        <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                            <i class="fal fa-times mt-2 fa-lg"></i>
+                        </a>
                     </div>
                     <div class="modal-body">
                         @csrf
@@ -242,9 +242,9 @@
                 <form id="confirm_delete_checklist_form">
                     <div class="modal-header draggable-handle">
                         <h3 class="modal-title" id="confirm_delete_checklist_modal_title">Delete Checklist</h3>
-                        <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                            <i class="fal fa-times fa-2x"></i>
-                        </button>
+                        <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                            <i class="fal fa-times mt-2 fa-lg"></i>
+                        </a>
                     </div>
                     <div class="modal-body">
                         Are you sure you want to permanently delete this checklist?
@@ -269,9 +269,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="confirm_remove_file_modal_title">Remove Form From Checklist</h3>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times fa-2x"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 Are you sure you want to remove this form from the checklist?
