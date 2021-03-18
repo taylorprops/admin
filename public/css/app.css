@@ -13141,7 +13141,7 @@ body.modal-open {
 }
 .dataTables_wrapper .page-link {
   padding: 0.3rem 0.6rem;
-  font-size: 0.7rem;
+  font-size: 0.7rem !important;
   line-height: 1 !important;
 }
 
@@ -13160,9 +13160,28 @@ body.modal-open {
   .dataTables_wrapper .dataTable.table td.small {
     font-size: 0.7rem !important;
   }
+  .dataTables_wrapper .page-link {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.6rem !important;
+  }
 
-  div.dataTables_filter input {
-    width: 100px !important;
+  .dataTables_filter input {
+    width: 120px !important;
+    padding: 4px 0 2px 3px;
+    height: 25px;
+    margin-top: 8px;
+  }
+
+  .dataTables_length label {
+    font-size: 0.7rem;
+    margin-top: 8px;
+  }
+  .dataTables_length label select {
+    padding: 2px 25px 1px 6px;
+  }
+
+  .dataTables_info {
+    margin-bottom: 5px;
   }
 }
 .modal-1000 {
@@ -13195,17 +13214,7 @@ body.modal-open {
   .modal .modal-lg, .modal .modal-xl {
     max-width: 100% !important;
   }
-  .modal .modal-dialog {
-    top: 0px;
-  }
-  .modal .modal-dialog .modal-content {
-    height: 100VH;
-    margin-bottom: 0px;
-    overflow: hidden;
-  }
   .modal .modal-dialog .modal-content .modal-body {
-    overflow-y: scroll;
-    overflow-x: hidden;
     padding: 5px;
   }
 }
@@ -15610,6 +15619,10 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 .page-required-details .using-heritage {
   width: 130px;
 }
+.page-required-details .add-contact-row:hover {
+  cursor: pointer;
+  background: #f8fcff;
+}
 .page-required-details .receiving, .page-required-details .referring {
   display: none;
 }
@@ -16375,6 +16388,10 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 .template-docs-div .form-ele {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+#contacts_table tr:hover {
+  cursor: pointer;
 }
 
 #files_queue {

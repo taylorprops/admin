@@ -2,12 +2,12 @@ if (document.URL.match(/transaction_details/)) {
 
     $(function() {
 
-        dt_contacts = setInterval(function() {
+        /* dt_contacts = setInterval(function() {
             if($('#contacts_table').length == 1) {
                 let contacts_table = data_table('10', $('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
                 clearInterval(dt_contacts);
             }
-        }, 500)
+        }, 500) */
 
         $(document).on('click', '.btn, input', function(e) {
 
@@ -40,6 +40,8 @@ if (document.URL.match(/transaction_details/)) {
         $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
             show_hide_fields();
         });
+
+        data_table(10, $('#contacts_table'), [0, 'asc'], [], [], false, true, true, true, true);
 
     }
 
@@ -263,7 +265,7 @@ if (document.URL.match(/transaction_details/)) {
         member_div = $(member_div);
         $('#import_contact_modal').modal();
 
-        $('#contacts_table').off('click').on('click', '.add-contact-button', function() {
+        $('#contacts_table').off('click').on('click', '.add-contact-row', function() {
             /* if($(this).data('contact-type-id')) {
                 member_div.find('.member-type-id').val($(this).data('contact-type-id'));
             } */

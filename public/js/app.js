@@ -3121,7 +3121,7 @@ if (document.URL.match(/transaction_required_details/)) {
   var show_import_modal = function show_import_modal(member, member_id) {
     member_id = member_id - 1;
     $('#import_contact_modal').modal();
-    $('#contacts_table').off('click').on('click', '.add-contact-button', function () {
+    $('#contacts_table').off('click').on('click', '.add-contact-row', function () {
       var member_div = $('.' + member + '-div').eq(member_id);
       member_div.find('[name^=' + member + '_first_name]').val($(this).data('contact-first'));
       member_div.find('[name^=' + member + '_last_name]').val($(this).data('contact-last'));
@@ -3361,6 +3361,7 @@ if (document.URL.match(/transaction_required_details/)) {
         targets: 0
       }]
     });
+    data_table(10, $('#contacts_table'), [0, 'asc'], [], [], false, true, true, true, true);
     $('.import-from-contacts-button').off('click').on('click', function () {
       show_import_modal($(this).data('member'), $(this).data('member-id'));
     });
@@ -7130,12 +7131,12 @@ if (document.URL.match(/transaction_details/)) {
 
 if (document.URL.match(/transaction_details/)) {
   $(function () {
-    dt_contacts = setInterval(function () {
-      if ($('#contacts_table').length == 1) {
-        var contacts_table = data_table('10', $('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
-        clearInterval(dt_contacts);
-      }
-    }, 500);
+    /* dt_contacts = setInterval(function() {
+        if($('#contacts_table').length == 1) {
+            let contacts_table = data_table('10', $('#contacts_table'), [1, 'desc'], [0], [], false, true, true, true, true);
+            clearInterval(dt_contacts);
+        }
+    }, 500) */
     $(document).on('click', '.btn, input', function (e) {
       var ele = $(this);
       var id = ele.attr('id');
@@ -7162,6 +7163,7 @@ if (document.URL.match(/transaction_details/)) {
     $('a[data-toggle="list"]').on('shown.bs.tab', function (e) {
       show_hide_fields();
     });
+    data_table(10, $('#contacts_table'), [0, 'asc'], [], [], false, true, true, true, true);
   };
 
   window.show_hide_fields = function () {
@@ -7351,7 +7353,7 @@ if (document.URL.match(/transaction_details/)) {
   window.show_import_modal = function (member_div) {
     member_div = $(member_div);
     $('#import_contact_modal').modal();
-    $('#contacts_table').off('click').on('click', '.add-contact-button', function () {
+    $('#contacts_table').off('click').on('click', '.add-contact-row', function () {
       /* if($(this).data('contact-type-id')) {
           member_div.find('.member-type-id').val($(this).data('contact-type-id'));
       } */

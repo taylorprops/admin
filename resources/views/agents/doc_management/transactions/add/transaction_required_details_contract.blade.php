@@ -365,33 +365,26 @@ if($property -> Owner2 != '') {
                             <table id="contacts_table" class="table table-hover table-bordered table-sm" width="100%">
                                 <thead>
                                     <tr>
-                                        <th></th>
-                                        <th>Last</th>
-                                        <th>First</th>
+                                        <th>Name</th>
                                         <th>Address</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($contacts as $contact)
-                                    <tr>
-                                        <td class="w-10">
-                                            <a href="javascript: void(0)"
-                                            class="btn btn-sm btn-primary add-contact-button"
-                                            data-contact-id="{{ $contact -> id }}"
-                                            data-contact-first="{{ $contact -> contact_first }}"
-                                            data-contact-last="{{ $contact -> contact_last }}"
-                                            data-contact-company="{{ $contact -> contact_company }}"
-                                            data-contact-phone="{{ $contact -> contact_phone_cell }}"
-                                            data-contact-email="{{ $contact -> contact_email }}"
-                                            data-contact-street="{{ $contact -> contact_street }}"
-                                            data-contact-city="{{ $contact -> contact_city }}"
-                                            data-contact-state="{{ $contact -> contact_state }}"
-                                            data-contact-zip="{{ $contact -> contact_zip }}"
-                                            >Import</a>
-                                        </td>
-                                        <td>{{ $contact -> contact_last }}</td>
-                                        <td>{{ $contact -> contact_first }}</td>
-                                        <td class="w-60">{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
+                                    <tr class="add-contact-row"
+                                    data-contact-id="{{ $contact -> id }}"
+                                    data-contact-first="{{ $contact -> contact_first }}"
+                                    data-contact-last="{{ $contact -> contact_last }}"
+                                    data-contact-company="{{ $contact -> contact_company }}"
+                                    data-contact-phone="{{ $contact -> contact_phone_cell }}"
+                                    data-contact-email="{{ $contact -> contact_email }}"
+                                    data-contact-street="{{ $contact -> contact_street }}"
+                                    data-contact-city="{{ $contact -> contact_city }}"
+                                    data-contact-state="{{ $contact -> contact_state }}"
+                                    data-contact-zip="{{ $contact -> contact_zip }}">
+
+                                        <td>{{ $contact -> contact_last.', '.$contact -> contact_first }}</td>
+                                        <td>{{ $contact -> contact_street.' '.$contact -> contact_city.', '.$contact -> contact_state.' '.$contact -> contact_zip }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

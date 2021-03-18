@@ -176,13 +176,15 @@ if(stristr(auth() -> user() -> group, 'agent')) {
                             <div class="col-md-12">
                                 <div class="border border-gray text-gray p-3 shadow">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-12 col-sm-3">
                                             <div class="d-flex justify-content-center">
                                                 <img class="image-fluid property-results-image" src="" id="property_details_photo">
                                             </div>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-12 col-sm-9">
+
                                             <div class="h5 mt-3 mt-md-0" id="property_details_address"></div>
+
                                             <div class="row pt-2 mt-2 border-top property-details">
                                                 <div class="container">
                                                     <div class="row">

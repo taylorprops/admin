@@ -38,6 +38,8 @@ if (document.URL.match(/transaction_required_details/)) {
             }]
         });
 
+        data_table(10, $('#contacts_table'), [0, 'asc'], [], [], false, true, true, true, true);
+
 
         $('.import-from-contacts-button').off('click').on('click', function() {
             show_import_modal($(this).data('member'), $(this).data('member-id'));
@@ -304,7 +306,7 @@ if (document.URL.match(/transaction_required_details/)) {
         member_id = member_id - 1;
 
         $('#import_contact_modal').modal();
-        $('#contacts_table').off('click').on('click', '.add-contact-button', function() {
+        $('#contacts_table').off('click').on('click', '.add-contact-row', function() {
             let member_div = $('.'+member+'-div').eq(member_id);
             member_div.find('[name^='+member+'_first_name]').val($(this).data('contact-first'));
             member_div.find('[name^='+member+'_last_name]').val($(this).data('contact-last'));

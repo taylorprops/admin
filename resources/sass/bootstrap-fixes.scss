@@ -306,7 +306,7 @@ body.modal-open {
 
     .page-link {
         padding: .3rem .6rem;
-        font-size: .7rem;
+        font-size: .7rem !important;
         line-height: 1 !important;
     }
 
@@ -344,11 +344,35 @@ body.modal-open {
 
         }
 
+        .page-link {
+            padding: .2rem .4rem;
+            font-size: .6rem !important;
+            //line-height: 1 !important;
+        }
+
     }
 
-    div.dataTables_filter input {
-        width: 100px !important;
+    .dataTables_filter input {
+        width: 120px !important;
+        padding: 4px 0 2px 3px;
+        height: 25px;
+        margin-top: 8px;
     }
+
+    .dataTables_length label {
+        font-size: .7rem;
+        margin-top: 8px;
+
+        select {
+            padding: 2px 25px 1px 6px;
+        }
+
+    }
+
+    .dataTables_info {
+        margin-bottom: 5px;
+    }
+
 }
 
 .modal-1000 {
@@ -388,16 +412,16 @@ body.modal-open {
         }
 
         .modal-dialog {
-            top: 0px;
+            //top: 0px;
 
             .modal-content {
-                height: 100VH;
-                margin-bottom: 0px;
-                overflow:hidden;
+                //height: auto;
+                // margin-bottom: 0px;
+                //overflow:hidden;
 
                 .modal-body {
-                    overflow-y:scroll;
-                    overflow-x: hidden;
+                    //overflow-y:scroll;
+                    //overflow-x: hidden;
                     padding: 5px;
                 }
             }
