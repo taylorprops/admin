@@ -15703,9 +15703,6 @@ header .main-search-results-container .main-search-results-div .main-search-resu
 .page-transaction-details #details_tabs {
   z-index: 0;
 }
-.page-transaction-details #esign_tab .nav-link {
-  padding: 0.4rem 0.3rem !important;
-}
 .page-transaction-details .property-image-div img {
   height: 90px;
   border: 1px solid #4c9bdb;

@@ -67,7 +67,7 @@
                                         </div>
                                     @else
                                         <div class="col-12 col-md-6">
-                                            <input type="text" class="custom-form-element form-input datepicker required" data-label="Lease Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}">
+                                            <input type="text" class="custom-form-element form-input datepicker" data-label="Lease Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}">
                                         </div>
                                     @endif
                                     <div class="col-12 col-sm-6">
@@ -351,7 +351,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-sm-6 col-lg-3 col-xl-2">
-                                    <input type="text" class="custom-form-element form-input required" data-label="Street Number" name="StreetNumber" id="StreetNumber" value="{{ $property -> StreetNumber }}" {{ $disabled }}>
+                                    <input type="text" class="custom-form-element form-input" data-label="Street Number" name="StreetNumber" id="StreetNumber" value="{{ $property -> StreetNumber }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6 col-xl-4">
                                     <input type="text" class="custom-form-element form-input required" data-label="Street Name" name="StreetName" id="StreetName" value="{{ $property -> StreetName }}" {{ $disabled }}>

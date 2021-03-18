@@ -1075,7 +1075,7 @@ class TransactionsDetailsController extends Controller
             $order = TransactionDocumentsFolders::where('Referral_ID', $Referral_ID);
         }
 
-        $order = $order -> where('Agent_ID', $Agent_ID) -> where('folder_name', '!=', 'Trash') -> max('order');
+        $order = $order -> where('Agent_ID', $Agent_ID) -> where('folder_name', '!=', 'Trash') -> max('folder_order');
 
         $order += 1;
         $folder = new TransactionDocumentsFolders();
