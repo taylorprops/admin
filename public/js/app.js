@@ -16482,7 +16482,7 @@ $(function () {
     global_tooltip();
   }, 1000);
   window.datatable_settings = _defineProperty({
-    "bAutoWidth": true,
+    "autoWidth": false,
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     //"responsive": false,
     "destroy": true,
