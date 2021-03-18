@@ -115,27 +115,29 @@ class GlobalFunctionsController extends Controller
 
                     ];
 
-                    // TODO: This gets sellers names. need to make this work, causes site to hang
-                    /* if (isset($property['real_property_search_link'])) {
+                    if (isset($property['real_property_search_link'])) {
+
                         // Owner name not available from response so we have to follow the link provided in the results and get the owner's name from that page
                         $link = $property['real_property_search_link']['url'];
                         $page = new \DOMDocument();
                         libxml_use_internal_errors(true);
                         $page -> loadHTMLFile($link);
-                        //$page -> saveHTML();
+                        $xpath = new \DOMXpath($page);
 
-                        $owner1 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName_0');
-                        if (! $owner1) {
-                            $owner1 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName_0');
+                        $owner1 = $xpath -> evaluate('string(//span[@id="MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName_0"])');
+
+                        if ($owner1 == '') {
+                            $owner1 = $xpath -> evaluate('string(//span[@id="MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName_0"])');
                         }
 
-                        $owner2 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName2_0');
-                        if (! $owner2) {
-                            $owner2 = $page -> getElementById('MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName2_0');
+                        $owner2 = $xpath -> evaluate('string(//span[@id="MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblOwnerName2_0"])');
+
+                        if ($owner2 == '') {
+                            $owner2 = $xpath -> evaluate('string(//span[@id="MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblOwnerName2_0"])');
                         }
 
-                        $details['Owner1'] = htmlspecialchars($this -> extractText($owner1));
-                        $details['Owner2'] = htmlspecialchars($this -> extractText($owner2));
+                        $details['Owner1'] = $owner1;
+                        $details['Owner2'] = $owner2;
 
                         // $details['frederick_city'] = 'no';
                         // if(stristr($property['town_code_mdp_field_towncode_desctown_sdat_field_36'], 'Frederick')) { //MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_query_ucDetailsSearch_query_dlstDetaisSearch_lblSpecTaxTown_0
@@ -145,7 +147,7 @@ class GlobalFunctionsController extends Controller
                         // if(stristr($property['land_use_code_mdp_field_lu_desclu_sdat_field_50'], 'condominium')) {
                         //     $details['condo'] = 'yes';
                         // }
-                    } */
+                    }
                 } else {
                     return response() -> json([
                         'error' => 'yes',
@@ -158,7 +160,7 @@ class GlobalFunctionsController extends Controller
         return $details;
     }
 
-    public function extractText($node) {
+    /* public function extractText($node) {
         if (XML_TEXT_NODE === $node -> nodeType || XML_CDATA_SECTION_NODE === $node -> nodeType) {
             return $node -> nodeValue;
         } elseif (XML_ELEMENT_NODE === $node -> nodeType || XML_DOCUMENT_NODE === $node -> nodeType || XML_DOCUMENT_FRAG_NODE === $node -> nodeType) {
@@ -173,5 +175,5 @@ class GlobalFunctionsController extends Controller
 
             return $text;
         }
-    }
+    } */
 }
