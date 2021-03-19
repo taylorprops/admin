@@ -74,11 +74,11 @@ class FieldsController extends Controller
 
         $label = $field_category == 'radio' ? 'Radio Button Group Name' : 'Custom Field Name';
 
-        $common_fields_groups = CommonFieldsGroups::with('sub_groups')
+        $common_fields_groups = CommonFieldsGroups::with(['sub_groups', 'common_fields'])
             -> orderBy('group_order')
             -> get();
 
-        $common_fields = CommonFields::orderBy('field_order') -> get();
+        $common_fields = $common_fields_groups -> common_fields;
 
         $file = Upload::whereFileId($file_id) -> first();
         $published = $file -> published;
@@ -140,7 +140,8 @@ class FieldsController extends Controller
 
         $published = Upload::where('file_id', $file_id) -> first();
 
-        if ($published -> published == 'no') {
+        //if ($published -> published == 'no') {
+
             if (isset($file_id)) {
 
                 // delete all fields for this document
@@ -177,11 +178,11 @@ class FieldsController extends Controller
             }
 
             return true;
-        } else {
-            return response() -> json([
-                'error' => 'published',
-            ]);
-        }
+        // } else {
+        //     return response() -> json([
+        //         'error' => 'published',
+        //     ]);
+        // }
     }
 
 

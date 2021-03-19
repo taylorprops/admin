@@ -31,10 +31,23 @@ class LoginController extends Controller
      *
      * @var string
      */
+
+    public function credentials(Request $request)
+    {
+        return [
+            'email'     => $request -> email,
+            'password'  => $request -> password,
+            'active' => 'yes'
+
+        ];
+    }
+
     public function redirectTo() {
+
         $super_user = false;
 
         if (auth() -> user() -> group == 'admin') {
+
             session(['header_logo_src' => '/images/logo/logos.png']);
             session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
@@ -47,7 +60,9 @@ class LoginController extends Controller
             if (auth() -> user() -> super_user == 'yes') {
                 session(['super_user' => true]);
             }
+
         } elseif (stristr(auth() -> user() -> group, 'agent')) {
+
             $user_id = auth() -> user() -> user_id;
 
             // get agent details and add to session
@@ -62,6 +77,7 @@ class LoginController extends Controller
                 session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
             }
         } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
+
         } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
 
             session(['header_logo_src' => '/images/logo/logos.png']);
@@ -93,6 +109,10 @@ class LoginController extends Controller
         Cookie::queue(Cookie::make('user_group', auth() -> user() -> group, $maxlifetime, null, null, false, false));
 
         return $this -> redirectTo;
+
+
+
+
     }
 
     /**
@@ -104,5 +124,6 @@ class LoginController extends Controller
 
 		$this -> previous_url = $request -> previous_url;
         $this -> middleware('guest') -> except(['logout', 'login']);
+
     }
 }

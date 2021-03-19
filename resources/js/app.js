@@ -4,8 +4,25 @@ const axios = require('axios');
 import 'jquery-ui/ui/widgets/datepicker.js';
 require('dm-file-uploader');
 
+import * as FilePond from "filepond";
+window.FilePond = FilePond;
 
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
+// import FilePondPluginImageCrop from "filepond-plugin-image-crop";
+// import FilePondPluginImageTransform from "filepond-plugin-image-transform";
+// import FilePondPluginImageEdit from "filepond-plugin-image-edit";
+// import FilePondPluginImageResize from "filepond-plugin-image-resize";
 
+FilePond.registerPlugin(FilePondPluginImagePreview);
+FilePond.registerPlugin(FilePondPluginFileEncode);
+// FilePond.registerPlugin(FilePondPluginImageCrop);
+// FilePond.registerPlugin(FilePondPluginImageTransform);
+// FilePond.registerPlugin(FilePondPluginImageEdit);
+// FilePond.registerPlugin(FilePondPluginImageResize);
+
+import Cropper from 'cropperjs';
+window.Cropper = Cropper;
 
 require('./bootstrap');
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Esign\EsignController;
 use App\Http\Controllers\CRM\ContactsController;
 use App\Http\Controllers\Search\SearchController;
 use App\Http\Controllers\Employees\EmployeesController;
+use App\Http\Controllers\Files\FilepondUploadController;
 use App\Http\Controllers\Dashboard\DashboardAdminController;
 use App\Http\Controllers\Dashboard\DashboardAgentController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
@@ -58,6 +59,8 @@ Route::get('/dashboard_agent_referral', [DashboardAgentReferralController::class
 /********** Search Routes ********/
 Route::get('/search', [SearchController::class, 'search']);
 
+/***** file upload ******/
+Route::post('/filepond_upload', [FilepondUploadController::class, 'upload']);
 
 
 // Route::get('/test', 'Testcontroller@test');
@@ -281,6 +284,9 @@ Route::middleware(['admin']) -> group(function () {
     Route::get('/employees', [EmployeesController::class, 'employees']);
     Route::get('/employees/get_employees', [EmployeesController::class, 'get_employees']);
     Route::post('/employees/save_employee', [EmployeesController::class, 'save_employee']);
+    Route::post('/employees/save_cropped_upload', [EmployeesController::class, 'save_cropped_upload']);
+    Route::post('/employees/delete_photo', [EmployeesController::class, 'delete_photo']);
+    Route::post('/employees/docs_upload', [EmployeesController::class, 'docs_upload']);
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {

@@ -115,7 +115,7 @@ class GlobalFunctionsController extends Controller
 
                     ];
 
-                    if (isset($property['real_property_search_link'])) {
+                    if (isset($property['real_property_search_link']['url'])) {
 
                         // Owner name not available from response so we have to follow the link provided in the results and get the owner's name from that page
                         $link = $property['real_property_search_link']['url'];

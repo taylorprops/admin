@@ -20,6 +20,10 @@
 @import '~pretty-checkbox/src/pretty-checkbox.scss';
 @import '~animate.css/animate.min.css';
 
+@import "filepond/dist/filepond.min.css";
+@import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+// @import "filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css";
+@import 'cropperjs/dist/cropper.css';
 
 
 // SECTIONS
@@ -64,6 +68,9 @@
 
 // Contacts
 @import 'contacts/contacts.scss';
+
+// Employees
+@import 'employees/employees.scss';
 
 // Balance Earnest
 @import 'doc_management/earnest/balance_earnest.scss';

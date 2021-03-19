@@ -4,7 +4,7 @@
 
 <div class="container page-container page-add-fields file-view-container p-0 mx-auto">
 
-    @if($published == 'no')
+    {{-- @if($published == 'no') --}}
 
         <div class="container-fluid">
             <div class="row bg-blue-light">
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-    @endif
+    {{-- @endif --}}
 
     <div class="container-fluid">
 

@@ -19,6 +19,12 @@
         {{-- slider input --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" crossorigin="anonymous" />
 
+        {{-- filepond uploader --}}
+        {{-- <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" /><link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet"> --}}
+
+
+
+
 
         <script src="{{ mix('/js/app.js') }}"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
@@ -36,6 +42,15 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js" crossorigin="anonymous"></script>
         {{-- text editor --}}
         <script src="//cdn.tiny.cloud/1/t3u7alod16y8nsqt07h4m5kwfw8ob9sxbvy2rlmrqo94zrui/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+        {{-- filepond uploader --}}
+        {{-- <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+        <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+        <script>
+            // Register the plugin
+            FilePond.registerPlugin(FilePondPluginImagePreview);
+        </script> --}}
+
 
         @yield('js_scripts')
 

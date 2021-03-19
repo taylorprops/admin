@@ -160,43 +160,26 @@ ul {
     max-width: 1500px !important;
 }
 
-.container-1400 {
-    max-width: 1400px !important;
+// .container-1000, .container-1100
+$i: 500;
+@while $i <= 1500 {
+    .container-#{$i} {
+        max-width: #{$i}px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    $i: $i + 50;
 }
 
-.container-1350 {
-    max-width: 1350px !important;
-}
 
-.container-1300 {
-    max-width: 1300px !important;
-}
-
-.container-1200 {
-    max-width: 1200px !important;
-}
-
-.container-1100 {
-    max-width: 1100px !important;
-}
-
-.container-1000 {
-    max-width: 1000px !important;
-}
-
-.container-800 {
-    max-width: 800px !important;
-}
-
-.container-600 {
-    max-width: 600px !important;
-}
 
 div[class*='container-'] {
     padding-left: 10px !important;
     padding-right: 10px !important;
 }
 
+// width in pixels
+// .wpx-55
 @for $i from 1 through 100 {
     .wpx-#{$i * 5} {
         width: #{$i * 5}px;
@@ -433,4 +416,12 @@ a.ck.ck-button {
     a {
         font-size: .8rem !important;
     }
+}
+
+
+/* image cropping */
+.filepond--drop-label {
+    border: 2px dashed $primary;
+    background: $blue-light;
+    color: $blue-dark;
 }

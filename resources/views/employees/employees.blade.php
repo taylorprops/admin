@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container page-container page-page-class">
+<div class="container-1200 page-container page-employees">
 
     <div class="row">
 
@@ -21,7 +21,7 @@
                     <a class="nav-link employee-nav-link active" id="in_house_tab" data-toggle="tab" href="#in_house_div" role="tab" aria-controls="in_house_div" aria-selected="true" data-type="in_house">In House</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link employee-nav-link" id="transaction_coordinators_tab" data-toggle="tab" href="#transaction_coordinators_div" role="tab" aria-controls="transaction_coordinators_div" aria-selected="false" data-type="transaction_coordinators">Transaction Coordinators</a>
+                    <a class="nav-link employee-nav-link" id="transaction_coordinator_tab" data-toggle="tab" href="#transaction_coordinator_div" role="tab" aria-controls="transaction_coordinator_div" aria-selected="false" data-type="transaction_coordinator">Transaction Coordinators</a>
                 </li>
             </ul>
 
@@ -36,7 +36,7 @@
 
                 <div class="tab-pane fade show active" id="in_house_div" role="tabpanel" aria-labelledby="in_house_tab"></div>
 
-                <div class="tab-pane fade" id="transaction_coordinators_div" role="tabpanel" aria-labelledby="transaction_coordinators_tab"></div>
+                <div class="tab-pane fade" id="transaction_coordinator_div" role="tabpanel" aria-labelledby="transaction_coordinator_tab"></div>
 
             </div>
 
@@ -82,16 +82,16 @@
                                         <option value="admin" data-type="in_house">Admin</option>
                                         <option value="mortgage" data-type="in_house">Mortgage</option>
                                         <option value="title" data-type="in_house">Title</option>
-                                        <option value="transaction_coordinators" data-type="transaction_coordinators">Transaction Coordinator</option>
+                                        <option value="transaction_coordinator" data-type="transaction_coordinator">Transaction Coordinator</option>
                                     </select>
                                 </div>
 
                                 <div class="col-12 col-sm-6">
-                                    <select class="custom-form-element form-select form-select-no-search required" id="emp_position" name="emp_position" data-label="Position">
+                                    <select class="custom-form-element form-select form-select-no-search" id="emp_position" name="emp_position" data-label="Position">
                                         <option value=""></option>
-                                        <option value="employee" data-type="title,admin">Employee</option>
-                                        <option value="manager" data-type="mortgage,title,admin">Manager</option>
-                                        <option value="processor" data-type="mortgage,title">Processor</option>
+                                        <option value="employee">Employee</option>
+                                        <option value="manager">Manager</option>
+                                        <option value="processor">Processor</option>
                                     </select>
                                 </div>
                             </div>
@@ -150,6 +150,7 @@
                             </div>
 
                             <input type="hidden" id="id" name="id">
+                            <input type="hidden" id="email_orig" name="email_orig">
 
                         </form>
 
@@ -157,12 +158,70 @@
 
                     <div class="col-12 col-lg-6">
 
+                        <div class="employee-image-div">
+
+                            <div class="text-orange font-11 mb-3">Employee Photo</div>
+
+                            <div class="row">
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="d-flex justify-content-center h-100">
+                                        <div class="image-div relative">
+                                            <div class="has-photo delete-image-div">
+                                                <a href="javascript: void(0)" class="delete-image-button"><i class="fal fa-times fa-lg text-danger"></i></a>
+                                            </div>
+                                            <img class="has-photo shadow rounded" id="photo_location" src="">
+                                        </div>
+                                        <div class="no-photo my-auto">
+                                            <i class="fad fa-user fa-5x text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="text-gray mb-3">Add/Replace Photo</div>
+                                    <input type="file" id="agent_photo_file" name="agent_photo_file">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="employee-docs-div">
+
+                            <div class="text-orange font-11 mb-3">Employee Docs</div>
+
+                            <input type="file" id="agent_docs_file" name="agent_docs_file">
+
+                        </div>
+
                     </div>
 
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-primary" id="save_edit_employee_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable" id="crop_modal" tabindex="-1" role="dialog" aria-labelledby="crop_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="crop_modal_title">Crop Image</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="d-flex justify-content-around align-items-center modal-body">
+                <div class="crop-container"></div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="save_crop_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>
