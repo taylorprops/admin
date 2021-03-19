@@ -1229,7 +1229,7 @@ class TransactionsAddController extends Controller {
             }
 
             $property_details['ResidenceType'] = $tax_record_search['ResidenceType'] ?? null;
-            $property_details['TaxRecordLink'] = str_replace('http:', 'https:', $tax_record_search['TaxRecordLink']) ?? null;
+            $property_details['TaxRecordLink'] = $tax_record_search['TaxRecordLink'] ?? null;
         } else {
             $property_details = [];
         }
