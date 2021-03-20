@@ -48,7 +48,7 @@
 </div>
 
 <div class="modal fade draggable" id="edit_employee_modal" tabindex="-1" role="dialog" aria-labelledby="edit_employee_modal_title" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1000" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-1200" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="edit_employee_modal_title"></h4>
@@ -60,7 +60,7 @@
 
                 <div class="row">
 
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-lg-5">
 
                         <form id="edit_employee_form">
 
@@ -156,44 +156,63 @@
 
                     </div>
 
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-lg-7">
 
-                        <div class="employee-image-div">
+                        <div class="edit-div">
 
-                            <div class="text-orange font-11 mb-3">Employee Photo</div>
+                            <div class="ml-lg-5">
 
-                            <div class="row">
+                                <div class="employee-image-div">
 
-                                <div class="col-12 col-sm-6">
-                                    <div class="d-flex justify-content-center h-100">
-                                        <div class="image-div relative">
-                                            <div class="has-photo delete-image-div">
-                                                <a href="javascript: void(0)" class="delete-image-button"><i class="fal fa-times fa-lg text-danger"></i></a>
+                                    <div class="text-orange font-11 mb-3">Employee Photo</div>
+
+                                    <div class="row">
+
+                                        <div class="col-12 col-sm-6">
+                                            <div class="d-flex justify-content-center h-100">
+                                                <div class="image-div relative">
+                                                    <div class="has-photo delete-image-div">
+                                                        <a href="javascript: void(0)" class="delete-image-button"><i class="fal fa-times fa-lg text-danger"></i></a>
+                                                    </div>
+                                                    <img class="has-photo shadow rounded" id="photo_location" src="">
+                                                </div>
+                                                <div class="no-photo my-auto">
+                                                    <i class="fad fa-user fa-5x text-primary"></i>
+                                                </div>
                                             </div>
-                                            <img class="has-photo shadow rounded" id="photo_location" src="">
                                         </div>
-                                        <div class="no-photo my-auto">
-                                            <i class="fad fa-user fa-5x text-primary"></i>
+
+                                        <div class="col-12 col-sm-6">
+                                            <div class="text-gray mb-3">Add/Replace Photo</div>
+                                            <input type="file" id="agent_photo_file" name="agent_photo_file">
                                         </div>
+
                                     </div>
+
                                 </div>
 
-                                <div class="col-12 col-sm-6">
-                                    <div class="text-gray mb-3">Add/Replace Photo</div>
-                                    <input type="file" id="agent_photo_file" name="agent_photo_file">
+                                <hr>
+
+                                <div class="employee-docs-div">
+
+                                    <div class="text-orange font-11 mb-3">Employee Docs</div>
+
+                                    <div class="text-gray mb-3">Add Employee Docs</div>
+                                    <input type="file" id="agent_docs_file" name="agent_docs_file" multiple>
+
+                                    <div class="list-group agent-docs-div"></div>
+
                                 </div>
 
                             </div>
 
                         </div>
 
-                        <hr>
+                        <div class="add-div h-100">
 
-                        <div class="employee-docs-div">
-
-                            <div class="text-orange font-11 mb-3">Employee Docs</div>
-
-                            <input type="file" id="agent_docs_file" name="agent_docs_file">
+                            <div class="d-flex justify-content-around align-items-center mt-5">
+                                <div class="font-10 text-gray wpx-400 text-center">Once you have added the employee details you will be able to add a photo and documents</div>
+                            </div>
 
                         </div>
 
@@ -222,6 +241,27 @@
             </div>
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-primary" id="save_crop_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade draggable" id="employee_saved_modal" tabindex="-1" role="dialog" aria-labelledby="employee_saved_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="employee_saved_title">Employee Added</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    Employee details successfully saved. You can now add a photo and documents
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary modal-confirm-button" id="employee_saved_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Continue</a>
             </div>
         </div>
     </div>

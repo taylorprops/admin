@@ -287,6 +287,8 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/employees/save_cropped_upload', [EmployeesController::class, 'save_cropped_upload']);
     Route::post('/employees/delete_photo', [EmployeesController::class, 'delete_photo']);
     Route::post('/employees/docs_upload', [EmployeesController::class, 'docs_upload']);
+    Route::get('/employees/get_docs', [EmployeesController::class, 'get_docs']);
+    Route::post('/employees/delete_doc', [EmployeesController::class, 'delete_doc']);
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {

@@ -42,13 +42,30 @@
 
                 <li class="w-100">
 
-                    <div class="d-flex justify-content-start justify-content-xl-end flex-wrap align-items-center">
+                    <div class="d-flex justify-content-start justify-content-xl-end align-items-center">
                         <div class="mr-5">
                             <a class="nav-link text-white" href="javascript: void(0)"><i class="far fa-comments mr-2"></i> Support</a>
                         </div>
-                        <div class="d-flex justify-content-around">
-                            <a class="nav-link text-white py-0" href="javascript: void(0)"><i class="fas fa-user mr-2"></i>@if(auth() -> user()) {{ str_replace(' ', '/', ucwords(str_replace('_', ' ', auth() -> user() -> group))).' - '.auth() -> user() -> name }} @endif</a>
-                            <a class="nav-link text-white py-0 float-right ml-3" href="/logout">Logout</a>
+                        <div class="text-right">
+                            <a class="nav-link text-white py-0" href="javascript: void(0)" {{-- TODO: this needs to link to agent's account --}}>
+                                <i class="fas fa-user mr-2"></i>
+                                @if(auth() -> user() && auth() -> user() -> group == 'agent')
+
+                                    {{ auth() -> user() -> name }}
+
+                                @else
+
+                                    @if(!stristr(auth() -> user() -> group, 'coordinator'))
+                                        {{ str_replace(' ', '/', ucwords(str_replace('_', ' ', auth() -> user() -> group))).' - '.auth() -> user() -> name }}
+                                    @else
+                                        {{ 'TC - '.auth() -> user() -> name }}
+                                    @endif
+
+                                @endif
+
+                            </a>
+
+                            <a class="nav-link text-white py-0 ml-3" href="/logout"><i class="fal fa-sign-out mr-2"></i> Logout</a>
                         </div>
                     </div>
 

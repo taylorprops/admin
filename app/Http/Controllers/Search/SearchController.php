@@ -53,7 +53,7 @@ class SearchController extends Controller
                     $query -> whereIn('Agent_ID', $agent_ids);
                 }
             })
-            -> with(['status:resource_id,resource_name,resource_color', 'agent:id,full_name', 'transaction_coordinator'])
+            -> with(['status:resource_id,resource_name,resource_color','agent:id,full_name','transaction_coordinator'])
             -> orderBy('MLSListDate', 'DESC')
             -> get();
 
@@ -110,5 +110,6 @@ class SearchController extends Controller
         -> get();
 
         return view('/search/search_results_html', compact('listings', 'contracts', 'referrals'));
+
     }
 }

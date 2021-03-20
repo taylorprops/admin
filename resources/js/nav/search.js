@@ -30,7 +30,7 @@ $(function() {
         let value = input.val().trim();
         let container = $('.main-search-results-div');
 
-        if(value.length > 1) {
+        if(value.length > 0) {
 
             input.next('.hide-search').removeClass('hidden');
 

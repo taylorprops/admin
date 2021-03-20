@@ -420,8 +420,11 @@ a.ck.ck-button {
 
 
 /* image cropping */
-.filepond--drop-label {
-    border: 2px dashed $primary;
+
+.filepond--panel-root {
     background: $blue-light;
     color: $blue-dark;
+    border: 2px dashed $primary;
 }
+
+

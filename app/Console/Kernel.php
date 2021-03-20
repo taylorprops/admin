@@ -38,8 +38,10 @@ class Kernel extends ConsoleKernel
         // set listings to expired
         $schedule -> command('doc_management:expire_listings') -> dailyAt('00:01');
 
-        // mysql backup locally
-        $schedule -> command('database:backup') -> daily();
+        if(config('app.env') == 'development') {
+            // mysql backup locally
+            //$schedule -> command('database:backup') -> dailyAt('08:25');
+        }
     }
 
     /**

@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Employees\Title;
 use App\Models\Employees\InHouse;
 use App\Http\Controllers\Controller;
+use App\Models\Employees\InHouseDocs;
 use Intervention\Image\Facades\Image;
 use App\Models\Employees\LoanOfficers;
 use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Employees\EmployeeImages;
 use App\Models\Employees\TransactionCoordinators;
+use App\Models\Employees\TransactionCoordinatorsDocs;
 
 class EmployeesController extends Controller {
 
@@ -26,18 +28,18 @@ class EmployeesController extends Controller {
 
     public function get_employees(Request $request) {
 
-        $type = $request -> type;
+        $emp_type = $request -> emp_type;
         $active = $request -> active;
 
         $select = ['id', 'active', 'first_name', 'last_name', 'photo_location', 'email', 'cell_phone', 'address_street', 'address_unit', 'address_city', 'address_state', 'address_zip', 'emp_type', 'emp_position'];
 
-        if($type == 'in_house') {
+        if($emp_type == 'in_house') {
             $employees = InHouse::select($select) -> where('active', $active) -> orderBy('last_name', 'asc') -> get();
-        } else if($type == 'transaction_coordinator') {
+        } else if($emp_type == 'transaction_coordinator') {
             $employees = TransactionCoordinators::select($select) -> where('active', $active) -> orderBy('last_name', 'asc') -> get();
         }
 
-        return view('/employees/get_employees_html', compact('employees', 'type', 'active'));
+        return view('/employees/get_employees_html', compact('employees', 'emp_type', 'active'));
 
     }
 
@@ -70,7 +72,9 @@ class EmployeesController extends Controller {
                 'group' => $request -> emp_type
             ]);
 
-        return response() -> json(['status' => 'success']);
+        $emp_id = $employee -> id;
+
+        return response() -> json(['status' => 'success', 'emp_id' => $emp_id]);
 
 
     }
@@ -79,7 +83,13 @@ class EmployeesController extends Controller {
 
         $file = $request -> file('cropped_image');
         $emp_id = $request -> emp_id;
-        $employee = InHouse::find($emp_id);
+        $emp_type = $request -> emp_type;
+
+        if($emp_type == 'in_house') {
+            $employee = InHouse::find($emp_id);
+        } else if($emp_type == 'transaction_coordinator') {
+            $employee = TransactionCoordinators::find($emp_id);
+        }
 
         $filename = $employee -> first_name.'-'.$employee -> last_name.'.'.$file -> extension();
         $filename = time().'_'.$filename;
@@ -88,8 +98,8 @@ class EmployeesController extends Controller {
         $image_resize -> resize(300, 400);
         $image_resize -> save(Storage::disk('public') -> path('/employee_photos/'.$filename));
 
-        //$save_file = $file -> storeAs('employee_photos/', $filename, 'public');
-        $path = Storage::disk('public') -> url('/employee_photos/'.$filename);
+
+        $path = '/storage/employee_photos/'.$filename;
 
         $employee -> update(['photo_location' => $path]);
 
@@ -102,16 +112,86 @@ class EmployeesController extends Controller {
 
     public function delete_photo(Request $request) {
 
-        $emp = InHouse::find($request -> emp_id) -> update([
+        $emp_id = $request -> emp_id;
+        $emp_type = $request -> emp_type;
+
+        if($emp_type == 'in_house') {
+            $emp = InHouse::find($emp_id);
+        } else if($emp_type == 'transaction_coordinator') {
+            $emp = TransactionCoordinators::find($emp_id);
+        }
+
+        Storage::disk('public') -> delete(str_replace('/storage/', '', $emp -> photo_location));
+        $emp -> update([
             'photo_location' => ''
         ]);
+
+
 
     }
 
     public function docs_upload(Request $request) {
 
-        dd($request -> all());
+        $file = $request -> file('agent_docs_file');
+        $emp_id = $request -> emp_id;
+        $emp_type = $request -> emp_type;
+
+        $file_name = $file -> getClientOriginalName();
+        $ext = $file -> extension();
+        $file_name = preg_replace('/\.'.$ext.'/i', '', $file_name);
+        $file_name = time().'_'.sanitize($file_name).'.'.$ext;
+        $file -> storeAs('employee_docs/', $file_name, 'public');
+        $file_location = Storage::disk('public') -> url('/employee_docs/'.$file_name);
+        $file_location = str_replace(config('app.url'), '', $file_location);
+
+        if($emp_type == 'in_house') {
+            $add_file = InHouseDocs::create([
+                'emp_in_house_id' => $emp_id,
+                'file_name' => $file_name,
+                'file_location' => $file_location
+            ]);
+        } else if($emp_type == 'transaction_coordinator') {
+            $add_file = TransactionCoordinatorsDocs::create([
+                'emp_transaction_coordinators_id' => $emp_id,
+                'file_name' => $file_name,
+                'file_location' => $file_location
+            ]);
+        }
+
+
 
     }
+
+    public function get_docs(Request $request) {
+
+        $emp_id = $request -> emp_id;
+        $emp_type = $request -> emp_type;
+
+        if($emp_type == 'in_house') {
+            $docs = InHouseDocs::where('emp_in_house_id', $emp_id) -> orderBy('created_at', 'desc') -> get();
+        } else if($emp_type == 'transaction_coordinator') {
+            $docs = TransactionCoordinatorsDocs::where('emp_transaction_coordinators_id', $emp_id) -> orderBy('created_at', 'desc') -> get();
+        }
+
+        return view('/employees/get_employee_docs_html', compact('docs'));
+
+    }
+
+    public function delete_doc(Request $request) {
+
+        $doc_id = $request -> doc_id;
+        $emp_type = $request -> emp_type;
+        $active = $request -> active;
+
+        if($emp_type == 'in_house') {
+            $doc_delete = InHouseDocs::find($doc_id) -> update(['active' => $active]);
+        } else if($emp_type == 'transaction_coordinator') {
+            $doc_delete = TransactionCoordinatorsDocs::find($doc_id) -> update(['active' => $active]);
+        }
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
 
 }

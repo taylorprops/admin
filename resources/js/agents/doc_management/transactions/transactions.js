@@ -51,11 +51,11 @@ if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab
             }
 
             if(type == 'listings') {
-                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+                data_table('10', $('#'+type+'_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
             } else if(type == 'contracts') {
-                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+                data_table('10', $('#'+type+'_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
             } else if(type == 'referrals') {
-                data_table('10', $('#'+type+'_div table'), [1, 'asc'], [0], hidden_cols, false, true, true, true);
+                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [0], hidden_cols, false, true, true, true);
             }
 
         })

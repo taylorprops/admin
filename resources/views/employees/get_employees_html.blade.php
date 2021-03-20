@@ -21,7 +21,7 @@
                 <tr>
                     <td width="80">
                         <button class="btn btn-primary edit-employee-button"
-                        data-type="{{ $type }}"
+                        data-type="{{ $emp_type }}"
                         @foreach($employee -> toArray() as $column => $value)
                             data-{{ $column }}="{{ $value }}"
                         @endforeach

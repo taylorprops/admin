@@ -81,6 +81,7 @@ class GlobalFunctionsController extends Controller
 
                     $tax_county = str_replace(' County', '', $property['county_name_mdp_field_cntyname']);
                     $tax_county = str_replace('\'', '', $tax_county);
+
                     $details = [
                         'County' => $tax_county ?? null,
                         'ListingTaxID' => $property['account_id_mdp_field_acctid'] ?? null,
@@ -98,7 +99,7 @@ class GlobalFunctionsController extends Controller
                         'UnitNumber' => $property['premise_address_condominium_unit_no_sdat_field_28'] ?? null,
                         'District' => $property['record_key_district_ward_sdat_field_2'] ?? null,
                         'LegalDescription1' => $property['legal_description_line_1_mdp_field_legal1_sdat_field_17'] ?? null,
-                        'TaxRecordLink' => $property['real_property_search_link']['url'] ?? null,
+                        'TaxRecordLink' => str_replace('http:', 'https:', $property['real_property_search_link']['url']) ?? null,
                         'LegalDescription2' => $property['legal_description_line_2_mdp_field_legal2_sdat_field_18'] ?? null,
                         'LegalDescription3' => $property['legal_description_line_3_mdp_field_legal3_sdat_field_19'] ?? null,
                         'DeedReference1' => $property['deed_reference_1_liber_mdp_field_dr1liber_sdat_field_30'] ?? null,

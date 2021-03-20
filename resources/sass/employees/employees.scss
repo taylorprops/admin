@@ -4,8 +4,6 @@
 
 }
 
-
-
 #crop_image {
     width: 100%;
 }
@@ -19,5 +17,16 @@
     position: absolute;
     top: -15px;
     right: -20px;
+}
+
+.employee-docs-div {
+
+    .filepond--root {
+        max-height: 5rem;
+    }
+    .filepond--root .filepond--drop-label {
+        min-height: 2.75em;
+    }
+
 }
 

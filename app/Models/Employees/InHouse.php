@@ -12,4 +12,10 @@ class InHouse extends Model {
     protected $connection = 'mysql';
     public $table = 'emp_in_house';
     protected $guarded = [];
+
+    public function docs() {
+        return $this -> hasMany(\App\Models\Employees\InHouseDocs::class, 'emp_in_house_id', 'id') -> orderBy('created_at', 'desc');
+    }
+
+
 }

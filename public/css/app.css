@@ -13467,10 +13467,10 @@ a.ck.ck-button {
   }
 }
 /* image cropping */
-.filepond--drop-label {
-  border: 2px dashed #4c9bdb;
+.filepond--panel-root {
   background: #f8fcff;
   color: #1972bb;
+  border: 2px dashed #4c9bdb;
 }
 
 .modal {
@@ -13764,6 +13764,10 @@ body.modal-open {
 }
 .modal-1000 {
   max-width: 1000px !important;
+}
+
+.modal-1200 {
+  max-width: 1200px !important;
 }
 
 @media (max-width: 1200px) {
@@ -17715,6 +17719,13 @@ header .main-search-results-container .main-search-results-div .main-search-resu
   position: absolute;
   top: -15px;
   right: -20px;
+}
+
+.employee-docs-div .filepond--root {
+  max-height: 5rem;
+}
+.employee-docs-div .filepond--root .filepond--drop-label {
+  min-height: 2.75em;
 }
 
 .page-balance-earnest .earnest-key {
