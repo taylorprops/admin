@@ -54,8 +54,8 @@ class LoginController extends Controller
             $user_id = auth() -> user() -> user_id;
 
             // get admin details and add to session
-            $admin_details = InHouse::whereId($user_id) -> first();
-            session(['admin_details' => $admin_details]);
+            $user_details = InHouse::whereId($user_id) -> first();
+            session(['user_details' => $user_details]);
 
             if (auth() -> user() -> super_user == 'yes') {
                 session(['super_user' => true]);
@@ -66,13 +66,13 @@ class LoginController extends Controller
             $user_id = auth() -> user() -> user_id;
 
             // get agent details and add to session
-            $agent_details = Agents::whereId($user_id) -> first();
-            session(['agent_details', $agent_details]);
+            $user_details = Agents::whereId($user_id) -> first();
+            session(['user_details', $user_details]);
 
             // set logo for header logo and EMAILS by company and add to session
             session(['header_logo_src' => '/images/logo/logo_aap.png']);
             session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
-            if (stristr($agent_details -> company, 'Taylor')) {
+            if (stristr($user_details -> company, 'Taylor')) {
                 session(['header_logo_src' => '/images/logo/logo_tp.png']);
                 session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
             }
@@ -86,8 +86,8 @@ class LoginController extends Controller
             $user_id = auth() -> user() -> user_id;
 
             // get admin details and add to session
-            $transaction_coordinator_details = TransactionCoordinators::whereId($user_id) -> first();
-            session(['transaction_coordinator_details' => $transaction_coordinator_details]);
+            $user_details = TransactionCoordinators::whereId($user_id) -> first();
+            session(['user_details' => $user_details]);
 
         }
 

@@ -446,7 +446,7 @@ class TransactionsAddController extends Controller {
         if ($request -> Agent_ID) {
             $agent = Agents::AgentDetails($request -> Agent_ID);
         } else {
-            $agent = \Session::get('agent_details');
+            $agent = \Session::get('user_details');
         }
         // add agent details
         $property_details -> Agent_ID = $agent -> id;

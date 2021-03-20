@@ -16510,9 +16510,9 @@ $(function () {
 
   if (!document.URL.match(/admin\/$/)) {
     inactivityTime();
-  }
+  } //$('#main_nav_bar').bootnavbar({});
 
-  $('#main_nav_bar').bootnavbar({});
+
   toastr.options = {
     "timeOut": 4000,
     "preventDuplicates": true
@@ -17150,60 +17150,93 @@ $(document).on('keydown', function (event) {
   \*********************************/
 /***/ (() => {
 
-(function ($) {
-  var defaults = {
-    sm: 540,
-    md: 720,
-    lg: 960,
-    xl: 1140,
-    navbar_expand: 'lg',
-    animation: true,
-    animateIn: 'show'
-  };
+$(function ($) {
+  show_sidebar();
+  $(window).on('resize', show_sidebar);
+  $(".sidebar-dropdown > a").on('click', function () {
+    $(".sidebar-submenu").slideUp(200);
 
-  $.fn.bootnavbar = function (options) {
-    var screen_width = $(document).width();
-    settings = $.extend(defaults, options);
-
-    if (screen_width >= settings.lg) {
-      $(this).find('.dropdown').each(function () {
-        $(this).on('mouseenter', function () {
-          $(this).addClass('show');
-          $(this).find('.dropdown-menu').first().addClass('show');
-
-          if (settings.animation) {
-            $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
-          }
-        });
-        $(this).on('mouseleave', function () {
-          $(this).removeClass('show');
-          $(this).find('.dropdown-menu').first().removeClass('show');
-        });
-      });
+    if ($(this).parent().hasClass("active")) {
+      $(".sidebar-dropdown").removeClass("active");
+      $(this).parent().removeClass("active");
+    } else {
+      $(".sidebar-dropdown").removeClass("active");
+      $(this).next(".sidebar-submenu").slideDown(200);
+      $(this).parent().addClass("active");
     }
-    /* $('.dropdown-input').on('click', function() {
-        console.log('clicked');
-        $(this).addClass('show');
-        $(this).find('.dropdown-menu').first().addClass('show');
-        if (settings.animation) {
-            $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
+  });
+  $("#close-sidebar").on('click', function () {
+    $(".page-wrapper").removeClass("toggled");
+  });
+  $("#show-sidebar").on('click', function () {
+    $(".page-wrapper").addClass("toggled");
+  });
+
+  function show_sidebar() {
+    if ($(document).width() > 1200) {
+      $(".page-wrapper").addClass("toggled");
+    } else {
+      $(".page-wrapper").removeClass("toggled");
+    }
+  }
+});
+/* (function ($) {
+    var defaults = {
+        sm: 540,
+        md: 720,
+        lg: 960,
+        xl: 1140,
+        navbar_expand: 'lg',
+        animation: true,
+        animateIn: 'show',
+    };
+    $.fn.bootnavbar = function (options) {
+
+        var screen_width = $(document).width();
+        settings = $.extend(defaults, options);
+
+        if (screen_width >= settings.lg) {
+
+            $(this).find('.dropdown').each(function () {
+                $(this).on('mouseenter', function() {
+                    $(this).addClass('show');
+                    $(this).find('.dropdown-menu').first().addClass('show');
+                    if (settings.animation) {
+                        $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
+                    }
+                });
+                $(this).on('mouseleave', function() {
+                    $(this).removeClass('show');
+                    $(this).find('.dropdown-menu').first().removeClass('show');
+                });
+            });
+
         }
-    }); */
 
+        // $('.dropdown-input').on('click', function() {
+        //     console.log('clicked');
+        //     $(this).addClass('show');
+        //     $(this).find('.dropdown-menu').first().addClass('show');
+        //     if (settings.animation) {
+        //         $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
+        //     }
+        // });
 
-    $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
-      /* if (!$(this).next().hasClass('show')) {
-          $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-      }
-      var $subMenu = $(this).next('.dropdown-menu');
-      $subMenu.toggleClass('show');
-       $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
-          $('.dropdown-submenu .show').removeClass('show');
-      }); */
-      return false;
-    });
-  };
-})(jQuery);
+        $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
+            // if (!$(this).next().hasClass('show')) {
+            //     $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+            // }
+            // var $subMenu = $(this).next('.dropdown-menu');
+            // $subMenu.toggleClass('show');
+
+            // $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+            //     $('.dropdown-submenu .show').removeClass('show');
+            // });
+
+            return false;
+        });
+    };
+})(jQuery); */
 
 /***/ }),
 
@@ -72894,12 +72927,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
   \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\n\n    border-top: 1px solid $primary-dark;\n                         ^\n      Undefined variable.\n    ╷\n437 │     border-top: 1px solid $primary-dark;\n    │                           ^^^^^^^^^^^^^\n    ╵\n  resources/sass/nav/nav.scss 437:27  @import\n  stdin 15:9                          root stylesheet\n      in /var/www/admin/resources/sass/nav/nav.scss (line 437, column 27)\n    at processResult (/var/www/admin/node_modules/webpack/lib/NormalModule.js:598:19)\n    at /var/www/admin/node_modules/webpack/lib/NormalModule.js:692:5\n    at /var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:399:11\n    at /var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:251:18\n    at context.callback (/var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:124:13)\n    at /var/www/admin/node_modules/sass-loader/dist/index.js:89:7\n    at Function.call$2 (/var/www/admin/node_modules/sass/sass.dart.js:91729:16)\n    at _render_closure1.call$2 (/var/www/admin/node_modules/sass/sass.dart.js:80373:12)\n    at _RootZone.runBinary$3$3 (/var/www/admin/node_modules/sass/sass.dart.js:27269:18)\n    at _FutureListener.handleError$1 (/var/www/admin/node_modules/sass/sass.dart.js:25797:19)");
 
 /***/ }),
 
@@ -79904,12 +79934,6 @@ exports.defaults = defaults;
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
-/******/ 	// the startup function
-/******/ 	// It's empty as some runtime module handles the default behavior
-/******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -79972,100 +79996,13 @@ exports.defaults = defaults;
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		// no baseURI
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// Promise = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			"/js/app": 0
-/******/ 		};
-/******/ 		
-/******/ 		var deferredModules = [
-/******/ 			["./resources/js/app.js"],
-/******/ 			["./resources/sass/app.scss"]
-/******/ 		];
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		var checkDeferredModules = x => {};
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0, resolves = [];
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					resolves.push(installedChunks[chunkId][0]);
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			for(moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			while(resolves.length) {
-/******/ 				resolves.shift()();
-/******/ 			}
-/******/ 		
-/******/ 			// add entry modules from loaded chunk to deferred list
-/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
-/******/ 		
-/******/ 			// run deferred modules when all chunks ready
-/******/ 			return checkDeferredModules();
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkadmin"] = self["webpackChunkadmin"] || [];
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 		
-/******/ 		function checkDeferredModulesImpl() {
-/******/ 			var result;
-/******/ 			for(var i = 0; i < deferredModules.length; i++) {
-/******/ 				var deferredModule = deferredModules[i];
-/******/ 				var fulfilled = true;
-/******/ 				for(var j = 1; j < deferredModule.length; j++) {
-/******/ 					var depId = deferredModule[j];
-/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferredModules.splice(i--, 1);
-/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 				}
-/******/ 			}
-/******/ 			if(deferredModules.length === 0) {
-/******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = x => {};
-/******/ 			}
-/******/ 			return result;
-/******/ 		}
-/******/ 		var startup = __webpack_require__.x;
-/******/ 		__webpack_require__.x = () => {
-/******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = startup || (x => {});
-/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 /******/ 	
-/******/ 	// run startup
-/******/ 	var __webpack_exports__ = __webpack_require__.x();
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	__webpack_require__("./resources/js/app.js");
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./resources/sass/app.scss");
 /******/ 	
 /******/ })()
 ;

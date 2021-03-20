@@ -34,7 +34,7 @@ $(function() {
     }
 
 
-    $('#main_nav_bar').bootnavbar({});
+    //$('#main_nav_bar').bootnavbar({});
 
     toastr.options = {
         "timeOut": 4000,

@@ -23,7 +23,7 @@
         @component('mail::footer')
             © {{ date('Y') }}
             @if(auth() -> user() && stristr(auth() -> user() -> group, 'agent'))
-                {{ \Session::get('agent_details') -> company }}
+                {{ \Session::get('user_details') -> company }}
                 @else
                 Taylor Properties
                 @endif
