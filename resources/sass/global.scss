@@ -173,7 +173,7 @@ $i: 500;
 
 
 
-div[class*='container-'] {
+div[class*='container-']:not(.p-0) {
     padding-left: 10px !important;
     padding-right: 10px !important;
 }

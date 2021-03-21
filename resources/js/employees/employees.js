@@ -71,6 +71,9 @@ if (document.URL.match(/employees/)) {
     function show_cropper(width, height, agent_photo_file_pond) {
 
         $('#crop_modal').modal('show');
+        $('#crop_modal').on('hidden.bs.modal', function(){
+            agent_photo_file_pond.removeFiles();
+        });
 
         let image = document.querySelector('#crop_image');
         let cropper = new Cropper(image, {

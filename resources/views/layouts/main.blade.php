@@ -67,7 +67,6 @@
 
         @include('layouts.includes.header')
 
-
         {{-- <main>
         @yield('content')
         </main> --}}

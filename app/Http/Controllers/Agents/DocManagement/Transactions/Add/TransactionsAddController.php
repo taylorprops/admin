@@ -233,6 +233,8 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
+
+
     public function transaction_add_details_referral(Request $request) {
 
 		$status = ResourceItems::GetResourceID('Active', 'referral_status');
@@ -330,6 +332,8 @@ class TransactionsAddController extends Controller {
         return true;
     }
 
+
+
     public function transaction_add_details_new(Request $request) {
 
 		$transaction_type = $request -> transaction_type;
@@ -391,47 +395,7 @@ class TransactionsAddController extends Controller {
         return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
-    public function transaction_required_details(Request $request) {
 
-		$transaction_type = $request -> transaction_type;
-        $id = $request -> id;
-
-
-        $property = Listings::GetPropertyDetails($transaction_type, $id);
-        $Agent_ID = $property -> Agent_ID;
-
-        $office = null;
-        if ($property -> ListOfficeMlsId != '') {
-            $office = Offices::where('OfficeMlsId', $property -> ListOfficeMlsId) -> first();
-        }
-
-        $for_sale = true;
-        if ($property -> SaleRent == 'rental') {
-            $for_sale = false;
-        }
-
-        $states = LocationData::AllStates();
-        $states_json = $states -> toJson();
-        $statuses = ResourceItems::where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
-
-        $contacts = [];
-        if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
-            $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
-        } elseif (auth() -> user() -> group == 'admin') {
-            $contacts = CRMContacts::get();
-        }
-
-        $resource_items = new ResourceItems();
-
-        /* $transaction_type_header = 'Contract/Lease';
-        if($transaction_type == 'listing') {
-            $transaction_type_header = 'Listing';
-        } else if($transaction_type == 'referral') {
-            $transaction_type_header = 'Referral Agreement';
-        } */
-
-        return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
-    }
 
     public function save_add_transaction(Request $request) {
 
@@ -574,6 +538,50 @@ class TransactionsAddController extends Controller {
         $new_folder -> save();
 
         return response() -> json(['id' => $Listing_ID.$Contract_ID.$Referral_ID]);
+    }
+
+
+
+    public function transaction_required_details(Request $request) {
+
+		$transaction_type = $request -> transaction_type;
+        $id = $request -> id;
+
+
+        $property = Listings::GetPropertyDetails($transaction_type, $id);
+        $Agent_ID = $property -> Agent_ID;
+
+        $office = null;
+        if ($property -> ListOfficeMlsId != '') {
+            $office = Offices::where('OfficeMlsId', $property -> ListOfficeMlsId) -> first();
+        }
+
+        $for_sale = true;
+        if ($property -> SaleRent == 'rental') {
+            $for_sale = false;
+        }
+
+        $states = LocationData::AllStates();
+        $states_json = $states -> toJson();
+        $statuses = ResourceItems::where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
+
+        $contacts = [];
+        if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
+            $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
+        } elseif (auth() -> user() -> group == 'admin') {
+            $contacts = CRMContacts::get();
+        }
+
+        $resource_items = new ResourceItems();
+
+        /* $transaction_type_header = 'Contract/Lease';
+        if($transaction_type == 'listing') {
+            $transaction_type_header = 'Listing';
+        } else if($transaction_type == 'referral') {
+            $transaction_type_header = 'Referral Agreement';
+        } */
+
+        return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
     }
 
     public function save_transaction_required_details(Request $request) {
@@ -1001,6 +1009,9 @@ class TransactionsAddController extends Controller {
             'id' => $Contract_ID,
         ]);
     }
+
+
+
 
     public function get_property_info(Request $request) {
 

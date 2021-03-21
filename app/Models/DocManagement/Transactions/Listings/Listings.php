@@ -28,7 +28,15 @@ class Listings extends Model
                 } elseif (auth() -> user() -> group == 'transaction_coordinator') {
                     $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
+
+                $one_minute_ago = date('Y-m-d H:i:s', strtotime('-1 minute'));
+                $query -> where(function($query) use ($one_minute_ago) {
+                    $query -> where('Status', '>', '0')
+                    -> orWhere('created_at', '>', $one_minute_ago);
+                });
+
             }
+
         });
     }
 

@@ -568,9 +568,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="bg-white p-2 mt-3">
-                                        <div class="list-group check-deductions-div"></div>
-                                    </div>
+                                    <div class="list-group check-deductions-div bg-white mt-3"></div>
 
                                 </div>
 

@@ -104,7 +104,7 @@
 
                 <div class="file-view" id="thumb_viewer">
 
-                    <div class="h5 text-white bg-primary-dark p-2"><i class="fad fa-send-backward mr-3"></i> Pages</div>
+                    <div class="h5 text-white bg-primary p-2"><i class="fad fa-send-backward mr-3"></i> Pages</div>
 
                     @foreach($images as $image)
                         <?php $c = $image -> page_number; ?>

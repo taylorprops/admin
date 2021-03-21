@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\CheckEmailedDocuments::class,
-        \App\Console\Commands\DocManagement\ExpireListings::class,
+        \App\Console\Commands\DocManagement\SetListingStatus::class,
         \App\Console\Commands\DatabaseBackUp::class,
     ];
 
@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
 
         // set listings to expired
-        $schedule -> command('doc_management:expire_listings') -> dailyAt('00:01');
+        $schedule -> command('doc_management:set_listing_status') -> dailyAt('00:01');
 
         // mysql backup locally
         $schedule -> command('database:backup') -> daily();

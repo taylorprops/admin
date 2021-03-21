@@ -7,11 +7,11 @@ $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
 // Colors
-$blue: #0065b8;
-$blue-dark: #015396;
-$blue-darker: #013b6b;
+$blue-light: #f1fcff;
+$blue: #3596e6; //#1a6fb4
 $blue-med: #015091;
-$blue-light: #f3f7ff;
+$blue-dark: #124772;
+$blue-darker: #0d3555;
 /* $blue: #4c9bdb;
 $blue-dark: #1972bb;
 $blue-darker: #104875;
@@ -21,7 +21,7 @@ $blue-gray: #adcee8;
 $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66d9b;
-$red: #b64341;
+$red: #9e4c4b;
 $danger_red: #a14f4e;
 $red-light: #f8d9d9;
 $red-lighter: #f5e0e0;
@@ -31,7 +31,7 @@ $orange-light: #f8e5e3;
 $orange-dark: #943d31;
 $yellow: #ffed4a;
 $yellow-light: #f7efae;
-$green: #2d8d2d;
+$green: #4c864c;
 $success_green: #518d54;
 $green-light: #bef1be;
 $green-lighter: #d2f1d2;
@@ -173,13 +173,37 @@ a.text-green:hover {
     border: 1px solid $orange !important;
 }
 
-$badge_blue: #4594d4;
-$badge_blue_light: #e9ecf0;
-$badge_green: #329732;
-$badge_orange: #d47433;
-$badge_red: #a33a38;
-$badge_default: #6a839e;
+$badge_blue: #346e9e;
+$badge_blue_light: #7daed6;
+$badge_green: #62b962;
+$badge_orange: #a1460a;
+$badge_red: #852624;
+$badge_default: #496b90;
+
+
 .badge.bg-primary {
+    background: linear-gradient(122deg, $badge_blue, $blue) !important;
+}
+.badge.bg-success {
+    background: linear-gradient(122deg, $badge_green, $green) !important;
+}
+.badge.bg-orange {
+    background: linear-gradient(122deg, $badge_orange, $orange) !important;
+}
+.badge.bg-danger {
+    background: linear-gradient(122deg, $badge_red, $red) !important;
+}
+.badge.bg-blue-light {
+    background: linear-gradient(122deg, $badge_blue_light, $blue_light) !important;
+}
+.badge.bg-default {
+    background-image: linear-gradient(122deg, $badge_default 0%, $default 100%) !important;
+}
+
+
+
+
+/* .badge.bg-primary {
     background-image: linear-gradient(122deg, $badge_blue 29.17%, $blue 29.17%, $blue 50%, $badge_blue 50%, $badge_blue 79.17%, $blue 79.17%, $blue 100%) !important;
     background-size: 14.15px 22.64px !important;
 }
@@ -202,4 +226,4 @@ $badge_default: #6a839e;
 .badge.bg-default {
     background-image: linear-gradient(122deg, $badge_default 29.17%, $default 29.17%, $default 50%, $badge_default 50%, $badge_default.17%, $default 79.17%, $default 100%) !important;
     background-size: 14.15px 22.64px !important;
-}
+} */

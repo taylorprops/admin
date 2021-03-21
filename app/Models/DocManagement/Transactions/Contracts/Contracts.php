@@ -27,6 +27,7 @@ class Contracts extends Model
                     $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
             }
+            $query -> where('Status', '>', '0');
         });
     }
 

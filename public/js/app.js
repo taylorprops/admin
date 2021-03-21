@@ -3110,7 +3110,6 @@ if (document.URL.match(/transaction_required_details/)) {
 
     if ($(this).is(':checked')) {
       $(this).closest('.form-ele').next('div').find('[name^=' + member + '_]').not('[name^=' + member + '_crm]').removeClass('required').parent().find('.required-div').hide();
-      console.log(field);
       field.removeClass('hide').find('input').addClass('required').parent().find('.required-div').show();
     } else {
       $(this).closest('.form-ele').next('div').find('[name^=' + member + '_]').not('[name^=' + member + '_crm]').addClass('required').parent().find('.required-div').show();
@@ -3436,6 +3435,13 @@ if (document.URL.match(/transaction_required_details/)) {
               add_buyers_agent($(this));
             }
           });
+          $(document).on('mouseup', function (e) {
+            var search_divs = $('.search-results-container');
+
+            if (!search_divs.is(e.target) && search_divs.has(e.target).length === 0) {
+              $('.search-results-container').hide();
+            }
+          });
         })["catch"](function (error) {
           if (axios.isCancel(error)) {} else {//
           }
@@ -3463,6 +3469,9 @@ if (document.URL.match(/transaction_required_details/)) {
       $(this).on('change', function () {
         format_money_with_decimals($(this));
       });
+    });
+    $('#list_agent_search_div').on('shown.bs.collapse', function () {
+      $('#list_agent_search_div').find('.agent-search').focus().select();
     });
   });
 }
@@ -9817,9 +9826,9 @@ if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab
       }
 
       if (type == 'listings') {
-        data_table('10', $('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+        data_table('10', $('#' + type + '_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
       } else if (type == 'contracts') {
-        data_table('10', $('#' + type + '_div table'), [3, 'desc'], [0, 7], hidden_cols, false, true, true, true);
+        data_table('10', $('#' + type + '_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
       } else if (type == 'referrals') {
         data_table('10', $('#' + type + '_div table'), [1, 'asc'], [0], hidden_cols, false, true, true, true);
       }
@@ -13984,6 +13993,7 @@ if (document.URL.match(/document_review/)) {
   };
 
   $(function () {
+    $('.page-wrapper').removeClass('toggled');
     $('.property-item').off('click').on('click', function () {
       $('.documents-div').children().addClass('animate__animated animate__bounceOutDown');
       $('.details-div').children().addClass('animate__animated animate__fadeOut');
@@ -14122,6 +14132,9 @@ if (document.URL.match(/document_review/)) {
 if (document.URL.match(/employees/)) {
   var show_cropper = function show_cropper(width, height, agent_photo_file_pond) {
     $('#crop_modal').modal('show');
+    $('#crop_modal').on('hidden.bs.modal', function () {
+      agent_photo_file_pond.removeFiles();
+    });
     var image = document.querySelector('#crop_image');
     var cropper = new Cropper(image, {
       aspectRatio: 3 / 4,
@@ -16510,8 +16523,7 @@ $(function () {
 
   if (!document.URL.match(/admin\/$/)) {
     inactivityTime();
-  } //$('#main_nav_bar').bootnavbar({});
-
+  }
 
   toastr.options = {
     "timeOut": 4000,
@@ -17153,90 +17165,33 @@ $(document).on('keydown', function (event) {
 $(function ($) {
   show_sidebar();
   $(window).on('resize', show_sidebar);
-  $(".sidebar-dropdown > a").on('click', function () {
-    $(".sidebar-submenu").slideUp(200);
+  $('.sidebar-dropdown > a').on('click', function () {
+    $('.sidebar-submenu').slideUp(200);
 
-    if ($(this).parent().hasClass("active")) {
-      $(".sidebar-dropdown").removeClass("active");
-      $(this).parent().removeClass("active");
+    if ($(this).parent().hasClass('active')) {
+      $('.sidebar-dropdown').removeClass('active');
+      $(this).parent().removeClass('active');
     } else {
-      $(".sidebar-dropdown").removeClass("active");
-      $(this).next(".sidebar-submenu").slideDown(200);
-      $(this).parent().addClass("active");
+      $('.sidebar-dropdown').removeClass('active');
+      $(this).next('.sidebar-submenu').slideDown(200);
+      $(this).parent().addClass('active');
     }
   });
-  $("#close-sidebar").on('click', function () {
-    $(".page-wrapper").removeClass("toggled");
+  $('#close-sidebar').on('click', function () {
+    $('.page-wrapper').removeClass('toggled');
   });
-  $("#show-sidebar").on('click', function () {
-    $(".page-wrapper").addClass("toggled");
+  $('#show-sidebar').on('click', function () {
+    $('.page-wrapper').addClass('toggled');
   });
 
   function show_sidebar() {
     if ($(document).width() > 1200) {
-      $(".page-wrapper").addClass("toggled");
+      $('.page-wrapper').addClass('toggled');
     } else {
-      $(".page-wrapper").removeClass("toggled");
+      $('.page-wrapper').removeClass('toggled');
     }
   }
 });
-/* (function ($) {
-    var defaults = {
-        sm: 540,
-        md: 720,
-        lg: 960,
-        xl: 1140,
-        navbar_expand: 'lg',
-        animation: true,
-        animateIn: 'show',
-    };
-    $.fn.bootnavbar = function (options) {
-
-        var screen_width = $(document).width();
-        settings = $.extend(defaults, options);
-
-        if (screen_width >= settings.lg) {
-
-            $(this).find('.dropdown').each(function () {
-                $(this).on('mouseenter', function() {
-                    $(this).addClass('show');
-                    $(this).find('.dropdown-menu').first().addClass('show');
-                    if (settings.animation) {
-                        $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
-                    }
-                });
-                $(this).on('mouseleave', function() {
-                    $(this).removeClass('show');
-                    $(this).find('.dropdown-menu').first().removeClass('show');
-                });
-            });
-
-        }
-
-        // $('.dropdown-input').on('click', function() {
-        //     console.log('clicked');
-        //     $(this).addClass('show');
-        //     $(this).find('.dropdown-menu').first().addClass('show');
-        //     if (settings.animation) {
-        //         $(this).find('.dropdown-menu').first().addClass('animate__animated animate__' + settings.animateIn);
-        //     }
-        // });
-
-        $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
-            // if (!$(this).next().hasClass('show')) {
-            //     $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-            // }
-            // var $subMenu = $(this).next('.dropdown-menu');
-            // $subMenu.toggleClass('show');
-
-            // $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
-            //     $('.dropdown-submenu .show').removeClass('show');
-            // });
-
-            return false;
-        });
-    };
-})(jQuery); */
 
 /***/ }),
 
@@ -17248,16 +17203,16 @@ $(function ($) {
 
 $(function () {
   $(document).on('keyup', '.main-search-input', function () {
-    $('#main_nav_collapse').collapse('hide');
+    //$('#main_nav_collapse').collapse('hide');
     main_search($(this));
   });
   $(document).on('click', '.hide-search', hide_search);
   /* $(document).on('click', '.search-results-row .list-group-item', function() {
       window.open($(this).data('href'));
   }) */
+  // let top = $('#main_nav_bar').css('height');
+  // $('.main-search-results-div').css('top', top);
 
-  var top = $('#main_nav_bar').css('height');
-  $('.main-search-results-div').css('top', top);
   var search_request = null;
 
   function main_search(input) {
@@ -17271,8 +17226,8 @@ $(function () {
     var value = input.val().trim();
     var container = $('.main-search-results-div');
 
-    if (value.length > 1) {
-      input.next('.hide-search').removeClass('hidden');
+    if (value.length > 0) {
+      $('.hide-search').removeClass('hidden');
       axios.get('/search', {
         cancelToken: search_request.token,
         params: {
@@ -17292,10 +17247,9 @@ $(function () {
           if (!search_divs.is(e.target) && search_divs.has(e.target).length === 0) {
             hide_search();
           }
-        });
-        $('#main_nav_collapse .nav-link').on('click', function () {
-          hide_search();
-        });
+        }); // $('#main_nav_collapse .nav-link').on('click', function(){
+        //     hide_search();
+        // });
       })["catch"](function (error) {});
     } else {
       $('.main-search-results').html('');
@@ -26105,7 +26059,7 @@ exports.validate = function(email)
 /***/ (function(module) {
 
 /*!
- * FilePondPluginFileEncode 2.1.9
+ * FilePondPluginFileEncode 2.1.10
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -26309,7 +26263,7 @@ exports.validate = function(email)
 /***/ (function(module) {
 
 /*!
- * FilePondPluginImagePreview 4.6.5
+ * FilePondPluginImagePreview 4.6.6
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -30096,7 +30050,7 @@ exports.validate = function(email)
 /***/ (function(__unused_webpack_module, exports) {
 
 /*!
- * FilePond 4.25.3
+ * FilePond 4.26.0
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -35272,6 +35226,19 @@ exports.validate = function(email)
                     return null;
                 };
 
+            var headers =
+                typeof action.headers === 'function'
+                    ? action.headers(file, metadata) || {}
+                    : Object.assign(
+                          {},
+
+                          action.headers
+                      );
+
+            var requestParams = Object.assign({}, action, {
+                headers: headers,
+            });
+
             // create formdata object
             var formData = new FormData();
 
@@ -35290,7 +35257,11 @@ exports.validate = function(email)
             });
 
             // send request object
-            var request = sendRequest(ondata(formData), buildURL(apiUrl, action.url), action);
+            var request = sendRequest(
+                ondata(formData),
+                buildURL(apiUrl, action.url),
+                requestParams
+            );
             request.onload = function(xhr) {
                 load(
                     createResponse(
@@ -38694,7 +38665,7 @@ exports.validate = function(email)
     var getItemsPerRow = function(horizontalSpace, itemWidth) {
         // add one pixel leeway, when using percentages for item width total items can be 1.99 per row
 
-        return Math.floor((horizontalSpace + 1) / itemWidth);
+        return Math.max(1, Math.floor((horizontalSpace + 1) / itemWidth));
     };
 
     var getItemIndexByPosition = function getItemIndexByPosition(view, children, positionInView) {
@@ -72927,9 +72898,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
   \*********************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\n\n    border-top: 1px solid $primary-dark;\n                         ^\n      Undefined variable.\n    ╷\n437 │     border-top: 1px solid $primary-dark;\n    │                           ^^^^^^^^^^^^^\n    ╵\n  resources/sass/nav/nav.scss 437:27  @import\n  stdin 15:9                          root stylesheet\n      in /var/www/admin/resources/sass/nav/nav.scss (line 437, column 27)\n    at processResult (/var/www/admin/node_modules/webpack/lib/NormalModule.js:598:19)\n    at /var/www/admin/node_modules/webpack/lib/NormalModule.js:692:5\n    at /var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:399:11\n    at /var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:251:18\n    at context.callback (/var/www/admin/node_modules/loader-runner/lib/LoaderRunner.js:124:13)\n    at /var/www/admin/node_modules/sass-loader/dist/index.js:89:7\n    at Function.call$2 (/var/www/admin/node_modules/sass/sass.dart.js:91729:16)\n    at _render_closure1.call$2 (/var/www/admin/node_modules/sass/sass.dart.js:80373:12)\n    at _RootZone.runBinary$3$3 (/var/www/admin/node_modules/sass/sass.dart.js:27269:18)\n    at _FutureListener.handleError$1 (/var/www/admin/node_modules/sass/sass.dart.js:25797:19)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
 
 /***/ }),
 
@@ -79914,8 +79888,9 @@ exports.defaults = defaults;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -79934,7 +79909,41 @@ exports.defaults = defaults;
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					result = fn();
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -79996,13 +80005,66 @@ exports.defaults = defaults;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/js/app": 0,
+/******/ 			"css/app": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			for(moduleId in moreModules) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 			}
+/******/ 			__webpack_require__.O();
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkadmin"] = self["webpackChunkadmin"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	__webpack_require__("./resources/js/app.js");
-/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./resources/sass/app.scss");
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
 ;

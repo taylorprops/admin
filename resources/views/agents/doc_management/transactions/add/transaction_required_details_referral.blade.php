@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container-600 page-container page-required-details mx-auto mb-5 pb-5">
+<div class="container-800 page-container page-required-details mx-auto mb-5 pb-5">
     <div class="row">
         <div class="col-12">
 
@@ -87,7 +87,7 @@
                                     <div class="collapse" id="receiving_agent_search_div">
                                         <div class="p-2 mb-4 bg-blue-light">
                                             <div class="mb-4">Type the Agent's Name, Email or BrightMLS ID</div>
-                                            <input type="text" class="custom-form-element form-input agent-search" data-label="Enter Agent's Name, Email or ID" autocomplete="agentsearch">
+                                            <input type="text" class="custom-form-element form-input agent-search" data-label="Enter Agent's Name, E<span></span>mail or ID" autocomplete="agentsearch">
                                             <div class="search-results-container">
                                                 <div class="list-group search-results bg-white p-2 border shadow w-100"></div>
                                             </div>
