@@ -32,7 +32,7 @@ html {
 
 
 body {
-    padding-top: 55px;
+    //padding-top: 55px;
     padding-right: 0px !important;
 
 }
@@ -173,7 +173,7 @@ $i: 500;
 
 
 
-div[class*='container-'] {
+div[class*='container-']:not(.p-0) {
     padding-left: 10px !important;
     padding-right: 10px !important;
 }

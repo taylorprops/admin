@@ -31,7 +31,7 @@ if($property -> Owner2 != '') {
 </script>
 <div class="container-1000 page-container page-required-details mx-auto mb-5 pb-5">
     <div class="row">
-        <div class="col-12 col-sm-8 mb-5 mx-auto">
+        <div class="col-12 col-lg-10 mb-5 mx-auto">
 
             <div class="h3 text-orange mt-3 mt-sm-4 text-center w-100">{{ $property -> FullStreetAddress }} {{ $property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode }}</div>
 
@@ -57,7 +57,7 @@ if($property -> Owner2 != '') {
                                 <a href="javascript: void(0)" class="btn btn-sm btn-primary ml-0 import-from-contacts-button" data-member="buyer" data-member-id="1"><i class="fad fa-user-friends mr-2"></i> Import from Contacts</a>
 
                                 <div class="row bank-trust-row hide">
-                                    <div class="col-12>
+                                    <div class="col-12">
                                         <input type="text" class="custom-form-element form-input required" name="buyer_entity_name" data-label="Trust, Company or other Entity Name">
                                     </div>
                                 </div>
@@ -182,7 +182,7 @@ if($property -> Owner2 != '') {
                                         <div class="collapse" id="list_agent_search_div">
                                             <div class="p-2 mb-4 font-8 bg-blue-light border">
                                                 <div class="mb-4">Type the Agent's Name, Email or BrightMLS ID</div>
-                                                <input type="text" class="custom-form-element form-input agent-search" data-type="list" data-label="Enter Agent's Name, Email or ID" autocomplete="agentsearch">
+                                                <input type="text" class="custom-form-element form-input agent-search" data-type="list" data-label="Enter Agent's Name, E<span></span>mail or ID" autocomplete="agentsearch">
                                                 <div class="search-results-container">
                                                     <div class="list-group search-results bg-white p-2 border w-100"></div>
                                                 </div>

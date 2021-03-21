@@ -1,7 +1,7 @@
 $(function() {
 
     $(document).on('keyup', '.main-search-input', function() {
-        $('#main_nav_collapse').collapse('hide');
+        //$('#main_nav_collapse').collapse('hide');
         main_search($(this));
     });
 
@@ -11,8 +11,8 @@ $(function() {
         window.open($(this).data('href'));
     }) */
 
-    let top = $('#main_nav_bar').css('height');
-    $('.main-search-results-div').css('top', top);
+    // let top = $('#main_nav_bar').css('height');
+    // $('.main-search-results-div').css('top', top);
 
 
     let search_request = null;
@@ -32,7 +32,7 @@ $(function() {
 
         if(value.length > 0) {
 
-            input.next('.hide-search').removeClass('hidden');
+            $('.hide-search').removeClass('hidden');
 
             axios.get('/search', {
                 cancelToken: search_request.token,
@@ -58,9 +58,9 @@ $(function() {
                     }
                 });
 
-                $('#main_nav_collapse .nav-link').on('click', function(){
-                    hide_search();
-                });
+                // $('#main_nav_collapse .nav-link').on('click', function(){
+                //     hide_search();
+                // });
 
             })
             .catch(function (error) {

@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Auth;
 use Cookie;
 use Illuminate\Http\Request;
-use App\Models\Employees\Agents;
-use App\Models\Employees\InHouse;
 use App\Http\Controllers\Controller;
-use App\Models\Employees\TransactionCoordinators;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -51,43 +48,20 @@ class LoginController extends Controller
             session(['header_logo_src' => '/images/logo/logos.png']);
             session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
-            $user_id = auth() -> user() -> user_id;
-
-            // get admin details and add to session
-            $admin_details = InHouse::whereId($user_id) -> first();
-            session(['admin_details' => $admin_details]);
-
             if (auth() -> user() -> super_user == 'yes') {
                 session(['super_user' => true]);
             }
 
         } elseif (stristr(auth() -> user() -> group, 'agent')) {
 
-            $user_id = auth() -> user() -> user_id;
 
-            // get agent details and add to session
-            $agent_details = Agents::whereId($user_id) -> first();
-            session(['agent_details', $agent_details]);
 
-            // set logo for header logo and EMAILS by company and add to session
-            session(['header_logo_src' => '/images/logo/logo_aap.png']);
-            session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
-            if (stristr($agent_details -> company, 'Taylor')) {
-                session(['header_logo_src' => '/images/logo/logo_tp.png']);
-                session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
-            }
         } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
 
         } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
 
             session(['header_logo_src' => '/images/logo/logos.png']);
             session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
-
-            $user_id = auth() -> user() -> user_id;
-
-            // get admin details and add to session
-            $transaction_coordinator_details = TransactionCoordinators::whereId($user_id) -> first();
-            session(['transaction_coordinator_details' => $transaction_coordinator_details]);
 
         }
 

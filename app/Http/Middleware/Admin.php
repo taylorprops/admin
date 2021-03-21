@@ -21,7 +21,8 @@ class Admin
             $group = auth() -> user() -> group;
             if ($group == 'admin') {
                 return $next($request);
-            } else if ($group == 'agent' || $group == 'transaction_coordinator') {
+            }
+            if ($group == 'agent') {
                 $redirect_url = '/dashboard_agent';
             } else {
                 // TODO: this might be an issue

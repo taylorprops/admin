@@ -28,6 +28,7 @@
         "sass-loader": "^7.1.0",
         "smooth-dnd": "^0.12.1",
         "vue-template-compiler": "^2.6.12",
+        "webpack": "^4.46.0",
         "websocket-extensions": ">=0.1.4"
     },
     "dependencies": {

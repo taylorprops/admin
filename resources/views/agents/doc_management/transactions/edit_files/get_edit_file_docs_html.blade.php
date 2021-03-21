@@ -45,7 +45,7 @@
 
         <div class="col-2 d-none d-lg-block p-0 edit-file-sidebar border-right">
             <div class="file-view animate__animated animate__fadeIn" id="thumb_viewer">
-                <div class="h5 text-white bg-primary-dark p-2"><i class="fad fa-send-backward mr-3"></i> Pages</div>
+                <div class="h5 text-white bg-primary p-2"><i class="fad fa-send-backward mr-3"></i> Pages</div>
                 @foreach($images as $image)
                     @php $c = $image -> page_number; @endphp
                     <div class="file-view-thumb-container mb-2 mx-auto @if($c == 1) active @endif" id="thumb_{{ $c }}" data-id="{{ $c }}">

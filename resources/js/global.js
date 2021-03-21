@@ -34,8 +34,6 @@ $(function() {
     }
 
 
-    $('#main_nav_bar').bootnavbar({});
-
     toastr.options = {
         "timeOut": 4000,
         "preventDuplicates": true,

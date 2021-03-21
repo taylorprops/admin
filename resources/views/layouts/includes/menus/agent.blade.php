@@ -1,41 +1,61 @@
-<li class="nav-item mx-2">
-    <a href="/dashboard_agent" class="nav-link"> Dashboard</a>
-</li>
+<ul>
+    <li class="mt-4">
+        <a href="/dashboard_agent">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
 
-<li class="nav-item dropdown mx-2">
+    <li><hr class="my-1"></li>
 
-    <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="transactions_dropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        Transactions
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="transactions_dropdown">
+    <li class="header-menu">
+        <span>Doc Managment</span>
+    </li>
 
-        <li><a href="/agents/doc_management/transactions" class="dropdown-item">View Transactions</a></li>
+    <li class="sidebar-dropdown">
+        <a href="#">
+            <i class="fa fa-sign"></i>
+            <span>Transactions</span>
+            <span class="badge badge-pill badge-danger">3</span>
+        </a>
+        <div class="sidebar-submenu">
+            <ul>
+                <li>
+                    <a href="/agents/doc_management/transactions">View All Transactions</a>
+                </li>
+                <li>
+                    <a href="/agents/doc_management/transactions/add/listing">Add Listing</a>
+                </li>
+                <li>
+                    <a href="/agents/doc_management/transactions/add/contract">Add Contract</a>
+                </li>
+                <li>
+                    <a href="/agents/doc_management/transactions/add/referral">Add Referral</a>
+                </li>
+
+            </ul>
+        </div>
+    </li>
+
+    @if(auth() -> user() -> group == 'agent')
+        <li>
+            <a href="/esign">
+                <i class="fa fa-signature"></i>
+                E-Sign
+            </a>
+        </li>
 
         <li>
-            <a href="/agents/doc_management/transactions/add/listing" class="dropdown-item">Add Listing</a>
+            <a href="/contacts">
+                <i class="fa fa-users"></i>
+                Contacts
+            </a>
         </li>
-        <li>
-            <a href="/agents/doc_management/transactions/add/contract" class="dropdown-item">Add Contract/Lease</a>
-        </li>
-        <li>
-            <a href="/agents/doc_management/transactions/add/referral" class="dropdown-item">Add Referral</a>
-        </li>
+    @endif
 
-    </ul>
-
-</li>
-
-<li class="nav-item mx-2">
-    <a href="/documents" class="nav-link"> Documents</a>
-</li>
-
-@if(auth() -> user() -> group == 'agent')
-<li class="nav-item mx-2">
-    <a href="/esign" class="nav-link"> E-Sign</a>
-</li>
-
-<li class="nav-item mx-2">
-    <a href="/contacts" class="nav-link"> Contacts</a>
-</li>
-@endif
+    <li>
+        <a href="/documents">
+            <i class="fa fa-book"></i>
+            Documents
+        </a>
+    </li>

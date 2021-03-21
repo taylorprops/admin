@@ -4,9 +4,9 @@
 
         @if(count($listings) > 0)
 
-            <div class="col-12 col-md-6 col-xl-4 px-2">
+            <div class="col-12 col-md-6 col-xl-4">
 
-                <div class="text-orange font-11 mb-1 ml-2 mt-2">Listings</div>
+                <div class="text-white font-11 mb-1 ml-2 mt-2">Listings</div>
 
                 <div class="list-group">
 
@@ -19,13 +19,13 @@
                         $transaction_coordinator = $property -> transaction_coordinator;
                         @endphp
 
-                        <div class="list-group-item search-item px-2 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
+                        <div class="list-group-item search-item px-2 py-1 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
 
                                 <div class="row">
 
-                                    <div class="col-5 col-md-8 col-lg-5"">
+                                    <div class="col-8 col-lg-5">
 
-                                        <div class="font-10">
+                                        <div class="font-9">
                                             <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing">
                                                 {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                             </a>
@@ -33,7 +33,7 @@
 
                                     </div>
 
-                                    <div class="col-4 font-10" style="color: {{ $status_color }}">
+                                    <div class="col-4 font-9 float-right float-lg-none" style="color: {{ $status_color }}">
                                         {{ $status }}
                                         @if(stristr($status, 'Under Contract') || stristr($status, 'Closed'))
                                             <br>
@@ -43,9 +43,9 @@
 
 
 
-                                    <div class="col-3 d-md-none d-lg-inline-block">
+                                    <div class="col-3 d-none d-lg-inline-block">
 
-                                        <div class="overflow-hidden text-right font-10">
+                                        <div class="overflow-hidden text-right">
                                             @if($property -> ListPictureURL)
                                                 <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
                                             @else
@@ -56,30 +56,30 @@
 
                                 </div>
 
-                                <div class="row mt-3">
+                                <div class="row mt-1">
 
                                     <div class="col-12">
 
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
 
                                             @if(Cookie::get('user_group') == 'admin')
                                                 <div>
-                                                    <span class="text-gray">{{ $agent }}</span>
+                                                    <span class="text-orange font-9">{{ $agent }}</span>
                                                 </div>
-                                            <span class="font-12 text-primary">|</span>
+                                            <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                             @endif
                                             <div>
                                                 {{ ucwords($property -> SaleRent) }}
                                             </div>
-                                            <span class="font-12 text-primary">|</span>
+                                            <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                             <div>
                                                 <span class="text-gray">${{ number_format($property -> ListPrice) }}</span>
                                             </div>
-                                            <span class="font-12 text-primary">|</span>
+                                            <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                             <div title="List Date" data-toggle="tooltip">
                                                 LD - <span class="text-gray">{{ date_mdy($property -> MLSListDate) }}</span>
                                             </div>
-                                            <span class="font-12 text-primary">|</span>
+                                            <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                             <div title="Expiration Date" data-toggle="tooltip">
                                                 EX - <span class="text-gray">{{ date_mdy($property -> ExpirationDate) }}</span>
                                             </div>
@@ -93,8 +93,8 @@
                                 @if($transaction_coordinator)
 
                                     <div class="row">
-                                        <div class="col-12">
-                                            <hr>
+                                        <div class="col-12 font-8">
+                                            <hr class="my-1">
                                             Transaction Coordinator -
                                             <span class="text-gray">{{ $transaction_coordinator -> first_name.' '.$transaction_coordinator -> last_name }}</span>
                                         </div>
@@ -117,7 +117,7 @@
 
             <div class="col-12 col-md-6 col-xl-4 px-2">
 
-                <div class="text-orange font-11 mb-1 ml-2 mt-2">Contracts/Leases</div>
+                <div class="text-white font-11 mb-1 ml-2 mt-2">Contracts/Leases</div>
 
                 <div class="list-group">
 
@@ -131,13 +131,13 @@
                         $transaction_coordinator = $property -> transaction_coordinator;
                         @endphp
 
-                        <div class="list-group-item search-item px-2 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
+                        <div class="list-group-item search-item px-2 py-1 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
 
                             <div class="row">
 
-                                <div class="col-5 col-md-8 col-lg-5"">
+                                <div class="col-8 col-lg-5">
 
-                                    <div class="font-10">
+                                    <div class="font-9">
                                         <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
                                             {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                         </a>
@@ -145,14 +145,14 @@
 
                                 </div>
 
-                                <div class="col-4 font-10" style="color: {{ $status_color }}">
+                                <div class="col-4 font-9 float-right float-lg-none" style="color: {{ $status_color }}">
                                     {{ $status }}
                                 </div>
 
 
-                                <div class="col-3 d-md-none d-lg-inline-block">
+                                <div class="col-3 d-none d-lg-inline-block">
 
-                                    <div class="overflow-hidden text-right font-10">
+                                    <div class="overflow-hidden text-right">
                                         @if($property -> ListPictureURL)
                                             <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
                                         @else
@@ -163,29 +163,29 @@
 
                             </div>
 
-                            <div class="row mt-3">
+                            <div class="row mt-1">
 
                                 <div class="col-12">
 
-                                    <div class="d-flex justify-content-between align-items-center  flex-wrap no-wrap">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
                                         @if(Cookie::get('user_group') == 'admin')
                                             <div>
-                                                <span class="text-gray">{{ $agent }}</span>
+                                                <span class="text-orange font-9">{{ $agent }}</span>
                                             </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                         @endif
                                         <div>
                                             {{ ucwords($property -> SaleRent) }}
                                         </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                         <div>
                                             <span class="text-gray">${{ number_format($property -> ContractPrice) }}</span>
                                         </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                         <div title="Contract Date" data-toggle="tooltip">
                                             CD - <span class="text-gray">{{ date_mdy($property -> ContractDate) }}</span>
                                         </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                         <div title="Settle Date" data-toggle="tooltip">
                                             SD - <span class="text-gray">{{ date_mdy($property -> CloseDate) }}</span>
                                         </div>
@@ -198,8 +198,8 @@
                             @if($transaction_coordinator)
 
                                 <div class="row">
-                                    <div class="col-12">
-                                        <hr>
+                                    <div class="col-12 font-8">
+                                        <hr class="my-1">
                                         Transaction Coordinator -
                                         <span class="text-gray">{{ $transaction_coordinator -> first_name.' '.$transaction_coordinator -> last_name }}</span>
                                     </div>
@@ -220,8 +220,8 @@
                                 }
                                 @endphp
                                 <div class="row">
-                                    <div class="col-12 @if($property -> EarnestHeldBy == 'us') text-success @else text-danger @endif">
-                                        <hr>
+                                    <div class="col-12 font-8 @if($property -> EarnestHeldBy == 'us') text-success @else text-danger @endif">
+                                        <hr class="my-1">
                                         Holding Earnest - {!! $earnest_html !!}
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@
 
             <div class="col-12 col-md-6 col-xl-4 px-2">
 
-                <div class="text-orange font-11 mb-1 ml-2 mt-2">Referrals</div>
+                <div class="text-white font-11 mb-1 ml-2 mt-2">Referrals</div>
 
                 <div class="list-group">
 
@@ -254,13 +254,13 @@
                         $transaction_coordinator = $property -> transaction_coordinator;
                         @endphp
 
-                        <div class="list-group-item search-item px-2 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Referral_ID }}/referral">
+                        <div class="list-group-item search-item px-2 py-1 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Referral_ID }}/referral">
 
                             <div class="row">
 
-                                <div class="col-5 col-md-8 col-lg-5">
+                                <div class="col-8 col-lg-5">
 
-                                    <div class="font-10 text-primary">
+                                    <div class="font-9 text-primary">
                                         <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Referral_ID }}/referral">
                                             {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                         </a>
@@ -268,14 +268,14 @@
 
                                 </div>
 
-                                <div class="col-4 font-10" style="color: {{ $status_color }}">
+                                <div class="col-4 font-9 float-right float-lg-none" style="color: {{ $status_color }}">
                                     {{ $status }}
                                 </div>
 
 
-                                <div class="col-3 d-md-none d-lg-inline-block">
+                                <div class="col-3 d-none d-lg-inline-block">
 
-                                    <div class="overflow-hidden text-right font-10">
+                                    <div class="overflow-hidden text-right ">
                                         <i class="fad fa-home fa-3x text-primary"></i>
                                     </div>
 
@@ -283,21 +283,21 @@
 
                             </div>
 
-                            <div class="row mt-3">
+                            <div class="row mt-1">
 
                                 <div class="col-12">
 
-                                    <div class="d-flex justify-content-between align-items-center  flex-wrap no-wrap">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
                                         @if(Cookie::get('user_group') == 'admin')
                                             <div>
-                                                <span class="text-gray">{{ $agent }}</span>
+                                                <span class="text-orange font-9">{{ $agent }}</span>
                                             </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
                                         @endif
                                         <div>
                                             {{ $property -> ClientFirstName. ' '.$property -> ClientLastName }}
                                         </div>
-                                        <span class="font-12 text-primary">|</span>
+                                        <span class="font-12 text-primary mx-1 mx-lg-2">|</span>
 
                                         <div title="Close Date" data-toggle="tooltip">
                                             CD - <span class="text-gray">{{ date_mdy($property -> CloseDate) }}</span>
@@ -311,8 +311,8 @@
                             @if($transaction_coordinator)
 
                                 <div class="row">
-                                    <div class="col-12">
-                                        <hr>
+                                    <div class="col-12 font-8">
+                                        <hr class="my-1">
                                         Transaction Coordinator -
                                         <span class="text-gray">{{ $transaction_coordinator -> first_name.' '.$transaction_coordinator -> last_name }}</span>
                                     </div>
@@ -336,7 +336,7 @@
     <div class="row p-5">
         <div class="col-12">
             <div class="d-flex justify-content-around">
-                <div class="d-flex justify-content-start align-items-center font-12 text-gray mx-auto">
+                <div class="d-flex justify-content-start align-items-center font-12 text-white mx-auto">
                     <div>
                         <i class="fad fa-frown fa-2x mr-3"></i>
                     </div>

@@ -7,6 +7,7 @@
         width: 100VW;
         height: 5px;
         background: $primary;
+        z-index: 1000;
     }
 
     .transactions-container {
@@ -15,13 +16,13 @@
         .properties-container,
         .checklist-items-container {
             position: absolute;
-            top: -60px;
+            //top: -60px;
             left: 0;
-            height: 99.8VH;
+            height: 100VH;
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-top: 60px;
+            //padding-top: 60px;
             z-index: 1;
         }
 
@@ -107,17 +108,17 @@
         overflow: hidden;
 
         .documents-div {
-            height: 93VH;
+            height: 100VH;
             overflow: hidden;
         }
 
         .review-container {
             position: relative;
-            height: 93VH;
+            height: 100VH;
         }
 
         .review-image-container {
-            height: 87VH;
+            height: 93VH;
             overflow-y: auto;
             scroll-behavior: smooth;
             padding-bottom: 25px;
@@ -139,6 +140,7 @@
             position: absolute;
             bottom: 0px;
             left: 0px;
+            height: 7VH;
             background: #fff;
             border-top: 1px solid $border-color;
             z-index: 1;

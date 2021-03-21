@@ -140,6 +140,14 @@ if (document.URL.match(/transaction_required_details/)) {
                         }
                     });
 
+                    $(document).on('mouseup', function (e) {
+                        let search_divs = $('.search-results-container');
+                        if (!search_divs.is(e.target) && search_divs.has(e.target).length === 0) {
+                            $('.search-results-container').hide();
+                        }
+                    });
+
+
 
                 })
                 .catch(function (error) {
@@ -180,6 +188,10 @@ if (document.URL.match(/transaction_required_details/)) {
             $(this).on('change', function() {
                 format_money_with_decimals($(this));
             });
+        });
+
+        $('#list_agent_search_div').on('shown.bs.collapse', function () {
+            $('#list_agent_search_div').find('.agent-search').focus().select();
         });
 
 
@@ -294,7 +306,7 @@ if (document.URL.match(/transaction_required_details/)) {
 
         if($(this).is(':checked')) {
             $(this).closest('.form-ele').next('div').find('[name^='+member+'_]').not('[name^='+member+'_crm]').removeClass('required').parent().find('.required-div').hide();
-            console.log(field);
+
             field.removeClass('hide').find('input').addClass('required').parent().find('.required-div').show();
         } else {
             $(this).closest('.form-ele').next('div').find('[name^='+member+'_]').not('[name^='+member+'_crm]').addClass('required').parent().find('.required-div').show();

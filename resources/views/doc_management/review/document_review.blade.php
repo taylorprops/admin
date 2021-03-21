@@ -15,9 +15,9 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <div class="d-flex justify-content-start align-items-center w-100 pl-3">
+                            <div class="d-flex justify-content-end align-items-center w-100 pl-3">
                                 <input type="text" class="custom-form-element form-input" id="search_properties" data-label="Search">
-                                <a href="javascript: void(0)" class="btn btn-danger ml-2 mt-2" id="cancel_search_properties"><i class="fal fa-times mr-2"></i> Clear</a>
+                                <a href="javascript: void(0)" class="btn btn-danger ml-2 mt-2" id="cancel_search_properties"><i class="fal fa-times mr-2"></i> Reset</a>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                 <div class="checklist-items-container w-100">
 
                     <div class="sticky bg-white py-3 border-bottom">
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-end align-items-center">
                             <a href="javascript: void(0);" id="close_checklist_button" class="btn btn-sm btn-primary"><i class="fal fa-chevron-double-left mr-2"></i> Back</a>
                             <a href="javascript: void(0);" class="btn btn-sm btn-primary next-button">Next <i class="fal fa-chevron-double-right ml-2"></i></a>
                         </div>

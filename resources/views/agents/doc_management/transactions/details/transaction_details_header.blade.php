@@ -47,7 +47,11 @@ if($property -> CloseDate != '') {
 
             <div class="w-100">
 
-                <div class="h3 mt-2 mt-sm-0 mb-2 ml-2 text-gray">
+                <div class="h3 mt-0 mb-2 ml-2 text-gray d-none d-sm-inline-block">
+                    {!! $property -> FullStreetAddress.' '.$property -> Street.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
+                </div>
+
+                <div class="px-2 py-3 w-100 mt-2 mb-2 bg-primary text-white d-inline-block d-sm-none">
                     {!! $property -> FullStreetAddress.' '.$property -> Street.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                 </div>
 
@@ -288,6 +292,8 @@ if($property -> CloseDate != '') {
 </div>
 
 @if($transaction_type != 'referral')
+
+{{-- TODO: add status section - missing docs, etc. --}}
 <div class="row my-4 listing-header-details">
 
     <div class="col-12">
@@ -404,80 +410,6 @@ if($property -> CloseDate != '') {
 
             @endif
 
-
-            {{-- <div class="col-12 col-sm-6 col-xl-3 h-100">
-
-                <div class="bg-blue-light text-gray rounded h-100  header-status-div">
-
-                    @if($for_sale || $transaction_type == 'listing')
-
-                        <div class="container pt-2 pr-5">
-                            <div class="row">
-                                <div class="col-6 text-right pr-0">
-                                    <span class="text-primary text-nowrap">Status</span>
-                                </div>
-                                <div class="col-6 text-left text-nowrap">
-                                    {{ $status }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 text-right pr-0">
-                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') List Date @else Contract Date @endif</span>
-                                </div>
-                                <div class="col-6 text-left">
-                                    @if($transaction_type == 'listing') {{ date_mdy($property -> MLSListDate) }} @else {{ date_mdy($property -> ContractDate) }} @endif
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 text-right pr-0">
-                                    <span class="text-primary text-nowrap">@if($transaction_type == 'listing') Expires Date @else Settle Date @endif</span>
-                                </div>
-                                <div class="col-6 text-left">
-                                    @php
-                                    $settle_date = '';
-                                    if($property -> CloseDate != '') {
-                                        $settle_date = date_mdy($property -> CloseDate);
-                                    }
-                                    @endphp
-                                    @if($transaction_type == 'listing') {{ date_mdy($property -> ExpirationDate) }} @else {{ date_mdy($settle_date) }} @endif
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
-                                    <span class="text-primary">@if($transaction_type == 'listing') {{ $for_sale ? 'List Price' : 'Lease Amount' }} @else Sale Price @endif</span>
-                                </div>
-                                <div class="col-6 text-left text-nowrap">
-                                    @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> ContractPrice) }} @endif
-                                </div>
-                            </div>
-                        </div>
-
-                    @else
-
-                        <div class="container pr-5">
-                            <div class="row">
-                                <div class="col-6 text-right pr-0">
-                                    <span class="font-weight-bold text-nowrap">Lease Date</span>
-                                </div>
-                                <div class="col-6 text-left">
-                                    {{ date_mdy($property -> CloseDate) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 text-right pr-0 text-nowrap text-nowrap">
-                                    <span class="font-weight-bold">Lease Price</span>
-                                </div>
-                                <div class="col-6 text-left text-nowrap">
-                                    @if($transaction_type == 'listing') ${{ number_format($property -> ListPrice) }} @else ${{ number_format($property -> LeaseAmount) }}  @endif
-                                </div>
-                            </div>
-                        </div>
-
-                    @endif
-
-                </div>
-
-            </div> --}}
 
         </div>
 
