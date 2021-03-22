@@ -75,10 +75,11 @@
 
 }
 
-/* body,
+body,
 body.modal-open {
-    padding-right: 26px !important;
-} */
+    padding-right: 0px !important;
+    overflow: visible !important;
+}
 
 *::-webkit-scrollbar {
     width: .5em;
@@ -155,7 +156,7 @@ body.modal-open {
 
 .badge:not(.badge-pill) {
     border-radius: 3px;
-    padding: .4rem !important;
+    padding: .4rem;
     margin-left: .5rem;
     margin-right: .5rem;
 }

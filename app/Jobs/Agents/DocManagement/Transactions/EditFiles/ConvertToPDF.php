@@ -17,7 +17,7 @@ class ConvertToPDF implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    //public $tries = 5;
 
     protected $request;
     protected $Listing_ID;
@@ -143,7 +143,10 @@ class ConvertToPDF implements ShouldQueue
 
             $html = "
             <style>
-            @import 'https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap';
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+            * {
+                font-family: 'Roboto Condensed', sans-serif;
+            }
             </style>
             ";
 

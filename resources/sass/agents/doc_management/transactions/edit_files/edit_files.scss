@@ -1,29 +1,39 @@
+.page-wrapper {
+    height: 100VH;
+    width: 100VW;
+    //overflow: hidden;
+}
+
 .page-fill-fields {
 
-    @function strip-unit($value) {
-        @return $value / ($value * 0 + 1);
-    }
+    overflow:hidden;
 
-    @mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
-        $u1: unit($min-vw);
-        $u2: unit($max-vw);
-        $u3: unit($min-font-size);
-        $u4: unit($max-font-size);
+    // @function strip-unit($value) {
+    //     @return $value / ($value * 0 + 1);
+    // }
 
-        @if $u1==$u2 and $u1==$u3 and $u1==$u4 {
-            & {
-                font-size: $min-font-size;
+    // @mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
+    //     $u1: unit($min-vw);
+    //     $u2: unit($max-vw);
+    //     $u3: unit($min-font-size);
+    //     $u4: unit($max-font-size);
 
-                @media screen and (min-width: $min-vw) {
-                    font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
-                }
+    //     @if $u1==$u2 and $u1==$u3 and $u1==$u4 {
+    //         & {
+    //             font-size: $min-font-size;
 
-                @media screen and (min-width: $max-vw) {
-                    font-size: $max-font-size;
-                }
-            }
-        }
-    }
+    //             @media screen and (min-width: $min-vw) {
+    //                 font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+    //             }
+
+    //             @media screen and (min-width: $max-vw) {
+    //                 font-size: $max-font-size;
+    //             }
+    //         }
+    //     }
+    // }
+
+
 
     .btn-group {
         z-index: 500;
@@ -44,12 +54,21 @@
     .file-view {
         position: relative;
         width: 100%;
-        height: calc(100vh - 130px);
+        height: calc(100vh - 80px);
         overflow-y: scroll;
         overflow-x: hidden;
         padding-bottom: 200px;
         -vendor-animation-duration: 2s;
         animation-duration: 2s;
+
+
+        .page-foot {
+            margin-bottom: 15px;
+
+            &:last-child {
+                margin-bottom: 200px;
+            }
+        }
     }
 
     .file-view-container {
@@ -222,12 +241,11 @@
             font-size: 14px;
             z-index: 0;
             white-space: nowrap !important;
-            line-height: 1 !important;
             overflow: visible;
             font-family: 'Roboto Condensed', sans-serif;
 
             &:not(.data-div-radio-check) {
-                padding-top: 4px;
+                line-height: 130%;
                 padding-left: 2px;
             }
             &:not(.inline-editor) {
@@ -236,6 +254,8 @@
 
 
         }
+
+
 
         .inputs-container {
             display: none;
@@ -275,21 +295,23 @@
 
     }
 
+
+
     *[contentEditable="true"]:focus {
         outline: none;
         /* border: 1px solid rgb(120, 196, 231);
         box-shadow: 0 0 5px rgb(120, 196, 231); */
     }
 
-    /* $min_width: 320px;
-    $max_width: 1000px;
-    $min_font: 6px;
-    $max_font: 13px; */
-    /* .data-div:not(.data-div-radio-check) {
-        //@include fluid-type($min_width, $max_width, $min_font, $max_font);
-        padding-left: 2px;
-        overflow: hidden;
-    } */
+    // $min_width: 320px;
+    // $max_width: 1000px;
+    // $min_font: 6px;
+    // $max_font: 13px;
+    // .data-div:not(.data-div-radio-check) {
+    //     //@include fluid-type($min_width, $max_width, $min_font, $max_font);
+    //     padding-left: 2px;
+    //     overflow: hidden;
+    // }
 
     .data-div.data-div-radio-check {
         cursor: pointer;
@@ -377,3 +399,46 @@
 
 
 }
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .form-options-container {
+        margin-left: 100px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .fill-form-option {
+        padding: 3px 10px !important;
+        width: auto !important;
+
+    }
+    .form-options-div {
+        width: 100% !important;
+        display: inline-block;
+    }
+}
+@media (max-width: 992px) {
+
+    .data-div {
+        font-size: 11px !important;
+        letter-spacing: -1px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .data-div {
+        font-size: 9px !important;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .data-div {
+        font-size: 8px !important;
+    }
+
+}
+

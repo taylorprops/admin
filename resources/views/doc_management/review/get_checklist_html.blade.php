@@ -22,7 +22,7 @@
                     $checklist_id = $checklist_item -> checklist_id;
 
                     if($checklist_item -> checklist_form_id > 0) {
-                        $checklist_item_name = $files -> GetFormName($checklist_item -> checklist_form_id);
+                        $checklist_item_name = $checklist_item -> upload -> file_name_display;
                     } else {
                         $checklist_item_name = $checklist_item -> checklist_item_added_name;
                     }

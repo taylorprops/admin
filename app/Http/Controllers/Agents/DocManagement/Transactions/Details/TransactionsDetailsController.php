@@ -128,6 +128,9 @@ class TransactionsDetailsController extends Controller
             }
 
             $member_type_id = ResourceItems::BuyerResourceId();
+
+
+
         } elseif ($transaction_type == 'referral') {
             $property = Referrals::find($id);
             if (! $property) {
@@ -270,10 +273,44 @@ class TransactionsDetailsController extends Controller
             }
         }
 
+        // get missing, required docs count
+        $checklist = $property -> checklist;
+        $checklist_items = $checklist -> checklist_items;
+
+        $rejected_count = $checklist_items -> where('checklist_item_status', 'rejected')
+            -> count();
+
+        $accepted_count = $checklist_items -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', 'accepted')
+            -> count();
+
+        $required_count = $checklist_items -> where('checklist_item_required', 'yes')
+            -> where('checklist_item_status', '!=', 'accepted')
+            -> count();
+
+
+        $earnest_html = '';
+        if($property -> EarnestHeldBy == 'us') {
+            $earnest = $property -> earnest;
+            if($earnest -> amount_received > 0) {
+                if($earnest -> amount_total > 0) {
+                    $earnest_html = '<div class="text-white bg-success font-9 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
+                } else {
+                    $earnest_html = '<div class="text-white bg-primary font-9 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
+                }
+            } else {
+                $earnest_html = '<div class="text-white bg-danger font-9 p-2 rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
+            }
+        } else {
+            $earnest_html = 'Not Holding';
+        }
+
+
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted'));
+        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
     }
+
 
     public function set_status_to_waiting_for_release(Request $request) {
 
@@ -2672,7 +2709,7 @@ class TransactionsDetailsController extends Controller
             -> with(['checklist_items' => function($query) {
                 $query -> orderBy('checklist_item_order');
             }])
-            -> with('checklist_items.notes','checklist_items.docs','checklist_items.upload','checklist')
+            -> with('checklist_items.notes.user','checklist_items.docs','checklist_items.upload','checklist')
             -> first();
 
         $transaction_checklist_id = $transaction_checklist -> id;

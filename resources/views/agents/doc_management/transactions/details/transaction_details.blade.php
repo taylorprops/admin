@@ -5,7 +5,7 @@
 
 <div class="container page-container page-transaction-details mb-5">
 
-    <div id="details_header" class="animate__animated animate__slow animate__fadeIn"></div>
+    <div id="details_header" class="animate__animated animate__fadeIn"></div>
 
     <span id="scroll_to"></span>
 

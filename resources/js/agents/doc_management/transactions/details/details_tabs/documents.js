@@ -196,8 +196,8 @@ if (document.URL.match(/transaction_details/)) {
                 load_tabs('documents');
             }
 
-            $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
-            $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
+            $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
+            $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
             $('.document-div').not('.sent').not('.completed').find('.sent-info, .completed-info').hide();
 
             $('.document-div.sent').find('button').prop('disabled', true);
@@ -235,7 +235,7 @@ if (document.URL.match(/transaction_details/)) {
                 doc_div.addClass('in-process').find('.check-document').prop('disabled', true);
                 doc_div.find('.in-process-icon').show();
                 doc_div.find('.document-title a').css({ opacity: '0.4' });
-                doc_div.find('.btn').prop('disabled', true);
+                doc_div.find('button').prop('disabled', true);
                 $('#in_process_div').show();
             });
         }
@@ -249,7 +249,7 @@ if (document.URL.match(/transaction_details/)) {
                     doc_div.removeClass('in-process').find('.check-document').prop('disabled', false);
                     doc_div.find('.in-process-icon').hide();
                     doc_div.find('.document-title a').css({ opacity: '1' });
-                    doc_div.find('.btn').prop('disabled', false);
+                    doc_div.find('button').prop('disabled', false);
                 });
             }
         } else {

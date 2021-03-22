@@ -8,10 +8,10 @@
             $username = $user -> name;
 
             if($user -> group == 'admin') {
-                $emp_photo_location = $admin_details -> photo_location ?? null;
+                $emp_photo_location = auth() -> user() -> photo_location ?? null;
                 $avatar_bg = 'bg-orange';
             } else if($user -> group == 'agent') {
-                $emp_photo_location = $agent_details -> photo_location ?? null;
+                $emp_photo_location = auth() -> user() -> photo_location ?? null;
                 $avatar_bg = 'bg-primary';
             }
             if(!$emp_photo_location) {
@@ -38,7 +38,7 @@
                 <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
                     <div class="d-flex justify-content-start align-items-center">
                         <div class="emp_photo mr-2">
-                            <div class="rounded-pill avatar-initials {{ $avatar_bg }} p-2">
+                            <div class="rounded-pill avatar-initials {{ $avatar_bg }} @if(!$emp_photo_location) p-2 @endif">
                                 @if($emp_photo_location)
                                     <img src="{{ $emp_photo_location }}" class="avatar rounded-circle d-flex align-self-center mr-2 shadow">
                                 @else

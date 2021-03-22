@@ -3,6 +3,7 @@
 namespace App\Models\DocManagement\Transactions\Checklists;
 
 use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNotes;
@@ -17,6 +18,12 @@ class TransactionChecklistItems extends Model
     protected $_primaryKey = 'id';
     protected $guarded = [];
 
+
+    // public function transaction_docs() {
+    //     return $this -> hasMany(\App\Models\DocManagement\Transactions\Documents\TransactionDocuments::class, 'id', 'checklist_form_id');
+    // }
+
+    // docs from checklist items
     public function docs() {
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs::class, 'checklist_item_id', 'id');
     }

@@ -29,7 +29,7 @@ class TransactionChecklists extends Model
     }
 
     public function checklist_items() {
-        return $this -> hasMany(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems::class, 'checklist_id', 'id');
+        return $this -> hasMany(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems::class, 'checklist_id', 'id') -> orderBy('checklist_item_order');
     }
 
     public function ScopeCreateTransactionChecklist($request, $checklist_id, $Listing_ID, $Contract_ID, $Referral_ID, $Agent_ID, $checklist_represent, $checklist_type, $checklist_property_type_id, $checklist_property_sub_type_id, $checklist_sale_rent, $checklist_state, $checklist_location_id, $checklist_hoa_condo, $checklist_year_built) {

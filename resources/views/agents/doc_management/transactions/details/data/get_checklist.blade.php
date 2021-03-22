@@ -348,10 +348,10 @@
                                                                                         $username = $user -> name;
 
                                                                                         if($user -> group == 'admin') {
-                                                                                            $emp_photo_location = $admin_details -> photo_location ?? null;
+                                                                                            $emp_photo_location = auth() -> user() -> photo_location ?? null;
                                                                                             $avatar_bg = 'bg-orange';
                                                                                         } else if($user -> group == 'agent') {
-                                                                                            $emp_photo_location = $agent_details -> photo_location ?? null;
+                                                                                            $emp_photo_location = auth() -> user() -> photo_location ?? null;
                                                                                             $avatar_bg = 'bg-primary';
                                                                                         }
                                                                                         if(!$emp_photo_location) {

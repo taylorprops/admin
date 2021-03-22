@@ -5151,7 +5151,7 @@ if (document.URL.match(/transaction_details/)) {
         doc_div.find('.document-title a').css({
           opacity: '0.4'
         });
-        doc_div.find('.btn').prop('disabled', true);
+        doc_div.find('button').prop('disabled', true);
         $('#in_process_div').show();
       });
     }
@@ -5167,7 +5167,7 @@ if (document.URL.match(/transaction_details/)) {
           doc_div.find('.document-title a').css({
             opacity: '1'
           });
-          doc_div.find('.btn').prop('disabled', false);
+          doc_div.find('button').prop('disabled', false);
         });
       }
     } else {
@@ -5328,8 +5328,8 @@ if (document.URL.match(/transaction_details/)) {
         load_tabs('documents');
       }
 
-      $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
-      $('.document-div').not('.sent').not('.completed').find('button').prop('disabled', false);
+      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
+      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
       $('.document-div').not('.sent').not('.completed').find('.sent-info, .completed-info').hide();
       $('.document-div.sent').find('button').prop('disabled', true);
       $('.document-div.sent').find('.sent-info').show();
@@ -8546,7 +8546,13 @@ if (document.URL.match(/edit_files/)) {
     }
 
     function save_edit_file() {
-      $('#save_file_button').prop('disabled', true).html('<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>'); // save system field input values
+      var button_html = 'Saving <span class="spinner-border spinner-border-sm ml-2"></span>';
+
+      if ($(window).width() > 768) {
+        button_html = '<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>';
+      }
+
+      $('#save_file_button').prop('disabled', true).html(button_html); // save system field input values
 
       var inputs = [];
       $('.field-input').not('.user-field-input').each(function () {
@@ -9022,7 +9028,7 @@ if (document.URL.match(/edit_files/)) {
       setTimeout(function () {
         in_process([document_id]);
       }, 3000);
-      $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
+      $('#save_file_button').html('<span class="d-none d-sm-block"><i class="fad fa-save fa-lg"></i><br></span>Save');
       axios_options['header'] = {
         'content-type': 'multipart/form-data'
       };
@@ -9354,6 +9360,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
           status_badge.removeClass('bg-orange').addClass('bg-default-light').html(default_icon + 'If Applicable').attr('title', '');
           parent.find('.mark-required.yes').addClass('d-block').prev('a').addClass('d-none');
         }
+
+        load_details_header();
       })["catch"](function (error) {});
     };
 
@@ -14263,12 +14271,15 @@ if (document.URL.match(/employees/)) {
         $('#edit_employee_modal').modal('hide');
         toastr['success']('Employee Successfully Saved');
         get_employees(emp_type, 'yes');
-        $('#employee_saved_modal').modal('show');
-        $('#employee_saved_button').on('click', function () {
-          var emp_id = response.data.emp_id;
-          $('button[data-id="' + emp_id + '"]').trigger('click');
-          $('#employee_saved_modal').modal('hide');
-        });
+
+        if ($('#id').val() == '') {
+          $('#employee_saved_modal').modal('show');
+          $('#employee_saved_button').on('click', function () {
+            var emp_id = response.data.emp_id;
+            $('button[data-id="' + emp_id + '"]').trigger('click');
+            $('#employee_saved_modal').modal('hide');
+          });
+        }
       })["catch"](function (error) {});
     }
   };
@@ -17253,7 +17264,7 @@ $(function ($) {
   });
 
   function show_sidebar() {
-    if ($(document).width() > 1200) {
+    if ($(document).width() > 1600) {
       $('.page-wrapper').addClass('toggled');
     } else {
       $('.page-wrapper').removeClass('toggled');

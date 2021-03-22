@@ -13,7 +13,7 @@
     </li>
 
     <li class="sidebar-dropdown">
-        <a href="#">
+        <a href="javascript:void(0)">
             <i class="fa fa-sign"></i>
             <span>Transactions</span>
             <span class="badge badge-pill badge-danger">3</span>
@@ -38,7 +38,7 @@
     </li>
 
     <li class="sidebar-dropdown">
-        <a href="#">
+        <a href="javascript:void(0)">
             <i class="far fa-tasks-alt"></i>
             <span>Resources</span>
         </a>
@@ -51,7 +51,7 @@
                     <a href="/doc_management/checklists"> Checklists</a>
                 </li>
                 <li>
-                    <a href="#">Resources</a>
+                    <a href="javascript:void(0)">Resources</a>
                     <ul>
                         @if(session('super_user') == true)
                         <li><a href="/doc_management/resources/resources"> Site Resources</a></li>
@@ -92,7 +92,7 @@
     </li>
 
     <li class="sidebar-dropdown">
-        <a href="#">
+        <a href="javascript:void(0)">
             <i class="fa fa-money-bill-wave"></i>
             <span>Earnest</span>
         </a>
@@ -131,7 +131,7 @@
     <li><hr class="my-2"></li>
 
     <li class="sidebar-dropdown">
-        <a href="#">
+        <a href="javascript:void(0)">
             <i class="fa fa-globe"></i>
             <span>Settings</span>
         </a>

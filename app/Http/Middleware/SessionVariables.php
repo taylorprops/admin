@@ -30,7 +30,7 @@ class SessionVariables
 
                 $user_details = InHouse::whereId($user_id) -> first();
 
-            } elseif (stristr(auth() -> user() -> group, 'agent')) {
+            } elseif (stristr(auth() -> user() -> group, 'agent') || stristr(auth() -> user() -> group, 'agent_referral')) {
 
                 $user_details = Agents::whereId($user_id) -> first();
                 // set logo for header logo and EMAILS by company and add to session
@@ -41,9 +41,7 @@ class SessionVariables
                     session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
                 }
 
-            } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
-
-            } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+            }elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
 
                 $user_details = TransactionCoordinators::whereId($user_id) -> first();
 

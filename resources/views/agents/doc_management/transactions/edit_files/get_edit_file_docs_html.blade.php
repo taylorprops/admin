@@ -30,7 +30,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="h5 text-white bg-primary p-2 mb-1 text-center">
+                            <div class="h5 text-white bg-primary p-2 text-center page-foot">
                                 <span class="badge">End Page {{ $c }}</span>
                             </div>
 

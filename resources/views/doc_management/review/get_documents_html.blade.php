@@ -14,11 +14,16 @@
                     @foreach($checklist_item_documents as $document)
 
                         @php
+                        // $document_id = $document -> document_id;
+                        // $document_images = $checklist_item_images_model -> where('document_id', $document_id) -> orderBy('page_number') -> get();
+                        // $document_details = $transaction_documents_model -> GetDocInfo($document_id);
+                        // $file_name = $document_details['file_name'];
+                        // $file_location = $document_details['file_location_converted'];
+
                         $document_id = $document -> document_id;
-                        $document_images = $checklist_item_images_model -> where('document_id', $document_id) -> orderBy('order') -> get();
-                        $document_details = $transaction_documents_model -> GetDocInfo($document_id);
-                        $file_name = $document_details['file_name'];
-                        $file_location = $document_details['file_location_converted'];
+                        $document_images = $document -> images;
+                        $file_name = $document -> original_doc -> file_name_display;
+                        $file_location = $document -> file_location_converted;
                         @endphp
 
                         <div class="bg-blue-light text-primary p-2 d-flex justify-content-start align-items-center" id="document_{{ $document_id }}">
@@ -45,7 +50,7 @@
 
                         {{-- this will be removed and appended to list-group-item.active --}}
                         <div class="checklist-item-docs-div bg-white p-1 small">
-                            <a href="javascript:void(0)" class="document-link d-block bg-primary text-white p-1 rounded" data-toggle="tooltip" @if(strlen($file_name) > 70) title="{{ $file_name }}" @endif data-document-id="{{ $document_id }}">{{ Str::limit($file_name, 70) }}</a>
+                            <a href="javascript:void(0)" class="document-link d-block text-primary p-1 rounded" data-toggle="tooltip" @if(strlen($file_name) > 70) title="{{ $file_name }}" @endif data-document-id="{{ $document_id }}">{{ Str::limit($file_name, 70) }}</a>
                         </div>
 
                     @endforeach

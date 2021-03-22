@@ -34,7 +34,7 @@ $(function ($) {
 
     function show_sidebar() {
 
-        if($(document).width() > 1200) {
+        if($(document).width() > 1600) {
             $('.page-wrapper').addClass('toggled');
         } else {
             $('.page-wrapper').removeClass('toggled');

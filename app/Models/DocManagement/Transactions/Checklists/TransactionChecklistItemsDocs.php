@@ -14,6 +14,14 @@ class TransactionChecklistItemsDocs extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
+    public function original_doc() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Documents\TransactionDocuments::class, 'id', 'document_id');
+    }
+
+    public function images() {
+        return $this -> hasMany(\App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages::class, 'document_id', 'document_id');
+    }
+
     public function ScopeGetDocs($query, $checklist_item_id) {
         $docs = $this -> where('checklist_item_id', $checklist_item_id) -> orderBy('created_at', 'DESC') -> get();
 

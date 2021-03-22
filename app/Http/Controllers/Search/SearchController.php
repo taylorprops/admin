@@ -27,7 +27,7 @@ class SearchController extends Controller
                 $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
             }
         } else {
-            abort(404);
+            //abort(404);
         }
 
         $listings_select = [

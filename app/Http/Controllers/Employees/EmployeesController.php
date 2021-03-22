@@ -103,6 +103,10 @@ class EmployeesController extends Controller {
 
         $employee -> update(['photo_location' => $path]);
 
+        $user = User::where('email', $employee -> email) -> first();
+        $user -> photo_location = $path;
+        $user -> save();
+
 
 
         return response() -> json(['status' => 'success', 'path' => $path]);

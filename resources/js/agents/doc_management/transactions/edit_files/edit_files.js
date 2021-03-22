@@ -392,7 +392,11 @@ if (document.URL.match(/edit_files/)) {
 
         function save_edit_file() {
 
-            $('#save_file_button').prop('disabled', true).html('<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>');
+            let button_html = 'Saving <span class="spinner-border spinner-border-sm ml-2"></span>';
+            if($(window).width() > 768) {
+                button_html = '<i class="fad fa-save fa-lg"></i><br>Saving <span class="spinner-border spinner-border-sm ml-2"></span>';
+            }
+            $('#save_file_button').prop('disabled', true).html(button_html);
 
             // save system field input values
             let inputs = [];
@@ -972,7 +976,7 @@ if (document.URL.match(/edit_files/)) {
             }, 3000);
 
 
-            $('#save_file_button').html('<i class="fad fa-save fa-lg"></i><br>Save');
+            $('#save_file_button').html('<span class="d-none d-sm-block"><i class="fad fa-save fa-lg"></i><br></span>Save');
 
             axios_options['header'] = { 'content-type': 'multipart/form-data' };
             axios.post('/agents/doc_management/transactions/edit_files/convert_to_pdf', formData, axios_options)

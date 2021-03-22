@@ -22,6 +22,7 @@ if (document.URL.match(/transaction_details/)) {
         load_details_header();
 
 
+
         let agent_search_request = null;
 
         function search_bright_agents() {

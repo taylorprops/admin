@@ -305,6 +305,7 @@ Route::middleware(['admin']) -> group(function () {
 Route::middleware(['agent']) -> group(function () {
 
     Route::get('/dashboard_agent', [DashboardAgentController::class, 'dashboard_agent']);
+    Route::get('/dashboard_transaction_coordinator', [DashboardAgentController::class, 'dashboard_agent']);
 
     /********** Contacts ********/
     Route::get('/contacts', [ContactsController::class, 'contacts']);

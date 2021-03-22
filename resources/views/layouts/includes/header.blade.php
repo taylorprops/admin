@@ -44,8 +44,8 @@
 
             <div class="sidebar-header">
                 <div class="user-pic">
-                    @if(session('user_details') -> photo_location)
-                        <img class="img-responsive img-rounded" src="{{ session('user_details') -> photo_location }}" alt="User picture">
+                    @if(auth() -> user() -> photo_location)
+                        <img class="img-responsive img-rounded" src="{{ auth() -> user() -> photo_location }}" alt="User picture">
                     @else
                         <i class="fal fa-user fa-3x mt-2 text-white"></i>
                     @endif

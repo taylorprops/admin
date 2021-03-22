@@ -22,7 +22,7 @@ class Admin
             if ($group == 'admin') {
                 return $next($request);
             }
-            if ($group == 'agent') {
+            if ($group == 'agent' || $group == 'transaction_coordinator') {
                 $redirect_url = '/dashboard_agent';
             } else {
                 // TODO: this might be an issue

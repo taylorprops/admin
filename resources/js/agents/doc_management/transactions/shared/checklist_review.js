@@ -258,6 +258,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                         parent.find('.mark-required.yes').addClass('d-block').prev('a').addClass('d-none');
                     }
 
+                    load_details_header();
+
                 })
                 .catch(function (error) {
 

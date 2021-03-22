@@ -248,14 +248,16 @@ if (document.URL.match(/employees/)) {
                     toastr['success']('Employee Successfully Saved');
                     get_employees(emp_type, 'yes');
 
-                    $('#employee_saved_modal').modal('show');
-                    $('#employee_saved_button').on('click', function () {
+                    if($('#id').val() == '') {
+                        $('#employee_saved_modal').modal('show');
+                        $('#employee_saved_button').on('click', function () {
 
-                        let emp_id = response.data.emp_id;
-                        $('button[data-id="'+emp_id+'"]').trigger('click');
-                        $('#employee_saved_modal').modal('hide');
+                            let emp_id = response.data.emp_id;
+                            $('button[data-id="'+emp_id+'"]').trigger('click');
+                            $('#employee_saved_modal').modal('hide');
 
-                    });
+                        });
+                    }
                 })
                 .catch(function (error) {
                 });

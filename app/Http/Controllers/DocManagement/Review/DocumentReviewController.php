@@ -86,18 +86,20 @@ class DocumentReviewController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        $transaction_checklist = TransactionChecklists::where($field, $id) -> first();
+        $transaction_checklist = TransactionChecklists::where($field, $id)
+            -> with(['checklist_items.upload'])
+            -> first();
         $transaction_checklist_id = $transaction_checklist -> id;
 
         $transaction_checklist_items_model = new TransactionChecklistItems();
-        $checklist_items = $transaction_checklist_items_model -> where('checklist_id', $transaction_checklist_id) -> orderBy('checklist_item_order') -> get();
+        $checklist_items = $transaction_checklist -> checklist_items;
 
         $files = new Upload();
 
         $transaction_checklist_item_notes = new TransactionChecklistItemsNotes();
 
         $resource_items = new ResourceItems();
-        $form_groups = $resource_items -> where('resource_type', 'form_groups') -> orderBy('resource_order') -> get();
+        $form_groups = ResourceItems::where('resource_type', 'form_groups') -> orderBy('resource_order') -> get();
 
         // used in checklist review modals
         $rejected_reasons = ResourceItemsAdmin::where('resource_type', 'rejected_reason') -> orderBy('resource_order') -> get();
@@ -109,18 +111,26 @@ class DocumentReviewController extends Controller
 
     public function get_documents(Request $request) {
 
-		$checklist_item_id = $request -> checklist_item_id;
-        $checklist_item_name = $request -> checklist_item_name;
+		// $checklist_item_id = $request -> checklist_item_id;
+        // $checklist_item_name = $request -> checklist_item_name;
 
-        $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
+        // $checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> first();
+        // $checklist_item_documents = TransactionChecklistItemsDocs::where('checklist_item_id', $checklist_item_id) -> get();
+        // $checklist_item_images_model = new TransactionDocumentsImages();
+        // $transaction_documents_model = new TransactionDocuments();
+        //return view('/doc_management/review/get_documents_html', compact('checklist_item', 'checklist_item_id', 'checklist_item_name', 'checklist_item_documents', 'checklist_item_images_model', 'transaction_documents_model'));
 
-        $checklist_item_documents = TransactionChecklistItemsDocs::where('checklist_item_id', $checklist_item_id) -> get();
+        $checklist_item_id = $request -> checklist_item_id;
+
+        $checklist_item = TransactionChecklistItems::with(['docs.images', 'docs.original_doc']) -> find($checklist_item_id);
+
+        $checklist_item_documents = $checklist_item -> docs;
 
         $checklist_item_images_model = new TransactionDocumentsImages();
 
         $transaction_documents_model = new TransactionDocuments();
 
-        return view('/doc_management/review/get_documents_html', compact('checklist_item', 'checklist_item_id', 'checklist_item_name', 'checklist_item_documents', 'checklist_item_images_model', 'transaction_documents_model'));
+        return view('/doc_management/review/get_documents_html', compact('checklist_item', 'checklist_item_documents', 'checklist_item_images_model', 'transaction_documents_model'));
     }
 
     public function get_details(Request $request) {
@@ -180,11 +190,11 @@ class DocumentReviewController extends Controller
 
         $transaction_checklist_item_notes = TransactionChecklistItemsNotes::where('checklist_item_id', $checklist_item_id) -> with('user') -> orderBy('created_at', 'DESC') -> get();
 
-        $users = User::get();
+        //$users = User::get();
 
-        $agent = $users -> where('user_id', $Agent_ID) -> where('group', 'agent') -> first();
+        //$agent = $users -> where('user_id', $Agent_ID) -> where('group', 'agent') -> first();
 
-        return view('/doc_management/review/get_notes_html', compact('checklist_item_id', 'transaction_checklist_item_notes', 'users', 'agent'));
+        return view('/doc_management/review/get_notes_html', compact('checklist_item_id', 'transaction_checklist_item_notes'));
     }
 
     public function delete_note(Request $request) {
