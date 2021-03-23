@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="col-4 d-flex justify-content-end">
                                     <div class="wpx-200">
-                                        <input type="text" class="custom-form-element form-input money-decimal numbers-only text-right text-danger total-trigger disabled" id="admin_fee_from_agent" name="admin_fee_from_agent" value="{{ $admin_fee }}" data-default-value="{{ $admin_fee }}" disabled>
+                                        <input type="text" class="custom-form-element form-input money-decimal numbers-only text-right text-danger total-trigger" id="admin_fee_from_agent" name="admin_fee_from_agent" value="{{ $admin_fee }}" data-default-value="{{ $admin_fee }}">
                                     </div>
                                 </div>
                             </div>

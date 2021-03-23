@@ -8,7 +8,7 @@
 
                 <div class="mr-4 wpx-300">
 
-                    <select class="custom-form-element form-select" id="earnest_held_by" name="earnest_held_by" data-label="Earnest Held By">
+                    <select class="custom-form-element form-select form-select-no-cancel" id="earnest_held_by" name="earnest_held_by" data-label="Earnest Held By">
                         <option value=""></option>
                         <option value="us" @if($earnest_held_by == 'us') selected @endif>Taylor/Anne Arundel Properties</option>
                         <option value="other_company" @if($earnest_held_by == 'other_company') selected @endif>Other Real Estate Company</option>
@@ -36,7 +36,7 @@
 
             </div>
 
-            <div>
+            <div class="holding-earnest">
 
                 <div class="alert alert-info mb-0 font-12 in-escrow-alert">
                     <div class="d-flex justify-content-between align-items-center">
@@ -59,13 +59,13 @@
     </form>
 
 
-    <div class="row">
+    <div class="row holding-earnest">
         <div class="col-12 my-4">
             <hr>
         </div>
     </div>
 
-    <div class="checks-in-container">
+    <div class="checks-in-container holding-earnest">
 
         <div class="row">
 

@@ -175,7 +175,7 @@
 
     <div class="row d-flex align-items-center border-top mt-3 p-4 bg-success text-white ">
         <div class="col-8">
-            <span class="font-weight-bold font-11">Total Commission To Agent</span>
+            <span class="font-weight-bold font-10">Total Commission To Agent</span>
         </div>
         <div class="col-4 d-flex justify-content-end font-weight-bold">
             ${{ number_format($breakdown -> total_commission_to_agent, 2) }}

@@ -8,6 +8,8 @@ setInterval(function() {
     });
 }, 100);
 
+
+
 // trigger change on any input changes
 (function($){
     let originalVal = $.fn.val;

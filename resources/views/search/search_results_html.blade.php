@@ -62,7 +62,7 @@
 
                                         <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
 
-                                            @if(Cookie::get('user_group') == 'admin')
+                                            @if(auth() -> user() -> group == 'admin')
                                                 <div>
                                                     <span class="text-orange font-9">{{ $agent }}</span>
                                                 </div>
@@ -168,7 +168,7 @@
                                 <div class="col-12">
 
                                     <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
-                                        @if(Cookie::get('user_group') == 'admin')
+                                        @if(auth() -> user() -> group == 'admin')
                                             <div>
                                                 <span class="text-orange font-9">{{ $agent }}</span>
                                             </div>
@@ -206,7 +206,7 @@
                                 </div>
                             @endif
 
-                            @if(Cookie::get('user_group') == 'admin')
+                            @if(auth() -> user() -> group == 'admin')
                                 @php
                                 if($property -> EarnestHeldBy == 'us') {
                                     $earnest_html = '$'.number_format($earnest -> amount_total);
@@ -288,7 +288,7 @@
                                 <div class="col-12">
 
                                     <div class="d-flex justify-content-between align-items-center flex-wrap no-wrap font-8">
-                                        @if(Cookie::get('user_group') == 'admin')
+                                        @if(auth() -> user() -> group == 'admin')
                                             <div>
                                                 <span class="text-orange font-9">{{ $agent }}</span>
                                             </div>

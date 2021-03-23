@@ -27,207 +27,211 @@
 
             <div class="col-5">
 
-                <div class="row">
-                    <div class="col-5"></div>
-                    <div class="col-7">
-                        <div class="h5 text-orange mb-2 mt-3 w-100 border-bottom">@if($type == 'referral') Receiving Agent @else Commission @endif Details </div>
-                    </div>
-                </div>
+                <div class="p-2 ml-5 mb-4 bg-blue-light rounded">
 
-                @if($type == 'sale')
-
-                    {{-- Close Price --}}
                     <div class="row">
-
-                        <div class="col-5">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div class="text-gray">Close Price</div>
-                                <div>
-                                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Close Price" data-content="This is the final close price on the ALTA. This is not the same as the Sales Price."><i class="fad fa-question-circle ml-2"></i></a>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="col-5"></div>
                         <div class="col-7">
-                            <div class="pr-4">
-                                <input type="text" class="custom-form-element form-input money-decimal numbers-only pr-2 form-value" name="close_price" id="close_price" value="${{ number_format($property -> ClosePrice, 0) }}">
-                            </div>
+                            <div class="h5 text-orange mb-2 mt-3 w-100 border-bottom">@if($type == 'referral') Receiving Agent @else Commission @endif Details </div>
                         </div>
-
                     </div>
 
-                    {{-- Close Date --}}
-                    <div class="row">
+                    @if($type == 'sale')
 
-                        <div class="col-5">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div class="text-gray">Close Date</div>
-                                <div>
-                                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Close Date" data-content="This is the final close date on the ALTA. This is not the same as the Settle Date."><i class="fad fa-question-circle ml-2"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="pr-4">
-                                <input type="text" class="custom-form-element form-input datepicker pr-2 form-value" name="close_date" id="close_date" value="{{ $property -> CloseDate }}">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    @if($rep_both_sides)
-                    {{-- Work With Both Sides --}}
-                    <div class="row">
-
-                        <div class="col-5">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div class="text-gray">Work With Both Sides</div>
-                                <div>
-                                    <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Work With Both Sides" data-content="This is when an agent works with both parties even if they don't represent both parties."><i class="fad fa-question-circle ml-2"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="pr-4">
-                                <select class="custom-form-element form-select form-select-no-search form-value" id="both_sides" name="both_sides">
-                                    <option value=""></option>
-                                    <option value="yes"
-                                    @if($commission -> both_sides != '')
-                                        @if($commission -> both_sides == 'yes')
-                                            selected
-                                        @endif
-                                    @else
-                                        selected
-                                    @endif
-                                    >Yes</option>
-                                    <option value="no" @if($commission -> both_sides == 'no') selected @endif>No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-                    @else
-                    <input type="hidden" class="form-value" id="both_sides" name="both_sides" value="no">
-                    @endif
-
-                    @if($for_sale == 'yes')
-
-                        {{-- Using Heritage Title --}}
+                        {{-- Close Price --}}
                         <div class="row">
 
                             <div class="col-5">
                                 <div class="h-100 d-flex justify-content-end align-items-center">
-                                    <div class="text-gray">Using Heritage Title</div>
+                                    <div class="text-gray">Close Price</div>
                                     <div>
-                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Using Heritage Title" data-content="Did the property sale settle at Heritage Title?"><i class="fad fa-question-circle ml-2"></i></a>
+                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Close Price" data-content="This is the final close price on the ALTA. This is not the same as the Sales Price."><i class="fad fa-question-circle ml-2"></i></a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-7">
                                 <div class="pr-4">
-                                    <select class="custom-form-element form-select form-select-no-search form-value" id="using_heritage" name="using_heritage">
+                                    <input type="text" class="custom-form-element form-input money-decimal numbers-only pr-2 form-value" name="close_price" id="close_price" value="${{ number_format($property -> ClosePrice, 0) }}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {{-- Close Date --}}
+                        <div class="row">
+
+                            <div class="col-5">
+                                <div class="h-100 d-flex justify-content-end align-items-center">
+                                    <div class="text-gray">Close Date</div>
+                                    <div>
+                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Close Date" data-content="This is the final close date on the ALTA. This is not the same as the Settle Date."><i class="fad fa-question-circle ml-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="pr-4">
+                                    <input type="text" class="custom-form-element form-input datepicker pr-2 form-value" name="close_date" id="close_date" value="{{ $property -> CloseDate }}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        @if($rep_both_sides)
+                        {{-- Work With Both Sides --}}
+                        <div class="row">
+
+                            <div class="col-5">
+                                <div class="h-100 d-flex justify-content-end align-items-center">
+                                    <div class="text-gray">Work With Both Sides</div>
+                                    <div>
+                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Work With Both Sides" data-content="This is when an agent works with both parties even if they don't represent both parties."><i class="fad fa-question-circle ml-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="pr-4">
+                                    <select class="custom-form-element form-select form-select-no-search form-value" id="both_sides" name="both_sides">
                                         <option value=""></option>
-                                        <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
-                                        <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>
+                                        <option value="yes"
+                                        @if($commission -> both_sides != '')
+                                            @if($commission -> both_sides == 'yes')
+                                                selected
+                                            @endif
+                                        @else
+                                            selected
+                                        @endif
+                                        >Yes</option>
+                                        <option value="no" @if($commission -> both_sides == 'no') selected @endif>No</option>
                                     </select>
                                 </div>
                             </div>
 
                         </div>
+                        @else
+                        <input type="hidden" class="form-value" id="both_sides" name="both_sides" value="no">
+                        @endif
 
-                        {{-- Title Company --}}
-                        <div class="row" id="title_company_row">
+                        @if($for_sale == 'yes')
 
-                            <div class="col-5">
-                                <div class="h-100 d-flex justify-content-end align-items-center">
-                                    <div class="text-gray">Title Company</div>
-                                    <div>
-                                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Title Company" data-content="Enter the Title Company used"><i class="fad fa-question-circle ml-2"></i></a>
+                            {{-- Using Heritage Title --}}
+                            <div class="row">
+
+                                <div class="col-5">
+                                    <div class="h-100 d-flex justify-content-end align-items-center">
+                                        <div class="text-gray">Using Heritage Title</div>
+                                        <div>
+                                            <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Using Heritage Title" data-content="Did the property sale settle at Heritage Title?"><i class="fad fa-question-circle ml-2"></i></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="pr-4">
-                                    <input type="text" class="custom-form-element form-input form-value" id="title_company" name="title_company" data-label="Title Company" value="{{ $property -> TitleCompany }}">
+                                <div class="col-7">
+                                    <div class="pr-4">
+                                        <select class="custom-form-element form-select form-select-no-search form-value" id="using_heritage" name="using_heritage">
+                                            <option value=""></option>
+                                            <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
+                                            <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>
+                                        </select>
+                                    </div>
                                 </div>
+
                             </div>
 
-                        </div>
+                            {{-- Title Company --}}
+                            <div class="row" id="title_company_row">
 
-                    @else
-                        <input type="hidden" class="form-value" id="using_heritage" name="using_heritage" value="no">
-                        <input type="hidden" class="form-value" id="title_company" name="title_company" value="">
-                    @endif
+                                <div class="col-5">
+                                    <div class="h-100 d-flex justify-content-end align-items-center">
+                                        <div class="text-gray">Title Company</div>
+                                        <div>
+                                            <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Title Company" data-content="Enter the Title Company used"><i class="fad fa-question-circle ml-2"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="pr-4">
+                                        <input type="text" class="custom-form-element form-input form-value" id="title_company" name="title_company" data-label="Title Company" value="{{ $property -> TitleCompany }}">
+                                    </div>
+                                </div>
 
-                @elseif($type == 'referral')
+                            </div>
 
-                <div class="row">
-                    <div class="col-5"></div>
-                    <div class="col-7">
-                        <div class="text-gray-dark font-weight-bold">Office</div>
-                        <div class="text-gray">
-                            <strong>{{ $property -> ReceivingAgentOfficeName }}</strong><br>
-                            {{ $property -> ReceivingAgentOfficeStreet }}<br>
-                            {{ $property -> ReceivingAgentOfficeCity }}, {{ $property -> ReceivingAgentOfficeState }} {{ $property -> ReceivingAgentOfficeZip }}<br>
-                            {{ format_phone($property -> ReceivingAgentOfficePhone) }}
-                        </div>
+                        @else
+                            <input type="hidden" class="form-value" id="using_heritage" name="using_heritage" value="no">
+                            <input type="hidden" class="form-value" id="title_company" name="title_company" value="">
+                        @endif
 
-                        <div class="text-gray-dark font-weight-bold mt-3">Agent</div>
-                        <div class="text-gray">
-                            <strong>{{ $property -> ReceivingAgentFirstName }} {{ $property -> ReceivingAgentLastName }}</strong><br>
-                            {{ format_phone($property -> ReceivingAgentPreferredPhone) }}<br>
-                            <a href="mailto:{{ $property -> ReceivingAgentEmail }}">{{ $property -> ReceivingAgentEmail }}</a>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                @else
+                    @elseif($type == 'referral')
 
                     <div class="row">
-
                         <div class="col-5"></div>
-
                         <div class="col-7">
-
+                            <div class="text-gray-dark font-weight-bold">Office</div>
                             <div class="text-gray">
+                                <strong>{{ $property -> ReceivingAgentOfficeName }}</strong><br>
+                                {{ $property -> ReceivingAgentOfficeStreet }}<br>
+                                {{ $property -> ReceivingAgentOfficeCity }}, {{ $property -> ReceivingAgentOfficeState }} {{ $property -> ReceivingAgentOfficeZip }}<br>
+                                {{ format_phone($property -> ReceivingAgentOfficePhone) }}
+                            </div>
 
-                                <div class="row">
+                            <div class="text-gray-dark font-weight-bold mt-3">Agent</div>
+                            <div class="text-gray">
+                                <strong>{{ $property -> ReceivingAgentFirstName }} {{ $property -> ReceivingAgentLastName }}</strong><br>
+                                {{ format_phone($property -> ReceivingAgentPreferredPhone) }}<br>
+                                <a href="mailto:{{ $property -> ReceivingAgentEmail }}">{{ $property -> ReceivingAgentEmail }}</a>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <div class="col-12">
-                                        <select class="custom-form-element form-select form-select-no-cancel form-value" id="Agent_ID" name="Agent_ID" data-label="Agent">
-                                            <option value=""></option>
-                                            @foreach($agents as $agent)
-                                                <option value="{{ $agent -> id }}" @if($commission -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> first_name.' '.$agent -> last_name }}</option>
-                                            @endforeach
-                                        </select>
+
+
+                    @else
+
+                        <div class="row">
+
+                            <div class="col-5"></div>
+
+                            <div class="col-7">
+
+                                <div class="text-gray">
+
+                                    <div class="row">
+
+                                        <div class="col-12">
+                                            <select class="custom-form-element form-select form-select-no-cancel form-value" id="Agent_ID" name="Agent_ID" data-label="Agent">
+                                                <option value=""></option>
+                                                @foreach($agents as $agent)
+                                                    <option value="{{ $agent -> id }}" @if($commission -> Agent_ID == $agent -> id) selected @endif>{{ $agent -> first_name.' '.$agent -> last_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <input type="text" class="custom-form-element form-input form-value" id="other_client_name" name="other_client_name" data-label="Client's Name" value="{{ $commission -> other_client_name }}">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <input type="text" class="custom-form-element form-input address required form-value" id="other_street" name="other_street" data-label="Street Address" value="{{ $commission -> other_street }}">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <input type="text" class="custom-form-element form-input address required form-value" id="other_city" name="other_city" data-label="City" value="{{ $commission -> other_city }}">
+                                        </div>
+
                                     </div>
+                                    <div class="row">
 
-                                    <div class="col-12">
-                                        <input type="text" class="custom-form-element form-input form-value" id="other_client_name" name="other_client_name" data-label="Client's Name" value="{{ $commission -> other_client_name }}">
-                                    </div>
+                                        <div class="col-6">
+                                            <select class="custom-form-element form-select form-select-no-cancel address required form-value" id="other_state" name="other_state" data-label="State">
+                                                <option value=""></option>
+                                                @foreach($states as $state)
+                                                    <option value="{{ $state -> state }}" @if($commission -> other_state == $state -> state) selected @endif>{{ $state -> state }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="custom-form-element form-input address required form-value" id="other_zip" name="other_zip" data-label="Zip Code" value="{{ $commission -> other_zip }}">
+                                        </div>
 
-                                    <div class="col-12">
-                                        <input type="text" class="custom-form-element form-input address required form-value" id="other_street" name="other_street" data-label="Street Address" value="{{ $commission -> other_street }}">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <input type="text" class="custom-form-element form-input address required form-value" id="other_city" name="other_city" data-label="City" value="{{ $commission -> other_city }}">
-                                    </div>
-
-                                </div>
-                                <div class="row">
-
-                                    <div class="col-6">
-                                        <select class="custom-form-element form-select form-select-no-cancel address required form-value" id="other_state" name="other_state" data-label="State">
-                                            <option value=""></option>
-                                            @foreach($states as $state)
-                                                <option value="{{ $state -> state }}" @if($commission -> other_state == $state -> state) selected @endif>{{ $state -> state }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="text" class="custom-form-element form-input address required form-value" id="other_zip" name="other_zip" data-label="Zip Code" value="{{ $commission -> other_zip }}">
                                     </div>
 
                                 </div>
@@ -236,15 +240,15 @@
 
                         </div>
 
-                    </div>
+                        <input type="hidden"class="form-value" id="close_price" name="close_price" value="0">
+                        <input type="hidden"class="form-value" id="close_date" name="close_date" value="{{ date('Y-m-d') }}">
+                        <input type="hidden"class="form-value" id="both_sides" name="both_sides" value="no">
+                        <input type="hidden"class="form-value" id="using_heritage" name="using_heritage" value="no">
+                        <input type="hidden"class="form-value" id="title_company" name="title_company" value="">
 
-                    <input type="hidden"class="form-value" id="close_price" name="close_price" value="0">
-                    <input type="hidden"class="form-value" id="close_date" name="close_date" value="{{ date('Y-m-d') }}">
-                    <input type="hidden"class="form-value" id="both_sides" name="both_sides" value="no">
-                    <input type="hidden"class="form-value" id="using_heritage" name="using_heritage" value="no">
-                    <input type="hidden"class="form-value" id="title_company" name="title_company" value="">
+                    @endif
 
-                @endif
+                </div>
 
             </div>
 

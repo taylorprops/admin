@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use Auth;
-use Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -77,10 +76,6 @@ class LoginController extends Controller
                 $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
             }
         }
-
-        $maxlifetime = ini_get('session.gc_maxlifetime');
-
-        Cookie::queue(Cookie::make('user_group', auth() -> user() -> group, $maxlifetime, null, null, false, false));
 
         return $this -> redirectTo;
 

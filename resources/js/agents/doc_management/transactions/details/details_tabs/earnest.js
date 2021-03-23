@@ -1,15 +1,5 @@
 if (document.URL.match(/transaction_details/)) {
 
-    /* TODO:
-    earnest_held_by
-        needs to be disabled if there are checks in
-        on change - show/hide checks div if we are not holding earnest
-
-    when saving checks
-        update commission tab details - earnest amount
-        update property - earnest amount
-
-    */
 
 
     //// functions
@@ -38,6 +28,9 @@ if (document.URL.match(/transaction_details/)) {
             delete_earnest_note(Earnest_ID, note_id);
 
         });
+
+
+
 
         get_earnest_check_info();
         get_earnest_checks('in', false);
@@ -75,7 +68,6 @@ if (document.URL.match(/transaction_details/)) {
             $('.earnest-notes').val('');
         })
         .catch(function (error) {
-            console.log(error);
         });
 
     }
@@ -93,7 +85,6 @@ if (document.URL.match(/transaction_details/)) {
             $('#earnest_notes_div').html(response.data);
         })
         .catch(function (error) {
-            console.log(error);
         });
     }
 
@@ -114,7 +105,6 @@ if (document.URL.match(/transaction_details/)) {
                 toastr['success']('Status Successfully Set');
             })
             .catch(function (error) {
-                console.log(error);
             });
 
         });
@@ -140,7 +130,8 @@ if (document.URL.match(/transaction_details/)) {
 
             $('#earnest_checks_'+check_type+'_div').html(response.data);
 
-            $('.cleared-checkbox').on('change', function() {
+
+            $('.cleared-checkbox').off('change').on('change', function() {
                 cleared_bounced($(this));
             });
 
@@ -195,6 +186,12 @@ if (document.URL.match(/transaction_details/)) {
             } else if(in_escrow_parsed < 0) {
                 $('.in-escrow-alert').removeClass('alert-info').addClass('alert-danger');
             }
+
+            show_checks();
+            $('#earnest_held_by').off('change').on('change', show_checks);
+
+            disable_check_in();
+            disable_held_by();
 
             if(save == true) {
 
@@ -354,6 +351,11 @@ if (document.URL.match(/transaction_details/)) {
         axios.post('/agents/doc_management/transactions/clear_bounce_earnest_check', formData, axios_options)
         .then(function (response) {
             get_earnest_checks(check_type);
+            setTimeout(function() {
+                disable_held_by();
+                disable_check_in();
+                load_details_header();
+            }, 1000);
         })
         .catch(function (error) {
 
@@ -468,12 +470,39 @@ if (document.URL.match(/transaction_details/)) {
             if(show_toastr == 'yes') {
                 toastr['success']('Earnest Details Saved Successfully');
             }
+            load_details_header();
             /* load_tabs('details');
             load_tabs('commission'); */
         })
         .catch(function (error) {
 
         });
+    }
+
+    window.show_checks = function() {
+
+        if($('#earnest_held_by').val() == 'us') {
+            $('.holding-earnest').show();
+        } else {
+            $('.holding-earnest').hide();
+        }
+
+    }
+
+    window.disable_check_in = function() {
+        if($('.cleared-checkbox[data-check-type="out"]:checked').length > 0) {
+            $('.cleared-checkbox[data-check-type="in"]').prop('disabled', true);
+        } else {
+            $('.cleared-checkbox[data-check-type="in"]').prop('disabled', false);
+        }
+    }
+
+    window.disable_held_by = function() {
+        if($('.cleared-checkbox[data-check-type="in"][value="cleared"]:checked').length > 0) {
+            $('#earnest_held_by').prop('disabled', true);
+        } else {
+            $('#earnest_held_by').prop('disabled', false);
+        }
     }
 
     window.clear_add_earnest_check_form = function() {

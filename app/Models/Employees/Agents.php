@@ -14,6 +14,10 @@ class Agents extends Model {
     protected $primaryKey = 'id';
     protected $guarded = [];
 
+    protected $hidden = [
+        'social_security',
+    ];
+
     public function scopeAgentDetails($query, $id) {
         $agent_details = $query -> find($id);
 

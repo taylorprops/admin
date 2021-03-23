@@ -10,7 +10,6 @@ use App\Models\Employees\Agents;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 
 class SearchController extends Controller
 {
@@ -21,13 +20,8 @@ class SearchController extends Controller
         $agent_ids = [];
 
         // get agent ids from names that match search value
-        // if no session group - abort
-        if (Cookie::get('user_group')) {
-            if (Cookie::get('user_group') == 'admin') {
-                $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
-            }
-        } else {
-            //abort(404);
+        if (auth() -> user() -> group == 'admin') {
+            $agent_ids = Agents::where('full_name', 'like', '%'.$value.'%') -> pluck('id');
         }
 
         $listings_select = [

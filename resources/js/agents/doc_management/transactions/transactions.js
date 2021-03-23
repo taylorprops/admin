@@ -29,7 +29,7 @@ if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab
 
     function get_transactions(type, status) {
 
-        let group = getCookie('user_group');
+        let group = global_user.group;
 
         axios.get('/agents/doc_management/transactions/get_transactions', {
             params: {

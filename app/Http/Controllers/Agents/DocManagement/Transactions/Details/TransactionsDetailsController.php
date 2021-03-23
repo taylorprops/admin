@@ -294,15 +294,15 @@ class TransactionsDetailsController extends Controller
             $earnest = $property -> earnest;
             if($earnest -> amount_received > 0) {
                 if($earnest -> amount_total > 0) {
-                    $earnest_html = '<div class="text-white bg-success font-9 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
+                    $earnest_html = '<div class="text-white bg-success font-10 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
                 } else {
-                    $earnest_html = '<div class="text-white bg-primary font-9 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
+                    $earnest_html = '<div class="text-white bg-primary font-10 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
                 }
             } else {
-                $earnest_html = '<div class="text-white bg-danger font-9 p-2 rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
+                $earnest_html = '<div class="text-white bg-danger font-10 p-2 rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
             }
         } else {
-            $earnest_html = 'Not Holding';
+            $earnest_html = '<div class="text-white bg-default font-10 p-2 rounded ml-0"><i class="fal fa-ban mr-2"></i> Not Holding</div>';
         }
 
 
@@ -3635,6 +3635,7 @@ class TransactionsDetailsController extends Controller
         if ($breakdown -> submitted == 'no') {
             $breakdown -> submitted = 'yes';
         }
+        dump($breakdown -> submitted);
 
         $breakdown -> save();
 
