@@ -295,7 +295,7 @@ if($property -> CloseDate != '') {
                 <div class="row">
 
                     {{-- if there is a list agent or viewer is list agent --}}
-                    @if($property -> PropertySubType != $fsbo_property_type && $property -> Agent_ID != auth() -> user() -> user_id)
+                    @if($property -> PropertySubType != $fsbo_property_type/*  && $property -> Agent_ID != auth() -> user() -> user_id */)
 
                         @php
                         $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> ListAgentPreferredPhone).'\'>'.format_phone($property -> ListAgentPreferredPhone).'</a><br>
@@ -342,7 +342,7 @@ if($property -> CloseDate != '') {
         </div>
 
 
-        @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none' && $property -> Agent_ID != auth() -> user() -> user_id)
+        @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
 
             <div class="col-12 col-md-6 col-lg-5 col-xl-4">
 
@@ -350,25 +350,29 @@ if($property -> CloseDate != '') {
 
                     <div class="row">
 
-                        @php
-                        $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
-                        <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
-                        @endphp
+                        {{-- @if($property -> Agent_ID != auth() -> user() -> user_id) --}}
 
-                        <div class="col-6">
+                            @php
+                            $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
+                            <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
+                            @endphp
 
-                            <div class="d-flex justify-content-start align-items-center mb-1">
-                                <div class="text-gray font-10">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</div>
-                                <div class="ml-2">
-                                    <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
+                            <div class="col-6">
+
+                                <div class="d-flex justify-content-start align-items-center mb-1">
+                                    <div class="text-gray font-10">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</div>
+                                    <div class="ml-2">
+                                        <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
+                                    </div>
                                 </div>
+
+                                {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
+                                <br>
+                                <span class="font-italic text-gray">{{ shorten_text($property -> BuyerOfficeName, 30) }}</span>
+
                             </div>
 
-                            {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
-                            <br>
-                            <span class="font-italic text-gray">{{ shorten_text($property -> BuyerOfficeName, 30) }}</span>
-
-                        </div>
+                        {{-- @endif --}}
 
 
                         <div class="col-6">
