@@ -9,9 +9,6 @@ if (perfEntries[0].type === 'back_forward') {
 
 
 
-
-
-
 // check for duplicate ids
 /* setTimeout(function() {
     $('[id]').each(function(){
@@ -27,7 +24,6 @@ $(function() {
 
     global_loading_off();
 
-    /* global_page_transition(); */
 
     if(!document.URL.match(/admin\/$/)) {
         inactivityTime();
@@ -153,7 +149,7 @@ $(function() {
     window.datatable_settings = {
         "autoWidth": false,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        //"responsive": false,
+        "responsive": true,
         "destroy": true,
         "language": {
             search: '',
@@ -163,20 +159,23 @@ $(function() {
             "info": "_START_ to _END_ of _TOTAL_",
             "lengthMenu": "Show _MENU_",
             "search": ""
-        }
+        },
+
     }
 
-    window.data_table = function(page_length, table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging, hide_cols = true) {
+    window.data_table = function(page_length, table, sort_by, no_sort_cols, hidden_cols, show_buttons, show_search, show_info, show_paging, show_hide_cols = true, hide_header_and_footer = false) {
 
         /*
         table = $('#table_id')
         sort_by = [1, 'desc'] - col #, dir
         no_sort_cols = [0, 8] - array of cols
-        hide_cols = [0, 8] - array of cols
+        hidden_cols = [0, 8] - array of cols
         show_buttons = true/false
         show_search = true/false
         show_info = true/false
         show_paging = true/false
+        show_hide_cols = true/false
+        hide_header_and_footer = true/false
         */
 
         datatable_settings.pageLength = parseInt(10);
@@ -223,7 +222,7 @@ $(function() {
             ];
             buttons = '<B>';
 
-            if(hide_cols == true) {
+            if(show_hide_cols == true) {
                 datatable_settings.buttons.push({
                     extend: 'colvis',
                     text: 'Hide Columns'
@@ -251,6 +250,21 @@ $(function() {
             datatable_settings.paging = true;
             length = '<l>';
         }
+
+        if(hide_header_and_footer == true) {
+            datatable_settings.drawCallback = function() {
+                $(this.api().table().header()).hide();
+                $(this.api().table().footer()).hide();
+            }
+            info = '';
+            paging = '';
+            datatable_settings.paging = false;
+            length = '';
+            search = '';
+            buttons = '';
+            datatable_settings.buttons = [];
+        }
+
 
         datatable_settings.dom = '<"d-flex justify-content-between flex-wrap align-items-center text-gray"'+search+info+length+buttons+'>rt<"d-flex justify-content-between align-items-center text-gray"'+info + paging+'>'
 
@@ -298,13 +312,80 @@ $(function() {
             $(this).addClass('draggable').find('.modal-header').addClass('draggable-handle');
         }
 
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+
     });
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    });
+
+    get_global_notifications();
 
 
 });
 
+function get_global_notifications() {
 
+    // notifications
+    axios.get('/notifications/get_notifications')
+    .then(function (response) {
 
+        $('.global-notifications-div').html(response.data);
+
+        $('.notifications-unread-count').text($('.global-notifications-count').first().text());
+
+        $('.notifications-mark-as-read').on('click', function () {
+
+            let id = $(this).data('id');
+            let request = notifications_mark_read(id);
+            request.then(function (response) {
+                $('div.alert[data-id="'+id+'"]').fadeOut();
+                let counter = $('.notifications-unread-count');
+                let count = parseInt(counter.first().text()) - 1;
+                counter.text(count);
+            });
+        });
+
+        $('.notifications-mark-all').on('click', function () {
+            $('#confirm_modal').modal().find('.modal-body').html('Mark All As Read?');
+            $('#confirm_modal').modal().find('.modal-title').html('Please Confirm');
+            $('#confirm_button').on('click', function() {
+                let request = notifications_mark_read('0');
+                request.then(function (response) {
+                    get_global_notifications();
+                });
+            });
+        });
+
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    $('#notifications_collapse').on('shown.bs.collapse', function () {
+        $(document).on('click', function (e) {
+            let notification_div = $('#notifications_collapse');
+            if (!notification_div.is(e.target) && notification_div.has(e.target).length === 0) {
+                $('#notifications_collapse').collapse('hide');
+            }
+        });
+    });
+
+}
+
+window.notifications_mark_read = function(id) {
+
+    let formData = new FormData();
+    formData.append('id', id);
+
+    return axios.post('/notifications/mark_as_read', formData, axios_options);
+
+}
 
 window.datepicker_custom = function() {
     $('.datepicker').not('.datepicker-added').not('.field-datepicker').each(function() {

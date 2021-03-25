@@ -16,7 +16,6 @@
         <a href="javascript:void(0)">
             <i class="fa fa-sign"></i>
             <span>Transactions</span>
-            <span class="badge badge-pill badge-danger">3</span>
         </a>
         <div class="sidebar-submenu">
             <ul>

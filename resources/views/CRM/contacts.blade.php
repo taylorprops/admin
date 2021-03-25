@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="table-responsive contacts-table-div"></div>
+            <div class="no-wrap contacts-table-div"></div>
 
         </div>
 

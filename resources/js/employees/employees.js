@@ -177,7 +177,7 @@ if (document.URL.match(/employees/)) {
             .then(function (response) {
 
                 $('#' + emp_type + '_div').html(response.data);
-                data_table(25, $('.employees-table'), [1, 'asc'], [0, 6], [], true, true, true, true, true);
+                data_table(25, $('.employees-table'), [1, 'asc'], [0, 6], [], true, true, true, true, true, false);
 
             })
             .catch(function (error) {
@@ -188,7 +188,7 @@ if (document.URL.match(/employees/)) {
 
     function edit_employee(ele) {
 
-        $('#edit_employee_modal').find('input, select').val('');
+        $('#edit_employee_modal').find('input, select').val('').trigger('change');
         $('#edit_employee_modal').modal('show');
         $('.agent-docs-div').html('');
         $('.edit-div').addClass('hidden');
@@ -244,6 +244,13 @@ if (document.URL.match(/employees/)) {
             let formData = new FormData(form[0]);
             axios.post('/employees/save_employee', formData, axios_options)
                 .then(function (response) {
+
+                    if(response.data.status == 'error') {
+                        if(response.data.message == 'exists') {
+                            $('#modal_danger').modal().find('.modal-body').html('The email address is already being used by another user.');
+                            return false;
+                        }
+                    }
                     $('#edit_employee_modal').modal('hide');
                     toastr['success']('Employee Successfully Saved');
                     get_employees(emp_type, 'yes');
@@ -252,10 +259,12 @@ if (document.URL.match(/employees/)) {
                         $('#employee_saved_modal').modal('show');
                         $('#employee_saved_button').on('click', function () {
 
-                            let emp_id = response.data.emp_id;
-                            $('button[data-id="'+emp_id+'"]').trigger('click');
                             $('#employee_saved_modal').modal('hide');
-
+                            setTimeout(function() {
+                                let emp_id = response.data.emp_id;
+                                console.log(emp_id, $('.edit-employee-button[data-id="'+emp_id+'"]').length);
+                                $('.edit-employee-button[data-id="'+emp_id+'"]').trigger('click');
+                            }, 500);
                         });
                     }
                 })
@@ -308,8 +317,5 @@ if (document.URL.match(/employees/)) {
         });
     }
 
-    function restore_doc(doc_id) {
-
-    }
 
 }

@@ -3,7 +3,7 @@
     <a id="show-sidebar" class="btn btn-primary-dark" href="javascript:void(0)">
         <i class="fal fa-bars fa-lg"></i>
     </a>
-    <nav id="sidebar" class="sidebar-wrapper">
+    <nav id="sidebar" class="sidebar-wrapper ">
         <div class="sidebar-content">
             <div class="sidebar-brand">
                 <a class="header-logo-link text-center mr-5" href="javascript: void(0)"><img src="{{ \Session::get('header_logo_src') }}" class="header-logo"></a>
@@ -71,21 +71,37 @@
         </div>
         <!-- sidebar-content  -->
         <div class="sidebar-footer">
-            <a href="#">
-                <i class="fa fa-bell"></i>
-                <span class="badge badge-pill badge-warning notification">3</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-envelope"></i>
-                <span class="badge badge-pill badge-success notification">7</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-cog"></i>
-                <span class="badge-sonar"></span>
-            </a>
+
             <a href="/logout">
-                <i class="fa fa-power-off"></i>
+                <i class="fal fa-sign-out fa-lg text-orange"></i>
             </a>
+            <a id="notifications_control" data-toggle="collapse" href="#notifications_collapse" role="button" aria-expanded="false" aria-controls="notifications_collapse">
+                <i class="fa fa-bell fa-lg"></i>
+                <span class="badge badge-pill bg-orange text-white notification notifications-unread-count">0</span>
+            </a>
+
+            <div class="collapse bg-primary p-1 mb-3 rounded" id="notifications_collapse">
+
+                <div class="d-flex justify-content-between align-items-center bg-primary text-white px-3 py-2 font-12">
+                    <div>
+                        <i class="fad fa-bell mr-2"></i> Notifications
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <div>
+                            <span class="badge bg-orange text-white notifications-unread-count"></span>
+                        </div>
+                        <div class="ml-3">
+                            <a data-toggle="collapse" href="#notifications_collapse" role="button" aria-expanded="false" aria-controls="notifications_collapse"><i class="fal fa-times text-danger mt-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notifications-container">
+                    <div class="global-notifications-div bg-white p-2 rounded"></div>
+                </div>
+
+            </div>
+
         </div>
     </nav>
     <!-- sidebar-wrapper  -->

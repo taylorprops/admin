@@ -1,11 +1,11 @@
-<div class="table-responsive">
+<div class="no-wrap">
 
     <table class="table table-hover table-bordered table-sm earnest-table {{ $tab }}" id="earnest_table_{{ $tab}}" width="100%">
 
         <thead>
             <tr>
                 @if($tab == 'missing')
-                    <th class="text-center pl-0">
+                    <th class="text-center">
                         <input type="checkbox" class="custom-form-element form-checkbox check-all" data-label="">
                     </th>
                 @endif

@@ -13,4 +13,8 @@ class TransactionCoordinators extends Model
     public $table = 'emp_transaction_coordinators';
     protected $guarded = [];
 
+    public function user_account() {
+        return $this -> hasOne(\Auth\User::class, 'user_id', 'id');
+    }
+
 }

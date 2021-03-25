@@ -23,7 +23,7 @@
 
                         <div class="list-group-item p-0 d-flex justify-content-between align-items-center notification-container" data-config-id="{{ $notification -> id }}">
 
-                            <div class="d-flex justify-content-start align-items-center w-70">
+                            <div class="d-flex justify-content-start align-items-center w-60">
 
                                 <div class="list-group-handle text-primary mx-3"><i class="fal fa-bars"></i></div>
 
@@ -36,15 +36,26 @@
 
                             </div>
 
-                            <div class="d-flex justify-content-end align-items-center w-30">
+                            <div class="d-flex justify-content-end align-items-center w-40">
 
-                                @if($notification -> config_type == 'emails')
+                                @if($notification -> config_type == 'notification')
 
-                                    <div class="w-80 ml-3">
+                                    <div class="w-20 notify-by-options text-gray">
+                                        <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-email" data-label="Email" value="yes" @if($notification -> notify_by_email == 'yes') checked @endif>
+                                        <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-text" data-label="Text SMS" value="yes" @if($notification -> notify_by_text == 'yes') checked @endif>
+                                    </div>
+
+                                    <div class="w-60 ml-3">
                                         <select class="custom-form-element form-select emails" multiple data-label="Select Recipients">
                                             <option value=""></option>
                                             @foreach($in_house_employees as $employee)
-                                                <option value="{{ $employee -> email }}" @if(stristr($notification -> config_value, $employee -> email)) selected @endif >{{ ucwords($employee -> emp_type).' - '.$employee -> first_name.' '.$employee -> last_name }}</option>
+                                                @php
+                                                //$user_emails = [$notification -> config_value];
+                                                //if(stristr($notification -> config_value, ',')) {
+                                                    $user_emails = explode(',', $notification -> config_value);
+                                                //}
+                                                @endphp
+                                                <option value="{{ $employee -> user_account -> email }}" @if(in_array($employee -> user_account -> email, $user_emails)) selected @endif >{{ ucwords($employee -> emp_type).' - '.$employee -> first_name.' '.$employee -> last_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

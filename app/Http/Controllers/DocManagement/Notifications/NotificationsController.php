@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\DocManagement\Notifications;
 
+
 use Illuminate\Http\Request;
 use App\Models\Config\Config;
 use App\Models\Employees\InHouse;
@@ -13,7 +14,8 @@ class NotificationsController extends Controller {
 
 		$categories = Config::where('config_role', 'notification_documents') -> orderBy('category') -> groupBy('category') -> pluck('category');
         $config_options = Config::where('config_role', 'notification_documents') -> orderBy('category') -> orderBy('order') -> get();
-        $in_house_employees = InHouse::orderBy('emp_type') -> get();
+        $in_house_employees = InHouse::with(['user_account:id,user_id,email']) -> orderBy('emp_type') -> get();
+
 
         return view('doc_management/notifications/notifications', compact('categories', 'config_options', 'in_house_employees'));
 
@@ -37,6 +39,8 @@ class NotificationsController extends Controller {
         $title = $request -> title;
         $description = $request -> description;
         $emails = $request -> emails ?? null;
+        $notify_by_email = $request -> notify_by_email ?? null;
+        $notify_by_text = $request -> notify_by_text ?? null;
         $number = $request -> number ?? null;
         $on_off = $request -> on_off ?? null;
 
@@ -51,7 +55,9 @@ class NotificationsController extends Controller {
         $config = Config::find($config_id) -> update([
             'title' => $title,
             'description' => $description,
-            'config_value' => $config_value
+            'config_value' => $config_value,
+            'notify_by_email' => $notify_by_email,
+            'notify_by_text' => $notify_by_text
         ]);
 
         return response() -> json(['status' => 'success']);

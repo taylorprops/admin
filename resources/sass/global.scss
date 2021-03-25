@@ -151,13 +151,14 @@ ul {
     opacity: 0.25;
 }
 
-
 .container-full {
-    max-width: 96VW;
+    max-width: 98%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .container {
-    max-width: 1500px !important;
+    max-width: 1500px;
 }
 
 // .container-1000, .container-1100
@@ -179,16 +180,27 @@ div[class*='container-']:not(.p-0) {
 }
 
 // width in pixels
+// 5 - 500
 // .wpx-55
 @for $i from 1 through 100 {
     .wpx-#{$i * 5} {
         width: #{$i * 5}px;
     }
 }
-
+// width in percent
+// 5 - 100
+// .w-20
 @for $i from 1 through 20 {
     .w-#{$i * 5} {
         width: $i * 5%;
+    }
+}
+// line height in pixels
+// 1-50
+// .line-height-px-20
+@for $i from 1 through 50 {
+    .line-height-px-#{$i} {
+        line-height: #{$i}px;
     }
 }
 
@@ -428,3 +440,13 @@ a.ck.ck-button {
 }
 
 
+/* notifications */
+
+#notifications_collapse {
+    position: absolute;
+    bottom: 40px;
+    left: 15px;
+    width: 500px;
+    max-height: 90VH;
+    overflow: auto;
+}

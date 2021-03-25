@@ -257,7 +257,7 @@
             </div>
             <div class="modal-body">
                 <div class="container">
-                    Employee details successfully saved. You can now add a photo and documents
+                    Employee details successfully saved. You can now add a photo and documents.
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">

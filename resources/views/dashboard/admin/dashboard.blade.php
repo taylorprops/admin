@@ -3,15 +3,33 @@
 
 @section('content')
 
-<div class="container page-container page-dashboard pt-5">
+<div class="container-full page-container page-dashboard">
 
-    <div class="row mt-5">
+    <div class="row mt-4">
 
         <div class="col-12 col-lg-4">
 
-            <div class="bg-red-light p-2 rounded">
+            <div class="bg-primary p-1 mb-3 rounded">
 
-                <div class="bg-danger text-white p-3 font-12">
+                <div class="d-flex justify-content-between bg-primary text-white px-3 py-2 font-12">
+                    <div>
+                        <i class="fad fa-bell mr-2"></i> Notifications
+                    </div>
+                    <div>
+                        <span class="badge bg-orange text-white notifications-unread-count"></span>
+                    </div>
+                </div>
+
+                <div class="notifications-container">
+                    <div class="global-notifications-div bg-white p-2 rounded"></div>
+                </div>
+
+            </div>
+
+
+            <div class="bg-danger p-1 mb-3 rounded">
+
+                <div class="bg-danger text-white p-2 font-12">
                     <i class="fad fa-exclamation-triangle mr-2"></i> Alerts
                 </div>
 
@@ -38,17 +56,17 @@
                                     $details = $alerts_by_type -> first() -> details;
                                     @endphp
 
-                                    <div class="list-group-item p-1">
+                                    <div class="list-group-item p-1 border-left-0 border-right-0">
 
-                                        <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center font-9">
 
                                             <div class="d-flex justify-content-start align-items-center">
 
-                                                <div class="d-flex justify-content-around align-items-center bg-danger text-white font-12 py-2 px-3 rounded">
+                                                <div class="d-flex justify-content-around align-items-center bg-danger text-white p-1 wpx-60 rounded">
                                                     {{ $count }}
                                                 </div>
 
-                                                <div class="text-gray font-11 ml-3">
+                                                <div class="text-gray ml-3">
                                                     {{ $title }}
                                                 </div>
 
@@ -72,13 +90,14 @@
 
                 </div>
 
+
             </div>
 
         </div>
 
         <div class="col-12 col-lg-8">
 
-            <div class="bg-blue-light p-3 rounded">
+            <div class="bg-blue-light p-2 rounded">
 
                 <div class="row">
 
@@ -163,62 +182,65 @@
 
                                 <div class="font-11 text-orange">Upcoming Closings</div>
 
-                                <div class="list-group upcoming-closings-container">
+                                <div class="no-wrap">
 
-                                    @foreach($contracts_closing_this_month as $contract)
+                                    <div class="upcoming-closings-container">
 
-                                        @php
-                                        if($contract -> DocsMissingCount > 0) {
-                                            $checklist_status = '<span class="text-danger font-8"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
-                                        } else {
-                                            $checklist_status = '<span class="text-success font-8"><i class="fal fa-check mr-2"></i> Complete</span>';
-                                        }
-                                        @endphp
+                                        <table id="upcoming_closings_table" class="table table-hover table-bordered table-sm" width="100%">
 
-                                        <div class="list-group-item">
+                                            <thead>
+                                                <tr>
+                                                    <th>Address</th>
+                                                    <th>Settle Date</th>
+                                                    <th>Checklist Status</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
 
-                                            <div class="d-flex justify-content-between align-items-center">
+                                            <tbody>
 
-                                                <div class="d-flex justify-content-start align-items-center w-75">
+                                                @foreach($contracts_closing_this_month as $contract)
 
-                                                    <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="btn btn-primary">View</a>
+                                                    @php
+                                                    if($contract -> DocsMissingCount > 0) {
+                                                        $checklist_status = '<span class="text-danger font-8"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
+                                                    } else {
+                                                        $checklist_status = '<span class="text-success font-8"><i class="fal fa-check mr-2"></i> Complete</span>';
+                                                    }
+                                                    @endphp
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="d-block h-100 line-height-px-40">{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</a>
+                                                        </td>
+                                                        <td>
+                                                            <div title="Settle Date" data-toggle="tooltip">
+                                                                SD - {{ date_mdy($contract -> CloseDate) }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            {!! $checklist_status !!}
+                                                        </td>
+                                                        <td>
+                                                            <div class="w-100 d-flex justify-content-around">
+                                                                @if($contract -> ListPictureURL)
+                                                                    <img src="{{ $contract -> ListPictureURL }}" class="img-responsive upcoming-closing-image">
+                                                                @else
+                                                                    <i class="fad fa-home fa-3x text-primary"></i>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                    <div class="ml-2">
-                                                        {{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}
-                                                    </div>
+                                                @endforeach
 
-                                                    <span class="font-12 text-primary mx-3">|</span>
+                                            </body>
 
-                                                    <div title="Settle Date" data-toggle="tooltip">
-                                                        SD - {{ date_mdy($contract -> CloseDate) }}
-                                                    </div>
+                                        </table>
 
-                                                </div>
-
-
-                                                <div class="d-flex align-items-center w-25">
-
-                                                    <div class="w-50">{!! $checklist_status !!}</div>
-
-                                                    <div class="d-flex justify-content-around align-items-center w-50">
-                                                        @if($contract -> ListPictureURL)
-                                                            <img src="{{ $contract -> ListPictureURL }}" class="img-responsive upcoming-closing-image">
-                                                        @else
-                                                            <i class="fad fa-home fa-3x text-primary"></i>
-                                                        @endif
-                                                    </div>
-
-                                                </div>
-
-
-
-                                            </div>
-
-                                        </div>
-
-                                    @endforeach
+                                    </div>
 
                                 </div>
+
 
                             </div>
 
@@ -256,19 +278,28 @@
 
                             @foreach($alerts as $alert)
 
-                                <div class="list-group-item alert-details-item {{ $alert -> alert_type }}">
+                                @php $agent = $alert -> agent -> full_name; @endphp
+
+                                <div class="list-group-item alert-details-item p-1 font-9 {{ $alert -> alert_type }}">
 
                                     <div class="d-flex justify-content-between align-items-center">
 
                                         <div class="d-flex justify-content-start align-items-center text-gray">
-                                            <div>
+                                            {{-- <div>
                                                 <a href="/agents/doc_management/transactions/transaction_details/{{ $alert -> id }}/{{ $alert -> transaction_type }}" class="btn btn-primary" target="_blank">View {{ ucwords($alert -> transaction_type) }}</a>
-                                            </div>
+                                            </div> --}}
                                             <div class="ml-3">
-                                                <span class="font-11">{{ $alert -> FullStreetAddress.' '.$alert -> City.', '.$alert -> StateOrProvince.' '.$alert -> PostalCode }}</span>
+                                                <a href="/agents/doc_management/transactions/transaction_details/{{ $alert -> id }}/{{ $alert -> transaction_type }}" target="_blank">
+                                                    <span class="text-primary">{{ $alert -> FullStreetAddress.' '.$alert -> City.', '.$alert -> StateOrProvince.' '.$alert -> PostalCode }}</span>
+                                                </a>
                                                 <br>
-                                                @if($alert -> transaction_type == 'listing')
-                                                    <div class="d-flex justify-content-start align-items-center">
+                                                <div class="d-flex justify-content-start align-items-center">
+                                                    @if(auth() -> user() -> group == 'admin')
+                                                        <div class="text-dark font-weight-bold mr-2">
+                                                            {{ $agent }}
+                                                        </div>
+                                                    @endif
+                                                    @if($alert -> transaction_type == 'listing')
                                                         <div title="List Date" data-toggle="tooltip">
                                                             LD - {{ date_mdy($alert -> MLSListDate) }}
                                                         </div>
@@ -276,9 +307,7 @@
                                                         <div title="Expiration Date" data-toggle="tooltip">
                                                             EX - {{ date_mdy($alert -> ExpirationDate) }}
                                                         </div>
-                                                    </div>
-                                                @elseif($alert -> transaction_type == 'contract')
-                                                    <div class="d-flex justify-content-start align-items-center">
+                                                    @elseif($alert -> transaction_type == 'contract')
                                                         <div title="Contract Date" data-toggle="tooltip">
                                                             CD - {{ date_mdy($alert -> ContractDate) }}
                                                         </div>
@@ -286,19 +315,17 @@
                                                         <div title="Settle Date" data-toggle="tooltip">
                                                             SD - {{ date_mdy($alert -> CloseDate) }}
                                                         </div>
-                                                    </div>
-                                                @elseif($alert -> transaction_type == 'referral')
-                                                    <div class="d-flex justify-content-start align-items-center">
+                                                    @elseif($alert -> transaction_type == 'referral')
                                                         <span class="font-12 text-primary mx-3">|</span>
                                                         <div title="Settle Date" data-toggle="tooltip">
                                                             SD - {{ date_mdy($alert -> CloseDate) }}
                                                         </div>
-                                                    </div>
-                                                @endif
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div>
+                                        <div class="pr-2">
                                             @if($alert -> DocsMissingCount > 0)
                                                 <span class="text-danger">Missing Docs - {{ $alert -> DocsMissingCount }}</span>
                                             @else

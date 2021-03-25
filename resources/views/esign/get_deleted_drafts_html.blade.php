@@ -1,6 +1,6 @@
 <div class="h4 text-orange my-3">Deleted Drafts</div>
 
-<div class="table-responsive">
+<div class="no-wrap">
 
         <table id="deleted_drafts_table" class="table table-hover table-bordered" width="100%">
 

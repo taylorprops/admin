@@ -173,31 +173,37 @@ a.text-green:hover {
     border: 1px solid $orange !important;
 }
 
-$badge_blue: #346e9e;
+$badge_blue: #416c8f;
 $badge_blue_light: #7daed6;
-$badge_green: #62b962;
-$badge_orange: #a1460a;
-$badge_red: #852624;
+$badge_green: #5d975d;
+$badge_orange: #b16b3c;
+$badge_red: #7e3736;
 $badge_default: #496b90;
 
 
 .badge.bg-primary {
-    background: linear-gradient(122deg, $badge_blue, $blue) !important;
+    //background: linear-gradient(122deg, $badge_blue, $blue) !important;
+    background: $badge_blue;
 }
 .badge.bg-success {
-    background: linear-gradient(122deg, $badge_green, $green) !important;
+    //background: linear-gradient(122deg, $badge_green, $green) !important;
+    background: $badge_green,;
 }
 .badge.bg-orange {
-    background: linear-gradient(122deg, $badge_orange, $orange) !important;
+    //background: linear-gradient(122deg, $badge_orange, $orange) !important;
+    background: $badge_orange;
 }
 .badge.bg-danger {
-    background: linear-gradient(122deg, $badge_red, $red) !important;
+    //background: linear-gradient(122deg, $badge_red, $red) !important;
+    background: $badge_red;
 }
 .badge.bg-blue-light {
-    background: linear-gradient(122deg, $badge_blue_light, $blue_light) !important;
+    //background: linear-gradient(122deg, $badge_blue_light, $blue_light) !important;
+    background: $badge_blue;
 }
 .badge.bg-default {
-    background-image: linear-gradient(122deg, $badge_default 0%, $default 100%) !important;
+    //background-image: linear-gradient(122deg, $badge_default 0%, $default 100%) !important;
+    background-image: $badge_default;
 }
 
 

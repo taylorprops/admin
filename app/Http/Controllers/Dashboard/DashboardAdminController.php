@@ -71,6 +71,7 @@ class DashboardAdminController extends Controller
             -> addSelect(DB::raw('"listing" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('DocsMissingCount', '>', '0')
             -> whereIn('Status', $active_listing_statuses)
+            -> with(['agent:id,full_name'])
             -> orderBy('MlsListDate', 'desc')
             -> get();
 
@@ -80,6 +81,7 @@ class DashboardAdminController extends Controller
         $expired_listings = Listings::select($listings_select)
             -> addSelect(DB::raw('"listing" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('Status', $expired_listing_status)
+            -> with(['agent:id,full_name'])
             -> orderBy('ExpirationDate', 'desc')
             -> get();
 
@@ -102,6 +104,7 @@ class DashboardAdminController extends Controller
                 $query -> where('amount_received', '0.00');
             })
             -> whereIn('Status', $active_contract_statuses)
+            -> with(['agent:id,full_name'])
             -> orderBy('CloseDate', 'desc')
             -> get();
 
@@ -112,6 +115,7 @@ class DashboardAdminController extends Controller
             -> addSelect(DB::raw('"contract" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('CloseDate', '<', date('Y-m-d'))
             -> whereIn('Status', $active_contract_statuses)
+            -> with(['agent:id,full_name'])
             -> orderBy('CloseDate', 'desc')
             -> get();
 
@@ -122,14 +126,16 @@ class DashboardAdminController extends Controller
             -> addSelect(DB::raw('"contract" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('DocsMissingCount', '>', '0')
             -> whereIn('Status', $active_contract_statuses)
+            -> with(['agent:id,full_name'])
             -> orderBy('CloseDate', 'desc')
             -> get();
 
         // non alerts
         $contracts_closing_this_month = Contracts::select($contracts_select)
-            -> where('CloseDate', '<=', date('Y-m-t'))
+            // -> where('CloseDate', '<=', date('Y-m-t'))
             -> where('CloseDate', '>=', date('Y-m-d'))
             -> whereIn('Status', $active_contract_statuses)
+            -> with(['agent:id,full_name'])
             -> orderBy('CloseDate', 'asc')
             -> get();
 
@@ -145,6 +151,7 @@ class DashboardAdminController extends Controller
             -> addSelect(DB::raw('"referral" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))
             -> where('DocsMissingCount', '>', '0')
             -> whereIn('Status', ResourceItems::GetActiveReferralStatuses())
+            -> with(['agent:id,full_name'])
             -> get();
 
         // merge all alerts
@@ -171,7 +178,9 @@ class DashboardAdminController extends Controller
             $alert_types = array_unique($alert_types);
         }
 
-        return view('/dashboard/admin/dashboard', compact('active_listings_count', 'alert_types', 'alerts', 'active_contracts_count', 'active_referrals_count', 'contracts_closing_this_month', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts'));
+        $notifications = auth() -> user() -> unreadNotifications;
+
+        return view('/dashboard/admin/dashboard', compact('active_listings_count', 'alert_types', 'alerts', 'active_contracts_count', 'active_referrals_count', 'contracts_closing_this_month', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts', 'notifications'));
 
     }
 }

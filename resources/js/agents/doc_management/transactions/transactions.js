@@ -50,13 +50,18 @@ if (document.URL.match(/transactions$/) || document.URL.match(/transactions\?tab
                 hidden_cols = [2];
             }
 
-            if(type == 'listings') {
-                data_table('10', $('#'+type+'_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
-            } else if(type == 'contracts') {
-                data_table('10', $('#'+type+'_div table'), [4, 'desc'], [0, 8], hidden_cols, false, true, true, true);
+            if(type == 'listings' || type == 'contracts') {
+                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [7], hidden_cols, true, true, true, true);
             } else if(type == 'referrals') {
-                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [0], hidden_cols, false, true, true, true);
+                data_table('10', $('#'+type+'_div table'), [3, 'desc'], [5], hidden_cols, true, true, true, true);
             }
+
+            $('#transactions_tabs a[data-toggle="tab"]').on('shown.bs.tab', function () {
+                $('#'+type+'_div table').DataTable()
+                    .columns.adjust()
+                    .responsive.recalc();
+            });
+
 
         })
         .catch(function (error) {

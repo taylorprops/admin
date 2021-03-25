@@ -1,5 +1,10 @@
 .page-dashboard {
 
+    .notifications-container {
+        max-height: 40VH;
+        overflow: auto;
+    }
+
     .upcoming-closing-image {
         max-height: 40px;
         max-width: 70px;

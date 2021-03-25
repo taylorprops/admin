@@ -1,10 +1,9 @@
-<div class="table-responsive">
+<div class="no-wrap">
     <table class="table table-hover table-bordered table-sm" id="listings_table">
         <thead>
-            <th width="100"></th>
+            <th>Address</th>
             <th>Status</th>
             <th>Agent</th>
-            <th>Address</th>
             <th>List Date</th>
             <th>Expiration Date</th>
             <th>Clients</th>
@@ -15,7 +14,8 @@
             @foreach($transactions as $transaction)
 
                 @php
-                $status = '<span class="font-10">'.$transaction -> status -> resource_name.'</span>';
+                $status = $transaction -> status -> resource_name;
+                $status_html = '<span class="font-10">'.$transaction -> status -> resource_name.'</span>';
                 $color = $transaction -> status -> resource_color;
                 $contract = $transaction -> contract;
                 $checklist = $transaction -> checklist;
@@ -29,20 +29,26 @@
 
                 if($contract) {
                     $close_date = $contract -> CloseDate;
-                    if(stristr($status, 'Under Contract') || stristr($status, 'Closed')) {
-                        $status .= ' - <a href="/agents/doc_management/transactions/transaction_details/'.$contract -> Contract_ID.'/contract">View</a><br><span class="text-gray font-8">Close Date: '.date_mdy($close_date).'</span>';
+                    if(stristr($status_html, 'Under Contract') || stristr($status_html, 'Closed')) {
+                        $status_html = '<a href="/agents/doc_management/transactions/transaction_details/'.$contract -> Contract_ID.'/contract" class="text-success">'.$status.'</a><br><span class="text-gray font-8">Close Date: '.date_mdy($close_date).'</span>';
                     }
                 }
 
                 $listing_expired = $transaction -> ExpirationDate < date('Y-m-d') && $transaction -> Contract_ID == 0 ? 'text-danger' : '';
 
+                $sale_rent = ucwords($transaction -> SaleRent);
+                if($transaction -> SaleRent == 'both') {
+                    $sale_rent = 'For Sale and Rent';
+                } else if($transaction -> SaleRent == 'sale') {
+                    $sale_rent = 'For Sale';
+                }
+
                 @endphp
                 <tr>
-                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Listing_ID }}/listing" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a></td>
-                    <td><span style="color: {{ $color }}">{!! $status !!}</span>
-                    <br>{{ ucwords($transaction -> SaleRent) }}</td>
+                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Listing_ID }}/listing">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
+                    <td><span style="color: {{ $color }}">{!! $status_html !!}</span>
+                    <br>{{ $sale_rent }}</td>
                     <td>{{ $transaction -> ListAgentFullName }}</td>
-                    <td>{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</td>
                     <td>{{ date_mdy($transaction -> MlsListDate) }}</td>
                     <td class="{{ $listing_expired }}">{{ date_mdy($transaction -> ExpirationDate) }}</td>
                     <td>{{ $transaction -> SellerOneFullName }} @if($transaction -> SellerTwoFullName) <br>{{ $transaction -> SellerTwoFullName }} @endif</td>

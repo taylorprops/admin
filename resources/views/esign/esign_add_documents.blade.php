@@ -157,7 +157,7 @@
 
                         <div class="font-10 text-gray my-3">Select the Template you want to apply</div>
 
-                        <div class="table-responsive">
+                        <div class="no-wrap">
 
                             <table id="templates_table" class="table table-hover table-bordered table-sm" width="100%">
 

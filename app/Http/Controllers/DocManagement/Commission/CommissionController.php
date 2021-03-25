@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 
 class CommissionController extends Controller
 {
+
     public function commission(Request $request) {
 
         // pending - where checks in and checks out = 0 - where checks in more than checks out

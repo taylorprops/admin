@@ -205,9 +205,6 @@ body.modal-open {
 
 // datatables
 
-// .table-responsive {
-//     overflow: visible !important;
-// }
 
 .table.responsive {
     width: 100%;
@@ -332,12 +329,24 @@ body.modal-open {
 
                 }
                 td {
-                    padding: 0.2rem !important;
                     font-size: .7rem !important;
 
                     &.small {
                         font-size: .7rem !important;
                     }
+
+                    &:not(:first-child) {
+                        padding: 0.2rem !important;
+                    }
+
+                    &:before {
+                        top: 50% !important;
+                    }
+
+                    .dtr-details {
+                        width: 100%;
+                    }
+
 
                 }
 

@@ -1,6 +1,6 @@
 
 
-<div class="table-responsive">
+<div class="no-wrap">
 
     <table class="table table-hover table-bordered table-sm employees-table" width="100%">
 

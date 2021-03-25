@@ -6,7 +6,9 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Models\Employees\Title;
 use App\Models\Employees\InHouse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Employees\InHouseDocs;
 use Intervention\Image\Facades\Image;
 use App\Models\Employees\LoanOfficers;
@@ -45,37 +47,60 @@ class EmployeesController extends Controller {
 
     public function save_employee(Request $request) {
 
-        if($request -> emp_type == 'transaction_coordinator') {
-            $employee = TransactionCoordinators::firstOrCreate([
-                'id' => $request -> id
-            ]);
-        } else {
-            $employee = InHouse::firstOrCreate([
-                'id' => $request -> id
-            ]);
+        $check_if_email_exists = User::where('email', $request -> email) -> count();
+        if($check_if_email_exists > 0) {
+            return response() -> json(['status' => 'error', 'message' => 'exists']);
         }
 
-        $ignore_cols = ['id', 'email_orig'];
-        foreach($request -> all() as $key => $val) {
-            if(!in_array($key, $ignore_cols)) {
-                $employee[$key] = $val;
+        $add_employee = DB::transaction(function () use ($request) {
+
+            if($request -> emp_type == 'transaction_coordinator') {
+                $employee = TransactionCoordinators::firstOrCreate([
+                    'id' => $request -> id
+                ]);
+            } else {
+                $employee = InHouse::firstOrCreate([
+                    'id' => $request -> id
+                ]);
             }
-        }
-        $employee -> save();
 
-        // update users table
-        $user = User::where('email', $request -> email_orig)
-            -> update([
-                'active' => $request -> active,
-                'name' => $request -> first_name.' '.$request -> last_name,
-                'email' => $request -> email,
-                'group' => $request -> emp_type
-            ]);
+            $ignore_cols = ['id', 'email_orig'];
+            foreach($request -> all() as $key => $val) {
+                if(!in_array($key, $ignore_cols)) {
+                    $employee[$key] = $val;
+                }
+            }
+            $employee -> save();
 
-        $emp_id = $employee -> id;
+            $emp_id = $employee -> id;
 
-        return response() -> json(['status' => 'success', 'emp_id' => $emp_id]);
+            // update users table
+            if($request -> email_orig != '') {
+                $user = User::where('email', $request -> email_orig) -> first();
+                $user -> update([
+                    'active' => $request -> active,
+                    'name' => $request -> first_name.' '.$request -> last_name,
+                    'email' => $request -> email,
+                    'group' => $request -> emp_type,
+                    'user_id' => $emp_id
+                ]);
+            } else {
+                $user = new User();
+                $temp_pass = 'Akd'.time().'zlq70k30wj';
+                $user -> password = Hash::make($temp_pass);
+                $user -> active = 'yes';
+                $user -> name = $request -> first_name.' '.$request -> last_name;
+                $user -> email = $request -> email;
+                $user -> group = $request -> emp_type;
+                $user -> user_id = $emp_id;
+                $user -> save();
+            }
 
+            return $emp_id;
+
+        });
+
+        return response() -> json(['status' => 'success', 'emp_id' => $add_employee]);
 
     }
 

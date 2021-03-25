@@ -34,11 +34,13 @@ use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Jobs\OldDB\Earnest\EscrowExportJob;
 use App\Mail\DocManagement\Emails\Documents;
+use Illuminate\Support\Facades\Notification;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use App\Models\Commission\CommissionChecksIn;
 use App\Models\DocManagement\Earnest\Earnest;
 use App\Models\Commission\CommissionChecksOut;
 use App\Models\Commission\CommissionBreakdowns;
+use App\Models\Employees\TransactionCoordinators;
 use App\Models\Admin\Resources\ResourceItemsAdmin;
 use App\Models\Commission\CommissionChecksInQueue;
 use App\Models\DocManagement\Create\Fields\Fields;
@@ -46,6 +48,7 @@ use App\Models\DocManagement\Create\Upload\Upload;
 use App\Models\DocManagement\Earnest\EarnestNotes;
 use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Earnest\EarnestChecks;
+use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionIncomeDeductions;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Create\Upload\UploadPages;
@@ -68,7 +71,6 @@ use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
 use App\Jobs\Agents\DocManagement\Transactions\Details\AddFieldAndInputs;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadImages;
-use App\Models\Employees\TransactionCoordinators;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklists;
 use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItems;
 use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages;
@@ -222,6 +224,7 @@ class TransactionsDetailsController extends Controller
         $Referral_ID = $request -> Referral_ID ?? 0;
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+        $status = $property -> status -> resource_name;
 
         //$listings_count = Listings::where('Agent_ID', $property -> Agent_ID) -> count();
         $listings_count = Cache::remember('listings_count', 1000, function () use ($property) {
@@ -294,21 +297,21 @@ class TransactionsDetailsController extends Controller
             $earnest = $property -> earnest;
             if($earnest -> amount_received > 0) {
                 if($earnest -> amount_total > 0) {
-                    $earnest_html = '<div class="text-white bg-success font-10 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
+                    $earnest_html = '<div class="text-white bg-success py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
                 } else {
-                    $earnest_html = '<div class="text-white bg-primary font-10 p-2 rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
+                    $earnest_html = '<div class="text-white bg-primary py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
                 }
             } else {
-                $earnest_html = '<div class="text-white bg-danger font-10 p-2 rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
+                $earnest_html = '<div class="text-white bg-danger py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
             }
         } else {
-            $earnest_html = '<div class="text-white bg-default font-10 p-2 rounded ml-0"><i class="fal fa-ban mr-2"></i> Not Holding</div>';
+            $earnest_html = '<div class="text-white bg-default py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-ban mr-2"></i> Not Holding</div>';
         }
 
 
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
+        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'status', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
     }
 
 
@@ -3635,7 +3638,6 @@ class TransactionsDetailsController extends Controller
         if ($breakdown -> submitted == 'no') {
             $breakdown -> submitted = 'yes';
         }
-        dump($breakdown -> submitted);
 
         $breakdown -> save();
 
@@ -3660,6 +3662,29 @@ class TransactionsDetailsController extends Controller
                 $c += 1;
             }
         }
+
+        // TODO: this not done
+        // notify admin
+        $notification = config('global_db.in_house_notification_commission_breakdown_submitted');
+        $users = User::whereIn('email', $notification['emails']) -> get();
+
+        $property = $breakdown -> property_contract;
+        if(!$property) {
+            $property = $breakdown -> property_referral;
+        }
+        $address =  $property -> FullStreetAddress.' '.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
+        $message = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address;
+        $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
+        $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address_email;
+
+        $notification['type'] = 'commission';
+        $notification['transaction_type'] = 'contract';
+        $notification['transaction_id'] = $breakdown -> Contract_ID;
+        $notification['subject'] = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name;
+        $notification['message'] = $message;
+        $notification['message_email'] = $message_email;
+
+        Notification::send($users, new GlobalNotification($notification));
 
         return response() -> json(['status' => 'success']);
     }

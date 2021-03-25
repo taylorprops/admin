@@ -1,6 +1,6 @@
 <div class="h4 text-orange my-3">Deleted Templates</div>
 
-<div class="table-responsive">
+<div class="no-wrap">
 
     <table id="deleted_system_templates_table" class="table table-hover table-bordered" width="100%">
 

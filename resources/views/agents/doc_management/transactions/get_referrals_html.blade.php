@@ -1,12 +1,11 @@
-<div class="table-responsive">
+<div class="no-wrap">
 
     <table class="table table-hover table-bordered table-sm" id="referrals_table">
         <thead>
-            <th width="100"></th>
+            <th>Address</th>
             <th>Status</th>
             <th>Agent</th>
             <th>Close Date</th>
-            <th>Address</th>
             <th>Clients</th>
             <th>Receiving Agent</th>
         </thead>
@@ -18,11 +17,10 @@
                 $our_agent = $transaction -> agent -> full_name;
                 @endphp
                 <tr>
-                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Referral_ID }}/referral" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a></td>
+                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Referral_ID }}/referral">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
                     <td style="color: {{ $color }}">{!! $status !!}</td>
                     <td>{{ $our_agent }}</td>
                     <td>{{ date_mdy($transaction -> CloseDate) }}</td>
-                    <td>{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</td>
                     <td>{{ $transaction -> ClientFirstName.' '.$transaction -> ClientLastName }}</td>
                     <td>{{ $transaction -> ReceivingAgentFirstName.' '.$transaction -> ReceivingAgentLastName }}</td>
                 </tr>

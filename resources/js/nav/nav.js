@@ -1,4 +1,4 @@
-$(function ($) {
+$(function () {
 
     show_sidebar();
     $(window).on('resize', show_sidebar);
@@ -32,15 +32,14 @@ $(function ($) {
         $('.page-wrapper').addClass('toggled');
     });
 
-    function show_sidebar() {
-
-        if($(document).width() > 1600) {
-            $('.page-wrapper').addClass('toggled');
-        } else {
-            $('.page-wrapper').removeClass('toggled');
-        }
-    }
-
 
 });
 
+function show_sidebar() {
+
+    if($(document).width() > 1600) {
+        $('.page-wrapper').addClass('toggled');
+    } else {
+        $('.page-wrapper').removeClass('toggled');
+    }
+}

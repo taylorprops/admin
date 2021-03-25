@@ -54,8 +54,13 @@ if(document.URL.match(/notifications/)) {
             let emails = '';
             let number = '';
             let on_off = '';
-            if(type == 'emails') {
+            let notify_by_email = '';
+            let notify_by_text = '';
+
+            if(type == 'notification') {
                 emails = container.find('.emails').val();
+                notify_by_email = container.find('.notify-checkbox-email:checked').val() || '';
+                notify_by_text = container.find('.notify-checkbox-text:checked').val() || '';
             } else if(type == 'number') {
                 number = container.find('.number').val();
             } else if(type == 'on_off') {
@@ -67,6 +72,8 @@ if(document.URL.match(/notifications/)) {
             formData.append('title', title);
             formData.append('description', description);
             formData.append('emails', emails);
+            formData.append('notify_by_email', notify_by_email);
+            formData.append('notify_by_text', notify_by_text);
             formData.append('number', number);
             formData.append('on_off', on_off);
             axios.post('/doc_management/save_notifications', formData, axios_options)

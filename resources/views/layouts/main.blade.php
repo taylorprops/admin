@@ -61,7 +61,7 @@
 
     </head>
 
-    <body class="@if(Request::is('*/edit_files/*')) y-scroll-none @endif @if(Request::is('*/document_review')) overflow-y-hidden @endif">
+    <body class="animate__animated animate__faster animate__fadeIn @if(Request::is('*/edit_files/*')) y-scroll-none @endif @if(Request::is('*/document_review')) overflow-y-hidden @endif">
 
         <div class="loading-bg">
             <div class="loading-spinner">

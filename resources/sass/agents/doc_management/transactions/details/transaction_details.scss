@@ -6,6 +6,14 @@
         //text-align: left;
     }
 
+    .divider {
+        margin-left: 5px;
+        margin-right: 25px;
+        height: 100px;
+        background: $border-color;
+        width: 2px;
+    }
+
 
     .listing-header-details .btn {
         padding: 0.1rem 0.2rem;

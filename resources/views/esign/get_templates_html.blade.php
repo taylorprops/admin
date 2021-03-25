@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="mb-5 table-responsive">
+<div class="mb-5 no-wrap">
 
     <table id="templates_table" class="table table-hover table-bordered" width="100%">
 

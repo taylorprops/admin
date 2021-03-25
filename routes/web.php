@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\DocManagement\Earnest\EarnestController;
 use App\Http\Controllers\Dashboard\DashboardAgentReferralController;
 use App\Http\Controllers\DocManagement\Resources\ResourcesController;
+use App\Http\Controllers\Notifications\GlobalNotificationsController;
 use App\Http\Controllers\Admin\Resources\ResourceItemsAdminController;
 use App\Http\Controllers\DocManagement\Checklists\ChecklistsController;
 use App\Http\Controllers\DocManagement\Commission\CommissionController;
@@ -61,6 +62,11 @@ Route::get('/search', [SearchController::class, 'search']);
 
 /***** file upload ******/
 Route::post('/filepond_upload', [FilepondUploadController::class, 'upload']);
+
+/***** notifications ******/
+Route::get('/notifications/get_notifications', [GlobalNotificationsController::class, 'get_notifications']);
+Route::post('/notifications/mark_as_read', [GlobalNotificationsController::class, 'mark_as_read']);
+
 
 
 // Route::get('/test', 'Testcontroller@test');

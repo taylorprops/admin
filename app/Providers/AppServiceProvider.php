@@ -31,16 +31,20 @@ class AppServiceProvider extends ServiceProvider
         // add custom config vars from config table
         config([
             'global_db' => Config::all([
-                'config_key','config_value','config_type'
+                'config_key','config_value','config_type', 'notify_by_email', 'notify_by_text'
             ])
             -> keyBy('config_key')
             -> transform(function ($setting) {
 
-                if($setting -> config_type == 'emails') {
+                if($setting -> config_type == 'notification') {
                     if(stristr($setting -> config_value, ',')) {
-                        return explode(',', $setting -> config_value);
+                        $notification['emails'] = explode(',', $setting -> config_value);
                     }
-                    return [$setting -> config_value];
+                    $notification['emails'] = [$setting -> config_value];
+                    $notification['notify_by_email'] = $setting -> notify_by_email;
+                    $notification['notify_by_text'] = $setting -> notify_by_text;
+
+                    return $notification;
                 }
 
                 return $setting -> config_value;

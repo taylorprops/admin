@@ -10,7 +10,7 @@
 
                         <h4 class="text-orange">Checks In</h4>
 
-                        <div class="table-responsive-lg font-8">
+                        <div class="no-wrap-lg font-8">
 
                             <table class="table table-hover table-bordered table-sm">
 
@@ -74,7 +74,7 @@
 
                         <h4 class="text-orange">Checks Out</h4>
 
-                        <div class="table-responsive-lg font-8">
+                        <div class="no-wrap-lg font-8">
 
                             <table class="table table-hover table-bordered table-sm">
                                 <thead>

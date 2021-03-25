@@ -1,11 +1,10 @@
-<div class="table-responsive">
+<div class="no-wrap">
 
     <table class="table table-hover table-bordered table-sm" style="width: 100%;" id="contracts_table">
         <thead>
-            <th width="100"></th>
+            <th>Address</th>
             <th>Status</th>
             <th>Agent</th>
-            <th>Address</th>
             <th>Contract Date</th>
             <th>Settle Date</th>
             <th>Clients</th>
@@ -48,11 +47,10 @@
 
                 @endphp
                 <tr>
-                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Contract_ID }}/contract" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View</a></td>
+                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Contract_ID }}/contract">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
                     <td><span style="color: {{ $color }}">{!! $status !!}</span>
                         <br>{{ ucwords($transaction -> SaleRent) }}</td>
                     <td>{{ $our_agent }}</td>
-                    <td>{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</td>
                     <td>{{ date_mdy($transaction -> ContractDate) }}</td>
                     <td class="{{ $past_settle_date }}">{{ date_mdy($transaction -> CloseDate) }}</td>
                     <td>{!! $clients !!}</td>

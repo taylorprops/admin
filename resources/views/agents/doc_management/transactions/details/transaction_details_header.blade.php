@@ -23,8 +23,6 @@ if($transaction_type == 'listing') {
     $transaction_type_bg = 'bg-orange';
 }
 
-$status = $resource_items -> GetResourceName($property -> Status);
-
 $settle_date = '';
 if($property -> CloseDate != '') {
     $settle_date = date_mdy($property -> CloseDate);
@@ -39,11 +37,13 @@ if($property -> CloseDate != '') {
             <div class="px-2 py-3 w-100 mt-2 mb-2 border-top border-bottom text-gray font-12">
                 {!! $property -> FullStreetAddress.' '.$property -> Street.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
             </div>
-            @if($property -> ListPictureURL)
             <div class="property-image-div">
-                <img src="{{ str_replace('http:', 'https:', $property -> ListPictureURL) }}" class="img-fluid shadow">
+                @if($property -> ListPictureURL)
+                    <img src="{{ str_replace('http:', 'https:', $property -> ListPictureURL) }}" class="img-fluid shadow">
+                @else
+                    <i class="fad fa-home fa-4x text-primary"></i>
+                @endif
             </div>
-            @endif
         </div>
 
         <div class="d-flex justify-content-start">
@@ -133,27 +133,32 @@ if($property -> CloseDate != '') {
 
         <div class="d-flex @if($for_sale && $transaction_type == 'contract') justify-content-between @else justify-content-end @endif align-items-center">
 
-            @if($for_sale && $transaction_type == 'contract')
+            {{-- @if($for_sale && $transaction_type == 'contract')
             <div class="no-wrap text-gray font-11">
                 Earnest {!! $earnest_html !!}
             </div>
-            @endif
+            @endif --}}
 
-            <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex justify-content-end align-items-center w-100">
 
                 <div class="mr-2">
 
                     @if($transaction_type == 'listing')
+
                         @php $action = $listing_accepted ? 'Withdraw' : 'Cancel'; @endphp
+
                         <div class="d-flex justify-content-end flex-wrap">
+
                             @if(in_array($property -> Status, $resource_items -> GetActiveListingStatuses('no', 'yes', 'yes') -> toArray()))
+
                                 <div class="my-1 mx-1">
-                                    <a href="javascript: void(0);" class="btn btn-success mt-2 btn-block" id="accept_contract_button"><i class="fal fa-plus mr-2"></i> Accept {{ $for_sale ? 'Contract' : 'Lease' }}</a>
+                                    <a href="javascript: void(0);" class="btn btn-success btn-block" id="accept_contract_button"><i class="fal fa-plus mr-2"></i> Accept {{ $for_sale ? 'Contract' : 'Lease' }}</a>
+
+                                    <a href="javascript: void(0);" class="btn btn-danger btn-sm mt-2 btn-block" id="cancel_listing_button"><i class="fal fa-minus mr-2"></i> {{ $action }} Listing</a>
                                 </div>
-                                <div class="my-1 mx-1">
-                                    <a href="javascript: void(0);" class="btn btn-danger mt-2 btn-block" id="cancel_listing_button"><i class="fal fa-minus mr-2"></i> {{ $action }} Listing</a>
-                                </div>
+
                             @else
+
                                 @php
                                 $header_status = $status;
                                 if($header_status == 'Under Contract') {
@@ -170,66 +175,100 @@ if($property -> CloseDate != '') {
                                     $header_fa = 'fa-ban';
                                 }
                                 @endphp
-                                <div>
-                                    <span class="{{ $header_status_class }} text-white mr-2 font-13 rounded px-3 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
+
+                                <div class="d-flex justify-content-end align-items-center">
+
+                                    <div class="{{ $header_status_class }} text-white mr-2 font-12 rounded px-2 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</div>
+
+                                    @if($status == 'Canceled' || $status == 'Withdrawn')
+                                        <a href="javascript: void(0)" class="btn btn-primary undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+                                    @endif
+
                                 </div>
-                                @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'listing_status') || $property -> Status == $resource_items -> GetResourceID('Withdrawn', 'listing_status'))
-                                    <div class="mx-3 mt-1">
-                                        <a href="javascript: void(0)"class="undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
-                                    </div>
-                                @endif
+
                             @endif
+
                         </div>
+
                     @elseif($transaction_type == 'contract')
+
                         @php
                         $docs_submitted = $upload -> DocsSubmitted('', $Contract_ID);
                         $action = $docs_submitted['contract_submitted'] ? 'Release' : 'Cancel';
                         @endphp
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex flex-wrap justify-content-end align-items-center">
-                                    @if($property -> Status == $resource_items -> GetResourceID('Active', 'contract_status'))
+
+                                    @if($status == 'Active')
+
                                         <div>
-                                            <a href="javascript: void(0);" class="btn btn-danger mt-2" id="cancel_contract_button" data-for-sale="{{ $for_sale ? 'yes' : 'no' }}" data-listing-expiration-date="{{ $listing_expiration_date }}"><i class="fal fa-minus mr-2"></i> {{ $for_sale ? $action.' Contract' : 'Cancel Lease' }}</a>
+                                            <a href="javascript: void(0);" class="btn btn-danger btn-sm" id="cancel_contract_button" data-for-sale="{{ $for_sale ? 'yes' : 'no' }}" data-listing-expiration-date="{{ $listing_expiration_date }}"><i class="fal fa-minus mr-2"></i> {{ $for_sale ? $action.' Contract' : 'Cancel Lease' }}</a>
                                         </div>
-                                    @elseif($property -> Status == $resource_items -> GetResourceID('Cancel Pending', 'contract_status'))
-                                        <span class="bg-orange text-white mr-2 font-13 rounded px-3 py-2"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</span>
-                                        <div class="mx-3 mt-1">
-                                            <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+
+                                    @elseif($status == 'Cancel Pending')
+
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            <div class="bg-orange text-white mr-2 font-12 rounded px-2 py-2"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</div>
+                                            <a href="javascript: void(0)"class="btn btn-primary undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                         </div>
+
+
                                         @if(auth() -> user() -> group == 'admin')
+
                                             <div>
                                                 <button class="btn btn-danger process-cancellation-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fad fa-cogs mr-2 text-white"></i> Process</button>
                                             </div>
+
                                         @endif
-                                    @elseif($property -> Status == $resource_items -> GetResourceID('Released', 'contract_status') || $property -> Status == $resource_items -> GetResourceID('Canceled', 'contract_status'))
-                                        <span class="bg-danger text-white mr-2 font-13 rounded px-3 py-2"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</span>
-                                        <div class="mx-3 mt-1">
-                                            <a href="javascript: void(0)"class="undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+
+                                    @elseif($status == 'Released' || $status == 'Canceled')
+
+                                        <div class="d-flex justify-content-start align-items-center">
+                                            <div class="bg-danger text-white mr-2 font-12 rounded px-2 py-2"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</div>
+                                            <a href="javascript: void(0)" class="btn btn-primary undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                         </div>
-                                    @elseif($property -> Status == $resource_items -> GetResourceID('Closed', 'contract_status'))
-                                        <span class="bg-success text-white mr-2 font-13 rounded px-3 py-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</span>
+
+                                    @elseif($status == 'Closed')
+
+                                        <span class="bg-success text-white mr-2 font-12 rounded px-2 py-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</span>
+
                                     @else
-                                        <span class="bg-primary text-white mr-2 font-13 rounded px-3 py-2"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span>
+
+                                        <span class="bg-primary text-white mr-2 font-12 rounded px-2 py-2"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span>
+
                                     @endif
+
                                     @if($property -> Listing_ID > 0 && $property -> Contract_ID > 0)
+
                                         <div>
                                             <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing" class="btn btn-primary mt-2"><i class="fad fa-sign mr-2"></i> View Listing</a>
                                         </div>
+
                                     @endif
+
                                 </div>
-                                @if(!$property -> Listing_ID > 0 && $listings_count > 0)
+                                @if(!$property -> Listing_ID > 0 && $listings_count > 0 && $status == 'Active')
+
                                     <div>
                                         <a href="javascript:void(0)" id="merge_with_listing_button"><i class="fad fa-exchange-alt mr-2"></i> Merge with Listing</a>
                                     </div>
+
                                 @endif
-                                @if($property -> Merged == 'yes')
+
+                                @if($property -> Merged == 'yes' && $status == 'Active')
+
                                     <div>
                                         <a href="javascript:void(0)" id="undo_merge_with_listing_button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fad fa-exchange-alt mr-2"></i> Undo Merge with Listing</a>
                                     </div>
+
                                 @endif
+
                             </div>
+
                         </div>
+
                     @elseif($transaction_type == 'referral')
                         <div class="">
                                 @php
@@ -244,7 +283,7 @@ if($property -> CloseDate != '') {
                                     $header_fa = 'fa-ban';
                                 }
                                 @endphp
-                                @if($property -> Status == $resource_items -> GetResourceID('Active', 'referral_status'))
+                                @if($status == 'Active')
                                     <div>
                                         <a href="javascript: void(0);" class="btn btn-danger" id="cancel_referral_button"><i class="fal fa-minus mr-2"></i> Cancel Referral</a>
                                     </div>
@@ -252,7 +291,7 @@ if($property -> CloseDate != '') {
                                     <div>
                                         <span class="{{ $header_status_class }} text-white mr-2 font-13 rounded px-3 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</span>
                                     </div>
-                                    @if($property -> Status == $resource_items -> GetResourceID('Canceled', 'referral_status'))
+                                    @if($status == 'Canceled')
                                         <div class="mx-3">
                                             <a href="javascript: void(0)"class="undo-cancel-referral-button" data-referral-id="{{ $property -> Referral_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                         </div>
@@ -288,7 +327,7 @@ if($property -> CloseDate != '') {
         $fsbo_property_type = $resource_items -> GetResourceId('For Sale By Owner', 'checklist_property_sub_types');
         @endphp
 
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-3">
 
             <div class="mt-3 mt-md-0">
 
@@ -307,7 +346,7 @@ if($property -> CloseDate != '') {
                             <div class="d-flex justify-content-start align-items-center mb-1">
                                 <div class="text-gray font-10">List Agent</div>
                                 <div class="ml-2">
-                                    <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
+                                    <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
                                 </div>
                             </div>
 
@@ -344,9 +383,9 @@ if($property -> CloseDate != '') {
 
         @if($transaction_type == 'contract' && $property -> BuyerRepresentedBy != 'none')
 
-            <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <div class="col-12 col-md-6 col-lg-5 col-xl-3">
 
-                <div class="mt-3 mt-lg-0">
+                <div class="mt-3 mt-md-0">
 
                     <div class="row">
 
@@ -362,7 +401,7 @@ if($property -> CloseDate != '') {
                                 <div class="d-flex justify-content-start align-items-center mb-1">
                                     <div class="text-gray font-10">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</div>
                                     <div class="ml-2">
-                                        <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book mr-sm-1"></i> <span class="d-none d-sm-inline-block">Contact</span></a>
+                                        <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
                                     </div>
                                 </div>
 
@@ -399,7 +438,7 @@ if($property -> CloseDate != '') {
 
     @endif
 
-    <div class="col-9 col-md-6 col-xl-3">
+    <div class="col-12 col-md-6 col-xl-3">
 
         <div class="text-gray font-10 mb-2 mt-3 mt-xl-0">
             Checklist Status
@@ -428,6 +467,18 @@ if($property -> CloseDate != '') {
             @endif
 
         </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-6 col-xl-3">
+
+        @if($for_sale && $transaction_type == 'contract')
+                <div class="text-gray font-10 mb-2 mt-3 mt-xl-0">
+                    Earnest
+                </div>
+                {!! $earnest_html !!}
+            @endif
 
     </div>
 

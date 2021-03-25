@@ -87,7 +87,7 @@ class Listings extends Model
             $property = Referrals::find($id);
         }
         if ($select) {
-            $property = $property -> select($select);
+            $property = $property -> select($select) -> with(['agent', 'co_agent', 'team', 'transaction_coordinator', 'checklist', 'status']);
         }
 
         return $property;

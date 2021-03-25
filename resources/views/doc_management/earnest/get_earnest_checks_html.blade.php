@@ -17,7 +17,7 @@
 
         <h5 class="text-orange">Checks In</h5>
 
-        <div class="table-responsive-lg">
+        <div class="no-wrap-lg">
 
             <table class="earnest-checks-table-in table table-hover table-bordered table-sm">
 
@@ -95,7 +95,7 @@
 
         <h5 class="text-orange mt-5">Checks Out</h5>
 
-        <div class="table-responsive-lg">
+        <div class="no-wrap-lg">
 
             <table class="earnest-checks-table-out table table-hover table-bordered table-sm">
 
@@ -164,7 +164,7 @@
 
         <h5 class="text-orange">Checks In</h5>
 
-        <div class="table-responsive-lg">
+        <div class="no-wrap-lg">
 
             <table class="earnest-checks-table-in-recent table table-hover table-bordered table-sm">
 
@@ -242,7 +242,7 @@
 
         <h5 class="text-orange mt-5">Checks Out</h5>
 
-        <div class="table-responsive-lg">
+        <div class="no-wrap-lg">
 
             <table class="earnest-checks-table-out-recent table table-hover table-bordered table-sm">
 
