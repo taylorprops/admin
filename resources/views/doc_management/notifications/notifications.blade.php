@@ -50,10 +50,7 @@
                                             <option value=""></option>
                                             @foreach($in_house_employees as $employee)
                                                 @php
-                                                //$user_emails = [$notification -> config_value];
-                                                //if(stristr($notification -> config_value, ',')) {
-                                                    $user_emails = explode(',', $notification -> config_value);
-                                                //}
+                                                $user_emails = explode(',', $notification -> config_value);
                                                 @endphp
                                                 <option value="{{ $employee -> user_account -> email }}" @if(in_array($employee -> user_account -> email, $user_emails)) selected @endif >{{ ucwords($employee -> emp_type).' - '.$employee -> first_name.' '.$employee -> last_name }}</option>
                                             @endforeach

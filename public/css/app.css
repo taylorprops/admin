@@ -13703,7 +13703,7 @@ a.ck.ck-button {
   bottom: 40px;
   left: 15px;
   width: 500px;
-  max-height: 90VH;
+  max-height: 40VH;
   overflow: auto;
 }
 
@@ -13767,6 +13767,11 @@ a.ck.ck-button {
   border-bottom-left-radius: 0.2rem !important;
   border-bottom-right-radius: 0.2rem !important;
   border: 2px solid #f1fcff !important;
+}
+
+.modal-backdrop.show {
+  background: #0d3555;
+  opacity: 0.9;
 }
 
 body,
@@ -16552,7 +16557,7 @@ body {
     print-color-adjust: exact;
   }
 }
-.page-dashboard .notifications-container {
+.page-dashboard .notifications-container, .page-dashboard .alerts-container {
   max-height: 40VH;
   overflow: auto;
 }
@@ -17457,12 +17462,10 @@ body {
       text-align: right;
   } */
 }
-.page-transaction-details .divider {
-  margin-left: 5px;
-  margin-right: 25px;
-  height: 100px;
-  background: #dee2e6;
-  width: 2px;
+.page-transaction-details .document-upload-div {
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 .page-transaction-details .listing-header-details .btn {
   padding: 0.1rem 0.2rem;
@@ -18977,9 +18980,6 @@ body {
   right: -20px;
 }
 
-.employee-docs-div .filepond--root {
-  max-height: 5rem;
-}
 .employee-docs-div .filepond--root .filepond--drop-label {
   min-height: 2.75em;
 }

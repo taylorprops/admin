@@ -145,7 +145,7 @@ class DashboardAdminController extends Controller
 
         // alerts
         $alert_type = 'missing-docs-referrals';
-        $title = 'Referrals Missing Documents';
+        $title = 'Missing Documents - Referrals';
         $details = 'The referrals below have required checklist items that you have not submitted yet.';
         $missing_docs_referrals = Referrals::select($referrals_select)
             -> addSelect(DB::raw('"referral" as transaction_type, "'.$alert_type.'" as alert_type, "'.$title.'" as title, "'.$details.'" as details'))

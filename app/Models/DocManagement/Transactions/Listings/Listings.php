@@ -28,13 +28,7 @@ class Listings extends Model
                 } elseif (auth() -> user() -> group == 'transaction_coordinator') {
                     $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
-
-                $one_minute_ago = date('Y-m-d H:i:s', strtotime('-1 minute'));
-                $query -> where(function($query) use ($one_minute_ago) {
-                    $query -> where('Status', '>', '0')
-                    -> orWhere('created_at', '>', $one_minute_ago);
-                });
-
+                $query -> where('Status', '>', '0');
             }
 
         });
@@ -80,14 +74,14 @@ class Listings extends Model
         }
 
         if ($transaction_type == 'listing') {
-            $property = self::find($id);
+            $property = self::with(['agent', 'co_agent', 'team', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
         } elseif ($transaction_type == 'contract') {
-            $property = Contracts::find($id);
+            $property = Contracts::with(['agent', 'team', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
         } elseif ($transaction_type == 'referral') {
-            $property = Referrals::find($id);
+            $property = Referrals::with(['agent', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
         }
         if ($select) {
-            $property = $property -> select($select) -> with(['agent', 'co_agent', 'team', 'transaction_coordinator', 'checklist', 'status']);
+            $property = $property -> select($select);
         }
 
         return $property;

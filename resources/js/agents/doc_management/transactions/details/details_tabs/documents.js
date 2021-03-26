@@ -78,6 +78,38 @@ if (document.URL.match(/transaction_details/)) {
         $(document).on('change', '.check-document', show_bulk_options);
 
 
+        let upload_documents_file = document.getElementById('upload_documents_file');
+        let upload_documents_file_pond = FilePond.create(upload_documents_file);
+
+        upload_documents_file_pond.setOptions({
+            allowImagePreview: false,
+            multiple: true,
+            acceptedFileTypes: ['application/pdf'],
+            server: {
+                process: {
+                    url: '/agents/doc_management/transactions/upload_documents',
+                    onerror: (response) => response.data,
+                    ondata: (formData) => {
+                        formData.append('Listing_ID', $('#Listing_ID').val()),
+                        formData.append('Contract_ID', $('#Contract_ID').val()),
+                        formData.append('Referral_ID', $('#Referral_ID').val()),
+                        formData.append('transaction_type', $('#transaction_type').val()),
+                        formData.append('Agent_ID', $('#Agent_ID').val()),
+                        formData.append('folder', $('#documents_folder').val())
+                        return formData;
+                    }
+                }
+            },
+            labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
+            onprocessfiles: () => {
+                upload_documents_file_pond.removeFiles();
+                load_tabs('documents');
+            }
+        });
+
+        $('.filepond--credits').hide();
+
+
     });
 
     window.documents_init = function(reorder) {

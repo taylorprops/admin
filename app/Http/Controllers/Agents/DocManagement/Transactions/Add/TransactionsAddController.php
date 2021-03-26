@@ -13,14 +13,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Commission\Commission;
 use App\Models\Resources\LocationData;
 use App\Traits\InHouseNotificationEmail;
+use App\Notifications\GlobalNotification;
+use Illuminate\Support\Facades\Notification;
 use App\Models\DocManagement\Earnest\Earnest;
 use App\Models\Commission\CommissionBreakdowns;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Members\Members;
-use App\Models\DocManagement\Transactions\Data\ListingsData;
-use App\Models\DocManagement\Transactions\Listings\Listings;
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Transactions\Data\ListingsData;
+use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\Data\ListingsRemovedData;
@@ -255,6 +257,7 @@ class TransactionsAddController extends Controller {
         $property_details = (object) $property_details;
 
         $add_referral = new Referrals();
+        $add_referral -> Status = ResourceItems::GetResourceID('Active', 'referral_status');
         foreach ($property_details as $key => $val) {
             $add_referral -> $key = $val;
         }
@@ -438,8 +441,10 @@ class TransactionsAddController extends Controller {
         $property_details -> Location_ID = $location_id;
 
         $new_transaction = new Contracts;
+        $new_transaction -> Status = ResourceItems::GetResourceID('Active', 'contract_status');
         if ($transaction_type == 'listing') {
             $new_transaction = new Listings;
+            $new_transaction -> Status = ResourceItems::GetResourceID('Active', 'listing_status');
         }
 
         foreach ($property_details as $key => $val) {
@@ -547,8 +552,10 @@ class TransactionsAddController extends Controller {
 		$transaction_type = $request -> transaction_type;
         $id = $request -> id;
 
+        $property = Contracts::find($id);
 
         $property = Listings::GetPropertyDetails($transaction_type, $id);
+
         $Agent_ID = $property -> Agent_ID;
 
         $office = null;
@@ -683,40 +690,46 @@ class TransactionsAddController extends Controller {
                 $add_heritage_to_members -> transaction_type = 'contract';
                 $add_heritage_to_members -> save();
 
-                // notify heritage title
-                $send_to_emails = config('global_db.in_house_notification_emails_using_heritage_title_contract');
-                if(count($send_to_emails) > 0) {
-                    foreach($send_to_emails as $send_to_email) {
-                        $name = User::where('email', $send_to_email) -> first() -> name ?? null;
-                        $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
-                    }
-                    $from_address = 'DoNotReply@TaylorProps.com';
-                    $from_name = 'Taylor Properties';
-                    $subject = 'Agent Using Heritage Title Notification';
-                    $message = '
-                    <div style="font-size: 14px;">
-                    An agent from '.$agent -> company.' has selected that they will be using Heritage Title for their contract.
-                    <br><br>
-                    <span style="color: #900">* No contract has been submitted to the office yet</span>
-                    <br><br>
-                    <table>
-                        <tr>
-                            <td valign="top">Agent</td>
-                            <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
-                        </tr>
-                        <tr><td colspan="2" height="20"></td></tr>
-                        <tr>
-                            <td valign="top">Property</td>
-                            <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'</td>
-                        </tr>
-                    </table>
-                    <br><br>
-                    Thank You,<br>
-                    Taylor Properties
-                    </div>';
 
-                    $notify_title = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
-                }
+                // notify heritage title
+                $notification = config('global_db.in_house_notification_emails_using_heritage_title');
+                $users = User::whereIn('email', $notification['emails']) -> get();
+
+                $agent = $property -> agent;
+
+                $subject = 'Agent Using Heritage Title Notification';
+                $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+                $message_email = '
+                <div style="font-size: 14px;">
+                An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
+                <br><br>
+                <table>
+                    <tr>
+                        <td valign="top">Agent</td>
+                        <td>'.$agent -> full_name.'<br>'.$agent -> cell_phone.'<br>'.$agent -> email.'</td>
+                    </tr>
+                    <tr><td colspan="2" height="20"></td></tr>
+                    <tr>
+                        <td valign="top">Property</td>
+                        <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'
+                            <br>
+                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                        </td>
+                    </tr>
+                </table>
+                <br><br>
+                Thank You,<br>
+                Taylor Properties
+                </div>';
+
+                $notification['type'] = 'using_heritage_title';
+                $notification['transaction_type'] = 'contract';
+                $notification['transaction_id'] = $property -> Contract_ID;
+                $notification['subject'] = $subject;
+                $notification['message'] = $message;
+                $notification['message_email'] = $message_email;
+
+                Notification::send($users, new GlobalNotification($notification));
 
             }
 
@@ -948,21 +961,18 @@ class TransactionsAddController extends Controller {
 
                 $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id]);
 
+
                 // notify earnest admin
-                $send_to_emails = config('global_db.in_house_notification_emails_holding_earnest');
-                if(count($send_to_emails) > 0) {
-                    foreach($send_to_emails as $send_to_email) {
-                        $name = User::where('email', $send_to_email) -> first() -> name ?? null;
-                        $to_addresses[] = ['name' => $name, 'email' => $send_to_email];
-                    }
-                    $from_address = 'DoNotReply@TaylorProps.com';
-                    $from_name = 'Taylor Properties';
-                    $subject = 'New Earnest Deposit Notification';
-                    $message = '
+                $notification = config('global_db.in_house_notification_emails_holding_earnest');
+                $users = User::whereIn('email', $notification['emails']) -> get();
+
+                $subject = 'New Earnest Deposit Notification';
+                $message = 'A contract was submitted that we are holding earnest for.<br>
+                '.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+
+                $message_email = '
                     <div style="font-size: 14px;">
                     '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
-                    <br><br>
-                    <span style="color: #900">* No contract has been submitted to the office yet. The agent just created the transaction.</span>
                     <br><br>
                     <table>
                         <tr>
@@ -974,7 +984,7 @@ class TransactionsAddController extends Controller {
                             <td valign="top">Property</td>
                             <td>'.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'
                             <br>
-                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$id.'/'.$transaction_type.'" target="_blank">View Transaction</a>
+                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
                         </td>
                         </tr>
                     </table>
@@ -983,10 +993,18 @@ class TransactionsAddController extends Controller {
                     Taylor Properties
                     </div>';
 
-                    $notify_earnest_admin = $this -> in_house_notification_email($to_addresses, $from_address, $from_name, $subject, $message);
-                }
+                $notification['type'] = 'earnest';
+                $notification['transaction_type'] = 'contract';
+                $notification['transaction_id'] = $property -> Contract_ID;
+                $notification['subject'] = $subject;
+                $notification['message'] = $message;
+                $notification['message_email'] = $message_email;
+
+                Notification::send($users, new GlobalNotification($notification));
+
 
             }
+
         }
 
         // add checklist and checklist items

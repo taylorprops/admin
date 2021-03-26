@@ -18,6 +18,10 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
             show_apply_template($(this));
         });
 
+        $(document).on('click', '.remove-template-button', function(e) {
+            remove_template($(this));
+        });
+
         $('#uploads_div').sortable({
             handle: '.file-handle'
         });
@@ -30,6 +34,16 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
         }
 
         ////////// functions //////////
+
+        function remove_template(ele) {
+
+            let li = ele.closest('.upload-li');
+            li.data('template-applied-id', '');
+            li.find('.edit-template-options').remove();
+
+            $('.template-applied').html('<a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a>');
+
+        }
 
 
         function show_apply_template(ele) {
@@ -46,11 +60,12 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
                 $('#add_template_modal').modal('hide');
 
                 let template_status_html = ' \
-                <div class="no-wrap"> \
+                <div class="no-wrap teplate-applied"> \
                     <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span> \
                     <br> \
-                    <div class="text-right"> \
-                        <a href="javascript: void(0)" class="show-apply-template-button small">Edit <i class="fad fa-pencil ml-1"></i></a> \
+                    <div class="d-flex justify-content-end edit-template-options"> \
+                    <a href="javascript: void(0)" class="show-apply-template-button small">Edit <i class="fad fa-pencil ml-1"></i></a> \
+                    <a href="javascript: void(0)" class="remove-template-button small text-danger ml-3">Remove <i class="fal fa-times ml-1"></i></a> \
                     </div> \
                 </div> \
                 ';
@@ -175,7 +190,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
                                 </div> \
                                 <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0"> \
                                     '+add_template+' \
-                                    <div> \
+                                    <div class="ml-2 pl-3 border-left"> \
                                         <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a> \
                                     </div> \
                                 </div> \

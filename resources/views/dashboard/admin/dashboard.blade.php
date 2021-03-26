@@ -9,89 +9,104 @@
 
         <div class="col-12 col-lg-4">
 
-            <div class="bg-primary p-1 mb-3 rounded">
+            <div class="row">
 
-                <div class="d-flex justify-content-between bg-primary text-white px-3 py-2 font-12">
-                    <div>
-                        <i class="fad fa-bell mr-2"></i> Notifications
-                    </div>
-                    <div>
-                        <span class="badge bg-orange text-white notifications-unread-count"></span>
-                    </div>
-                </div>
+                <div class="col-12 col-sm-6 col-lg-12">
 
-                <div class="notifications-container">
-                    <div class="global-notifications-div bg-white p-2 rounded"></div>
-                </div>
+                    <div class="bg-primary p-1 mb-3 rounded">
 
-            </div>
-
-
-            <div class="bg-danger p-1 mb-3 rounded">
-
-                <div class="bg-danger text-white p-2 font-12">
-                    <i class="fad fa-exclamation-triangle mr-2"></i> Alerts
-                </div>
-
-                <div class="bg-white p-2 rounded">
-
-                    @if(!$show_alerts)
-
-                        <div class="text-gray font-13 text-center p-4">
-                            <i class="fal fa-check mr-2"></i> No Alerts
+                        <div class="d-flex justify-content-between bg-primary text-white px-3 py-2 font-12">
+                            <div>
+                                <i class="fad fa-bell mr-2"></i> Notifications
+                            </div>
+                            <div>
+                                <span class="badge bg-orange text-white notifications-unread-count"></span>
+                            </div>
                         </div>
 
-                    @else
+                        <div class="notifications-container">
+                            <div class="global-notifications-div bg-white p-2 rounded"></div>
+                        </div>
 
-                        <div class="list-group mt-3">
+                    </div>
 
-                            @if(count($alerts) > 0)
+                </div>
 
-                                @foreach($alert_types as $alert_type)
+                <div class="col-12 col-sm-6 col-lg-12">
 
-                                    @php
-                                    $alerts_by_type = $alerts -> where('alert_type', $alert_type);
-                                    $count = count($alerts_by_type);
-                                    $title = $alerts_by_type -> first() -> title;
-                                    $details = $alerts_by_type -> first() -> details;
-                                    @endphp
+                    <div class="bg-danger p-1 mb-3 rounded">
 
-                                    <div class="list-group-item p-1 border-left-0 border-right-0">
+                        <div class="bg-danger text-white p-2 font-12">
+                            <i class="fad fa-exclamation-triangle mr-2"></i> Alerts
+                        </div>
 
-                                        <div class="d-flex justify-content-between align-items-center font-9">
+                        <div class="bg-white p-2 rounded alerts-container">
 
-                                            <div class="d-flex justify-content-start align-items-center">
+                            @if(!$show_alerts)
 
-                                                <div class="d-flex justify-content-around align-items-center bg-danger text-white p-1 wpx-60 rounded">
-                                                    {{ $count }}
-                                                </div>
+                                <div class="text-gray font-13 text-center p-4">
+                                    <i class="fal fa-check mr-2"></i> No Alerts
+                                </div>
 
-                                                <div class="text-gray ml-3">
-                                                    {{ $title }}
+                            @else
+
+                                <div class="list-group mt-3">
+
+                                    @if(count($alerts) > 0)
+
+                                        @foreach($alert_types as $alert_type)
+
+                                            @php
+                                            $alerts_by_type = $alerts -> where('alert_type', $alert_type);
+                                            $count = count($alerts_by_type);
+                                            $title = $alerts_by_type -> first() -> title;
+                                            $details = $alerts_by_type -> first() -> details;
+                                            @endphp
+
+                                            <div class="list-group-item p-1 border-left-0 border-right-0">
+
+                                                <div class="d-flex justify-content-between align-items-center font-9">
+
+                                                    <div class="d-flex justify-content-start align-items-center">
+
+                                                        <div class="d-flex justify-content-around align-items-center bg-danger text-white p-1 wpx-60 rounded">
+                                                            {{ $count }}
+                                                        </div>
+
+                                                        <div class="text-gray ml-3">
+                                                            {{ $title }}
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div>
+                                                        <button class="btn btn-primary view-alert-details-button" data-type="{{ $alert_type }}" data-title="{!! $title !!}" data-details="{!! $details !!}">View</button>
+                                                    </div>
+
                                                 </div>
 
                                             </div>
 
-                                            <div>
-                                                <button class="btn btn-primary view-alert-details-button" data-type="{{ $alert_type }}" data-title="{!! $title !!}" data-details="{!! $details !!}">View</button>
-                                            </div>
+                                        @endforeach
 
-                                        </div>
+                                    @endif
 
-                                    </div>
-
-                                @endforeach
+                                </div>
 
                             @endif
 
                         </div>
 
-                    @endif
+                    </div>
 
                 </div>
 
-
             </div>
+
+
+
+
+
 
         </div>
 

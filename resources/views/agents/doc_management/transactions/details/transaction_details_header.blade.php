@@ -329,48 +329,52 @@ if($property -> CloseDate != '') {
 
         <div class="col-12 col-md-6 col-lg-5 col-xl-3">
 
-            <div class="mt-3 mt-md-0">
+            <div class="bg-blue-light p-2 mr-2 rounded">
 
-                <div class="row">
+                <div class="mt-3 mt-md-0">
 
-                    {{-- if there is a list agent or viewer is list agent --}}
-                    @if($property -> PropertySubType != $fsbo_property_type/*  && $property -> Agent_ID != auth() -> user() -> user_id */)
+                    <div class="row">
 
-                        @php
-                        $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> ListAgentPreferredPhone).'\'>'.format_phone($property -> ListAgentPreferredPhone).'</a><br>
-                        <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> ListAgentEmail.'\'>'.$property -> ListAgentEmail.'</a>';
-                        @endphp
+                        {{-- if there is a list agent or viewer is list agent --}}
+                        @if($property -> PropertySubType != $fsbo_property_type/*  && $property -> Agent_ID != auth() -> user() -> user_id */)
+
+                            @php
+                            $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> ListAgentPreferredPhone).'\'>'.format_phone($property -> ListAgentPreferredPhone).'</a><br>
+                            <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> ListAgentEmail.'\'>'.$property -> ListAgentEmail.'</a>';
+                            @endphp
+
+                            <div class="col-6">
+
+                                <div class="d-flex justify-content-start align-items-center mb-1">
+                                    <div class="text-gray font-10">List Agent</div>
+                                    <div class="ml-2">
+                                        <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
+                                    </div>
+                                </div>
+
+                                {{ $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName }}
+                                <br>
+                                <span class="font-italic text-gray">{{ shorten_text($property -> ListOfficeName, 20) }}</span>
+
+                            </div>
+
+                        @endif
+
+
 
                         <div class="col-6">
 
-                            <div class="d-flex justify-content-start align-items-center mb-1">
-                                <div class="text-gray font-10">List Agent</div>
-                                <div class="ml-2">
-                                    <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
-                                </div>
-                            </div>
+                            <span class="text-gray font-10 mb-1">{{ $for_sale ? 'Sellers' : 'Owners' }}</span>
 
-                            {{ $property -> ListAgentFirstName . ' ' . $property -> ListAgentLastName }}
-                            <br>
-                            <span class="font-italic text-gray">{{ shorten_text($property -> ListOfficeName, 30) }}</span>
+                            @if($sellers)
+                                @foreach($sellers as $seller)
+                                    <div>
+                                        {{ ucwords(strtolower($seller)) }}
+                                    </div>
+                                @endforeach
+                            @endif
 
                         </div>
-
-                    @endif
-
-
-
-                    <div class="col-6">
-
-                        <span class="text-gray font-10 mb-1">{{ $for_sale ? 'Sellers' : 'Owners' }}</span>
-
-                        @if($sellers)
-                            @foreach($sellers as $seller)
-                                <div>
-                                    {{ ucwords(strtolower($seller)) }}
-                                </div>
-                            @endforeach
-                        @endif
 
                     </div>
 
@@ -385,46 +389,50 @@ if($property -> CloseDate != '') {
 
             <div class="col-12 col-md-6 col-lg-5 col-xl-3">
 
-                <div class="mt-3 mt-md-0">
+                <div class="bg-blue-light mt-3 mt-md-0 p-2 mr-2 rounded">
 
-                    <div class="row">
+                    <div class="mt-3 mt-md-0">
 
-                        {{-- @if($property -> Agent_ID != auth() -> user() -> user_id) --}}
+                        <div class="row">
 
-                            @php
-                            $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
-                            <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
-                            @endphp
+                            {{-- @if($property -> Agent_ID != auth() -> user() -> user_id) --}}
+
+                                @php
+                                $contact_details = '<i class=\'fad fa-phone-alt mr-2 text-primary\'></i> <a href=\'tel:'.format_phone($property -> BuyerAgentPreferredPhone).'\'>'.format_phone($property -> BuyerAgentPreferredPhone).'</a><br>
+                                <i class=\'fad fa-at mr-2 text-primary\'></i> <a href=\'mailto:'.$property -> BuyerAgentEmail.'\'>'.$property -> BuyerAgentEmail.'</a>';
+                                @endphp
+
+                                <div class="col-6">
+
+                                    <div class="d-flex justify-content-start align-items-center mb-1">
+                                        <div class="text-gray font-10">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</div>
+                                        <div class="ml-2">
+                                            <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
+                                        </div>
+                                    </div>
+
+                                    {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
+                                    <br>
+                                    <span class="font-italic text-gray">{{ shorten_text($property -> BuyerOfficeName, 20) }}</span>
+
+                                </div>
+
+                            {{-- @endif --}}
+
 
                             <div class="col-6">
 
-                                <div class="d-flex justify-content-start align-items-center mb-1">
-                                    <div class="text-gray font-10">{{ $for_sale ? 'Buyer' : 'Renter' }}'s Agent</div>
-                                    <div class="ml-2">
-                                        <a href="javascript: void(0)" data-toggle="popover" data-html="true" data-trigger="focus" title="Contact Details" data-content="{!! $contact_details !!}"><i class="fad fa-address-book"></i></a>
-                                    </div>
-                                </div>
+                                <span class="text-gray font-10 mb-1">{{ $for_sale ? 'Buyers' : 'Renters' }}</span>
 
-                                {{ $property -> BuyerAgentFirstName . ' ' . $property -> BuyerAgentLastName }}
-                                <br>
-                                <span class="font-italic text-gray">{{ shorten_text($property -> BuyerOfficeName, 30) }}</span>
+                                @if(count($buyers) > 0)
+                                    @foreach($buyers as $buyer)
+                                        <div>
+                                            {{ ucwords(strtolower($buyer)) }}
+                                        </div>
+                                    @endforeach
+                                @endif
 
                             </div>
-
-                        {{-- @endif --}}
-
-
-                        <div class="col-6">
-
-                            <span class="text-gray font-10 mb-1">{{ $for_sale ? 'Buyers' : 'Renters' }}</span>
-
-                            @if(count($buyers) > 0)
-                                @foreach($buyers as $buyer)
-                                    <div>
-                                        {{ ucwords(strtolower($buyer)) }}
-                                    </div>
-                                @endforeach
-                            @endif
 
                         </div>
 
@@ -438,7 +446,7 @@ if($property -> CloseDate != '') {
 
     @endif
 
-    <div class="col-12 col-md-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-xl-3">
 
         <div class="text-gray font-10 mb-2 mt-3 mt-xl-0">
             Checklist Status
@@ -471,7 +479,7 @@ if($property -> CloseDate != '') {
     </div>
 
 
-    <div class="col-12 col-md-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-xl-3">
 
         @if($for_sale && $transaction_type == 'contract')
                 <div class="text-gray font-10 mb-2 mt-3 mt-xl-0">

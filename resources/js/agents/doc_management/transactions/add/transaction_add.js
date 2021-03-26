@@ -372,7 +372,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
         let transaction_type = $('#transaction_type').val();
         let params = Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id;
 
-        window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
+        window.location = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
     }
 
 

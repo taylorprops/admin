@@ -773,7 +773,7 @@
                                     </div>
 
                                     <ul class="list-unstyled p-2 d-flex flex-column col" id="files_queue">
-                                        <li class="text-muted text-center empty">No files uploaded.</li>
+                                        <li class="text-muted text-center empty">No files selected.</li>
                                     </ul>
                                 </div>
                             </div>

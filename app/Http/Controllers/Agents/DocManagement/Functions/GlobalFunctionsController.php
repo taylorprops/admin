@@ -70,7 +70,7 @@ class GlobalFunctionsController extends Controller
 
             // if no response after searching by address
             } elseif (! stristr($response, 'account_id_mdp_field_acctid') && $tax_id == '') {
-            } else {
+            //} else {
 
                 // if tax record found
                 //$properties = preg_replace('/\\n/', '', $response);

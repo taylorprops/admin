@@ -21,8 +21,6 @@ class Referrals extends Model
                     $query -> where('TransactionCoordinator_ID', auth() -> user() -> user_id);
                 }
                 $query -> where('Status', '>', '0');
-            } else {
-                abort(404);
             }
         });
     }

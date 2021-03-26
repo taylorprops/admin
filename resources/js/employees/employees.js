@@ -66,6 +66,7 @@ if (document.URL.match(/employees/)) {
             labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
             onprocessfiles: () => {
                 agent_docs_file_pond.removeFiles();
+                get_docs();
             }
         });
 

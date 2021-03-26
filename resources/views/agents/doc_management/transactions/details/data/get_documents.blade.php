@@ -61,7 +61,14 @@
                     <div class="add-docs-div bg-blue-light p-3 mb-1 border border-primary rounded-lg text-center">
                         <i class="fad fa-file-upload fa-3x text-primary mb-2"></i>
                         <div class="h5 text-primary mb-3">Upload Documents <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Uploading Documents" data-content="Upload documents from your computer"><i class="fad fa-question-circle ml-2"></i></a></div>
-                        <a href="javascript:void(0);" class="btn btn-primary mt-1 mt-md-4" id="upload_documents_button"><i class="fal fa-plus mr-2"></i> Upload Documents</a>
+
+                        <div class="relative">
+                            <div class="document-upload-div bg-white border rounded p-2">
+                                <input type="file" id="upload_documents_button">
+                            </div>
+                        </div>
+
+                        {{-- <a href="javascript:void(0);" class="btn btn-primary mt-1 mt-md-4" id="upload_documents_button"><i class="fal fa-plus mr-2"></i> Upload Documents</a> --}}
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3 px-1">
@@ -290,7 +297,7 @@
 
                                                 $menu_options .= '<button type="button" class="dropdown-item text-primary add-to-checklist-button" data-document-id="'.$document -> id.'"  data-checklist-id="'.$checklist_id.'" title="Assign Document To Checklist Item"><i class="fad fa-tasks mr-1 "></i> Assign</button>';
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button disabled-completed" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
+                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
 
                                                 if($document -> pages_total > 1 && $document -> file_type == 'user') {
                                                     $menu_options .= '<button type="button" class="dropdown-item text-primary doc-split-button disabled-completed" data-document-id="'.$document -> id.'" data-checklist-id="'.$checklist_id.'" data-file-name="'.$document -> file_name_display.'" data-file-type="'.$document -> file_type.'" data-folder="'.$folder -> id.'" title="Split Document"><i class="fad fa-page-break mr-1 "></i> Split</button>';
@@ -298,7 +305,7 @@
 
                                                 $menu_options .= '<button type="button" class="dropdown-item text-primary doc-edit-button disabled-completed" onClick="window.open(\'/agents/doc_management/transactions/edit_files/'.$document -> id.'\')" data-document-id="'.$document -> id.'" title="Edit and Fill Fields"><i class="fad fa-edit mr-1 "></i> Edit/Fill</button>';
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-get-signed-button disabled-completed" data-document-id="'.$document -> id.'" title="Get Signed"><i class="fad fa-signature mr-1 "></i> Get Signed</button>';
+                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-get-signed-button" data-document-id="'.$document -> id.'" title="Get Signed"><i class="fad fa-signature mr-1 "></i> Get Signed</button>';
 
                                             }
 

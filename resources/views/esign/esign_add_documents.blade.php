@@ -99,14 +99,18 @@
                                         <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0 ml-sm-3">
                                             <div class="mr-4 template-status">
                                                 @if($doc['file_type'] == 'system' && $doc['template_id'] > 0)
-                                                <div class="no-wrap">
+                                                <div class="no-wrap template-applied">
                                                     <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span>
+                                                </div>
+                                                <div class="d-flex justify-content-end edit-template-options">
+                                                    <a href="javascript: void(0)" class="show-apply-template-button small">Edit <i class="fad fa-pencil ml-1"></i></a>
+                                                    <a href="javascript: void(0)" class="remove-template-button small text-danger ml-3">Remove <i class="fal fa-times ml-1"></i></a>
                                                 </div>
                                                 @else
                                                 <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a>
                                                 @endif
                                             </div>
-                                            <div>
+                                            <div class="ml-2 pl-3 border-left">
                                                 <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a>
                                             </div>
                                         </div>

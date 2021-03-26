@@ -75,6 +75,11 @@
 
 }
 
+.modal-backdrop.show {
+    background: $blue-darker;
+    opacity: 0.9;
+}
+
 body,
 body.modal-open {
     padding-right: 0px !important;

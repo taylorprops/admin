@@ -9,6 +9,7 @@ window.FilePond = FilePond;
 
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 // import FilePondPluginImageCrop from "filepond-plugin-image-crop";
 // import FilePondPluginImageTransform from "filepond-plugin-image-transform";
 // import FilePondPluginImageEdit from "filepond-plugin-image-edit";
@@ -16,6 +17,7 @@ import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 
 FilePond.registerPlugin(FilePondPluginImagePreview);
 FilePond.registerPlugin(FilePondPluginFileEncode);
+FilePond.registerPlugin(FilePondPluginFileValidateType);
 // FilePond.registerPlugin(FilePondPluginImageCrop);
 // FilePond.registerPlugin(FilePondPluginImageTransform);
 // FilePond.registerPlugin(FilePondPluginImageEdit);

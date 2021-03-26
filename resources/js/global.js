@@ -25,14 +25,14 @@ $(function() {
     global_loading_off();
 
 
-    if(!document.URL.match(/admin\/$/)) {
+    /* if(!document.URL.match(/admin\/$/)) {
         inactivityTime();
-    }
+    } */
 
 
-    toastr.options = {
+    window.toastr.options = {
         "timeOut": 4000,
-        "preventDuplicates": true,
+        "preventDuplicates": false,
     }
 
     window.text_editor = function(options) {
@@ -325,6 +325,11 @@ $(function() {
     });
 
     get_global_notifications();
+    setInterval(function() {
+        //if(!$('#notifications_collapse').hasClass('show')) {
+            get_global_notifications();
+        //}
+    }, 5000);
 
 
 });
@@ -431,7 +436,7 @@ window.datepicker_custom = function() {
 }
 
 // session timeout
-window.inactivityTime = function () {
+/* window.inactivityTime = function () {
     var time;
     window.onload = resetTimer;
     // DOM Events
@@ -471,7 +476,7 @@ window.inactivityTime = function () {
         //let timeout = 1000 * 5;
         time = setTimeout(logout, timeout);
     }
-};
+}; */
 
 
 /**************************  STANDARD USE FUNCTIONS ***********************************/

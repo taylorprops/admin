@@ -16,20 +16,35 @@ class GlobalNotification extends Notification
      *
      * @return void
      */
-    public function __construct($notification)
-    {
+    public function __construct($notification) {
+
         $this -> notification = $notification;
         $this -> notify_by = ['database'];
+
         if($notification['notify_by_email'] == 'yes') {
             $this -> notify_by[] = 'mail';
         }
         if($notification['notify_by_text'] == 'yes') {
             $this -> notify_by[] = 'nexmo';
         }
+
         if($notification['type'] == 'commission') {
-            $this -> link = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
+
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
             $this -> link_text = 'View Commission';
+
+        } else if($notification['type'] == 'release') {
+
+            $this -> link_url = '/doc_management/document_review/'.$notification['transaction_id'];
+            $this -> link_text = 'View Release';
+
+        } else if($notification['type'] == 'earnest' || $notification['type'] == 'using_heritage_title') {
+
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'';
+            $this -> link_text = 'View Contract';
+
         }
+
     }
 
     /**
@@ -54,8 +69,7 @@ class GlobalNotification extends Notification
         return (new MailMessage)
             -> subject($this -> notification['subject'])
             -> line($this -> notification['message_email'])
-            -> action($this -> link_text, url($this -> link));
-            //-> line('Thank you for using our application!');
+            -> action($this -> link_text, url($this -> link_url));
     }
 
     /**
@@ -70,7 +84,9 @@ class GlobalNotification extends Notification
             'type' => $this -> notification['type'],
             'transaction_type' => $this -> notification['transaction_type'],
             'transaction_id' => $this -> notification['transaction_id'],
-            'message' => $this -> notification['message']
+            'message' => $this -> notification['message'],
+            'link_url' => $this -> link_url,
+            'link_text' => $this -> link_text
         ];
     }
 }

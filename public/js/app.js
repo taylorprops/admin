@@ -2603,7 +2603,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
 
     var transaction_type = $('#transaction_type').val();
     var params = Agent_ID + '/' + transaction_type + '/' + state + '/' + tax_id + '/' + bright_type + '/' + bright_id;
-    window.location.href = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
+    window.location = '/agents/doc_management/transactions/add/transaction_add_details_existing/' + params;
   };
 
   var fill_location = function fill_location(zip) {
@@ -5242,6 +5242,31 @@ if (document.URL.match(/transaction_details/)) {
       }
     });
     $(document).on('change', '.check-document', show_bulk_options);
+    var upload_documents_file = document.getElementById('upload_documents_file');
+    var upload_documents_file_pond = FilePond.create(upload_documents_file);
+    upload_documents_file_pond.setOptions({
+      allowImagePreview: false,
+      multiple: true,
+      acceptedFileTypes: ['application/pdf'],
+      server: {
+        process: {
+          url: '/agents/doc_management/transactions/upload_documents',
+          onerror: function onerror(response) {
+            return response.data;
+          },
+          ondata: function ondata(formData) {
+            formData.append('Listing_ID', $('#Listing_ID').val()), formData.append('Contract_ID', $('#Contract_ID').val()), formData.append('Referral_ID', $('#Referral_ID').val()), formData.append('transaction_type', $('#transaction_type').val()), formData.append('Agent_ID', $('#Agent_ID').val()), formData.append('folder', $('#documents_folder').val());
+            return formData;
+          }
+        }
+      },
+      labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
+      onprocessfiles: function onprocessfiles() {
+        upload_documents_file_pond.removeFiles();
+        load_tabs('documents');
+      }
+    });
+    $('.filepond--credits').hide();
   });
 
   window.documents_init = function (reorder) {
@@ -10054,8 +10079,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var filepond_plugin_image_preview__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_image_preview__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var filepond_plugin_file_encode__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! filepond-plugin-file-encode */ "./node_modules/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js");
 /* harmony import */ var filepond_plugin_file_encode__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_file_encode__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var cropperjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! cropperjs */ "./node_modules/cropperjs/dist/cropper.js");
-/* harmony import */ var cropperjs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(cropperjs__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! filepond-plugin-file-validate-type */ "./node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js");
+/* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var cropperjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! cropperjs */ "./node_modules/cropperjs/dist/cropper.js");
+/* harmony import */ var cropperjs__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(cropperjs__WEBPACK_IMPORTED_MODULE_6__);
 
 window.$ = window.jQuery = (jquery__WEBPACK_IMPORTED_MODULE_0___default());
 
@@ -10068,19 +10095,21 @@ __webpack_require__(/*! dm-file-uploader */ "./node_modules/dm-file-uploader/src
 
 window.FilePond = filepond__WEBPACK_IMPORTED_MODULE_2__;
 
+
  // import FilePondPluginImageCrop from "filepond-plugin-image-crop";
 // import FilePondPluginImageTransform from "filepond-plugin-image-transform";
 // import FilePondPluginImageEdit from "filepond-plugin-image-edit";
 // import FilePondPluginImageResize from "filepond-plugin-image-resize";
 
 filepond__WEBPACK_IMPORTED_MODULE_2__.registerPlugin((filepond_plugin_image_preview__WEBPACK_IMPORTED_MODULE_3___default()));
-filepond__WEBPACK_IMPORTED_MODULE_2__.registerPlugin((filepond_plugin_file_encode__WEBPACK_IMPORTED_MODULE_4___default())); // FilePond.registerPlugin(FilePondPluginImageCrop);
+filepond__WEBPACK_IMPORTED_MODULE_2__.registerPlugin((filepond_plugin_file_encode__WEBPACK_IMPORTED_MODULE_4___default()));
+filepond__WEBPACK_IMPORTED_MODULE_2__.registerPlugin((filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_5___default())); // FilePond.registerPlugin(FilePondPluginImageCrop);
 // FilePond.registerPlugin(FilePondPluginImageTransform);
 // FilePond.registerPlugin(FilePondPluginImageEdit);
 // FilePond.registerPlugin(FilePondPluginImageResize);
 
 
-window.Cropper = (cropperjs__WEBPACK_IMPORTED_MODULE_5___default());
+window.Cropper = (cropperjs__WEBPACK_IMPORTED_MODULE_6___default());
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -14414,6 +14443,7 @@ if (document.URL.match(/employees/)) {
       labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
       onprocessfiles: function onprocessfiles() {
         agent_docs_file_pond.removeFiles();
+        get_docs();
       }
     });
     $('.filepond--credits').hide();
@@ -14703,6 +14733,9 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
     $(document).on('click', '.show-apply-template-button', function (e) {
       show_apply_template($(this));
     });
+    $(document).on('click', '.remove-template-button', function (e) {
+      remove_template($(this));
+    });
     $('#uploads_div').sortable({
       handle: '.file-handle'
     });
@@ -14714,6 +14747,13 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
     } ////////// functions //////////
 
 
+    function remove_template(ele) {
+      var li = ele.closest('.upload-li');
+      li.data('template-applied-id', '');
+      li.find('.edit-template-options').remove();
+      $('.template-applied').html('<a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a>');
+    }
+
     function show_apply_template(ele) {
       var li = ele.closest('.upload-li');
       $('#add_template_modal').modal('show');
@@ -14722,11 +14762,12 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
         li.data('template-applied-id', template_id);
         $('#add_template_modal').modal('hide');
         var template_status_html = ' \
-                <div class="no-wrap"> \
+                <div class="no-wrap teplate-applied"> \
                     <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span> \
                     <br> \
-                    <div class="text-right"> \
-                        <a href="javascript: void(0)" class="show-apply-template-button small">Edit <i class="fad fa-pencil ml-1"></i></a> \
+                    <div class="d-flex justify-content-end edit-template-options"> \
+                    <a href="javascript: void(0)" class="show-apply-template-button small">Edit <i class="fad fa-pencil ml-1"></i></a> \
+                    <a href="javascript: void(0)" class="remove-template-button small text-danger ml-3">Remove <i class="fal fa-times ml-1"></i></a> \
                     </div> \
                 </div> \
                 ';
@@ -14830,7 +14871,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
                                 </div> \
                                 <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0"> \
                                     ' + add_template + ' \
-                                    <div> \
+                                    <div class="ml-2 pl-3 border-left"> \
                                         <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a> \
                                     </div> \
                                 </div> \
@@ -16636,14 +16677,13 @@ if (perfEntries[0].type === 'back_forward') {
 
 $(function () {
   global_loading_off();
+  /* if(!document.URL.match(/admin\/$/)) {
+      inactivityTime();
+  } */
 
-  if (!document.URL.match(/admin\/$/)) {
-    inactivityTime();
-  }
-
-  toastr.options = {
+  window.toastr.options = {
     "timeOut": 4000,
-    "preventDuplicates": true
+    "preventDuplicates": false
   };
 
   window.text_editor = function (options) {
@@ -16903,6 +16943,10 @@ $(function () {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
   });
   get_global_notifications();
+  setInterval(function () {
+    //if(!$('#notifications_collapse').hasClass('show')) {
+    get_global_notifications(); //}
+  }, 5000);
 });
 
 function get_global_notifications() {
@@ -16990,42 +17034,48 @@ window.datepicker_custom = function () {
   });
 }; // session timeout
 
+/* window.inactivityTime = function () {
+    var time;
+    window.onload = resetTimer;
+    // DOM Events
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
 
-window.inactivityTime = function () {
-  var time;
-  window.onload = resetTimer; // DOM Events
+    function logout() {
 
-  document.onmousemove = resetTimer;
-  document.onkeypress = resetTimer;
+        $('#confirm_modal').modal('show').find('.modal-title').html('Session Expired!');
+        $('#confirm_modal').find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><div><i class="fad fa-exclamation-circle fa-2x text-danger mr-3"></i></div><div>Your session has expired due to inactivity.</div></div>');
+        $('#confirm_modal').find('.modal-sm').removeClass('modal-sm').find('.modal-header').addClass('bg-danger');
 
-  function logout() {
-    $('#confirm_modal').modal('show').find('.modal-title').html('Session Expired!');
-    $('#confirm_modal').find('.modal-body').html('<div class="d-flex justify-content-start align-items-center"><div><i class="fad fa-exclamation-circle fa-2x text-danger mr-3"></i></div><div>Your session has expired due to inactivity.</div></div>');
-    $('#confirm_modal').find('.modal-sm').removeClass('modal-sm').find('.modal-header').addClass('bg-danger');
-    var logout = $('#confirm_modal').find('.btn-danger');
-    logout.text('Log Off');
-    var stay = $('#confirm_modal').find('.btn-primary');
-    stay.text('Continue Session');
-    var force_logout = setTimeout(function () {
-      location.href = '/logout';
-    }, 1000 * 60 * 5);
-    logout.on('click', function () {
-      location.href = '/';
-    });
-    stay.on('click', function () {
-      clearTimeout(force_logout);
-      resetTimer();
-      $('#confirm_modal').modal('hide');
-    });
-  }
+        let logout = $('#confirm_modal').find('.btn-danger');
+        logout.text('Log Off');
+        let stay = $('#confirm_modal').find('.btn-primary');
+        stay.text('Continue Session');
 
-  function resetTimer() {
-    clearTimeout(time);
-    var timeout = 1000 * 60 * 60; //let timeout = 1000 * 5;
+        let force_logout = setTimeout(function() {
+            location.href = '/logout';
+        }, 1000 * 60 * 5);
 
-    time = setTimeout(logout, timeout);
-  }
-};
+        logout.on('click', function() {
+            location.href = '/';
+        });
+        stay.on('click', function() {
+            clearTimeout(force_logout);
+            resetTimer();
+            $('#confirm_modal').modal('hide');
+        });
+
+
+    }
+
+    function resetTimer() {
+        clearTimeout(time);
+        let timeout = 1000 * 60 * 60;
+        //let timeout = 1000 * 5;
+        time = setTimeout(logout, timeout);
+    }
+}; */
+
 /**************************  STANDARD USE FUNCTIONS ***********************************/
 
 
@@ -26422,6 +26472,253 @@ exports.validate = function(email)
       options: {
         // Enable or disable file encoding
         allowFileEncode: [true, Type.BOOLEAN]
+      }
+    };
+  };
+
+  // fire pluginloaded event if running in browser, this allows registering the plugin when using async script tags
+  var isBrowser =
+    typeof window !== 'undefined' && typeof window.document !== 'undefined';
+  if (isBrowser) {
+    document.dispatchEvent(
+      new CustomEvent('FilePond:pluginloaded', { detail: plugin })
+    );
+  }
+
+  return plugin;
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js":
+/*!****************************************************************************************************!*\
+  !*** ./node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js ***!
+  \****************************************************************************************************/
+/***/ (function(module) {
+
+/*!
+ * FilePondPluginFileValidateType 1.2.6
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/* eslint-disable */
+
+(function(global, factory) {
+   true
+    ? (module.exports = factory())
+    : 0;
+})(this, function() {
+  'use strict';
+
+  var plugin = function plugin(_ref) {
+    var addFilter = _ref.addFilter,
+      utils = _ref.utils;
+    // get quick reference to Type utils
+    var Type = utils.Type,
+      isString = utils.isString,
+      replaceInString = utils.replaceInString,
+      guesstimateMimeType = utils.guesstimateMimeType,
+      getExtensionFromFilename = utils.getExtensionFromFilename,
+      getFilenameFromURL = utils.getFilenameFromURL;
+
+    var mimeTypeMatchesWildCard = function mimeTypeMatchesWildCard(
+      mimeType,
+      wildcard
+    ) {
+      var mimeTypeGroup = (/^[^/]+/.exec(mimeType) || []).pop(); // image/png -> image
+      var wildcardGroup = wildcard.slice(0, -2); // image/* -> image
+      return mimeTypeGroup === wildcardGroup;
+    };
+
+    var isValidMimeType = function isValidMimeType(
+      acceptedTypes,
+      userInputType
+    ) {
+      return acceptedTypes.some(function(acceptedType) {
+        // accepted is wildcard mime type
+        if (/\*$/.test(acceptedType)) {
+          return mimeTypeMatchesWildCard(userInputType, acceptedType);
+        }
+
+        // is normal mime type
+        return acceptedType === userInputType;
+      });
+    };
+
+    var getItemType = function getItemType(item) {
+      // if the item is a url we guess the mime type by the extension
+      var type = '';
+      if (isString(item)) {
+        var filename = getFilenameFromURL(item);
+        var extension = getExtensionFromFilename(filename);
+        if (extension) {
+          type = guesstimateMimeType(extension);
+        }
+      } else {
+        type = item.type;
+      }
+
+      return type;
+    };
+
+    var validateFile = function validateFile(
+      item,
+      acceptedFileTypes,
+      typeDetector
+    ) {
+      // no types defined, everything is allowed \o/
+      if (acceptedFileTypes.length === 0) {
+        return true;
+      }
+
+      // gets the item type
+      var type = getItemType(item);
+
+      // no type detector, test now
+      if (!typeDetector) {
+        return isValidMimeType(acceptedFileTypes, type);
+      }
+
+      // use type detector
+      return new Promise(function(resolve, reject) {
+        typeDetector(item, type)
+          .then(function(detectedType) {
+            if (isValidMimeType(acceptedFileTypes, detectedType)) {
+              resolve();
+            } else {
+              reject();
+            }
+          })
+          .catch(reject);
+      });
+    };
+
+    var applyMimeTypeMap = function applyMimeTypeMap(map) {
+      return function(acceptedFileType) {
+        return map[acceptedFileType] === null
+          ? false
+          : map[acceptedFileType] || acceptedFileType;
+      };
+    };
+
+    // setup attribute mapping for accept
+    addFilter('SET_ATTRIBUTE_TO_OPTION_MAP', function(map) {
+      return Object.assign(map, {
+        accept: 'acceptedFileTypes'
+      });
+    });
+
+    // filtering if an item is allowed in hopper
+    addFilter('ALLOW_HOPPER_ITEM', function(file, _ref2) {
+      var query = _ref2.query;
+      // if we are not doing file type validation exit
+      if (!query('GET_ALLOW_FILE_TYPE_VALIDATION')) {
+        return true;
+      }
+
+      // we validate the file against the accepted file types
+      return validateFile(file, query('GET_ACCEPTED_FILE_TYPES'));
+    });
+
+    // called for each file that is loaded
+    // right before it is set to the item state
+    // should return a promise
+    addFilter('LOAD_FILE', function(file, _ref3) {
+      var query = _ref3.query;
+      return new Promise(function(resolve, reject) {
+        if (!query('GET_ALLOW_FILE_TYPE_VALIDATION')) {
+          resolve(file);
+          return;
+        }
+
+        var acceptedFileTypes = query('GET_ACCEPTED_FILE_TYPES');
+
+        // custom type detector method
+        var typeDetector = query('GET_FILE_VALIDATE_TYPE_DETECT_TYPE');
+
+        // if invalid, exit here
+        var validationResult = validateFile(
+          file,
+          acceptedFileTypes,
+          typeDetector
+        );
+
+        var handleRejection = function handleRejection() {
+          var acceptedFileTypesMapped = acceptedFileTypes
+            .map(
+              applyMimeTypeMap(
+                query('GET_FILE_VALIDATE_TYPE_LABEL_EXPECTED_TYPES_MAP')
+              )
+            )
+            .filter(function(label) {
+              return label !== false;
+            });
+
+          reject({
+            status: {
+              main: query('GET_LABEL_FILE_TYPE_NOT_ALLOWED'),
+              sub: replaceInString(
+                query('GET_FILE_VALIDATE_TYPE_LABEL_EXPECTED_TYPES'),
+                {
+                  allTypes: acceptedFileTypesMapped.join(', '),
+                  allButLastType: acceptedFileTypesMapped
+                    .slice(0, -1)
+                    .join(', '),
+                  lastType:
+                    acceptedFileTypesMapped[acceptedFileTypesMapped.length - 1]
+                }
+              )
+            }
+          });
+        };
+
+        // has returned new filename immidiately
+        if (typeof validationResult === 'boolean') {
+          if (!validationResult) {
+            return handleRejection();
+          }
+          return resolve(file);
+        }
+
+        // is promise
+        validationResult
+          .then(function() {
+            resolve(file);
+          })
+          .catch(handleRejection);
+      });
+    });
+
+    // expose plugin
+    return {
+      // default options
+      options: {
+        // Enable or disable file type validation
+        allowFileTypeValidation: [true, Type.BOOLEAN],
+
+        // What file types to accept
+        acceptedFileTypes: [[], Type.ARRAY],
+        // - must be comma separated
+        // - mime types: image/png, image/jpeg, image/gif
+        // - extensions: .png, .jpg, .jpeg ( not enabled yet )
+        // - wildcards: image/*
+
+        // label to show when a type is not allowed
+        labelFileTypeNotAllowed: ['File is of invalid type', Type.STRING],
+
+        // nicer label
+        fileValidateTypeLabelExpectedTypes: [
+          'Expects {allButLastType} or {lastType}',
+          Type.STRING
+        ],
+
+        // map mime types to extensions
+        fileValidateTypeLabelExpectedTypesMap: [{}, Type.OBJECT],
+
+        // Custom function to detect type of file
+        fileValidateTypeDetectType: [null, Type.FUNCTION]
       }
     };
   };
