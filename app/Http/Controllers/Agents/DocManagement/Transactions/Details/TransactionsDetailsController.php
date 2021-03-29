@@ -104,7 +104,7 @@ class TransactionsDetailsController extends Controller
             $Listing_ID = $id;
             // if not all required details submitted require them
             if ($property -> ExpirationDate == '' || $property -> ExpirationDate == '0000-00-00') {
-                return redirect('/agents/doc_management/transactions/add/transaction_required_details_listing/'.$id.'/listing');
+                return redirect('/agents/doc_management/transactions/add/transaction_required_details/'.$id.'/listing');
             }
             $active_status_id = ResourceItems::GetResourceID('Active', 'contract_status');
             $contracts = Contracts::where('Listing_ID', $Listing_ID) -> where('Status', $active_status_id) -> pluck('Contract_ID');

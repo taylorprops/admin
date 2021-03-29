@@ -4,6 +4,12 @@
     //overflow: hidden;
 }
 
+.qs-datepicker-container {
+    width: 200px !important;
+    height: auto !important;
+    font-size: .7rem;
+}
+
 .page-fill-fields {
 
     overflow:hidden;
@@ -73,6 +79,11 @@
 
     .file-view-container {
         padding: 8px 0px 0px 0px;
+    }
+
+    .file-view-page-container {
+        padding-left: 25px;
+        padding-right: 25px;
     }
 
     .file-view-page-container, .file-view-thumb-container {
