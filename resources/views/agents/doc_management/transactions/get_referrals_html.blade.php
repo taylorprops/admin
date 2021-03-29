@@ -17,7 +17,7 @@
                 $our_agent = $transaction -> agent -> full_name;
                 @endphp
                 <tr>
-                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Referral_ID }}/referral">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
+                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Referral_ID }}/referral" class="d-block h-100 line-height-px-50">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
                     <td style="color: {{ $color }}">{!! $status !!}</td>
                     <td>{{ $our_agent }}</td>
                     <td>{{ date_mdy($transaction -> CloseDate) }}</td>

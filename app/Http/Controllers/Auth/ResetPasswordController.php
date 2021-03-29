@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
@@ -25,8 +26,8 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    // XXX
-    protected $redirectTo = 'login';
+
+    protected $redirectTo = '/dashboard_admin';
 
     /**
      * Create a new controller instance.
@@ -36,4 +37,16 @@ class ResetPasswordController extends Controller
     public function __construct() {
         $this -> middleware('guest');
     }
+
+    protected function rules()
+    {
+
+        return [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+        ];
+    }
+
+
 }

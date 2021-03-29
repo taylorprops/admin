@@ -17,10 +17,11 @@ use App\Notifications\GlobalNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Models\DocManagement\Earnest\Earnest;
 use App\Models\Commission\CommissionBreakdowns;
+use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Resources\ResourceItems;
-use App\Models\DocManagement\Transactions\Members\Members;
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Data\ListingsData;
 use App\Models\DocManagement\Transactions\Listings\Listings;
 use App\Models\DocManagement\Transactions\Contracts\Contracts;
@@ -226,9 +227,15 @@ class TransactionsAddController extends Controller {
 
         $property_details = (object) $property_details;
 
-        $resource_items = new ResourceItems();
-        $property_types = $resource_items -> where('resource_type', 'checklist_property_types') -> orderBy('resource_order') -> get();
-        $property_sub_types = $resource_items -> where('resource_type', 'checklist_property_sub_types') -> orderBy('resource_order') -> get();
+        $property_type_resource_ids = Checklists::all() -> pluck('checklist_property_type_id');
+        $property_types = ResourceItems::where('resource_type', 'checklist_property_types')
+            -> whereIn('resource_id', $property_type_resource_ids)
+            -> orderBy('resource_order') -> get();
+
+        $property_sub_type_resource_ids = Checklists::all() -> pluck('checklist_property_sub_type_id');
+        $property_sub_types = ResourceItems::where('resource_type', 'checklist_property_sub_types')
+            -> whereIn('resource_id', $property_sub_type_resource_ids)
+            -> orderBy('resource_order') -> get();
 
         $request -> session() -> put('property_details', $property_details);
 
@@ -700,7 +707,7 @@ class TransactionsAddController extends Controller {
                 $subject = 'Agent Using Heritage Title Notification';
                 $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                 $message_email = '
-                <div style="font-size: 14px;">
+                <div style="font-size: 15px;">
                 An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
                 <br><br>
                 <table>
@@ -971,7 +978,7 @@ class TransactionsAddController extends Controller {
                 '.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
 
                 $message_email = '
-                    <div style="font-size: 14px;">
+                    <div style="font-size: 15px;">
                     '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
                     <br><br>
                     <table>
@@ -1112,6 +1119,8 @@ class TransactionsAddController extends Controller {
             $state = $request -> state;
             $zip = $request -> zip;
             $county = $request -> county;
+
+
         }
 
         $select_columns_db = ['ListPictureURL', 'FullStreetAddress', 'City', 'StateOrProvince', 'County', 'PostalCode', 'YearBuilt', 'BathroomsTotalInteger', 'BedroomsTotal', 'MlsStatus', 'ListingId', 'ListPrice', 'PropertyType', 'ListOfficeName', 'MLSListDate', 'ListAgentFirstName', 'ListAgentLastName', 'UnitNumber', 'CloseDate', 'ListingTaxID'];

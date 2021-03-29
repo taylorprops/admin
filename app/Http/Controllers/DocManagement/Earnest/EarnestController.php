@@ -74,7 +74,7 @@ class EarnestController extends Controller
                     $query -> where('earnest_account_id', $account_id);
                 }
                 if ($tab == 'active') {
-                    $query -> where('amount_received', '>', '0');
+                    $query -> where('amount_total', '>', '0');
                 } elseif ($tab == 'missing') {
                     $query -> where('amount_received', '0.00');
                 }
@@ -98,6 +98,7 @@ class EarnestController extends Controller
 
         $earnest_account_totals = [];
         foreach ($accounts as $account) {
+
             $account_total = $account -> earnest -> where('amount_total', '>', 0) -> sum('amount_total');
 
             $company = stristr($account -> resource_name, 'taylor') ? 'TP' : 'AAP';
@@ -110,6 +111,7 @@ class EarnestController extends Controller
                 'state' => $account -> resource_state,
                 'company' => $account -> resource_name,
             ];
+
         }
 
         return view('/doc_management/earnest/get_earnest_totals_html', compact('earnest_account_totals'));

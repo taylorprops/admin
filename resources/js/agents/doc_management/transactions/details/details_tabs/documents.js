@@ -78,37 +78,6 @@ if (document.URL.match(/transaction_details/)) {
         $(document).on('change', '.check-document', show_bulk_options);
 
 
-        let upload_documents_file = document.getElementById('upload_documents_file');
-        let upload_documents_file_pond = FilePond.create(upload_documents_file);
-
-        upload_documents_file_pond.setOptions({
-            allowImagePreview: false,
-            multiple: true,
-            acceptedFileTypes: ['application/pdf'],
-            server: {
-                process: {
-                    url: '/agents/doc_management/transactions/upload_documents',
-                    onerror: (response) => response.data,
-                    ondata: (formData) => {
-                        formData.append('Listing_ID', $('#Listing_ID').val()),
-                        formData.append('Contract_ID', $('#Contract_ID').val()),
-                        formData.append('Referral_ID', $('#Referral_ID').val()),
-                        formData.append('transaction_type', $('#transaction_type').val()),
-                        formData.append('Agent_ID', $('#Agent_ID').val()),
-                        formData.append('folder', $('#documents_folder').val())
-                        return formData;
-                    }
-                }
-            },
-            labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
-            onprocessfiles: () => {
-                upload_documents_file_pond.removeFiles();
-                load_tabs('documents');
-            }
-        });
-
-        $('.filepond--credits').hide();
-
 
     });
 
@@ -152,6 +121,39 @@ if (document.URL.match(/transaction_details/)) {
                 in_process(document_ids);
                 in_process_esign();
             }, 1000);
+
+
+            let upload_documents_file = document.getElementById('upload_documents_file');
+            let upload_documents_file_pond = FilePond.create(upload_documents_file);
+
+            upload_documents_file_pond.setOptions({
+                allowImagePreview: false,
+                multiple: true,
+                acceptedFileTypes: ['application/pdf', 'image/*'],
+                fileValidateTypeLabelExpectedTypes: 'PDF or Image Only',
+                server: {
+                    process: {
+                        url: '/agents/doc_management/transactions/upload_documents',
+                        onerror: (response) => response.data,
+                        ondata: (formData) => {
+                            formData.append('Listing_ID', $('#Listing_ID').val()),
+                            formData.append('Contract_ID', $('#Contract_ID').val()),
+                            formData.append('Referral_ID', $('#Referral_ID').val()),
+                            formData.append('transaction_type', $('#transaction_type').val()),
+                            formData.append('Agent_ID', $('#Agent_ID').val()),
+                            formData.append('folder', $('#default_folder_id').val())
+                            return formData;
+                        }
+                    }
+                },
+                labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
+                onprocessfiles: () => {
+                    upload_documents_file_pond.removeFiles();
+                    load_tabs('documents');
+                }
+            });
+
+            $('.filepond--credits').hide();
 
 
         }, 100);
@@ -1527,19 +1529,6 @@ if (document.URL.match(/transaction_details/)) {
         //select_refresh($('#add_individual_template_modal'));
     }
 
-    window.show_upload_documents = function() {
-        $('#upload_documents_modal').modal();
-        upload_documents();
-        $('#save_upload_documents_button').on('click', function () {
-            $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Uploading Documents');
-            $("#file_upload").dmUploader('start');
-        });
-        $(document).on('click', '.cancel-upload', function () {
-            $("#file_upload").dmUploader('cancel', $(this).data('id'));
-            $(this).closest('li').remove();
-            $('#save_upload_documents_button').html('<i class="fal fa-check mr-2"></i> Upload Documents');
-        });
-    }
 
     window.show_add_folder = function() {
         $('#add_folder_modal').modal();

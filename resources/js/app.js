@@ -29,6 +29,7 @@ window.Cropper = Cropper;
 require('./bootstrap');
 
 require('./global.js');
+require('./auth/login.js');
 require('./form_elements.js');
 require('./nav/nav.js');
 require('./nav/search.js');

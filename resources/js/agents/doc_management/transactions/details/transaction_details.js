@@ -21,7 +21,7 @@ if (document.URL.match(/transaction_details/)) {
 
         load_details_header();
 
-
+        data_table(10, $('#transfer_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
         let agent_search_request = null;
 
@@ -807,6 +807,19 @@ if (document.URL.match(/transaction_details/)) {
                 $('.undo-cancel-referral-button').off('click').on('click', undo_cancel_referral);
                 $('#merge_with_listing_button').off('click').on('click', show_merge_with_listing);
                 $('#undo_merge_with_listing_button').off('click').on('click', undo_merge_with_listing);
+                $('#email_agent_general').off('click').on('click', function() {
+                    let subject = $('#email_agent_subject').val().replace('Commission Breakdown Needed - ', '');
+                    $('#email_agent_subject').val(subject);
+                    $('#email_agent_modal').modal('show');
+                });
+
+                let options = {
+                    menubar: false,
+                    statusbar: false,
+                    toolbar: true,
+                    selector: '#email_agent_message'
+                }
+                text_editor(options);
 
             })
             .catch(function (error) {

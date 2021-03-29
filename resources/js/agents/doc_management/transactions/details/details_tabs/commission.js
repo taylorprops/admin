@@ -76,6 +76,20 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         $(document).on('click', '.export-deductions-button', add_deductions_to_breakdown);
 
+        $(document).on('click', '#email_agent_breakdown_reminder', function() {
+
+            $('#email_agent_modal').modal('show');
+
+            setTimeout(function() {
+                let subject = $('#email_agent_subject').val().replace('Commission Breakdown Needed - ', '');
+                $('#email_agent_subject').val('Commission Breakdown Needed - ' + subject);
+            }, 100);
+
+            $('#send_email_agent_button').off('click').on('click', send_email_agent);
+
+
+        });
+
 
         numbers_only();
 
@@ -299,6 +313,9 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         .then(function (response) {
             if(saved_manually == 'yes') {
                 toastr['success']('Commission Details Successfully Saved');
+            }
+            if(response.data.agent_notified == 'yes') {
+                $('#modal_success').modal().find('.modal-body').html('A notification was sent to the agent confirming their commission is complete along with delivery information');
             }
             load_details_header();
             /* if(page == 'details') {
@@ -1012,7 +1029,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     }
 
     function clear_add_check_form() {
-        $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input, select').val('');
+        $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input.custom-form-element, select.custom-form-element').val('');
         $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
     }
 

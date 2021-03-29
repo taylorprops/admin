@@ -63,8 +63,8 @@
                         <div class="h5 text-primary mb-3">Upload Documents <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Uploading Documents" data-content="Upload documents from your computer"><i class="fad fa-question-circle ml-2"></i></a></div>
 
                         <div class="relative">
-                            <div class="document-upload-div bg-white border rounded p-2">
-                                <input type="file" id="upload_documents_button">
+                            <div class="document-upload-div w-100">
+                                <input type="file" id="upload_documents_file" name="file" multiple>
                             </div>
                         </div>
 

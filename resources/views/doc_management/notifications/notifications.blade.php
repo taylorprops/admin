@@ -38,12 +38,16 @@
 
                             <div class="d-flex justify-content-end align-items-center w-40">
 
-                                @if($notification -> config_type == 'notification')
+                                @if($notification -> config_role == 'notification')
 
                                     <div class="w-20 notify-by-options text-gray">
                                         <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-email" data-label="Email" value="yes" @if($notification -> notify_by_email == 'yes') checked @endif>
                                         <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-text" data-label="Text SMS" value="yes" @if($notification -> notify_by_text == 'yes') checked @endif>
                                     </div>
+
+                                @endif
+
+                                @if($notification -> config_type == 'notification')
 
                                     <div class="w-60 ml-3">
                                         <select class="custom-form-element form-select emails" multiple data-label="Select Recipients">

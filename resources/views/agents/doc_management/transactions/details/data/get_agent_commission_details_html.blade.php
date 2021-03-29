@@ -127,13 +127,13 @@
 
         <div class="col-12">
 
-            <div class="border-top border-bottom py-2 mb-3">
+            @php
+            $deductions = $breakdown -> deductions;
+            @endphp
 
-                @php
-                $deductions = $breakdown -> deductions;
-                @endphp
+            @if(count($deductions) > 0)
 
-                @if(count($deductions) > 0)
+                <div class="border-top border-bottom py-2 mb-3">
 
                     @foreach($deductions as $deduction)
 
@@ -148,11 +148,11 @@
 
                     @endforeach
 
-                @endif
+                    <a href="javascript:void(0)" class="export-deductions-button"><i class="fal fa-plus mr-2"></i> Add Deductions To Breakdown</a>
 
-                <a href="javascript:void(0)" class="export-deductions-button"><i class="fal fa-plus mr-2"></i> Add Deductions To Breakdown</a>
+                </div>
 
-            </div>
+            @endif
 
         </div>
 
@@ -242,6 +242,10 @@
     <div class="row">
         <div class="col-12 my-5">
             <div class="font-10 text-orange"><i class="fal fa-exclamation-triangle mr-2"></i> Commission Breakdown Not Submitted</div>
+
+            <div class="d-flex justify-content-center mt-2">
+                <a href="javascript: void(0)" class="btn btn-primary" id="email_agent_breakdown_reminder"><i class="fa fa-envelope mr-2"></i> Email Agent</a>
+            </div>
         </div>
     </div>
 

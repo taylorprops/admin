@@ -537,6 +537,10 @@ Route::middleware(['agent']) -> group(function () {
     Route::post('/agents/doc_management/transactions/save_add_earnest_notes', [TransactionsDetailsController::class, 'save_add_earnest_notes']);
     // delete note
     Route::post('/agents/doc_management/transactions/delete_note', [TransactionsDetailsController::class, 'delete_note']);
+    // transfer earnest
+    Route::post('/agents/doc_management/transactions/transfer_earnest', [TransactionsDetailsController::class, 'transfer_earnest']);
+    // undo transfer earnest
+    Route::post('/agents/doc_management/transactions/undo_transfer_earnest', [TransactionsDetailsController::class, 'undo_transfer_earnest']);
 
     // Accept new contract for listing
     Route::post('/agents/doc_management/transactions/accept_contract', [TransactionsDetailsController::class, 'accept_contract']);

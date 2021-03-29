@@ -75,7 +75,7 @@
                         <br><br>
                         Please contact the office immediately to help us resolve this isssue.
                         <br><br>
-                        @if(session('admin_details')) {!! session('admin_details') -> signature !!} @endif
+                        @if(session('user_details')) {!! session('user_details') -> signature !!} @endif
                     </div>
 
                     <input type="hidden" id="contract_ids">

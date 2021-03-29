@@ -64,15 +64,16 @@ if($property -> CloseDate != '') {
                 </div>
 
 
+                <div class="no-wrap d-block d-md-none ml-2">
+                    <span class="font-12 text-primary">{!! $header_transaction_type !!}</span>
+                </div>
 
                 <div class="d-flex justify-content-start align-items-center flex-wrap mb-1 mb-md-3">
 
-                    <div class="{{ $transaction_type_bg }} my-1 p-1 p-sm-2 rounded no-wrap d-none d-xl-inline-block">
+                    <div class="{{ $transaction_type_bg }} my-1 p-1 p-sm-2 rounded no-wrap d-none d-md-inline-block">
                         <span class="font-12 text-white">{!! $header_transaction_type !!}</span>
                     </div>
-                    <div class="no-wrap d-inline-block d-xl-none ml-2">
-                        <span class="font-12 text-primary">{!! $header_transaction_type !!}</span>
-                    </div>
+
 
                     @if($transaction_type != 'referral')
 
@@ -102,7 +103,7 @@ if($property -> CloseDate != '') {
 
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
 
-                                <span class="font-11 text-gray ml-sm-3">{{ $status }}</span>
+                                <span class="font-11 text-gray ml-sm-3">{!! $status_html !!}</span>
 
                                 <span class="font-12 text-primary mx-1 mx-sm-3">|</span>
 
@@ -133,13 +134,9 @@ if($property -> CloseDate != '') {
 
         <div class="d-flex @if($for_sale && $transaction_type == 'contract') justify-content-between @else justify-content-end @endif align-items-center">
 
-            {{-- @if($for_sale && $transaction_type == 'contract')
-            <div class="no-wrap text-gray font-11">
-                Earnest {!! $earnest_html !!}
-            </div>
-            @endif --}}
-
             <div class="d-flex justify-content-end align-items-center w-100">
+
+
 
                 <div class="mr-2">
 
@@ -178,10 +175,10 @@ if($property -> CloseDate != '') {
 
                                 <div class="d-flex justify-content-end align-items-center">
 
-                                    <div class="{{ $header_status_class }} text-white mr-2 font-12 rounded px-2 py-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</div>
+                                    <div class="{{ $header_status_class }} text-white mr-2 font-11 rounded p-2"><i class="fal {{ $header_fa }} mr-2"></i> {{ $header_status }}!</div>
 
                                     @if($status == 'Canceled' || $status == 'Withdrawn')
-                                        <a href="javascript: void(0)" class="btn btn-primary undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+                                        <a href="javascript: void(0)" class="btn btn-sm btn-primary undo-cancel-listing-button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                     @endif
 
                                 </div>
@@ -198,45 +195,64 @@ if($property -> CloseDate != '') {
                         @endphp
 
                         <div class="row">
+
                             <div class="col-12">
+
                                 <div class="d-flex flex-wrap justify-content-end align-items-center">
 
                                     @if($status == 'Active')
 
-                                        <div>
+                                        {{-- <div class="bg-primary text-white mr-2 font-11 rounded px-3 py-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</div> --}}
+
+                                        <div class="ml-3">
                                             <a href="javascript: void(0);" class="btn btn-danger btn-sm" id="cancel_contract_button" data-for-sale="{{ $for_sale ? 'yes' : 'no' }}" data-listing-expiration-date="{{ $listing_expiration_date }}"><i class="fal fa-minus mr-2"></i> {{ $for_sale ? $action.' Contract' : 'Cancel Lease' }}</a>
+
+                                            @if(!$property -> Listing_ID > 0 && $listings_count > 0 && $status == 'Active')
+
+                                                <div>
+                                                    <a href="javascript:void(0)" id="merge_with_listing_button"><i class="fad fa-exchange-alt mr-2"></i> Merge with Listing</a>
+                                                </div>
+
+                                            @endif
+
+                                            @if($property -> Merged == 'yes' && $status == 'Active')
+
+                                                <div>
+                                                    <a href="javascript:void(0)" id="undo_merge_with_listing_button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fad fa-exchange-alt mr-2"></i> Undo Merge with Listing</a>
+                                                </div>
+
+                                            @endif
+
                                         </div>
 
                                     @elseif($status == 'Cancel Pending')
 
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <div class="bg-orange text-white mr-2 font-12 rounded px-2 py-2"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</div>
-                                            <a href="javascript: void(0)"class="btn btn-primary undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
-                                        </div>
 
-
-                                        @if(auth() -> user() -> group == 'admin')
-
-                                            <div>
-                                                <button class="btn btn-danger process-cancellation-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fad fa-cogs mr-2 text-white"></i> Process</button>
+                                            <div class="bg-orange text-white mr-2 font-11 rounded p-2 no-wrap"><i class="fad fa-hourglass-start mr-2 text-white"></i> {{ $status }}</div>
+                                            <div class="text-right">
+                                                <button class="btn btn-sm btn-primary undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</button>
+                                            @if(auth() -> user() -> group == 'admin')
+                                                <button class="btn btn-sm btn-danger process-cancellation-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fad fa-cogs mr-2 text-white"></i> Process</button>
+                                            @endif
                                             </div>
 
-                                        @endif
+                                        </div>
 
                                     @elseif($status == 'Released' || $status == 'Canceled')
 
                                         <div class="d-flex justify-content-start align-items-center">
-                                            <div class="bg-danger text-white mr-2 font-12 rounded px-2 py-2"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</div>
+                                            <div class="bg-danger text-white mr-2 font-11 rounded p-2"><i class="fal fa-ban mr-2 text-white"></i> {{ $status }}</div>
                                             <a href="javascript: void(0)" class="btn btn-primary undo-cancel-contract-button" data-contract-id="{{ $property -> Contract_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                         </div>
 
                                     @elseif($status == 'Closed')
 
-                                        <span class="bg-success text-white mr-2 font-12 rounded px-2 py-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</span>
+                                        {{-- <span class="bg-success text-white mr-2 font-11 rounded p-2"><i class="fal fa-check mr-2 text-white"></i> {{ $status }}</span> --}}
 
                                     @else
 
-                                        <span class="bg-primary text-white mr-2 font-12 rounded px-2 py-2"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span>
+                                        {{-- <span class="bg-primary text-white mr-2 font-11 rounded p-2"><i class="fad fa-exclamation-circle mr-2 text-white"></i> {{ $status }}</span> --}}
 
                                     @endif
 
@@ -249,21 +265,6 @@ if($property -> CloseDate != '') {
                                     @endif
 
                                 </div>
-                                @if(!$property -> Listing_ID > 0 && $listings_count > 0 && $status == 'Active')
-
-                                    <div>
-                                        <a href="javascript:void(0)" id="merge_with_listing_button"><i class="fad fa-exchange-alt mr-2"></i> Merge with Listing</a>
-                                    </div>
-
-                                @endif
-
-                                @if($property -> Merged == 'yes' && $status == 'Active')
-
-                                    <div>
-                                        <a href="javascript:void(0)" id="undo_merge_with_listing_button" data-listing-id="{{ $property -> Listing_ID }}"><i class="fad fa-exchange-alt mr-2"></i> Undo Merge with Listing</a>
-                                    </div>
-
-                                @endif
 
                             </div>
 
@@ -293,7 +294,7 @@ if($property -> CloseDate != '') {
                                     </div>
                                     @if($status == 'Canceled')
                                         <div class="mx-3">
-                                            <a href="javascript: void(0)"class="undo-cancel-referral-button" data-referral-id="{{ $property -> Referral_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
+                                            <a href="javascript: void(0)" class="undo-cancel-referral-button" data-referral-id="{{ $property -> Referral_ID }}"><i class="fal fa-undo mr-1"></i> Undo</a>
                                         </div>
                                     @endif
                                 @endif
@@ -306,8 +307,6 @@ if($property -> CloseDate != '') {
             </div>
 
         </div>
-
-
 
     </div>
 
@@ -479,14 +478,28 @@ if($property -> CloseDate != '') {
     </div>
 
 
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-xl-3 mt-3 mt-xl-0">
 
-        @if($for_sale && $transaction_type == 'contract')
-                <div class="text-gray font-10 mb-2 mt-3 mt-xl-0">
+        <div class="row">
+            <div class="col-6">
+                @if($for_sale && $transaction_type == 'contract')
+                <div class="text-gray font-10 mb-2 mt-0">
                     Earnest
                 </div>
                 {!! $earnest_html !!}
             @endif
+            </div>
+            <div class="col-6">
+                <div class="d-flex justify-content-end align-items-end h-100">
+                    @if(auth() -> user() -> group == 'admin')
+                        <a href="javascript: void(0)" class="btn btn-primary" id="email_agent_general"><i class="fa fa-envelope mr-2"></i> Email Agent</a>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+
+
 
     </div>
 

@@ -73,21 +73,22 @@ $(function() {
     }
 
     // Add a response interceptor
-    axios.interceptors.response.use(function (response) {
+    /* axios.interceptors.response.use(function (response) {
         //console.log(response);
-        if(response.status != 200) {
-            // if ajax returns a redirect to login page this will force the parent page to redirect to login
-            if(response.data.match(/doctype/)) {
-                window.location = '/';
-            }
-        }
-        return response;
+        // if(response.status != 200) {
+        //     // if ajax returns a redirect to login page this will force the parent page to redirect to login
+        //     if(response.data.match(/doctype/)) {
+        //         window.location = '/';
+        //     }
+        // }
+        // return response;
 
     }, function (error) {
-        if(error.response.status == 404) {
-            window.location = '/';
-        }
-    });
+        // alert(error);
+        // if(error.response.status == 404) {
+        //     window.location = '/';
+        // }
+    }); */
 
 
     $(document).on('focus', '.numbers-only', function (e) {
@@ -324,12 +325,14 @@ $(function() {
             .responsive.recalc();
     });
 
-    get_global_notifications();
-    setInterval(function() {
-        //if(!$('#notifications_collapse').hasClass('show')) {
-            get_global_notifications();
-        //}
-    }, 5000);
+    if(!document.URL.match('/(password|login)/') && $('#login_page').length == 0) {
+        get_global_notifications();
+        setInterval(function() {
+            //if(!$('#notifications_collapse').hasClass('show')) {
+                get_global_notifications();
+            //}
+        }, 5000);
+    }
 
 
 });

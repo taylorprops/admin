@@ -18,6 +18,10 @@ if (document.URL.match(/transaction_details/)) {
         });
         $(document).on('click', '#show_set_status_to_waiting_button', show_set_status_to_waiting);
 
+        $(document).on('click', '#transfer_to_another_contract_button', show_transfer_to_another_contract);
+
+        $(document).on('click', '#undo_transfer_button', undo_transfer_earnest);
+
         $('.save-earnest-notes-button').off('click').on('click', save_add_earnest_notes);
 
         $(document).on('click', '.delete-earnest-note-button', function() {
@@ -31,7 +35,6 @@ if (document.URL.match(/transaction_details/)) {
 
 
 
-
         get_earnest_check_info();
         get_earnest_checks('in', false);
         get_earnest_checks('out', false);
@@ -39,6 +42,50 @@ if (document.URL.match(/transaction_details/)) {
         get_earnest_notes();
     }
 
+    function undo_transfer_earnest() {
+
+        let Contract_ID = $('#Contract_ID').val();
+        let formData = new FormData();
+        formData.append('Contract_ID', Contract_ID);
+        axios.post('/agents/doc_management/transactions/undo_transfer_earnest', formData, axios_options)
+        .then(function (response) {
+            load_tabs('earnest');
+            load_details_header();
+            toastr['success']('Transfer Successfully Undone');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    function show_transfer_to_another_contract() {
+
+        $('#transfer_modal').modal('show');
+
+        $('.transfer-button').off('click').on('click', function() {
+
+            let to_id = $(this).data('contract-id');
+            let from_id = $('#Contract_ID').val();
+
+            let formData = new FormData();
+            formData.append('to_id', to_id);
+            formData.append('from_id', from_id);
+
+            axios.post('/agents/doc_management/transactions/transfer_earnest', formData, axios_options)
+            .then(function (response) {
+                $('#transfer_modal').modal('hide');
+                $('#modal_info').modal().find('.modal-body').html('Earnest Successfully Transferred.<br><a href="/agents/doc_management/transactions/transaction_details/'+to_id+'/contract">View New Deposit</a>');
+                load_tabs('earnest');
+                load_details_header();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        });
+
+    }
 
     function delete_earnest_note(Earnest_ID, note_id) {
 
@@ -175,12 +222,15 @@ if (document.URL.match(/transaction_details/)) {
             }
 
             let in_escrow_parsed = parseFloat(checks_in_total).toFixed(2) - parseFloat(checks_out_total).toFixed(2);
-            in_escrow = global_format_number_with_decimals(in_escrow_parsed.toFixed(2));
+            let in_escrow = global_format_number_with_decimals(in_escrow_parsed.toFixed(2));
+            if($('#transferred').val() == 'yes') {
+                in_escrow = '$0';
+            }
             $('#in_escrow').html(in_escrow);
 
             $('.status-waiting').hide();
             $('.in-escrow-alert').removeClass('alert-success alert-danger').addClass('alert-info');
-            if(in_escrow_parsed > 0) {
+            if(in_escrow_parsed > 0 && $('#transferred').val() == '') {
                 $('.in-escrow-alert').removeClass('alert-info').addClass('alert-success');
                 $('.status-waiting').show();
             } else if(in_escrow_parsed < 0) {
@@ -483,8 +533,11 @@ if (document.URL.match(/transaction_details/)) {
 
         if($('#earnest_held_by').val() == 'us') {
             $('.holding-earnest').show();
+            $('.earnest-account-div').show();
         } else {
             $('.holding-earnest').hide();
+            $('.earnest-account-div').hide();
+            $('#earnest_account_id').val('').prop('readonly', true);
         }
 
     }

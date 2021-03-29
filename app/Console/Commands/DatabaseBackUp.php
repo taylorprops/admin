@@ -39,7 +39,7 @@ class DatabaseBackUp extends Command
     public function handle() {
 
 
-        $tables = ['admin_resource_items', 'config', 'emp_in_house', 'emp_transaction_coordinators'];
+        $tables = ['admin_resource_items', 'config', 'emp_in_house', 'emp_transaction_coordinators', 'docs_resource_items'];
 
         foreach($tables as $table) {
 

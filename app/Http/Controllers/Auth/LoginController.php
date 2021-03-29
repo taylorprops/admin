@@ -79,9 +79,6 @@ class LoginController extends Controller
 
         return $this -> redirectTo;
 
-
-
-
     }
 
     /**
@@ -93,6 +90,7 @@ class LoginController extends Controller
 
 		$this -> previous_url = $request -> previous_url;
         $this -> middleware('guest') -> except(['logout', 'login']);
+
 
     }
 }

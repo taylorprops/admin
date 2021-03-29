@@ -4,16 +4,22 @@
 
         <div class="col-12 col-xl-5 mt-4 mx-auto">
 
+            <ul class="list-unstyled multi-steps">
+                <li class="@if($breakdown_status == 'submitted') is-active @endif">Submitted</li>
+                <li class="@if($breakdown_status == 'reviewed') is-active @endif">In Review</li>
+                <li class="@if($breakdown_status == 'complete') is-active @endif">Complete</li>
+            </ul>
+
             @if($breakdown -> status != 'complete')
 
-                @if($breakdown -> submitted == 'yes')
+                @if($breakdown -> submitted == 'yes' && $breakdown -> status != 'reviewed')
 
                     <div class="d-flex justify-content-start align-items-center bg-blue-light text-primary">
                         <div class="p-3">
                             <i class="fad fa-check-circle fa-2x"></i>
                         </div>
                         <div class="p-3">
-                            Your commission breakdown has been submitted and is awaiting review. You can still make changes until it is reviewed and we will notify you once the review process is complete.
+                            Your commission breakdown has been submitted and is awaiting review. You can still make changes until it is reviewed. We will notify you once the review process is complete.
                         </div>
                     </div>
 
@@ -428,6 +434,7 @@
 
             @elseif($breakdown -> status == 'complete')
 
+
                 <div class="d-flex justify-content-start align-items-center bg-green-lighter text-success">
                     <div class="p-3">
                         <i class="fad fa-check-circle fa-2x"></i>
@@ -435,15 +442,49 @@
                     <div class="p-3">
                         Your commission breakdown has been processed and is ready!
                     </div>
+                </div>
 
-                    {{--
-                    update status when admin reviews
-                    reviewed - after first save
-                    complete - total_in > 0 && total_left = 0
-                    --}}
-                    <div class="commission-details">
+                <div class="commission-details">
 
-                    </div>
+                    <div class="text-gray font-10 mt-5">Commission Check Details</div>
+                    <br>
+
+                    @foreach($checks_out as $check_out)
+
+                        <div class="list-group mb-3">
+
+                            @php
+                            $via = [
+                                'pickup' => 'Picking Up At Office',
+                                'mail' => 'Mailing To You',
+                                'fedex' => 'Sending by Fedex',
+                                'settlement' => 'Deliver at Settlement'
+                            ][$check_out -> check_delivery_method];
+
+                            if(in_array($check_out -> check_delivery_method, ['mail', 'fedex'])) {
+                                $via .= '<br>
+                                '.$check_out -> check_mail_to_street.'<br>
+                                '.$check_out -> check_mail_to_city.', '.$check_out -> check_mail_to_state.' '.$check_out -> check_mail_to_zip;
+                            }
+
+                            @endphp
+
+                            <div class="list-group-item d-flex justify-content-between">
+                                <div class="text-gray">Date Ready</div>
+                                <div>{{ date_mdy($check_out -> check_date_ready) }}</div>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <div class="text-gray">Amount</div>
+                                <div>${{ number_format($check_out -> check_amount, 2) }}</div>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <div class="text-gray">Delivery Method</div>
+                                <div class="text-right">{!! $via !!}</div>
+                            </div>
+
+                        </div>
+
+                    @endforeach
 
                 </div>
 

@@ -45,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
                     $notification['notify_by_text'] = $setting -> notify_by_text;
 
                     return $notification;
+                } else if($setting -> config_type == 'on_off') {
+                    $notification['on_off'] = $setting -> config_value;
+                    $notification['notify_by_email'] = $setting -> notify_by_email;
+                    $notification['notify_by_text'] = $setting -> notify_by_text;
+
+                    return $notification;
                 }
 
                 return $setting -> config_value;

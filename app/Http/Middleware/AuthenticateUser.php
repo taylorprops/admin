@@ -15,9 +15,9 @@ class AuthenticateUser
      */
     public function handle($request, Closure $next)
     {
-        if (basename(request()->path()) != 'login') {
-            if (auth()->user() == null) {
-                return redirect()->route('login');
+        if (basename(request() -> path()) != 'login') {
+            if (auth() -> user() == null) {
+                return redirect() -> route('login');
             }
         }
 

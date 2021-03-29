@@ -90,14 +90,16 @@ $deleted = 0;
                                 <li class="checkbox-li">
                                     <div class="d-flex justify-content-between align-items-center">
 
-                                        <div class="text-success">
-                                            <input type="checkbox" class="custom-form-element form-checkbox cleared-checkbox" value="cleared" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($check -> check_status == 'cleared') checked @endif data-label="Cleared">
-                                        </div>
-
-                                        @if($check_type == 'in')
-                                            <div class="text-danger">
-                                                <input type="checkbox" class="custom-form-element form-checkbox cleared-checkbox" value="bounced" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($check -> check_status == 'bounced') checked @endif data-label="Bounced">
+                                        @if(!$transferred)
+                                            <div class="text-success">
+                                                <input type="checkbox" class="custom-form-element form-checkbox cleared-checkbox" value="cleared" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($check -> check_status == 'cleared') checked @endif data-label="Cleared">
                                             </div>
+
+                                            @if($check_type == 'in')
+                                                <div class="text-danger">
+                                                    <input type="checkbox" class="custom-form-element form-checkbox cleared-checkbox" value="bounced" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($check -> check_status == 'bounced') checked @endif data-label="Bounced" @if($transferred) disabled @endif>
+                                                </div>
+                                            @endif
                                         @endif
                                     </div>
                                 </li>
@@ -151,12 +153,13 @@ $deleted = 0;
                                 data-date-deposited="{{ $check -> date_deposited }}"
                                 data-mail-to-address="{{ $check -> mail_to_address }}"
                                 data-date-sent="{{ $check -> date_sent }}"
+                                @if($transferred) disabled @endif
                                 >
                                 <i class="fad fa-pencil mr-2"></i> Edit
                             </button>
 
                             @if($check -> check_status == 'pending')
-                                <button class="btn btn-danger btn-block delete-earnest-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fal fa-ban mr-2"></i> Delete</button>
+                                <button class="btn btn-danger btn-block delete-earnest-check-button" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($transferred) disabled @endif><i class="fal fa-ban mr-2"></i> Delete</button>
                             @endif
 
                         </div>
@@ -164,7 +167,7 @@ $deleted = 0;
                         @php $deleted += 1; @endphp
                         <div class="text-center">
                             <span class="text-danger mb-3"><i class="fal fa-ban mr-2"></i> Deleted</span>
-                            <a href="javascript: void(0)" class="btn btn-block btn-primary undo-delete-earnest-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}"><i class="fal fa-undo-alt mr-2"></i> Undo</a>
+                            <button class="btn btn-block btn-primary undo-delete-earnest-check-button ml-0" data-check-id="{{ $check -> id }}" data-check-type="{{ $check_type }}" @if($transferred) disabled @endif><i class="fal fa-undo-alt mr-2"></i> Undo</button>
                         </div>
                     @endif
                 </div>

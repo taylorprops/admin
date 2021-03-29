@@ -44,6 +44,13 @@ class GlobalNotification extends Notification
             $this -> link_text = 'View Contract';
 
         }
+        // agent notifications
+        else if($notification['type'] == 'commission_ready') {
+
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
+            $this -> link_text = 'View Commission';
+
+        }
 
     }
 

@@ -12,8 +12,8 @@ class NotificationsController extends Controller {
 
     public function notifications(Request $request) {
 
-		$categories = Config::where('config_role', 'notification_documents') -> orderBy('category') -> groupBy('category') -> pluck('category');
-        $config_options = Config::where('config_role', 'notification_documents') -> orderBy('category') -> orderBy('order') -> get();
+		$categories = Config::where('config_role', 'notification') -> orderBy('category') -> groupBy('category') -> pluck('category');
+        $config_options = Config::whereIn('config_role', ['setting', 'notification']) -> orderBy('category') -> orderBy('order') -> get();
         $in_house_employees = InHouse::with(['user_account:id,user_id,email']) -> orderBy('emp_type') -> get();
 
 

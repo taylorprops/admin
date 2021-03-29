@@ -19,6 +19,6 @@ mix.js('resources/js/app.js','public/js')
             alias: {
                 '@': __dirname+'/resources/js'
             },
-        },
+        }
     })
     .disableNotifications();

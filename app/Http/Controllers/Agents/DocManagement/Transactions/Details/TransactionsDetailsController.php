@@ -170,6 +170,8 @@ class TransactionsDetailsController extends Controller
             $folders = TransactionDocumentsFolders::where($field, $id) -> orderBy('folder_order') -> get();
         }
 
+        $default_folder_id = $folders -> first() -> id;
+
         $transaction_checklist = TransactionChecklists::where($field, $id) -> first();
         $checklist_id = $transaction_checklist -> id;
         $original_checklist_id = $transaction_checklist -> checklist_id;
@@ -212,7 +214,24 @@ class TransactionsDetailsController extends Controller
 
         $states = LocationData::AllStates();
 
-        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'resource_items', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states'));
+        $contracts_select = [
+            'Agent_ID',
+            'City',
+            'CloseDate',
+            'ContractDate',
+            'Contract_ID',
+            'EarnestHeldBy',
+            'FullStreetAddress',
+            'PostalCode',
+            'StateOrProvince',
+            'Status'
+        ];
+
+        $active_status_id = ResourceItems::GetResourceID('Active', 'contract_status');
+        $contracts = Contracts::select($contracts_select) -> where('Agent_ID', $Agent_ID) -> where('Status', $active_status_id) -> with('earnest') -> orderBy('CloseDate', 'desc') -> get();
+
+
+        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'resource_items', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
     }
 
     // Transaction Details Header
@@ -225,6 +244,13 @@ class TransactionsDetailsController extends Controller
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
         $status = $property -> status -> resource_name;
+
+        $status_html = '<span class="text-primary">'.$status.'</span>';
+        if(preg_match('/(expired|released|cancel|waiting|withdrawn)/i', $status)) {
+            $status_html = '<span class="text-danger">'.$status.'</span>';
+        } else if(preg_match('/(closed|contract)/i', $status)) {
+            $status_html = '<span class="text-success">'.$status.'</span>';
+        }
 
         $listings_count = Listings::where('Agent_ID', $property -> Agent_ID) -> count();
 
@@ -287,16 +313,27 @@ class TransactionsDetailsController extends Controller
 
         $earnest_html = '';
         if($property -> EarnestHeldBy == 'us') {
+
             $earnest = $property -> earnest;
-            if($earnest -> amount_received > 0) {
-                if($earnest -> amount_total > 0) {
-                    $earnest_html = '<div class="text-white bg-success py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
-                } else {
-                    $earnest_html = '<div class="text-white bg-primary py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
-                }
+
+            if($earnest -> transferred_to_Contract_ID > 0) {
+
+                $earnest_html = '<div class="text-white bg-primary py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-share mr-2"></i> Transferred</div>';
+
             } else {
-                $earnest_html = '<div class="text-white bg-danger py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
+
+                if($earnest -> amount_received > 0) {
+                    if($earnest -> amount_total > 0) {
+                        $earnest_html = '<div class="text-white bg-success p-2 font-11 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> $'.number_format($earnest -> amount_total).'</div>';
+                    } else {
+                        $earnest_html = '<div class="text-white bg-primary py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-check mr-2"></i> Released</div>';
+                    }
+                } else {
+                    $earnest_html = '<div class="text-white bg-danger py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-exclamation-circle mr-2"></i> Not Received</div>';
+                }
+
             }
+
         } else {
             $earnest_html = '<div class="text-white bg-default py-1 px-2 d-inline-block rounded ml-0"><i class="fal fa-ban mr-2"></i> Not Holding</div>';
         }
@@ -304,7 +341,7 @@ class TransactionsDetailsController extends Controller
 
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'status', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
+        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'status', 'status_html', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
     }
 
 
@@ -646,7 +683,7 @@ class TransactionsDetailsController extends Controller
                 $subject = 'Agent Using Heritage Title Notification';
                 $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                 $message_email = '
-                <div style="font-size: 14px;">
+                <div style="font-size: 15px;">
                 An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
                 <br><br>
                 <table>
@@ -2003,7 +2040,7 @@ class TransactionsDetailsController extends Controller
             $message = $agent -> full_name.' has submitted a release for review.<br>
             '.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
             $message_email = '
-            <div style="font-size: 14px;">
+            <div style="font-size: 15px;">
             '.$agent -> full_name.' has submitted a release for review.
             <br><br>
             <table>
@@ -2943,7 +2980,7 @@ class TransactionsDetailsController extends Controller
                 $message = $agent -> full_name.' has submitted a release for review.<br>
                 '.$contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode;
                 $message_email = '
-                <div style="font-size: 14px;">
+                <div style="font-size: 15px;">
                 '.$agent -> full_name.' has submitted a release for review.
                 <br><br>
                 <table>
@@ -2956,7 +2993,7 @@ class TransactionsDetailsController extends Controller
                         <td valign="top">Property</td>
                         <td>'.$contract -> FullStreetAddress.'<br>'.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode.'
                         <br>
-                        <a href="'.config('app.url').'/doc_management/document_review/'.$con -> Contract_ID.'" target="_blank">Review Release</a>
+                        <a href="'.config('app.url').'/doc_management/document_review/'.$contract -> Contract_ID.'" target="_blank">Review Release</a>
                         <br>
                         <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
                     </td>
@@ -3453,6 +3490,7 @@ class TransactionsDetailsController extends Controller
             return Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
         });
 
+
         return view('/agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));
     }
 
@@ -3476,10 +3514,12 @@ class TransactionsDetailsController extends Controller
 
         $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> first();
 
+        $contract = null;
         // if a contract update the fields in transaction_docs_contracts
         if ($Contract_ID > 0) {
             $close_price = preg_replace('/[\$,]+/', '', $request -> close_price);
-            $contract = Contracts::find($Contract_ID) -> update(['CloseDate' => $request -> close_date, 'ClosePrice' => $close_price, 'UsingHeritage' => $request -> using_heritage, 'TitleCompany' => $request -> title_company]);
+            $contract = Contracts::find($Contract_ID);
+            $contract -> update(['CloseDate' => $request -> close_date, 'ClosePrice' => $close_price, 'UsingHeritage' => $request -> using_heritage, 'TitleCompany' => $request -> title_company]);
         }
 
         // if a commission other - update the check's agent, address and client name if changed
@@ -3490,27 +3530,121 @@ class TransactionsDetailsController extends Controller
         }
 
         // if commission is done set status to closed
+        $agent_notified = null;
         if ($commission -> total_income > 0 && $commission -> total_left == 0) {
             if ($Referral_ID > 0) {
                 $closed_status = ResourceItems::GetResourceID('Closed', 'contract_status');
             } else {
                 $closed_status = ResourceItems::GetResourceID('Closed', 'contract_status');
                 $update_contract_status = Contracts::find($Contract_ID) -> update(['Status' => $closed_status]);
-                if ($contract -> Listing_ID > 0) {
-                    $closed_status = ResourceItems::GetResourceID('Closed', 'listing_status');
-                    $update_listing_status = Listings::where('Contract_ID', $Contract_ID) -> update(['Status' => $closed_status, 'CloseDate', $update_contract_status -> CloseDate]);
+                if($contract) {
+                    if ($contract -> Listing_ID > 0) {
+                        $closed_status = ResourceItems::GetResourceID('Closed', 'listing_status');
+                        $update_listing_status = Listings::where('Contract_ID', $Contract_ID) -> update(['Status' => $closed_status, 'CloseDate', $update_contract_status -> CloseDate]);
+                    }
                 }
             }
             // update breakdown status
-            $breakdown -> status = 'complete';
-            $breakdown -> save();
+            $checks_out = $breakdown -> checks_out -> where('check_recipient_agent_id', $Agent_ID) -> where('active', 'yes') -> whereNotNull('check_delivery_method') -> whereNotNull('check_date_ready');
+
+            if(count($checks_out) > 0) {
+
+                if($breakdown -> status != 'complete') {
+
+                    //notify agent
+                    $notification = config('global_db.agent_notification_commission_complete');
+
+                    if($notification['on_off'] == 'on') {
+
+                        $agent_notified = 'yes';
+
+                        $user = User::where('user_id', $Agent_ID) -> where('group', 'agent') -> first();
+
+                        $property = Contracts::find($Contract_ID);
+                        $address =  $property -> FullStreetAddress.' '.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
+                        $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
+
+                        $subject = 'Commission Breakdown processed for '.$address;
+                        $message = 'Commission Breakdown processed<br>'.$address;
+                        $message_email = '
+                        <div style="font-size: 15px;">
+                            Hello '.$property -> agent -> first_name.',<br><br>
+                            Your commission breakdown has been processed!<br><br>
+                            <strong>Property</strong><br>
+                            '.$property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode.'
+                            <br>
+                            <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$Contract_ID.'/contract" target="_blank">View Transaction</a>
+                            <br>
+                            <br>
+                            <strong>Payment Details</strong>
+                            <table>';
+
+                            foreach($checks_out as $check_out) {
+
+                                $via = [
+                                    'pickup' => 'Picking Up At Office',
+                                    'mail' => 'Mailing To You',
+                                    'fedex' => 'Sending by Fedex',
+                                    'settlement' => 'Deliver at Settlement'
+                                ][$check_out -> check_delivery_method];
+
+                                if(in_array($check_out -> check_delivery_method, ['mail', 'fedex'])) {
+                                    $via .= '<br>
+                                    '.$check_out -> check_mail_to_street.'<br>
+                                    '.$check_out -> check_mail_to_city.', '.$check_out -> check_mail_to_state.' '.$check_out -> check_mail_to_zip;
+                                }
+
+                                $message_email .= '
+                                <tr>
+                                    <td>Date Ready</td>
+                                    <td>'.date_mdy($check_out -> check_date_ready).'</td>
+                                </tr>
+                                <tr>
+                                    <td>Amount</td>
+                                    <td>$'.number_format($check_out -> check_amount, 2).'</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" style="width: 125px">Delivery Method</td>
+                                    <td>'.$via.'</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="height: 20px"></td>
+                                </tr>';
+                            }
+                            $message_email .= '</table>
+                            <br><br>
+                            Thank You,<br>
+                            Taylor Properties
+                        </div>';
+
+
+                        $notification['type'] = 'commission_ready';
+                        $notification['transaction_type'] = 'contract';
+                        $notification['transaction_id'] = $Contract_ID;
+                        $notification['subject'] = $subject;
+                        $notification['message'] = $message;
+                        $notification['message_email'] = $message_email;
+
+                        Notification::send($user, new GlobalNotification($notification));
+
+                    }
+
+                    $breakdown -> status = 'complete';
+                    $breakdown -> save();
+
+                }
+
+            }
         } elseif ($change_status == 'yes') {
             // update breakdown status
             $breakdown -> status = 'reviewed';
             $breakdown -> save();
         }
 
-        return response() -> json(['result' => 'success']);
+        return response() -> json([
+            'result' => 'success',
+            'agent_notified' => $agent_notified
+        ]);
     }
 
     public function get_commission_notes(Request $request) {
@@ -3663,7 +3797,18 @@ class TransactionsDetailsController extends Controller
 
         $states = LocationData::AllStates();
 
-        return view('/agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states'));
+        $breakdown_status = '';
+        if($breakdown -> submitted == 'yes' && $breakdown -> status != 'reviewed' && $breakdown -> status != 'complete') {
+            $breakdown_status = 'submitted';
+        } else if($breakdown -> status == 'reviewed') {
+            $breakdown_status = 'reviewed';
+        } else if($breakdown -> status == 'complete') {
+            $breakdown_status = 'complete';
+        }
+
+        $checks_out = $breakdown -> checks_out -> where('check_recipient_agent_id', $Agent_ID) -> where('active', 'yes') -> whereNotNull('check_delivery_method') -> whereNotNull('check_date_ready');
+
+        return view('/agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states', 'breakdown_status', 'checks_out'));
     }
 
     public function save_commission_agent(Request $request) {
@@ -4198,15 +4343,18 @@ class TransactionsDetailsController extends Controller
         // earnest accounts
         $earnest_accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> orderBy('resource_order') -> get();
 
-        $suggested_earnest_account = $earnest -> earnest_account_id;
-        if ($suggested_earnest_account == '') {
-            $state = $property -> StateOrProvince;
-            $company = $agent -> company;
+        $suggested_earnest_account = '';
+        if($earnest_held_by == 'us') {
+            $suggested_earnest_account = $earnest -> earnest_account_id;
+            if ($suggested_earnest_account == '') {
+                $state = $property -> StateOrProvince;
+                $company = $agent -> company;
 
-            if ($state == 'MD') {
-                $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> where('resource_name', $company) -> first() -> resource_id;
-            } else {
-                $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> first() -> resource_id;
+                if ($state == 'MD') {
+                    $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> where('resource_name', $company) -> first() -> resource_id;
+                } else {
+                    $suggested_earnest_account = $earnest_accounts -> where('resource_state', $state) -> first() -> resource_id;
+                }
             }
         }
 
@@ -4223,7 +4371,22 @@ class TransactionsDetailsController extends Controller
             $hide_set_status_to_waiting = null;
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting'));
+        $transferred_from = null;
+        if($earnest -> transferred_from_Contract_ID > 0) {
+            $transferred_from = Contracts::find($earnest -> transferred_from_Contract_ID, ['Contract_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode']);
+        }
+
+        $transferred_to = null;
+        if($earnest -> transferred_to_Contract_ID > 0) {
+            $transferred_to = Contracts::find($earnest -> transferred_to_Contract_ID, ['Contract_ID', 'FullStreetAddress', 'City', 'StateOrProvince', 'PostalCode']);
+        }
+
+        $able_to_transfer = null;
+        if($earnest -> amount_total > 0 && $earnest -> amount_released != $earnest -> amount_total) {
+            $able_to_transfer = 'yes';
+        }
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting', 'transferred_from', 'transferred_to', 'able_to_transfer'));
     }
 
     public function get_earnest_checks(Request $request) {
@@ -4233,7 +4396,13 @@ class TransactionsDetailsController extends Controller
 
         $checks = EarnestChecks::where('Earnest_ID', $Earnest_ID) -> where('check_type', $check_type) -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type'));
+        $earnest = Earnest::find($Earnest_ID);
+        $transferred = null;
+        if($earnest -> amount_transferred > 0) {
+            $transferred = 'yes';
+        }
+
+        return view('/agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type', 'transferred'));
     }
 
     public function save_earnest(Request $request) {
@@ -4251,7 +4420,8 @@ class TransactionsDetailsController extends Controller
     public function save_earnest_amounts(Request $request) {
 
         // update earnest amounts
-        $earnest = Earnest::with('checks') -> find($request -> Earnest_ID);
+        $earnest = Earnest::with(['checks'])
+            -> find($request -> Earnest_ID);
         /* $amount_total = $request -> amount_total;
         $amount_received = $request -> amount_received;
         $amount_released = $request -> amount_released; */
@@ -4265,7 +4435,9 @@ class TransactionsDetailsController extends Controller
             if ($check -> active == 'yes') {
                 if ($check -> check_status == 'cleared') {
                     if ($check -> check_type == 'in') {
-                        $amount_received += $check -> check_amount;
+                        if($check -> amount_transferred == '' || $check -> amount_transferred = '0.00') {
+                            $amount_received += $check -> check_amount;
+                        }
                     } elseif ($check -> check_type == 'out') {
                         $amount_released += $check -> check_amount;
                     }
@@ -4438,6 +4610,150 @@ class TransactionsDetailsController extends Controller
 		$note = EarnestNotes::find($request -> note_id) -> delete();
 
         return response() -> json(['status' => 'success']);
+    }
+
+    public function transfer_earnest(Request $request) {
+
+        $to_id = $request -> to_id;
+        $from_id = $request -> from_id;
+
+        $from_earnest = Earnest::where('Contract_ID', $from_id) -> with(['property:Contract_ID,StateOrProvince','agent:id,company','checks']) -> first();
+        $transfer_amount = $from_earnest -> amount_total;
+
+
+        // details from earnest and checks to new contract
+        $new_earnest = Earnest::where('Contract_ID', $to_id) -> first();
+
+        $from_property = $from_earnest -> property;
+        $agent = $from_earnest -> agent;
+        $checks = $from_earnest -> checks -> where('check_status', 'cleared');
+
+
+        $to_property = Contracts::find($to_id) -> update([
+            'EarnestHeldBy' => 'us'
+        ]);
+
+        $earnest_account_id = ResourceItems::where('resource_type', 'earnest_accounts')
+            -> where('resource_state', $from_property -> StateOrProvince)
+            -> where('resource_name', $agent -> company)
+            -> value('resource_id');
+
+        $new_earnest -> status = 'active';
+        $new_earnest -> held_by = 'us';
+        $new_earnest -> earnest_account_id = $earnest_account_id;
+        $new_earnest -> amount_total = $from_earnest -> amount_total;
+        $new_earnest -> amount_received = $from_earnest -> amount_received;
+        $new_earnest -> amount_released = 0;
+        $new_earnest -> transferred_from_Contract_ID = $from_id;
+        $new_earnest -> save();
+
+        $new_earnest_id = $new_earnest -> id;
+
+        $from_earnest -> update([
+            'amount_transferred' => $transfer_amount,
+            'amount_total' => '0',
+            'transferred_to_Contract_ID' => $to_id
+        ]);
+
+
+        foreach($checks as $check) {
+
+            // copy checks to new location and get new locations for db
+
+            $new_check_file_location = str_replace('/'.$from_earnest -> id.'/', '/'.$new_earnest_id.'/', $check -> file_location);
+            $new_check_image_location = str_replace('/'.$from_earnest -> id.'/', '/'.$new_earnest_id.'/', $check -> image_location);
+
+            Storage::disk('public') -> makeDirectory('/earnest/checks_in/'.$new_earnest_id);
+
+            $copy_file_from = Storage::disk('public') -> path(str_replace('/storage/', '', $check -> file_location));
+            $copy_image_from = Storage::disk('public') -> path(str_replace('/storage/', '', $check -> image_location));
+
+            $copy_file_to = Storage::disk('public') -> path(str_replace('/storage/', '', $new_check_file_location));
+            $copy_image_to = Storage::disk('public') -> path(str_replace('/storage/', '', $new_check_image_location));
+
+            exec('cp '.$copy_file_from.' '.$copy_file_to);
+            exec('cp '.$copy_image_from.' '.$copy_image_to);
+
+            $new_check = EarnestChecks::create([
+                'Earnest_ID' => $new_earnest -> id,
+                'Contract_ID' => $to_id,
+                'Agent_ID' => $new_earnest -> Agent_ID,
+                'check_type' => 'in',
+                'check_name' => $check -> check_name,
+                'payable_to' => $check -> payable_to,
+                'check_date' => $check -> check_date,
+                'check_number' => $check -> check_number,
+                'check_amount' => $check -> check_amount,
+                'check_status' => $check -> check_status,
+                'file_location' => $new_check_file_location,
+                'image_location' => $new_check_image_location,
+                'date_cleared' => $check -> date_cleared,
+                'date_deposited' => $check -> date_deposited,
+                'transferred_from_Contract_ID' => $from_id
+            ]);
+
+        }
+
+    }
+
+    public function undo_transfer_earnest(Request $request) {
+
+        $from_id = $request -> Contract_ID;
+        $from_earnest = Earnest::where('Contract_ID', $from_id) -> with(['property:Contract_ID,StateOrProvince','agent:id,company','checks']) -> first();
+        $from_property = Contracts::find($from_id, ['StateOrProvince']);
+
+        $to_id = $from_earnest -> transferred_from_Contract_ID;
+        $to_earnest = Earnest::where('Contract_ID', $to_id) -> first();
+        $to_property = Contracts::find($to_id);
+
+        $agent = $from_earnest -> agent;
+
+        $to_earnest_account_id = ResourceItems::where('resource_type', 'earnest_accounts')
+            -> where('resource_state', $from_property -> StateOrProvince)
+            -> where('resource_name', $agent -> company)
+            -> value('resource_id');
+
+        // update properties
+        $from_property -> update([
+            'EarnestHeldBy' => 'other_company'
+        ]);
+        $to_property -> update([
+            'EarnestHeldBy' => 'us'
+        ]);
+
+        // get checks to delete and remove from db
+        $checks = $from_earnest -> checks -> where('transferred_from_Contract_ID', '>', '0');
+        $amount_total = $checks -> sum('check_amount');
+
+        // update to earnest
+        $to_earnest -> status = 'active';
+        $to_earnest -> held_by = 'us';
+        $to_earnest -> earnest_account_id = $to_earnest_account_id;
+        $to_earnest -> amount_total = $amount_total;
+        //$to_earnest -> amount_received = $from_earnest -> amount_received;
+        $to_earnest -> amount_transferred = '0.00';
+        $to_earnest -> amount_released = '0.00';
+        $to_earnest -> transferred_to_Contract_ID = '0';
+        $to_earnest -> save();
+
+        // remove values from from earnest
+        $from_earnest -> status = '';
+        $from_earnest -> held_by = 'other_company';
+        $from_earnest -> earnest_account_id = '0';
+        $from_earnest -> amount_total = $from_earnest -> amount_total - $amount_total;
+        $from_earnest -> amount_received = $from_earnest -> amount_received - $amount_total;
+        $from_earnest -> transferred_from_Contract_ID = '0';
+        $from_earnest -> save();
+
+        // delete checks from from earnest
+        foreach($checks as $check) {
+
+            Storage::disk('public') -> delete(str_replace('/storage/', '', $check -> file_location));
+            Storage::disk('public') -> delete(str_replace('/storage/', '', $check -> image_location));
+
+            $check -> delete();
+        }
+
     }
 
     // End Earnest Tab
@@ -4635,7 +4951,7 @@ class TransactionsDetailsController extends Controller
             $subject = 'Agent Using Heritage Title Notification';
             $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$new_contract -> FullStreetAddress.' '.$new_contract -> City.', '.$new_contract -> StateOrProvince.' '.$new_contract -> PostalCode;
             $message_email = '
-            <div style="font-size: 14px;">
+            <div style="font-size: 15px;">
             An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
             <br><br>
             <table>
@@ -4681,7 +4997,7 @@ class TransactionsDetailsController extends Controller
             '.$new_contract -> FullStreetAddress.' '.$new_contract -> City.', '.$new_contract -> StateOrProvince.' '.$new_contract -> PostalCode;
 
             $message_email = '
-                <div style="font-size: 14px;">
+                <div style="font-size: 15px;">
                 '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
                 <br><br>
                 <table>

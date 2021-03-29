@@ -69,6 +69,12 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                     search_request.cancel();
                 }
 
+                let active_states = $('#global_active_states').val().split(',');
+                if(active_states.includes(state) == false) {
+                    $('#modal_danger').modal().find('.modal-body').html('You can only add properties the company is licensed in');
+                    return false;
+                }
+
                 // creates a new token for upcoming ajax (overwrite the previous one)
                 search_request = axios.CancelToken.source();
 
@@ -484,6 +490,7 @@ if (document.URL.match(/transactions\/add\/(contract|listing|referral)/)) {
                 });
 
             } else {
+
 
                 // search mls and tax records
                 show_loader();

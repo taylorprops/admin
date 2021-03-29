@@ -19,7 +19,7 @@
 
                 </div>
 
-                <div class="mr-2 wpx-350">
+                <div class="mr-2 wpx-350 earnest-account-div">
 
                     <select class="custom-form-element form-select" id="earnest_account_id" name="earnest_account_id" data-label="Earnest Account">
                         <option value=""></option>
@@ -52,6 +52,31 @@
                     @endif
                 </div>
 
+                @if(!$transferred_to && $able_to_transfer)
+
+                    <div class="mt-2">
+                        <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Transfer Earnest" data-content="Use this if the earnest deposit has been transferred to another contract."><i class="fad fa-question-circle ml-2"></i></a>
+                        <a href="javascript: void(0)" class="text-orange" id="transfer_to_another_contract_button">Transfer To Another Contract</a>
+                    </div>
+
+                @endif
+
+                <div class="ml-2 mt-2 text-center">
+
+                    @if($transferred_to)
+                    <i class="fal fa-info-circle text-danger mr-2"></i> Transferred to:<br>
+                    <a href="/agents/doc_management/transactions/transaction_details/{{ $transferred_to -> Contract_ID }}/contract?tab=earnest">{!! $transferred_to -> FullStreetAddress.'<br>'.$transferred_to -> City.', '.$transferred_to -> StateOrProvince.' '.$transferred_to -> PostalCode !!}</a>
+                    @endif
+
+                    @if($transferred_from)
+                    <i class="fal fa-info-circle text-danger mr-2"></i> Transferred from:<br>
+                    <a href="/agents/doc_management/transactions/transaction_details/{{ $transferred_from -> Contract_ID }}/contract?tab=earnest">{!! $transferred_from -> FullStreetAddress.'<br>'.$transferred_from -> City.', '.$transferred_from -> StateOrProvince.' '.$transferred_from -> PostalCode !!}</a>
+                    <br>
+                    <a href="javascript: void(0)" id="undo_transfer_button"><i class="fal fa-undo mr-1"></i> Undo</a>
+                    @endif
+
+                </div>
+
             </div>
 
         </div>
@@ -79,7 +104,7 @@
                     <div class="font-12 text-success">Total: <span id="earnest_checks_in_total"></span></div>
 
                     <div>
-                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="in"><i class="fal fa-plus mr-2"></i> Add Check In</button>
+                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="in" @if($transferred_to) disabled @endif><i class="fal fa-plus mr-2"></i> Add Check In</button>
                     </div>
                 </div>
 
@@ -107,7 +132,7 @@
                     <div class="font-12 text-danger">Total: <span id="earnest_checks_out_total"></span></div>
 
                     <div>
-                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="out"><i class="fal fa-plus mr-2"></i> Add Check Out</button>
+                        <button class="btn btn-success wpx-150 add-earnest-check-button" data-check-type="out" @if($transferred_to) disabled @endif><i class="fal fa-plus mr-2"></i> Add Check Out</button>
                     </div>
                 </div>
 
@@ -160,3 +185,4 @@
 
 <input type="hidden" id="Earnest_ID" name="Earnest_ID" value="{{ $earnest -> id }}" >
 <input type="hidden" id="earnest_mail_to_address" value="{{ $earnest_mail_to_address }}">
+<input type="hidden" id="transferred" @if($transferred_to)value="yes"@endif>

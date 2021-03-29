@@ -112,6 +112,7 @@
     <input type="hidden" id="transaction_type" value="{{ $transaction_type }}">
     <input type="hidden" id="questions_confirmed" value="{{ $questions_confirmed }}">
     <input type="hidden" id="for_sale" value="{{ $for_sale == true ? 'yes' : 'no' }}">
+    <input type="hidden" id="default_folder_id" value="{{ $default_folder_id }}">
 
 </div>
 
@@ -164,6 +165,76 @@
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
                 <a class="btn btn-success modal-confirm-button" id="resend_envelope_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- transfer to another contract --}}
+<div class="modal fade draggable" id="transfer_modal" tabindex="-1" role="dialog" aria-labelledby="transfer_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="transfer_modal_title">Transfer Earnest Deposit</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="no-wrap">
+
+                            <table id="transfer_table" class="table table-hover table-bordered table-sm" width="100%">
+
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Address</th>
+                                        <th>Status</th>
+                                        <th>Contract Date</th>
+                                        <th>Close Date</th>
+                                        <th>Holding Earnest</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach($contracts as $contract)
+
+                                        @php $earnest = $contract -> earnest; @endphp
+
+                                        <tr>
+                                            <td><button class="btn btn-primary transfer-button" data-contract-id="{{ $contract -> Contract_ID }}" @if($earnest -> amount_total > 0) disabled @endif>Transfer <i class="fa fa-share"></i></button></td>
+                                            <td>{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</td>
+                                            <td>{{ $contract -> status -> resource_name }}</td>
+                                            <td>{{ date_mdy($contract -> ContractDate) }}</td>
+                                            <td>{{ date_mdy($contract -> CloseDate) }}</td>
+                                            <td>
+                                                @if($earnest -> amount_total > 0)
+                                                    <div class="text-danger">Yes</div>
+                                                @else
+                                                    <div class="text-success">No</div>
+                                                @endif
+                                            </td>
+                                        </tr>
+
+                                    @endforeach
+
+                                </body>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="save_transfer_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>
@@ -414,7 +485,7 @@
                                         </div>
                                     </div>
                                     <div class="col-10">
-                                        <textarea class="text-editor" id="email_message"><br><br>@if(session('admin_details')) {!! session('admin_details') -> signature !!} @endif</textarea>
+                                        <textarea class="text-editor" id="email_message"><br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif</textarea>
                                     </div>
                                 </div>
 
@@ -717,7 +788,7 @@
     </div>
 </div>
 
-<div class="modal fade draggable" id="upload_documents_modal" tabindex="-1" role="dialog" aria-labelledby="upload_documents_modal_title" aria-hidden="true">
+{{-- <div class="modal fade draggable" id="upload_documents_modal" tabindex="-1" role="dialog" aria-labelledby="upload_documents_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <form id="upload_documents_form">
@@ -786,7 +857,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="modal fade draggable" id="move_documents_modal" tabindex="-1" role="dialog" aria-labelledby="move_documents_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

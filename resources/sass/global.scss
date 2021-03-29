@@ -8,6 +8,11 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+
+    main {
+        position: absolute;
+        top: 0px;
+    }
 }
 
 .page-container:not(.page-document-review) {
@@ -122,6 +127,7 @@ ul {
     list-style: none;
 }
 
+
 .nowrap {
     white-space: nowrap;
 }
@@ -201,6 +207,14 @@ div[class*='container-']:not(.p-0) {
 @for $i from 1 through 50 {
     .line-height-px-#{$i} {
         line-height: #{$i}px;
+    }
+}
+// height in vh
+// 5 - 100
+// .vh-20
+@for $i from 1 through 20 {
+    .vh-#{$i * 5} {
+        height: $i * 5VH;
     }
 }
 

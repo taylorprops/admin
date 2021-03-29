@@ -65,6 +65,8 @@ if(document.URL.match(/notifications/)) {
                 number = container.find('.number').val();
             } else if(type == 'on_off') {
                 on_off = container.find('.on-off').val();
+                notify_by_email = container.find('.notify-checkbox-email:checked').val() || '';
+                notify_by_text = container.find('.notify-checkbox-text:checked').val() || '';
             }
 
             let formData = new FormData();

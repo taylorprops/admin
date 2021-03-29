@@ -24,6 +24,10 @@ class Agents extends Model {
         return $agent_details;
     }
 
+    public function contracts() {
+        return $this -> hasMany('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Agent_ID', 'id');
+    }
+
     /* public function earnest_deposits() {
         return $this -> hasMany('App\Models\DocManagement\Earnest\Earnest', 'Agent_ID', 'id');
     }

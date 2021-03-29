@@ -47,7 +47,7 @@
 
                 @endphp
                 <tr>
-                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Contract_ID }}/contract">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
+                    <td><a href="/agents/doc_management/transactions/transaction_details/{{ $transaction -> Contract_ID }}/contract" class="d-block h-100 line-height-px-50">{{ $transaction -> FullStreetAddress.' '.$transaction -> City.', '.$transaction -> StateOrProvince.' '.$transaction -> PostalCode }}</a></td>
                     <td><span style="color: {{ $color }}">{!! $status !!}</span>
                         <br>{{ ucwords($transaction -> SaleRent) }}</td>
                     <td>{{ $our_agent }}</td>
