@@ -101,7 +101,7 @@ if($field_created_by == 'user') {
         data-field-id="{{ $field_id }}"
         data-group-id="{{ $group_id }}"
         data-type="{{ $field_type }}"
-        data-field-name="{{ $field_name.'_'.$group_id }}"
+        data-field-name="{{ $field_name }}"
         data-category="{{ $field_category }}"
         data-number-type="{{ $user_field -> number_type }}"
         data-page="{{ $user_field -> page }}"

@@ -682,6 +682,7 @@ if (document.URL.match(/edit_files/)) {
 
             let field_div_container = field_div.closest('.field-div-container');
             let field_name = field_div.data('field-name');
+            let group_id = field_div.data('group-id');
 
             if(field_div.data('type') == 'name') {
 
@@ -744,8 +745,8 @@ if (document.URL.match(/edit_files/)) {
             } else if(field_div.data('type') == 'number') {
 
                 let number = field_div_container.find('.field-input').eq(0).val();
-                $('[data-field-name="'+field_name+'"]').closest('.field-div-container').find('.field-input').val(number);
-                set_field_text($('[data-field-name="'+field_name+'"]'));
+                $('[data-group-id="'+group_id+'"]').closest('.field-div-container').find('.field-input').val(number);
+                set_field_text($('[data-group-id="'+group_id+'"]'));
 
             }
 
