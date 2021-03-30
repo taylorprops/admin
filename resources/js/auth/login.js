@@ -53,6 +53,7 @@ $(function () {
                 .catch(function (error) {
                     let error_message = error.response.data.errors.email[0];
                     $('#reset_error_div').removeClass('hidden').find('#reset_error_message').text(error_message);
+                    $('#save_forgot_password_button').html('Reset Password <i class="fal fa-arrow-right ml-2"></i>');
                 });
             } else {
                 $('#save_forgot_password_button').html('Reset Password <i class="fal fa-arrow-right ml-2"></i>');

@@ -24,6 +24,10 @@
         margin-top: .5rem !important;
         margin-bottom: .3rem !important;
     }
+    &.form-large {
+        margin-top: .12rem !important;
+        margin-bottom: .9rem !important;
+    }
 
     .invalid-input {
         //color: $danger !important;
@@ -86,12 +90,20 @@
             padding: 7px 20px 2px 5px !important;
             font-size: .7rem !important;
         }
+        &.form-large {
+            padding: 16px 20px 4px 10px !important;
+            font-size: 1.2rem !important;
+        }
     }
 
     .form-select-value-input {
         &.form-small {
             padding: 5px 20px 2px 5px !important;
             font-size: .7rem !important;
+        }
+        &.form-large {
+            padding: 14px 20px 4px 10px !important;
+            font-size: 1.2rem !important;
         }
     }
 
@@ -180,12 +192,20 @@
             font-size: .8rem;
             top: 7px !important;
         }
+        &.form-large {
+            font-size: 1rem;
+            top: 20px !important;
+        }
     }
 
     .form-select-label {
         &.form-small {
             font-size: .8rem;
             top: 10px !important;
+        }
+        &.form-large {
+            font-size: 1rem;
+            top: 20px !important;
         }
     }
 
@@ -206,6 +226,9 @@
 
         &.form-small {
             top: -7px !important;
+        }
+        &.form-large {
+            top: 3px !important;
         }
 
     }

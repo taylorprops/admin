@@ -3,7 +3,7 @@
 @section('content')
 {{ Auth::logout() }}
 
-<div class="vh-100 vw-100 bg-primary">
+<div class="vh-100 vw-100 login-page">
 
     <div class="container-1000 login-container">
 
@@ -15,35 +15,45 @@
 
                     <div>
 
-                        <div class="d-flex justify-content-around mb-4">
-                            <img src="/images/logo/logos.png">
+                        <div class="d-flex justify-content-around mb-4 animate__animated animate__zoomIn">
+                            <img src="/images/logo/logos.png" width="330" height="40">
                         </div>
 
                         <form id="login_form" class="w-100">
 
-                            <div class="card w-100 shadow">
+                        <div class="card w-100 shadow animate__animated animate__zoomIn">
 
-                                <div class="card-header bg-primary text-white">Login</div>
-                                <div class="card-body text-primary">
+                                <div class="card-header bg-primary text-white shadow font-12 mb-n2">Login</div>
+
+                                <div class="card-body text-primary mt-3">
+
                                     <div class="alert alert-danger hidden" id="error_div"><i class="fa fa-exclamation-triangle mr-2"></i> <span id="error_message"></span></div>
                                     <div class="px-5 pt-2">
-                                        <input type="text" class="custom-form-element form-input required" id="email" name="email" value="{{ old('email') }}" data-label="Email Address" required autocomplete="email" autofocus>
-                                        <input type="password" class="custom-form-element form-input required" id="password" name="password" data-label="Password" required autocomplete="current-password">
+                                        <input type="text" class="custom-form-element form-large form-input required" id="email" name="email" value="{{ old('email') }}" data-label="Email Address" required autocomplete="email" autofocus>
+                                        <input type="password" class="custom-form-element form-large form-input required" id="password" name="password" data-label="Password" required autocomplete="current-password">
                                         <input class="custom-form-element form-checkbox" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} data-label="Remember Me">
                                     </div>
+
                                 </div>
+
                                 <div class="card-footer bg-white">
+
                                     <div class="d-flex justify-content-around">
                                         <a href="javascript:void(0)" class="btn btn-primary" id="login_button">Login <i class="fal fa-arrow-right ml-2"></i></a>
                                     </div>
                                     <div class="d-flex justify-content-around mt-3">
                                         <a href="javascript:void(0)" id="forgot_password_button">Forgot Your Password?</a>
                                     </div>
+
                                 </div>
+
                                 <input type="hidden" id="previous_url" name="previous_url" value="{{ url() -> previous() }}">
+
                             </div>
 
                         </form>
+
+                        <div class="h5 mt-5 text-white w-100 text-center animate__animated animate__zoomIn">Taylor Properties Document Management</div>
 
                     </div>
 
@@ -74,7 +84,7 @@
                         <div class="text-gray d-flex justify-content-around">
                             <div>
                                 Enter your email address to reset your password
-                                <input type="text" class="custom-form-element form-input" id="forgot_email" name="email" data-label="Email Address">
+                                <input type="text" class="custom-form-element form-large form-input" id="forgot_email" name="email" data-label="Email Address">
                             </div>
                         </div>
                     </div>

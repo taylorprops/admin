@@ -165,19 +165,20 @@ window.form_elements = function () {
                     }
 
                     let small = element.hasClass('form-small') ? 'form-small' : '';
+                    let large = element.hasClass('form-large') ? 'form-large' : '';
                     let wide = element.hasClass('form-wide') ? 'form-wide' : '';
 
                     element.show();
 
                     if (form_type == 'form-input' || form_type == 'form-textarea') {
 
-                        element.wrap('<div class="form-ele '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+label_view+'">' + label + '</label>');
+                        element.wrap('<div class="form-ele '+small+' '+large+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+large+' '+label_view+'">' + label + '</label>');
 
                     } else if (form_type == 'form-input-file') {
 
                         element.addClass('custom-file-input');
 
-                        element.wrap('<div class="form-ele custom-file '+small+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+label_view+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
+                        element.wrap('<div class="form-ele custom-file '+small+' '+large+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+large+' '+label_view+' custom-file-label"></label><label for="' + id + '" class="form-input-label ' + active_label + '">' + label + '</label>');
 
 
                     } else if (form_type == 'form-checkbox') {
@@ -212,7 +213,7 @@ window.form_elements = function () {
 
                     } else if (form_type == 'form-select') {
 
-                        element.wrap('<div class="form-ele '+small+' select"></div>');
+                        element.wrap('<div class="form-ele '+small+' '+large+' select"></div>');
                         // get wrapper to append to
                         let wrapper = element.parent();
 
@@ -233,7 +234,7 @@ window.form_elements = function () {
                         let select_html = ' \
                         <div class="form-select-wrapper"> \
                             ' + clear_value + ' \
-                            <label class="' + form_type + '-label ' + small + ' '+label_view+'" for="select_value_' + select_input_id + '">' + label + '</label> \
+                            <label class="' + form_type + '-label ' + small + ' '+large+' '+label_view+'" for="select_value_' + select_input_id + '">' + label + '</label> \
                             <input type="text" class="form-select-value-input caret '+ disabled + '" id="select_value_' + select_input_id + '" readonly ' + disabled + '> \
                             <div class="form-select-dropdown shadow '+wide+'"> \
                         ';

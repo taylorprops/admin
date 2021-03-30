@@ -16,6 +16,8 @@
     "bootstrap": "^4.6.0",
     "clean-css": "^5.1.2",
     "cross-env": "^6.0.3",
+    "is-svg": ">=4.2.2",
+    "yargs-parser": ">=5.0.0-security.0",
     "jquery": "^3.6.0",
     "jquery-sortablejs": "^1.0.1",
     "jquery-ui": "^1.12.1",
