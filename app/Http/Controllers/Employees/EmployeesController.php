@@ -28,6 +28,10 @@ class EmployeesController extends Controller {
 
     }
 
+    public function register_employee(Request $request) {
+
+    }
+
     public function get_employees(Request $request) {
 
         $emp_type = $request -> emp_type;
@@ -47,9 +51,11 @@ class EmployeesController extends Controller {
 
     public function save_employee(Request $request) {
 
-        $check_if_email_exists = User::where('email', $request -> email) -> count();
-        if($check_if_email_exists > 0) {
-            return response() -> json(['status' => 'error', 'message' => 'exists']);
+        if($request -> id == '') {
+            $check_if_email_exists = User::where('email', $request -> email) -> count();
+            if($check_if_email_exists > 0) {
+                return response() -> json(['status' => 'error', 'message' => 'exists']);
+            }
         }
 
         $add_employee = DB::transaction(function () use ($request) {
@@ -77,6 +83,7 @@ class EmployeesController extends Controller {
             // update users table
             if($request -> email_orig != '') {
                 $user = User::where('email', $request -> email_orig) -> first();
+
                 $user -> update([
                     'active' => $request -> active,
                     'name' => $request -> first_name.' '.$request -> last_name,

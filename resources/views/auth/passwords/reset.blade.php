@@ -3,7 +3,7 @@
 @section('content')
 {{ Auth::logout() }}
 
-<div class="vh-100 vw-100 bg-primary">
+<div class="vh-100 vw-100 bg-primary login-page">
 
     <div class="container-1100 login-container">
 
@@ -40,13 +40,13 @@
 
                                         <div class="col-12 col-sm-7">
 
-                                            <div class="pt-2">
+                                            <div class="pt-2 reset-inputs">
 
-                                                <input type="text" class="custom-form-element form-large form-input required" id="email" name="email" value="{{ $email ?? old('email') }}" data-label="Email Address" required autocomplete="email" autofocus>
+                                                <input type="text" class="custom-form-element form-large form-input" id="email" name="email" value="{{ $email ?? old('email') }}" data-label="Email Address" readonly autocomplete="email">
 
                                                 <input type="password" class="custom-form-element form-large form-input required" id="password" name="password" data-label="New Password" required autocomplete="new-password">
 
-                                                <input type="password" class="custom-form-element form-input required" id="password_confirmation" name="password_confirmation" data-label="Confirm New Password" required autocomplete="new-password">
+                                                <input type="password" class="custom-form-element form-input form-large required" id="password_confirmation" name="password_confirmation" data-label="Confirm New Password" required autocomplete="new-password">
 
 
                                             </div>

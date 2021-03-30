@@ -76,7 +76,7 @@
                                                     @endforeach
 
                                                 @else
-                                                    @foreach($common_fields -> where('group_id', $common_fields_group -> id) as $common_field)
+                                                    @foreach($common_fields_group -> common_fields -> where('group_id', $common_fields_group -> id) as $common_field)
                                                         <li class="nav-item">
                                                             <a href="javascript: void(0)"
                                                             class="nav-link dropdown-item field-name"

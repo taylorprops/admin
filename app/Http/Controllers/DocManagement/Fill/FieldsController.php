@@ -78,12 +78,11 @@ class FieldsController extends Controller
             -> orderBy('group_order')
             -> get();
 
-        $common_fields = $common_fields_groups -> common_fields;
 
         $file = Upload::whereFileId($file_id) -> first();
         $published = $file -> published;
 
-        return view('/doc_management/create/fields/edit_properties_html', compact('field_id', 'field_category', 'group_id', 'common_name', 'custom_name', 'common_field_type', 'common_field_sub_group_id', 'common_field_id', 'number_type', 'label', 'common_fields_groups', 'common_fields', 'published'));
+        return view('/doc_management/create/fields/edit_properties_html', compact('field_id', 'field_category', 'group_id', 'common_name', 'custom_name', 'common_field_type', 'common_field_sub_group_id', 'common_field_id', 'number_type', 'label', 'common_fields_groups', 'published'));
 
         /* $field_id = $request -> field_id;
         $field_type = $request -> field_type;
