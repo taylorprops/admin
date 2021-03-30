@@ -10,8 +10,8 @@ html {
     overflow-x: hidden;
 
     main {
-        position: absolute;
-        top: 0px;
+        // position: absolute;
+        // top: 0px;
     }
 }
 
@@ -328,6 +328,17 @@ div[class*='container-']:not(.p-0) {
         font-size: 0.8rem;
     }
 
+}
+
+@media (max-width: 500px) {
+    // .container-1000, .container-1100
+    $i: 500;
+    @while $i <= 1500 {
+        .container-#{$i} {
+            padding: 0px;
+        }
+        $i: $i + 50;
+    }
 }
 
 

@@ -1,15 +1,32 @@
 .login-page {
     background: rgb(41,105,158);
     background: linear-gradient(90deg, rgba(41,105,158,1) 0%, rgba(53,150,230,1) 100%);
+    min-height: 100VH;
+    width: 100VW;
+    overflow-x: hidden;
+    padding-bottom: 100px;
+
+    .login-logo {
+        max-width: 330px;
+        max-height: 40px;
+    }
 
     .login-container {
 
-        .card {
-            border: none;
+        .login-div {
+            min-height: 90vh;
 
-            .card-header {
-                width: 104%;
-                margin-left: -2%;
+            .card {
+                width: 94%;
+                margin-left: auto;
+                margin-right: auto;
+                border: none;
+
+                .card-header {
+                    width: 104%;
+                    margin-left: -2%;
+                }
+
             }
 
         }
@@ -17,3 +34,29 @@
     }
 
 }
+
+@media (max-width: 575px) {
+
+    .login-page {
+
+        .login-logo {
+            max-height: 30px;
+        }
+
+        .login-container {
+
+            .card {
+
+
+                .card-header {
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
+

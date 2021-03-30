@@ -8,7 +8,7 @@
 
         <title>@yield('title', 'Document Management')</title>
 
-        @include('/layouts/includes/header_scripts');
+        @include('/layouts/includes/header_scripts')
 
         @yield('js_scripts')
 

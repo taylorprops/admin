@@ -3,7 +3,15 @@
 @section('content')
 {{ Auth::logout() }}
 
-<div class="vh-100 vw-100 bg-primary login-page">
+@php
+$action = request() -> get('action');
+$card_title = [
+    'register' => 'Create Account',
+    'reset' => 'Reset Password'
+][$action];
+@endphp
+
+<div class="bg-primary login-page">
 
     <div class="container-1100 login-container">
 
@@ -11,21 +19,21 @@
 
             <div class="col-12 col-sm-7 mx-auto">
 
-                <div class="d-flex justify-content-around align-items-center vh-90 w-100">
+                <div class="d-flex justify-content-around align-items-center login-div w-100">
 
                     <div class="w-100">
 
-                        <div class="d-flex justify-content-around mb-4">
-                            <img src="/images/logo/logos.png">
+                        <div class="d-flex justify-content-around my-4 animate__animated animate__zoomIn">
+                            <img src="/images/logo/logos.png" class="login-logo">
                         </div>
 
                         <form id="reset_password_form" class="w-100">
 
                             <input type="hidden" name="token" value="{{ $token }}">
 
-                            <div class="card w-100 shadow">
+                            <div class="card w-100 shadow animate__animated animate__zoomIn">
 
-                                <div class="card-header bg-primary text-white">Reset Password</div>
+                                <div class="card-header bg-primary text-white shadow font-12 mb-n2">{{ $card_title }}</div>
 
                                 <div class="card-body text-primary">
 
@@ -38,22 +46,22 @@
 
                                     <div class="row">
 
-                                        <div class="col-12 col-sm-7">
+                                        <div class="col-12 col-md-7">
 
                                             <div class="pt-2 reset-inputs">
 
                                                 <input type="text" class="custom-form-element form-large form-input" id="email" name="email" value="{{ $email ?? old('email') }}" data-label="Email Address" readonly autocomplete="email">
 
-                                                <input type="password" class="custom-form-element form-large form-input required" id="password" name="password" data-label="New Password" required autocomplete="new-password">
+                                                <input type="password" class="custom-form-element form-large form-input required" id="password" name="password" data-label="Password" required autocomplete="new-password">
 
-                                                <input type="password" class="custom-form-element form-input form-large required" id="password_confirmation" name="password_confirmation" data-label="Confirm New Password" required autocomplete="new-password">
+                                                <input type="password" class="custom-form-element form-input form-large required" id="password_confirmation" name="password_confirmation" data-label="Confirm Password" required autocomplete="new-password">
 
 
                                             </div>
 
                                         </div>
 
-                                        <div class="col-12 col-sm-5">
+                                        <div class="col-12 col-md-5">
                                             <div class="d-flex justify-content-start align-items-center font-9 h-100">
                                                 <div>
                                                     <strong>Password Requirements:</strong><br>
@@ -72,17 +80,16 @@
 
                                 <div class="card-footer bg-white">
                                     <div class="d-flex justify-content-around">
-                                        <a href="javascript:void(0)" class="btn btn-primary" id="reset_password_button">Save Password <i class="fal fa-check ml-2"></i></a>
+                                        <a href="javascript:void(0)" class="btn btn-primary" id="reset_password_button">Create Account <i class="fal fa-check ml-2"></i></a>
                                     </div>
 
-                                    <div class="d-flex justify-content-around mt-3">
-                                        <a href="/login"><i class="fal fa-arrow-circle-left mr-2"></i> Return to Login Page</a>
-                                    </div>
                                 </div>
 
                             </div>
 
                         </form>
+
+                        <div class="h5 mt-5 text-white w-100 text-center animate__animated animate__zoomIn">Taylor Properties Document Management</div>
 
                     </div>
 

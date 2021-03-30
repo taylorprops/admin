@@ -3,7 +3,7 @@
 @section('content')
 {{ Auth::logout() }}
 
-<div class="vh-100 vw-100 login-page">
+<div class="bg-primary login-page">
 
     <div class="container-1000 login-container">
 
@@ -11,12 +11,12 @@
 
             <div class="col-12 col-sm-8 col-lg-6 mx-auto">
 
-                <div class="d-flex justify-content-around align-items-center vh-90 w-100">
+                <div class="d-flex justify-content-around align-items-center login-div w-100">
 
-                    <div>
+                    <div class="w-100">
 
-                        <div class="d-flex justify-content-around mb-4 animate__animated animate__zoomIn">
-                            <img src="/images/logo/logos.png" width="330" height="40">
+                        <div class="d-flex justify-content-around my-4 animate__animated animate__zoomIn">
+                            <img src="/images/logo/logos.png" class="login-logo">
                         </div>
 
                         <form id="login_form" class="w-100">

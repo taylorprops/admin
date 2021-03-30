@@ -53,7 +53,7 @@ Route::view('login', '/auth/login');
 Auth::routes();
 Route::get('/logout', [LoginController::class, 'logout']);
 
-Route::get('/register_employee/{id}', [EmployeesController::class, 'register_employee']);
+Route::get('/register_employee/{email}', [EmployeesController::class, 'register_employee']);
 
 Route::get('/dashboard_agent_referral', [DashboardAgentReferralController::class, 'dashboard_agent_referral']);
 

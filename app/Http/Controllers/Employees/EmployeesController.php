@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Employees;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\Employees\Title;
 use App\Models\Employees\InHouse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Users\PasswordResets;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Employees\InHouseDocs;
 use Intervention\Image\Facades\Image;
 use App\Models\Employees\LoanOfficers;
 use App\Models\Resources\LocationData;
+use App\Notifications\RegisterEmployee;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Employees\EmployeeImages;
+use Illuminate\Support\Facades\Notification;
 use App\Models\Employees\TransactionCoordinators;
 use App\Models\Employees\TransactionCoordinatorsDocs;
 
@@ -29,6 +33,32 @@ class EmployeesController extends Controller {
     }
 
     public function register_employee(Request $request) {
+
+        $email = $request -> email;
+        $user = User::where('email', $email) -> first();
+        $url = $this -> create_password_reset_url($user, 'register');
+
+
+        Notification::send($user, new RegisterEmployee($url));
+
+    }
+
+    public function create_password_reset_url($user, $action) {
+
+        $token = str_random(60);
+        PasswordResets::where('email', $user -> email) -> delete();
+        PasswordResets::insert([
+            'email' => $user -> email,
+            'token' => Hash::make($token),
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+        $url = url(route('password.reset', [
+            'token' => $token,
+            'email' => $user -> email,
+            'action' => $action
+        ], false));
+
+        return $url;
 
     }
 

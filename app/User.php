@@ -2,10 +2,11 @@
 
 namespace App;
 
+use App\Notifications\PasswordReset;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -39,8 +40,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /* public function ScopeUserDetails($query, $user_id) {
-        $user_details = $this -> select('name', 'email', 'user_id', 'group') -> where('user_id', $user_id);
-        return $user_details;
-    } */
+    public function sendPasswordResetNotification($token)
+    {
+        $this -> notify(new PasswordReset($token));
+    }
 }

@@ -16126,6 +16126,12 @@ window.form_elements = function () {
 
         var small = element.hasClass('form-small') ? 'form-small' : '';
         var large = element.hasClass('form-large') ? 'form-large' : '';
+
+        if ($(document).width() < 576) {
+          large = '';
+          $('.form-large').removeClass('form-large');
+        }
+
         var wide = element.hasClass('form-wide') ? 'form-wide' : '';
         element.show();
 
