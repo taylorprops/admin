@@ -1,8 +1,26 @@
 <div class="page-wrapper theme chiller-theme toggled">
 
-    <a id="show-sidebar" class="btn btn-primary-dark" href="javascript:void(0)">
-        <i class="fal fa-bars fa-lg"></i>
-    </a>
+    <div class="d-flex justify-content-between align-items-center show-sidebar w-100">
+
+        <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
+            <i class="fal fa-bars fa-lg"></i>
+        </a>
+        <div class="top-search mr-5">
+            <div class="d-flex justify-content-start align-items-center">
+                <div class="input-group">
+                    <input type="text" class="form-control search-menu main-search-input top" placeholder="Search...">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+                <a href="#" class="hide-search hidden"><i class="fal fa-times text-danger ml-3 fa-2x"></i></a>
+            </div>
+        </div>
+
+    </div>
+
     <nav id="sidebar" class="sidebar-wrapper ">
         <div class="sidebar-content">
             <div class="sidebar-brand">
@@ -16,7 +34,7 @@
             <div class="sidebar-search">
                 <div class="d-flex justify-content-start align-items-center">
                     <div class="input-group">
-                        <input type="text" class="form-control search-menu main-search-input" placeholder="Search...">
+                        <input type="text" class="form-control search-menu main-search-input sidebar" placeholder="Search...">
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="fa fa-search" aria-hidden="true"></i>

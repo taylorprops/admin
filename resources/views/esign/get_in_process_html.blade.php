@@ -36,10 +36,9 @@
                         @php
                         foreach($signers as $signer) {
 
-                            $callback_signer = $callbacks -> where('signer_id', $signer -> id) -> last();
-                            $event_type = $callback_signer ? $callback_signer -> event_type : null;
+                            $signer_status = $signer -> signer_status;
 
-                            $signer_status = [
+                            $signer_status_html = [
                                 'document_sent' => '
                                 <div class="text-primary no-wrap">'.$signer -> signer_name.'</div>
                                 <div class="no-wrap">
@@ -65,9 +64,9 @@
                                 'signer_bounced' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Bounced <i class="fal fa-ban ml-2"></i></div>',
                                 'document_expired' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Expired <i class="fad fa-ban ml-2"></i></div>',
                                 'document_cancelled' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Cancelled <i class="fal fa-ban ml-2"></i></div>'
-                            ][$event_type] ?? '<div>'.$signer -> signer_name.'</div>';
+                            ][$signer_status] ?? '<div>'.$signer -> signer_name.'</div>';
 
-                            echo '<div class="d-flex justify-content-between">'.$signer_status.'</div>';
+                            echo '<div class="d-flex justify-content-between">'.$signer_status_html.'</div>';
 
                         }
                         @endphp

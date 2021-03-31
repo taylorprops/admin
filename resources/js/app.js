@@ -35,8 +35,7 @@ require('./nav/nav.js');
 require('./nav/search.js');
 
 // dashboard
-require('./dashboard/dashboard_admin.js');
-require('./dashboard/dashboard_agent.js');
+require('./dashboard/dashboard.js');
 
 // Document Management
 

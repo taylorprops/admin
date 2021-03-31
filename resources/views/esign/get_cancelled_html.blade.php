@@ -26,11 +26,11 @@
                 $signers = $envelope -> signers;
                 $recipients = [];
                 foreach($signers as $signer) {
-                    if($signer -> signer_status == 'Declined') {
+                    if($signer -> signer_status == 'document_declined') {
                         $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Declined</span></span>';
-                    } else if($signer -> signer_status == 'Bounced') {
+                    } else if($signer -> signer_status == 'document_bounced') {
                         $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Bounced</span></span>';
-                    } else if($signer -> signer_status == 'Expired') {
+                    } else if($signer -> signer_status == 'document_expired') {
                         $recipients[] = '<span class="text-danger">'.$signer -> signer_name.' - <span class="small">Expired</span></span>';
                     } else {
                         $recipients[] = $signer -> signer_name;

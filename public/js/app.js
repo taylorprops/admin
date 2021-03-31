@@ -9000,11 +9000,11 @@ if (document.URL.match(/edit_files/)) {
       }); // set inline styles for PDF
       // system fields
 
-      var font_size = '13px';
+      var font_size = '12px';
       var top = '3px';
 
       if ($('#page_size').val() == 'a4') {
-        font_size = '12px';
+        font_size = '11px';
         top = '3px';
       }
 
@@ -10186,9 +10186,7 @@ __webpack_require__(/*! ./nav/nav.js */ "./resources/js/nav/nav.js");
 __webpack_require__(/*! ./nav/search.js */ "./resources/js/nav/search.js"); // dashboard
 
 
-__webpack_require__(/*! ./dashboard/dashboard_admin.js */ "./resources/js/dashboard/dashboard_admin.js");
-
-__webpack_require__(/*! ./dashboard/dashboard_agent.js */ "./resources/js/dashboard/dashboard_agent.js"); // Document Management
+__webpack_require__(/*! ./dashboard/dashboard.js */ "./resources/js/dashboard/dashboard.js"); // Document Management
 
 
 __webpack_require__(/*! ./doc_management/resources/resources.js */ "./resources/js/doc_management/resources/resources.js");
@@ -10285,6 +10283,11 @@ __webpack_require__(/*! ./employees/employees.js */ "./resources/js/employees/em
 /***/ (() => {
 
 $(function () {
+  $(document).on('keyup', function (e) {
+    if (e.key == 'Enter') {
+      $('#login_button').trigger('click');
+    }
+  });
   $('#login_button').off('click').on('click', function (e) {
     e.preventDefault();
     var form = $('#login_form');
@@ -10293,7 +10296,7 @@ $(function () {
     if (validate == 'yes') {
       var formData = new FormData(form[0]);
       axios.post('/login', formData, axios_options).then(function (response) {
-        window.location = '/dashboard_admin';
+        window.location = '/dashboard';
       })["catch"](function (error) {
         var error_message = error.response.data.errors.email[0];
 
@@ -10337,7 +10340,7 @@ $(function () {
     if (validate == 'yes') {
       var formData = new FormData(form[0]);
       axios.post('/password/reset', formData, axios_options).then(function (response) {
-        window.location = '/dashboard_admin';
+        window.location = '/dashboard';
       })["catch"](function (error) {
         var error_messages_password = error.response.data.errors.password;
 
@@ -10411,13 +10414,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/dashboard/dashboard_admin.js":
-/*!***************************************************!*\
-  !*** ./resources/js/dashboard/dashboard_admin.js ***!
-  \***************************************************/
+/***/ "./resources/js/dashboard/dashboard.js":
+/*!*********************************************!*\
+  !*** ./resources/js/dashboard/dashboard.js ***!
+  \*********************************************/
 /***/ (() => {
 
-if (document.URL.match(/dashboard_admin/)) {
+if (document.URL.match(/dashboard/)) {
   var show_alert_details = function show_alert_details(type, title, details) {
     $('.alert-details-item').hide();
     $('.' + type).show();
@@ -10431,30 +10434,6 @@ if (document.URL.match(/dashboard_admin/)) {
       show_alert_details($(this).data('type'), $(this).data('title'), $(this).data('details'));
     });
     data_table('0', $('#upcoming_closings_table'), [1, 'asc'], [3], [], false, false, false, false, false, false);
-  });
-}
-
-/***/ }),
-
-/***/ "./resources/js/dashboard/dashboard_agent.js":
-/*!***************************************************!*\
-  !*** ./resources/js/dashboard/dashboard_agent.js ***!
-  \***************************************************/
-/***/ (() => {
-
-if (document.URL.match(/dashboard_agent/)) {
-  var show_alert_details = function show_alert_details(type, title, details) {
-    $('.alert-details-item').hide();
-    $('.' + type).show();
-    $('#alert_details_modal').modal('show');
-    $('#alert_details_modal_title').html(title);
-    $('#alert_details_modal_details').html(details);
-  };
-
-  $(function () {
-    $(document).on('click', '.view-alert-details-button', function () {
-      show_alert_details($(this).data('type'), $(this).data('title'), $(this).data('details'));
-    });
   });
 }
 
@@ -17109,8 +17088,7 @@ $(function () {
   if (!document.URL.match('/(password|login)/') && $('#login_page').length == 0) {
     get_global_notifications();
     setInterval(function () {
-      //if(!$('#notifications_collapse').hasClass('show')) {
-      get_global_notifications(); //}
+      get_global_notifications();
     }, 5000);
   }
 });
@@ -17565,7 +17543,13 @@ $(document).on('keydown', function (event) {
 
 $(function () {
   show_sidebar();
-  $(window).on('resize', show_sidebar);
+  $(window).on('resize', function () {
+    var window_width = $(window).width();
+
+    if (window_width > 1500) {
+      show_sidebar();
+    }
+  });
   $('.sidebar-dropdown > a').on('click', function () {
     $('.sidebar-submenu').slideUp(200);
 
@@ -17581,7 +17565,7 @@ $(function () {
   $('#close-sidebar').on('click', function () {
     $('.page-wrapper').removeClass('toggled');
   });
-  $('#show-sidebar').on('click', function () {
+  $('#show_sidebar').on('click', function () {
     $('.page-wrapper').addClass('toggled');
   });
 });
@@ -17589,8 +17573,10 @@ $(function () {
 function show_sidebar() {
   if ($(document).width() > 1600) {
     $('.page-wrapper').addClass('toggled');
+    $('.top-search').hide();
   } else {
     $('.page-wrapper').removeClass('toggled');
+    $('.top-search').show();
   }
 }
 

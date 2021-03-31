@@ -825,10 +825,10 @@ if (document.URL.match(/edit_files/)) {
 
             // set inline styles for PDF
             // system fields
-            let font_size = '13px';
+            let font_size = '12px';
             let top = '3px';
             if($('#page_size').val() == 'a4') {
-                font_size = '12px';
+                font_size = '11px';
                 top = '3px';
             }
             let font_family = "'Roboto Condensed', sans-serif";

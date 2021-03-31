@@ -219,12 +219,12 @@
                                                                         <span class="d-none checked-div mr-3"><i class="fal fa-check-circle text-success"></i></span>
                                                                         <span class="text-primary form-name-display">{{ $form -> file_name_display }}</span>
                                                                     </div>
-                                                                    <div>
+                                                                    {{-- <div>
                                                                         @php $categories = explode(',', $form -> form_categories); @endphp
                                                                         @foreach($categories as $category)
                                                                             <span class="badge badge-pill text-white ml-1 form-pill" style="background-color: {{ $resource_items -> GetCategoryColor($category) }}">{{ $resource_items -> getResourceName($category) }}</span>
                                                                         @endforeach
-                                                                    </div>
+                                                                    </div> --}}
                                                                 </div>
                                                             </li>
 

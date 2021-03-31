@@ -10,13 +10,11 @@ use App\Http\Controllers\CRM\ContactsController;
 use App\Http\Controllers\Search\SearchController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Files\FilepondUploadController;
-use App\Http\Controllers\Dashboard\DashboardAdminController;
-use App\Http\Controllers\Dashboard\DashboardAgentController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
 use App\Http\Controllers\DocManagement\Create\UploadController;
 use App\Http\Controllers\Admin\Permissions\PermissionsController;
 use App\Http\Controllers\DocManagement\Earnest\EarnestController;
-use App\Http\Controllers\Dashboard\DashboardAgentReferralController;
 use App\Http\Controllers\DocManagement\Resources\ResourcesController;
 use App\Http\Controllers\Notifications\GlobalNotificationsController;
 use App\Http\Controllers\Admin\Resources\ResourceItemsAdminController;
@@ -55,7 +53,7 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/register_employee/{email}', [EmployeesController::class, 'register_employee']);
 
-Route::get('/dashboard_agent_referral', [DashboardAgentReferralController::class, 'dashboard_agent_referral']);
+Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 
 /********** Search Routes ********/
 Route::get('/search', [SearchController::class, 'search']);
@@ -83,8 +81,6 @@ Route::post('/send_email', [EmailController::class, 'send_email']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {
-
-    Route::get('/dashboard_admin', [DashboardAdminController::class, 'dashboard_admin']);
 
     /* List of uploads */
     Route::get('/doc_management/create/upload/files', [UploadController::class, 'get_uploaded_files']) -> name('create.upload.files');
@@ -309,9 +305,6 @@ Route::middleware(['admin']) -> group(function () {
 
 // ***************************** AGENTS ********************************
 Route::middleware(['agent']) -> group(function () {
-
-    Route::get('/dashboard_agent', [DashboardAgentController::class, 'dashboard_agent']);
-    Route::get('/dashboard_transaction_coordinator', [DashboardAgentController::class, 'dashboard_agent']);
 
     /********** Contacts ********/
     Route::get('/contacts', [ContactsController::class, 'contacts']);
@@ -641,6 +634,9 @@ Route::middleware(['agent']) -> group(function () {
 
     // resend envelope
     Route::post('/esign/resend_envelope', [EsignController::class, 'resend_envelope']);
+
+    // get envelope
+    Route::get('/esign/get_envelope', [EsignController::class, 'get_envelope']);
 
     // get esign dashboard tabs
     Route::get('/esign/get_drafts', [EsignController::class, 'get_drafts']);

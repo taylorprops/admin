@@ -1,6 +1,12 @@
 
 $(function () {
 
+    $(document).on('keyup', function (e) {
+        if(e.key == 'Enter') {
+            $('#login_button').trigger('click');
+        }
+    });
+
     $('#login_button').off('click').on('click', function(e) {
 
         e.preventDefault();
@@ -13,7 +19,7 @@ $(function () {
             let formData = new FormData(form[0]);
             axios.post('/login', formData, axios_options)
             .then(function (response) {
-                window.location = '/dashboard_admin';
+                window.location = '/dashboard';
             })
             .catch(function(error) {
                 let error_message = error.response.data.errors.email[0];
@@ -75,7 +81,7 @@ $(function () {
             let formData = new FormData(form[0]);
             axios.post('/password/reset', formData, axios_options)
             .then(function (response) {
-                window.location = '/dashboard_admin';
+                window.location = '/dashboard';
             })
             .catch(function (error) {
 

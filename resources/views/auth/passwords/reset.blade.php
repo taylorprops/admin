@@ -5,7 +5,7 @@
 
 @php
 $action = request() -> get('action');
-$card_title = [
+$action_text = [
     'register' => 'Create Account',
     'reset' => 'Reset Password'
 ][$action];
@@ -33,7 +33,7 @@ $card_title = [
 
                             <div class="card w-100 shadow animate__animated animate__zoomIn">
 
-                                <div class="card-header bg-primary text-white shadow font-12 mb-n2">{{ $card_title }}</div>
+                                <div class="card-header bg-primary text-white shadow font-12 mb-n2">{{ $action_text }}</div>
 
                                 <div class="card-body text-primary">
 
@@ -80,8 +80,10 @@ $card_title = [
 
                                 <div class="card-footer bg-white">
                                     <div class="d-flex justify-content-around">
-                                        <a href="javascript:void(0)" class="btn btn-primary" id="reset_password_button">Create Account <i class="fal fa-check ml-2"></i></a>
+                                        <a href="javascript:void(0)" class="btn btn-primary" id="reset_password_button">{{ $action_text }} <i class="fal fa-check ml-2"></i></a>
                                     </div>
+
+                                    <div class="mt-3 text-white w-100 text-center"><a href="/login">Return to Login</div>
 
                                 </div>
 
@@ -90,6 +92,8 @@ $card_title = [
                         </form>
 
                         <div class="h5 mt-5 text-white w-100 text-center animate__animated animate__zoomIn">Taylor Properties Document Management</div>
+
+
 
                     </div>
 
@@ -104,7 +108,7 @@ $card_title = [
 </div>
 
 
-<div class="modal fade draggable" id="forgot_password_modal" tabindex="-1" role="dialog" aria-labelledby="forgot_password_modal_title" aria-hidden="true">
+{{-- <div class="modal fade draggable" id="forgot_password_modal" tabindex="-1" role="dialog" aria-labelledby="forgot_password_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">
@@ -132,5 +136,5 @@ $card_title = [
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection

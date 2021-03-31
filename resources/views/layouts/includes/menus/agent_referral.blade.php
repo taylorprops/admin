@@ -1,5 +1,5 @@
 <li class="nav-item mx-2">
-    <a href="/dashboard_agent_referral" class="nav-link"> Dashboard</a>
+    <a href="/dashboard" class="nav-link"> Dashboard</a>
 </li>
 
 <li class="nav-item dropdown mx-2">

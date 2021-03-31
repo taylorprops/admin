@@ -290,7 +290,7 @@ if(stristr(auth() -> user() -> group, 'agent')) {
                 <a class="btn btn-primary btn-lg" id="save_add_agent_id_button">Continue <i class="fal fa-arrow-circle-right ml-3"></i></a>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a href="/dashboard_{{ auth() -> user() -> group }}" class="btn btn-sm btn-danger">Return To Dashboard</a>
+                <a href="/dashboard" class="btn btn-sm btn-danger">Return To Dashboard</a>
             </div>
         </div>
     </div>

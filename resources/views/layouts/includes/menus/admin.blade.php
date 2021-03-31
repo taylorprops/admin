@@ -1,6 +1,6 @@
 <ul>
     <li class="mt-2">
-        <a href="/dashboard_admin">
+        <a href="/dashboard">
             <i class="fa fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>

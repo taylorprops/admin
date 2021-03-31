@@ -328,9 +328,7 @@ $(function() {
     if(!document.URL.match('/(password|login)/') && $('#login_page').length == 0) {
         get_global_notifications();
         setInterval(function() {
-            //if(!$('#notifications_collapse').hasClass('show')) {
-                get_global_notifications();
-            //}
+            get_global_notifications();
         }, 5000);
     }
 

@@ -22,12 +22,7 @@ class Admin
             if ($group == 'admin') {
                 return $next($request);
             }
-            if ($group == 'agent' || $group == 'transaction_coordinator') {
-                $redirect_url = '/dashboard_agent';
-            } else {
-                // TODO: this might be an issue
-                $redirect_url = '/dashboard_'.auth() -> user() -> group;
-            }
+            $redirect_url = '/dashboard';
 
             return redirect($redirect_url) -> with('error', 'You do not have access');
         }

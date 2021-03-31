@@ -1345,7 +1345,55 @@ class EsignController extends Controller
         return response() -> json(['status' => 'sent']); */
     }
 
+
+    ////////////////////// Get Docs and Signers //////////////////////////////////
+
     ////////////////////// Callbacks //////////////////////////////////
+
+    public function get_envelope(Request $request) {
+
+        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
+
+        // Get all documents
+        // $documents = $client -> getAllDocuments();
+        // echo sizeof($documents) . ' documents found';
+
+        // Get a single document
+        $document = $client -> getDocumentByHash('576b55b7f84a477a8160a551fe348818');
+
+        // Update envelope
+        if($document -> getIsCompleted()) {
+            $status = 'completed';
+        }
+
+
+        // update callbacks
+        $status = [
+            'document_created' => 'Sent',
+            'document_viewed' => 'Viewed',
+            'document_sent' => 'Sent',
+            'document_signed' => 'Signed',
+            'document_declined' => 'Declined',
+            'document_forwarded' => 'Forwarded',
+            'signer_removed' => 'Signer Removed',
+            'signer_bounced' => 'Signer Bounced',
+            'document_completed' => 'Completed',
+            'document_expired' => 'Expired',
+            'document_cancelled' => 'Cancelled',
+        ][$event_type] ?? null;
+
+
+        /* // download said document
+        $client -> downloadFinalDocumentToPath($document, getcwd() . '/final.pdf', true);
+        $client -> downloadRawDocumentToPath($document, getcwd() .'/raw.pdf');
+
+        // send a reminder for a signer
+        $signers = $document -> getSigners();
+        foreach ($signers as $signer) {
+            $client -> sendReminderForDocument($document, $signer);
+        } */
+
+    }
 
     public function esign_callback(Request $request) {
 
@@ -1392,17 +1440,15 @@ class EsignController extends Controller
                 $signer_role = $request -> signer['role'];
                 $signer_order = $request -> signer['order'];
 
-                if($status == 'Declined') {
-                    $signer = EsignSigners::find($signer_id) -> update([
-                        'signer_status' => 'Declined'
-                    ]);
-                }
-
                 $esign_callback -> signer_id = $signer_id;
                 $esign_callback -> signer_name = $signer_name;
                 $esign_callback -> signer_email = $signer_email;
                 $esign_callback -> signer_role = $signer_role;
                 $esign_callback -> signer_order = $signer_order;
+
+                $signer = EsignSigners::find($signer_id) -> update([
+                    'signer_status' => $event_type
+                ]);
 
             }
 

@@ -70,11 +70,7 @@ class LoginController extends Controller
         if ($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === false && $path != '/' && ! preg_match('/dashboard/', $path)) {
             $this -> redirectTo = $this -> previous_url;
         } else {
-            if(auth() -> user() -> group == 'transaction_coordinator') {
-                $this -> redirectTo = 'dashboard_agent';
-            } else {
-                $this -> redirectTo = 'dashboard_'.auth() -> user() -> group;
-            }
+            $this -> redirectTo = '/dashboard';
         }
 
         return $this -> redirectTo;

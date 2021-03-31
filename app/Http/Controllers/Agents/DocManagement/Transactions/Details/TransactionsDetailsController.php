@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\InHouseNotificationEmail;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Jobs\OldDB\Earnest\EscrowExportJob;
@@ -82,7 +81,6 @@ use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsNo
 class TransactionsDetailsController extends Controller
 {
 
-    use InHouseNotificationEmail;
 
     // Transaction Details
     public function transaction_details(Request $request) {
@@ -98,7 +96,7 @@ class TransactionsDetailsController extends Controller
         if ($transaction_type == 'listing') {
             $property = Listings::find($id);
             if (! $property) {
-                return redirect('dashboard_'.auth() -> user() -> group);
+                return redirect('dashboard');
             }
             $field = 'Listing_ID';
             $Listing_ID = $id;
@@ -117,7 +115,7 @@ class TransactionsDetailsController extends Controller
         } elseif ($transaction_type == 'contract') {
             $property = Contracts::find($id);
             if (! $property) {
-                return redirect('dashboard_'.auth() -> user() -> group);
+                return redirect('dashboard');
             }
             $field = 'Contract_ID';
             $Contract_ID = $id;
@@ -136,7 +134,7 @@ class TransactionsDetailsController extends Controller
         } elseif ($transaction_type == 'referral') {
             $property = Referrals::find($id);
             if (! $property) {
-                return redirect('dashboard_'.auth() -> user() -> group);
+                return redirect('dashboard');
             }
             $field = 'Referral_ID';
             $Referral_ID = $id;
@@ -187,9 +185,8 @@ class TransactionsDetailsController extends Controller
 
         $available_files = new Upload();
 
-        $resource_items = new ResourceItems();
-        $form_groups = $resource_items -> where('resource_type', 'form_groups') -> where('resource_association', 'yes') -> orderBy('resource_order') -> get();
-        $form_categories = $resource_items -> where('resource_type', 'form_categories') -> orderBy('resource_order') -> get();
+        $form_groups = ResourceItems::where('resource_type', 'form_groups') -> where('resource_association', 'yes') -> orderBy('resource_order') -> get();
+        $form_categories = ResourceItems::where('resource_type', 'form_categories') -> orderBy('resource_order') -> get();
 
         $files = new Upload();
 
@@ -209,8 +206,8 @@ class TransactionsDetailsController extends Controller
 
         $rejected_reasons = ResourceItemsAdmin::where('resource_type', 'rejected_reason') -> orderBy('resource_order') -> get();
 
-        $property_types = $resource_items -> where('resource_type', 'checklist_property_types') -> orderBy('resource_order') -> get();
-        $property_sub_types = $resource_items -> where('resource_type', 'checklist_property_sub_types') -> orderBy('resource_order') -> get();
+        $property_types = ResourceItems::where('resource_type', 'checklist_property_types') -> orderBy('resource_order') -> get();
+        $property_sub_types = ResourceItems::where('resource_type', 'checklist_property_sub_types') -> orderBy('resource_order') -> get();
 
         $states = LocationData::AllStates();
 
@@ -228,10 +225,10 @@ class TransactionsDetailsController extends Controller
         ];
 
         $active_status_id = ResourceItems::GetResourceID('Active', 'contract_status');
-        $contracts = Contracts::select($contracts_select) -> where('Agent_ID', $Agent_ID) -> where('Status', $active_status_id) -> with('earnest') -> orderBy('CloseDate', 'desc') -> get();
+        $contracts = Contracts::select($contracts_select) -> where('Agent_ID', $Agent_ID) -> where('Status', $active_status_id) -> with(['status', 'earnest']) -> orderBy('CloseDate', 'desc') -> get();
 
 
-        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'resource_items', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
+        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
     }
 
     // Transaction Details Header
