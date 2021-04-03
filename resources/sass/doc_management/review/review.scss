@@ -16,13 +16,12 @@
         .properties-container,
         .checklist-items-container {
             position: absolute;
-            //top: -60px;
+            top: 40px;
             left: 0;
-            height: 100VH;
+            height: calc(100VH - 40px);
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            //padding-top: 60px;
             z-index: 1;
         }
 
@@ -52,7 +51,7 @@
 
             .sticky {
                 position: sticky;
-                top: -2px;
+                top: 0px;
                 z-index: 100;
             }
 

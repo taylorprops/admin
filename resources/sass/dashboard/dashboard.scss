@@ -10,6 +10,11 @@
         max-width: 70px;
     }
 
+    #upcoming_closings_mod, #commissions_mod {
+        max-height: 300px;
+        overflow: auto;
+    }
+
 }
 
 // modals
@@ -18,7 +23,4 @@
     max-height: 60VH;
     overflow: auto;
 }
-.upcoming-closings-container {
-    max-height: 300px;
-    overflow: auto;
-}
+

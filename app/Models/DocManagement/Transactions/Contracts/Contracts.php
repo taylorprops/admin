@@ -47,6 +47,14 @@ class Contracts extends Model
         return $this -> hasOne(\App\Models\Employees\TransactionCoordinators::class, 'id', 'TransactionCoordinator_ID');
     }
 
+    public function commission() {
+        return $this -> hasOne(\App\Models\Commission\Commission::class, 'Contract_ID');
+    }
+
+    public function commission_breakdown() {
+        return $this -> hasOne(\App\Models\Commission\CommissionBreakdowns::class, 'Contract_ID');
+    }
+
     public function earnest() {
         return $this -> hasOne(\App\Models\DocManagement\Earnest\Earnest::class, 'Contract_ID', 'Contract_ID');
     }

@@ -22,6 +22,10 @@ class TransactionDocuments extends Model
         return compact('file_name', 'file_location_converted');
     }
 
+    public function upload() {
+        return $this -> hasOne(\App\Models\DocManagement\Create\Upload\Upload::class, 'file_id', 'orig_file_id');
+    }
+
     public function images_converted() {
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Documents\TransactionDocumentsImages::class, 'document_id', 'id') -> orderBy('page_number');
     }

@@ -1359,7 +1359,7 @@ class TransactionsDetailsController extends Controller
         // copy original file
         File::copyDirectory(Storage::disk('public') -> path($orig_uploads_path), Storage::disk('public') -> path($new_uploads_path));
 
-        exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+        exec('find '.Storage::disk('public') -> path($new_uploads_path).' -type f -exec chmod 664 {} \;');
 
         // add file_location to upload
 
@@ -2012,8 +2012,9 @@ class TransactionsDetailsController extends Controller
             $update_docs = TransactionDocuments::where('id', $document_id) -> update(['assigned' => 'yes', 'checklist_item_id' => $checklist_item_id]);
             $update_checklist_item = TransactionChecklistItems::where('id', $checklist_item_id) -> update(['checklist_item_status' => 'not_reviewed']);
 
-            // if release is submitted
+            // if release or closing docs are submitted
             if ($transaction_type == 'contract') {
+
                 if (Upload::IsRelease($checklist_form_id)) {
                     $contract = Contracts::find($Contract_ID);
                     $contract -> Status = ResourceItems::GetResourceID('Cancel Pending', 'contract_status');
@@ -2021,10 +2022,17 @@ class TransactionsDetailsController extends Controller
 
                     $release_submitted = true;
                 }
+
+                if(Upload::IsClosingDoc($checklist_form_id)) {
+                    $add_checklist_item_doc -> update(['is_closing_docs' => 'yes']);
+                }
+
             }
         }
 
         if ($release_submitted == true) {
+
+            $add_checklist_item_doc -> update(['is_release' => 'yes']);
 
             $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
             $agent = $property -> agent;
@@ -2921,16 +2929,24 @@ class TransactionsDetailsController extends Controller
         $checklist_form_id = $checklist_item -> checklist_form_id;
 
         // if release is submitted make sure contract was submitted first. Otherwise reject it
+        // also add is_release to doc
+        $is_release = 'no';
+        $is_closing_docs = 'no';
         if ($transaction_type == 'contract') {
             $docs_submitted = Upload::DocsSubmitted('', $Contract_ID);
             // if this is a release
             if (Upload::IsRelease($checklist_form_id)) {
+                $is_release = 'yes';
                 // if contract not submitted
                 if ($docs_submitted['contract_submitted'] === false) {
                     return response() -> json([
                         'release_rejected' => 'yes',
                     ]);
                 }
+            }
+
+            if(Upload::IsClosingDoc($checklist_form_id)) {
+                $is_closing_docs = 'yes';
             }
         }
 
@@ -2940,6 +2956,8 @@ class TransactionsDetailsController extends Controller
         $add_checklist_item_doc -> checklist_id = $checklist_id;
         $add_checklist_item_doc -> checklist_item_id = $checklist_item_id;
         $add_checklist_item_doc -> Agent_ID = $Agent_ID;
+        $add_checklist_item_doc -> is_release = $is_release;
+        $add_checklist_item_doc -> is_closing_docs = $is_closing_docs;
         // set id
         if ($transaction_type == 'listing') {
             $add_checklist_item_doc -> Listing_ID = $Listing_ID;
@@ -3864,8 +3882,8 @@ class TransactionsDetailsController extends Controller
 
         $subject = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name;
         $message = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address;
-        $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
-        $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address_email;
+        $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> State.' '.$property -> PostalCode;
+        $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br><br>'.$address_email;
 
         $notification['type'] = 'commission';
         $notification['transaction_type'] = 'contract';
@@ -4558,6 +4576,11 @@ class TransactionsDetailsController extends Controller
 		$check_id = $request -> check_id;
         $status = $request -> status;
 
+        $earnest_check = EarnestChecks::with(['property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode,BuyerOneLastName,BuyerOneFirstName,BuyerTwoFirstName,BuyerTwoLastName', 'agent:id,first_name,full_name,email']) -> find($check_id);
+
+        $property = $earnest_check -> property;
+        $agent = $earnest_check -> agent;
+
         $date_cleared = '';
         if ($status == '') {
             $status = 'pending';
@@ -4565,9 +4588,79 @@ class TransactionsDetailsController extends Controller
             $date_cleared = date('Y-m-d');
         }
 
-        $update_check = EarnestChecks::find($check_id) -> update(['check_status' => $status, 'date_cleared' => $date_cleared]);
+        $earnest_check -> update(['check_status' => $status, 'date_cleared' => $date_cleared]);
 
-        return response() -> json(['status' => 'success']);
+        $link = config('app.url').'/agents/doc_management/transactions/transaction_details/'.$property -> Contract_ID.'/contract';
+
+        if($status == 'bounced') {
+
+            // notify admin
+            $notification = config('global_db.in_house_notification_emails_bounced_earnest');
+            $users = User::whereIn('email', $notification['emails']) -> get();
+
+            $address =  $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> State.' '.$property -> PostalCode;
+
+            $buyers = $property -> BuyerOneFirstName.' '.$property -> BuyerOneLastName;
+            if($property -> BuyerTwoFirstName != '') {
+                $buyers .= 'and '.$property -> BuyerTwoFirstName.' '.$property -> BuyerTwoLastName;
+            }
+
+            $subject = 'Bounced Earnest Deposit Alert '.$address;
+
+            $message = 'Bounced Earnest Deposit<br>'.str_replace('<br>', ' ', $address);
+            $message_email = 'Bounced Earnest Deposit for the property below<br><br>
+            '.$address.'<br><br>
+            Agent: '.$agent -> full_name.'<br>
+            Buyers: '.$buyers.'<br>
+            Check Amount: $'.number_format($earnest_check -> check_amount);
+
+            $notification['type'] = 'bounced_earnest';
+            $notification['transaction_type'] = 'contract';
+            $notification['transaction_id'] = $property -> Contract_ID;
+            $notification['subject'] = $subject;
+            $notification['message'] = $message;
+            $notification['message_email'] = $message_email;
+            $notification['show_link'] = 'yes';
+
+            Notification::send($users, new GlobalNotification($notification));
+
+        }
+
+
+        return response() -> json([
+            'status' => $status,
+            'link' => $link,
+            'check' => $earnest_check
+            ]);
+    }
+
+    public function notify_agent_bounced_earnest(Request $request) {
+
+        //notify agent
+        $agent_email = $request -> agent_email;
+        $address_email = $request -> property_address;
+        $address = str_replace('<br>', ' ', $address_email);
+        $Contract_ID = $request -> Contract_ID;
+
+        $user = User::where('email', $agent_email) -> first();
+
+        $subject = 'Bounced Earnest Deposit Alert '.$address_email;
+        $message = 'Bounced Earnest Deposit<br>'.$address;
+        $message_email = $request -> bounced_check_message;
+
+        $notification = [];
+        $notification['type'] = 'bounced_earnest';
+        $notification['notify_by_email'] = 'yes';
+        $notification['notify_by_text'] = '';
+        $notification['transaction_type'] = 'contract';
+        $notification['transaction_id'] = $Contract_ID;
+        $notification['subject'] = $subject;
+        $notification['message'] = $message;
+        $notification['message_email'] = $message_email;
+        $notification['show_link'] = 'no';
+
+        Notification::send($user, new GlobalNotification($notification));
+
     }
 
     public function delete_earnest_check(Request $request) {

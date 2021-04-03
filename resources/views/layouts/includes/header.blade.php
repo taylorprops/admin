@@ -5,7 +5,7 @@
         <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
             <i class="fal fa-bars fa-lg"></i>
         </a>
-        <div class="top-search mr-5">
+        <div class="top-search mr-1 mr-sm-3">
             <div class="d-flex justify-content-start align-items-center">
                 <div class="input-group">
                     <input type="text" class="form-control search-menu main-search-input top" placeholder="Search...">

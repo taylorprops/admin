@@ -21,12 +21,20 @@ class GlobalNotificationsController extends Controller
     public function mark_as_read(Request $request) {
 
         $id = $request -> id;
+        $mark = $request -> mark;
 
         if($id != '0') {
-            auth() -> user()
-                -> unreadNotifications
-                -> where('id', $id)
-                -> markAsRead();
+            if($mark == 'read') {
+                auth() -> user()
+                    -> unreadNotifications
+                    -> where('id', $id)
+                    -> markAsRead();
+            } else if($mark == 'unread') {
+                auth() -> user()
+                    -> readNotifications
+                    -> where('id', $id)
+                    -> markAsUnread();
+            }
         } else {
             auth() -> user()
                 -> unreadNotifications

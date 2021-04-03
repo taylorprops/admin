@@ -3,9 +3,10 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\HtmlString;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class GlobalNotification extends Notification
 {
@@ -20,6 +21,8 @@ class GlobalNotification extends Notification
 
         $this -> notification = $notification;
         $this -> notify_by = ['database'];
+
+        $this -> show_link = 'yes';
 
         if($notification['notify_by_email'] == 'yes') {
             $this -> notify_by[] = 'mail';
@@ -40,7 +43,7 @@ class GlobalNotification extends Notification
 
         } else if($notification['type'] == 'earnest' || $notification['type'] == 'using_heritage_title') {
 
-            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'';
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'];
             $this -> link_text = 'View Contract';
 
         }
@@ -49,6 +52,14 @@ class GlobalNotification extends Notification
 
             $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
             $this -> link_text = 'View Commission';
+
+        } else if($notification['type'] == 'bounced_earnest') {
+
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'];
+            $this -> link_text = 'View Contract';
+            if($notification['show_link'] == 'no') {
+                $this -> show_link = 'no';
+            }
 
         }
 
@@ -73,10 +84,16 @@ class GlobalNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            -> subject($this -> notification['subject'])
-            -> line($this -> notification['message_email'])
-            -> action($this -> link_text, url($this -> link_url));
+        if($this -> show_link == 'yes') {
+            return (new MailMessage)
+                -> subject($this -> notification['subject'])
+                -> line(new HtmlString($this -> notification['message_email']))
+                -> action($this -> link_text, url($this -> link_url));
+        } else {
+            return (new MailMessage)
+                -> subject($this -> notification['subject'])
+                -> line(new HtmlString($this -> notification['message_email']));
+        }
     }
 
     /**

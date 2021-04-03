@@ -447,7 +447,7 @@
                                 <div class="d-flex justify-content-start align-items-center mb-3">
                                     <div class="h4 mt-2 text-primary">Checks In</div>
                                     <div class="ml-4">
-                                        <a href="javascript: void(0)" class="btn btn-success add-check-in-button"><i class="fal fa-plus mr-2"></i> Add</a>
+                                        <a href="javascript: void(0)" class="btn btn-primary add-check-in-button"><i class="fal fa-plus mr-2"></i> Add</a>
                                     </div>
                                 </div>
 
@@ -548,7 +548,7 @@
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="h4 mt-2 text-primary">Income Deductions</div>
                                     <div class="ml-4">
-                                        <a class="btn btn-success" data-toggle="collapse" href="#add_income_deduction_div" role="button" aria-expanded="false" aria-controls="add_income_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
+                                        <a class="btn btn-primary" data-toggle="collapse" href="#add_income_deduction_div" role="button" aria-expanded="false" aria-controls="add_income_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
                                     </div>
                                 </div>
 
@@ -779,7 +779,7 @@
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div class="h4 mt-2 text-primary">Commission Deductions</div>
                                     <div class="ml-4">
-                                        <a class="btn btn-success" id="show_add_commission_deduction_button" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
+                                        <a class="btn btn-primary" id="show_add_commission_deduction_button" data-toggle="collapse" href="#add_commission_deduction_div" role="button" aria-expanded="false" aria-controls="add_commission_deduction_div"><i class="fal fa-plus mr-2"></i> Add</a>
                                     </div>
                                 </div>
 
@@ -1009,7 +1009,7 @@
                                 <div class="d-flex justify-content-start align-items-center mb-3">
                                     <div class="h4 mt-2 text-primary">Checks Out</div>
                                     <div class="ml-4">
-                                        <a href="javascript: void(0)" class="btn btn-success add-check-out-button"><i class="fal fa-plus mr-2"></i> Add</a>
+                                        <a href="javascript: void(0)" class="btn btn-primary add-check-out-button"><i class="fal fa-plus mr-2"></i> Add</a>
                                     </div>
                                 </div>
 

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
-use App\Models\DocManagement\Resources\ResourceItems;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Commission\Commission;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\DocManagement\Earnest\Earnest;
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Transactions\Listings\Listings;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use App\Models\DocManagement\Transactions\Checklists\TransactionChecklistItemsDocs;
 
 class DashboardController extends Controller
 {
@@ -59,10 +62,6 @@ class DashboardController extends Controller
         $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no');
         $expired_listing_status = ResourceItems::GetResourceID('Expired', 'listing_status');
 
-        $active_listings_count = Listings::whereIn('Status', $active_listing_statuses) // include 'Under Contract' and 'Expired'
-            -> count();
-
-
         // alerts
         $alert_type = 'missing-docs-listings';
         $title = 'Missing Documents - Listings';
@@ -89,9 +88,6 @@ class DashboardController extends Controller
 
         // CONTRACTS
         $active_contract_statuses = ResourceItems::GetActiveContractStatuses();
-
-        $active_contracts_count = Contracts::whereIn('Status', $active_contract_statuses)
-            -> count();
 
         // alerts
         $alert_type = 'missing-earnest';
@@ -130,18 +126,8 @@ class DashboardController extends Controller
             -> orderBy('CloseDate', 'desc')
             -> get();
 
-        // non alerts
-        $contracts_closing_this_month = Contracts::select($contracts_select)
-            // -> where('CloseDate', '<=', date('Y-m-t'))
-            -> where('CloseDate', '>=', date('Y-m-d'))
-            -> whereIn('Status', $active_contract_statuses)
-            -> with(['agent:id,full_name'])
-            -> orderBy('CloseDate', 'asc')
-            -> get();
 
         // REFERRALS
-        $active_referrals_count = Referrals:: whereIn('Status', ResourceItems::GetActiveReferralStatuses())
-            -> count();
 
         // alerts
         $alert_type = 'missing-docs-referrals';
@@ -156,7 +142,7 @@ class DashboardController extends Controller
 
         // merge all alerts
         $alerts = collect();
-        $alerts = $alerts -> merge($missing_docs_listings) -> merge($expired_listings) -> merge($missing_earnest) -> merge($contracts_past_settle_date) -> merge($missing_docs_contracts) -> merge($missing_docs_referrals);
+        $alerts = $alerts -> merge($missing_earnest) -> merge($missing_docs_listings) -> merge($expired_listings) -> merge($contracts_past_settle_date) -> merge($missing_docs_contracts) -> merge($missing_docs_referrals);
 
         // commission checks status
         // unread messages
@@ -180,7 +166,149 @@ class DashboardController extends Controller
 
         $notifications = auth() -> user() -> unreadNotifications;
 
-        return view('/dashboard/dashboard', compact('active_listings_count', 'alert_types', 'alerts', 'active_contracts_count', 'active_referrals_count', 'contracts_closing_this_month', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts', 'notifications'));
+        return view('/dashboard/dashboard', compact('alert_types', 'alerts', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts', 'notifications'));
 
     }
+
+    public function get_transactions(Request $request) {
+
+        $active_listing_statuses = ResourceItems::GetActiveListingStatuses('yes', 'yes', 'no');
+        $expired_listing_status = ResourceItems::GetResourceID('Expired', 'listing_status');
+
+        $active_listings_count = Listings::whereIn('Status', $active_listing_statuses) // include 'Under Contract' and 'Expired'
+            -> count();
+
+        $active_contract_statuses = ResourceItems::GetActiveContractStatuses();
+
+        $active_contracts_count = Contracts::whereIn('Status', $active_contract_statuses)
+            -> count();
+
+        $active_referrals_count = Referrals:: whereIn('Status', ResourceItems::GetActiveReferralStatuses())
+            -> count();
+
+        return view('/dashboard/mods/get_transactions_html', compact('active_listings_count',  'active_contracts_count', 'active_referrals_count',));
+
+    }
+
+
+    public function get_upcoming_closings(Request $request) {
+
+        $contracts_select = [
+            'Agent_ID',
+            'City',
+            'CloseDate',
+            'ContractDate',
+            'Contract_ID',
+            'DocsMissingCount',
+            'EarnestHeldBy',
+            'FullStreetAddress',
+            'ListPictureURL',
+            'PostalCode',
+            'StateOrProvince'
+        ];
+
+        $active_contract_statuses = ResourceItems::GetActiveContractStatuses();
+
+        $contracts = Contracts::select($contracts_select)
+            // -> where('CloseDate', '<=', date('Y-m-t'))
+            -> where('CloseDate', '>=', date('Y-m-d'))
+            -> whereIn('Status', $active_contract_statuses)
+            -> with(['agent:id,full_name'])
+            -> orderBy('CloseDate', 'asc')
+            -> get();
+
+        return view('/dashboard/mods/get_upcoming_closings_html', compact('contracts'));
+
+    }
+
+    public function get_commissions(Request $request) {
+
+        $active_contract_statuses = ResourceItems::GetActiveAndClosedContractStatuses();
+
+        $contracts_select = [
+            'Agent_ID',
+            'City',
+            'CloseDate',
+            'ContractDate',
+            'Contract_ID',
+            'DocsMissingCount',
+            'FullStreetAddress',
+            'PostalCode',
+            'StateOrProvince'
+        ];
+
+        $contracts = Contracts::select($contracts_select)
+            -> whereIn('Status', $active_contract_statuses)
+            -> where('CloseDate', '<', date('Y-m-d', strtotime('+1 week')))
+            -> where('CloseDate', '>', date('Y-m-d', strtotime('-2 month')))
+            -> with(['commission:Contract_ID,total_commission_to_agent', 'commission_breakdown:Contract_ID,submitted,status,total_commission_to_agent'])
+            -> orderBy('CloseDate', 'DESC')
+            -> get();
+
+        return view('/dashboard/mods/get_commissions_html', compact('contracts'));
+
+    }
+
+    public function get_admin_todo(Request $request) {
+
+        $select = ['id', 'commission_type', 'Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'total_left'];
+        $pending_contracts = Commission::select($select)
+            -> where(function ($query) {
+                $query -> where('total_left', '>', '0')
+                -> orWhere('total_left', '<', '0');
+            })
+            -> where('Contract_ID', '>', '0')
+            -> count();
+
+        $pending_referrals = Commission::select($select)
+            -> where('total_left', '>', '0')
+            -> where('Referral_ID', '>', '0')
+            -> count();
+
+        $pending_commissions_count = $pending_contracts + $pending_referrals;
+
+
+        $pending_earnest_count = Earnest::with('checks')
+        -> whereHas('checks', function (Builder $query) {
+            $query -> where('active', 'yes')
+                -> where('check_status', 'pending');
+        })
+        -> count();
+
+        $listing_docs_to_review = TransactionChecklistItemsDocs::select('Listing_ID')
+            -> where('doc_status', 'pending')
+            -> where('Listing_ID', '>', '0')
+            -> groupBy('Listing_ID')
+            -> get();
+        $listing_docs_to_review_count = count($listing_docs_to_review);
+
+        $contract_docs_to_review = TransactionChecklistItemsDocs::select('Contract_ID', 'document_id')
+            -> where('doc_status', 'pending')
+            -> where('Contract_ID', '>', '0')
+            -> where('is_release', 'no')
+            -> groupBy('Contract_ID')
+            -> get();
+        $contract_docs_to_review_count = count($contract_docs_to_review);
+
+        $referral_docs_to_review = TransactionChecklistItemsDocs::select('Referral_ID')
+            -> where('doc_status', 'pending')
+            -> where('Referral_ID', '>', '0')
+            -> groupBy('Referral_ID')
+            -> get();
+        $referral_docs_to_review_count = count($referral_docs_to_review);
+
+        $releases_to_review = TransactionChecklistItemsDocs::select('Contract_ID', 'document_id')
+            -> where('doc_status', 'pending')
+            -> where('Contract_ID', '>', '0')
+            -> where('is_release', 'yes')
+            -> groupBy('Contract_ID')
+            -> get();
+        $releases_to_review_count = count($releases_to_review);
+
+        $docs_to_review_count = $listing_docs_to_review_count + $contract_docs_to_review_count + $referral_docs_to_review_count;
+
+        return view('/dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'docs_to_review_count', 'releases_to_review_count'));
+
+    }
+
 }

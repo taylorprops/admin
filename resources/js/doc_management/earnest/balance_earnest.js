@@ -13,6 +13,18 @@ if(document.URL.match(/balance_earnest/)) {
             search_earnest_checks($(this).val());
         });
 
+        let options = {
+            menubar: false,
+            statusbar: false,
+            toolbar: true,
+            selector: '#bounced_check_message',
+            height: 450,
+            relative_urls : false,
+            remove_script_host : true,
+            document_base_url: location.hostname
+        }
+        text_editor(options);
+
         //////////// functions ////////////
 
         function refresh() {
@@ -122,6 +134,63 @@ if(document.URL.match(/balance_earnest/)) {
                 .catch(function (error) {
 
                 });
+
+                if(status == 'bounced') {
+
+                    let check = response.data.check;
+
+                    let property = check.property;
+                    let agent = check.agent;
+                    let agent_email = agent.email;
+                    let link = response.data.link;
+
+                    let buyers = property.BuyerOneFirstName+' '+property.BuyerOneLastName;
+                    if(property.BuyerTwoFirstName != '') {
+                        buyers += 'and '+property.BuyerTwoFirstName+' '+property.BuyerTwoFirstName;
+                    }
+
+                    let property_address = property.FullStreetAddress+' '+property.City+', '+property.StateOrProvince+' '+property.PostalCode;
+
+                    let Contract_ID = property.Contract_ID;
+
+                    let message = ' \
+                    Hello '+agent.first_name+',<br><br> \
+                        The earnest deposit for the following property has bounced.<br><br> \
+                        '+property_address+'<br><br> \
+                        Buyers: '+buyers+'<br> \
+                        Check Amount: '+global_format_number_with_decimals(check.check_amount)+'<br><br> \
+                        <span style="color: #900">Please call the office immediately to resolve this issue.</span><br><br> \
+                        <a href="'+link+'" target="_blank">View Transaction</a> \
+                    ';
+                    $('#bounced_check_notification_modal').modal('show');
+
+                    let signature = $('#bounced_check_message').val();
+
+                    tinymce.get('bounced_check_message').setContent(message+signature);
+
+                    $('#send_bounced_check_notification_button').on('click', function() {
+                        $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending Email...');
+
+                        let bounced_check_message = tinymce.get('bounced_check_message').getContent();
+
+                        let formData = new FormData();
+                        formData.append('agent_email', agent_email);
+                        formData.append('bounced_check_message', bounced_check_message);
+                        formData.append('property_address', property_address);
+                        formData.append('Contract_ID', Contract_ID);
+                        axios.post('/agents/doc_management/transactions/notify_agent_bounced_earnest', formData, axios_options)
+                        .then(function (response) {
+                            $('#bounced_check_notification_modal').modal('hide');
+                            toastr['success']('Agent Successfully Notified');
+                            $('#send_bounced_check_notification_button').html('<i class="fad fa-share mr-2"></i> Send Message');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    });
+
+                }
+
 
             })
             .catch(function (error) {

@@ -44,6 +44,6 @@
 {{-- set user details as javascript variale --}}
 @if(auth() -> user())
 <script>
-    let global_user = {!! auth() -> user() -> toJson() !!};
+    let global_user = {!! collect(['name' => auth() -> user() -> name, 'group' => auth() -> user() -> group]) -> toJson() !!};
 </script>
 @endif

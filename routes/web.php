@@ -44,6 +44,7 @@ use App\Http\Controllers\Agents\DocManagement\Transactions\EditFiles\Transaction
     return view('/auth/login');
 }) -> name('login'); */
 
+
 Route::view('/', '/auth/login');
 Route::view('/login', '/auth/login');
 Route::view('login', '/auth/login');
@@ -64,6 +65,11 @@ Route::post('/filepond_upload', [FilepondUploadController::class, 'upload']);
 /***** notifications ******/
 Route::get('/notifications/get_notifications', [GlobalNotificationsController::class, 'get_notifications']);
 Route::post('/notifications/mark_as_read', [GlobalNotificationsController::class, 'mark_as_read']);
+
+Route::get('/dashboard/get_transactions', [DashboardController::class, 'get_transactions']);
+Route::get('/dashboard/get_commissions', [DashboardController::class, 'get_commissions']);
+Route::get('/dashboard/get_upcoming_closings', [DashboardController::class, 'get_upcoming_closings']);
+Route::get('/dashboard/get_admin_todo', [DashboardController::class, 'get_admin_todo']);
 
 
 
@@ -518,6 +524,8 @@ Route::middleware(['agent']) -> group(function () {
     Route::post('/agents/doc_management/transactions/save_edit_earnest_check', [TransactionsDetailsController::class, 'save_edit_earnest_check']);
     // clear/bounce earnest check
     Route::post('/agents/doc_management/transactions/clear_bounce_earnest_check', [TransactionsDetailsController::class, 'clear_bounce_earnest_check']);
+    // notify agent earnest check
+    Route::post('/agents/doc_management/transactions/notify_agent_bounced_earnest', [TransactionsDetailsController::class, 'notify_agent_bounced_earnest']);
     // delete earnest check
     Route::post('/agents/doc_management/transactions/delete_earnest_check', [TransactionsDetailsController::class, 'delete_earnest_check']);
     // undo delete earnest check
@@ -707,3 +715,6 @@ Route::middleware(['agent']) -> group(function () {
 // callback url
 Route::post('/esign_callback', [EsignController::class, 'esign_callback']);
 Route::post('/oauth_callback', [EsignController::class, 'oauth_callback']);
+
+
+

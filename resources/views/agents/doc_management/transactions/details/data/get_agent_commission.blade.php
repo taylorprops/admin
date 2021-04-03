@@ -4,7 +4,7 @@
 
         <div class="col-12 col-xl-5 mt-4 mx-auto">
 
-            <ul class="list-unstyled multi-steps">
+            <ul class="list-unstyled multi-steps @if($breakdown -> submitted == 'no') hidden @endif">
                 <li class="@if($breakdown_status == 'submitted') is-active @endif">Submitted</li>
                 <li class="@if($breakdown_status == 'reviewed') is-active @endif">In Review</li>
                 <li class="@if($breakdown_status == 'complete') is-active @endif">Complete</li>

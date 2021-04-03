@@ -55,4 +55,37 @@
 
 </div>
 
+<div class="modal fade draggable" id="bounced_check_notification_modal" tabindex="-1" role="dialog" aria-labelledby="bounced_check_notification_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="bounced_check_notification_modal_title">Notify Agent</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bounced_check_notification_form">
+
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <div class="font-10 text-orange mb-2">Notify Agent of Bounced Earnest Deposit</div>
+
+                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif</textarea>
+
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-primary" id="send_bounced_check_notification_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Send Message</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

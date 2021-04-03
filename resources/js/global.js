@@ -348,7 +348,7 @@ function get_global_notifications() {
         $('.notifications-mark-as-read').on('click', function () {
 
             let id = $(this).data('id');
-            let request = notifications_mark_read(id);
+            let request = notifications_mark_read(id, 'read');
             request.then(function (response) {
                 $('div.alert[data-id="'+id+'"]').fadeOut();
                 let counter = $('.notifications-unread-count');
@@ -361,10 +361,19 @@ function get_global_notifications() {
             $('#confirm_modal').modal().find('.modal-body').html('Mark All As Read?');
             $('#confirm_modal').modal().find('.modal-title').html('Please Confirm');
             $('#confirm_button').on('click', function() {
-                let request = notifications_mark_read('0');
+                let request = notifications_mark_read('0', 'read');
                 request.then(function (response) {
                     get_global_notifications();
                 });
+            });
+        });
+
+        $('.notifications-mark-unread').on('click', function () {
+
+            let id = $(this).data('id');
+            let request = notifications_mark_read(id, 'unread');
+            request.then(function (response) {
+                get_global_notifications();
             });
         });
 
@@ -384,10 +393,11 @@ function get_global_notifications() {
 
 }
 
-window.notifications_mark_read = function(id) {
+window.notifications_mark_read = function(id, mark) {
 
     let formData = new FormData();
     formData.append('id', id);
+    formData.append('mark', mark);
 
     return axios.post('/notifications/mark_as_read', formData, axios_options);
 

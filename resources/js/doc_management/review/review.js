@@ -2,7 +2,7 @@ if(document.URL.match(/document_review/)) {
 
     $(function() {
 
-        $('.page-wrapper').removeClass('toggled');
+        $('.page-wrapper').removeClass('toggled').css({ overflow: 'hidden' });
 
         $('.property-item').off('click').on('click', function() {
             $('.documents-div').children().addClass('animate__animated animate__bounceOutDown');

@@ -966,7 +966,7 @@ class TransactionsAddController extends Controller {
                     -> where('resource_name', $agent -> company)
                     -> value('resource_id');
 
-                $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id]);
+                $earnest = Earnest::where('Contract_ID', $Contract_ID) -> update(['earnest_account_id' => $earnest_account_id, 'held_by' => 'us']);
 
 
                 // notify earnest admin

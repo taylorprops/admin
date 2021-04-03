@@ -61,6 +61,11 @@ class SessionVariables
 
             session(['user_details' => $user_details]);
 
+        } else {
+
+            if(!stristr($_SERVER['REQUEST_URI'], 'login')) {
+                return redirect('/login');
+            }
         }
 
         return $next($request);

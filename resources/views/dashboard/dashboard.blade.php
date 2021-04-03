@@ -37,15 +37,15 @@
                     <div class="bg-danger p-1 mb-3 rounded">
 
                         <div class="bg-danger text-white p-2 font-12">
-                            <i class="fad fa-exclamation-triangle mr-2"></i> Alerts
+                            <i class="fad fa-exclamation-triangle mr-2"></i> Transaction Alerts
                         </div>
 
                         <div class="bg-white p-2 rounded alerts-container">
 
                             @if(!$show_alerts)
 
-                                <div class="text-gray font-13 text-center p-4">
-                                    <i class="fal fa-check mr-2"></i> No Alerts
+                                <div class="text-gray font-11 text-center p-2">
+                                    <i class="fal fa-check mr-2"></i> No Transaction Alerts
                                 </div>
 
                             @else
@@ -97,6 +97,7 @@
 
                         </div>
 
+
                     </div>
 
                 </div>
@@ -114,155 +115,71 @@
 
             <div class="bg-blue-light p-2 rounded">
 
-                <div class="row">
+                <div class="row mt-2">
 
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4">
+                    <div class="col-12">
 
-                        <div class="bg-white text-gray p-3 rounded">
+                        <div id="transactions_mod"></div>
 
-                            <div class="d-flex justify-content-start align-items-center">
-                                <div class="w-80 pl-2">
-                                    <div class="text-orange font-13">Active Listings</div>
-                                </div>
-                                <div class="d-flex justify-content-around align-items-center font-14 bg-orange text-white w-20 mb-2 p-2 rounded">
-                                    {{ $active_listings_count }}
-                                </div>
+                    </div>
+
+                </div>
+
+                @if(auth() -> user() -> group == 'admin')
+
+                    <div class="row mt-4">
+
+                        <div class="col-12">
+
+                            <div class="bg-white p-2 rounded">
+
+                                <div class="font-11 text-orange">Admin ToDo</div>
+
+                                <div id="admin_todo_mod"></div>
+
                             </div>
-
-                            <div class="d-flex justify-content-around align-items-center">
-                                <a href="/agents/doc_management/transactions?tab=listings" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View All</a>
-                                <a href="/agents/doc_management/transactions/add/listing" class="btn btn-primary"><i class="fal fa-plus mr-2"></i> Add New</a>
-                            </div>
-
 
                         </div>
 
                     </div>
 
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 mt-3 mt-sm-0">
+                @endif
 
-                        <div class="bg-white text-gray p-3 rounded">
+                @if(stristr(auth() -> user() -> group, 'agent'))
 
-                            <div class="d-flex justify-content-start align-items-center">
-                                <div class="w-80 pl-2">
-                                    <div class="text-orange font-13">Active Contracts</div>
-                                </div>
-                                <div class="d-flex justify-content-around align-items-center font-14 bg-orange text-white w-20 mb-2 p-2 rounded">
-                                    {{ $active_contracts_count }}
-                                </div>
+                    <div class="row mt-4">
+
+                        <div class="col-12">
+
+                            <div class="bg-white text-gray p-3 rounded">
+
+                                <div class="font-11 text-orange">Commissions Status</div>
+
+                                <div id="commissions_mod"></div>
+
                             </div>
-
-                            <div class="d-flex justify-content-around align-items-center">
-                                <a href="/agents/doc_management/transactions?tab=contracts" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View All</a>
-                                <a href="/agents/doc_management/transactions/add/contract" class="btn btn-primary"><i class="fal fa-plus mr-2"></i> Add New</a>
-                            </div>
-
 
                         </div>
 
                     </div>
 
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 mt-3 mt-md-0 mt-lg-3 mt-xl-0">
+                @endif
+
+                <div class="row mt-4">
+
+                    <div class="col-12">
 
                         <div class="bg-white text-gray p-3 rounded">
 
-                            <div class="d-flex justify-content-start align-items-center">
-                                <div class="w-80 pl-2">
-                                    <div class="text-orange font-13">Pending Referrals</div>
-                                </div>
-                                <div class="d-flex justify-content-around align-items-center font-14 bg-orange text-white w-20 mb-2 p-2 rounded">
-                                    {{ $active_referrals_count }}
-                                </div>
-                            </div>
+                            <div class="font-11 text-orange">Upcoming Closings</div>
 
-                            <div class="d-flex justify-content-around align-items-center">
-                                <a href="/agents/doc_management/transactions?tab=referrals" class="btn btn-primary"><i class="fad fa-eye mr-2"></i> View All</a>
-                                <a href="/agents/doc_management/transactions/add/referral" class="btn btn-primary"><i class="fal fa-plus mr-2"></i> Add New</a>
-                            </div>
-
+                            <div id="upcoming_closings_mod"></div>
 
                         </div>
 
                     </div>
 
                 </div>
-
-                @if(count($contracts_closing_this_month) > 0)
-
-                    <div class="row mt-5">
-
-                        <div class="col-12">
-
-                            <div class="bg-white text-gray p-3 rounded">
-
-                                <div class="font-11 text-orange">Upcoming Closings</div>
-
-                                <div class="no-wrap">
-
-                                    <div class="upcoming-closings-container">
-
-                                        <table id="upcoming_closings_table" class="table table-hover table-bordered table-sm" width="100%">
-
-                                            <thead>
-                                                <tr>
-                                                    <th>Address</th>
-                                                    <th>Settle Date</th>
-                                                    <th>Checklist Status</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                                @foreach($contracts_closing_this_month as $contract)
-
-                                                    @php
-                                                    if($contract -> DocsMissingCount > 0) {
-                                                        $checklist_status = '<span class="text-danger font-8"><i class="fal fa-exclamation-circle mr-2"></i> Missing Items</span>';
-                                                    } else {
-                                                        $checklist_status = '<span class="text-success font-8"><i class="fal fa-check mr-2"></i> Complete</span>';
-                                                    }
-                                                    @endphp
-                                                    <tr>
-                                                        <td>
-                                                            <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="d-block h-100 line-height-px-40">{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</a>
-                                                        </td>
-                                                        <td>
-                                                            <div title="Settle Date" data-toggle="tooltip">
-                                                                SD - {{ date_mdy($contract -> CloseDate) }}
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            {!! $checklist_status !!}
-                                                        </td>
-                                                        <td>
-                                                            <div class="w-100 d-flex justify-content-around">
-                                                                @if($contract -> ListPictureURL)
-                                                                    <img src="{{ $contract -> ListPictureURL }}" class="img-responsive upcoming-closing-image">
-                                                                @else
-                                                                    <i class="fad fa-home fa-3x text-primary"></i>
-                                                                @endif
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                @endforeach
-
-                                            </body>
-
-                                        </table>
-
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                @endif
 
             </div>
 
