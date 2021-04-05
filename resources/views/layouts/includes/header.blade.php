@@ -1,6 +1,6 @@
 <div class="page-wrapper theme chiller-theme toggled">
 
-    <div class="d-flex justify-content-between align-items-center show-sidebar w-100">
+    {{-- <div class="d-flex justify-content-between align-items-center show-sidebar w-100">
 
         <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
             <i class="fal fa-bars fa-lg"></i>
@@ -19,6 +19,12 @@
             </div>
         </div>
 
+    </div> --}}
+
+    <div class="show-sidebar">
+        <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
+            <i class="fal fa-bars fa-lg"></i>
+        </a>
     </div>
 
     <nav id="sidebar" class="sidebar-wrapper ">
@@ -93,6 +99,11 @@
             <a href="/logout">
                 <i class="fal fa-sign-out fa-lg text-orange"></i>
             </a>
+
+            <a href="/calendar">
+                <i class="fad fa-calendar-alt fa-lg text-white"></i>
+            </a>
+
             <a id="notifications_control" data-toggle="collapse" href="#notifications_collapse" role="button" aria-expanded="false" aria-controls="notifications_collapse">
                 <i class="fa fa-bell fa-lg"></i>
                 <span class="badge badge-pill bg-orange text-white notification notifications-unread-count">0</span>

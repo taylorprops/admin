@@ -38,11 +38,11 @@
                 <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
                     <div class="d-flex justify-content-start align-items-center">
                         <div class="emp_photo mr-2">
-                            <div class="rounded-pill avatar-initials {{ $avatar_bg }} @if(!$emp_photo_location) p-2 @endif">
+                            <div class="rounded-pill avatar-initials {{ $avatar_bg }} @if(!$emp_photo_location) @endif">
                                 @if($emp_photo_location)
                                     <img src="{{ $emp_photo_location }}" class="avatar rounded-circle d-flex align-self-center mr-2 shadow">
                                 @else
-                                    <span class="text-white">{{ $initials }}</span>
+                                    <span class="text-white p-2">{{ $initials }}</span>
                                 @endif
                             </div>
                         </div>

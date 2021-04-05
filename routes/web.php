@@ -8,9 +8,10 @@ use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Esign\EsignController;
 use App\Http\Controllers\CRM\ContactsController;
 use App\Http\Controllers\Search\SearchController;
+use App\Http\Controllers\Calendar\CalendarController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Files\FilepondUploadController;
-use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
 use App\Http\Controllers\DocManagement\Create\UploadController;
 use App\Http\Controllers\Admin\Permissions\PermissionsController;
@@ -55,6 +56,11 @@ Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/register_employee/{email}', [EmployeesController::class, 'register_employee']);
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard']);
+
+/********** Calendar ********/
+Route::get('/calendar', [CalendarController::class, 'calendar']);
+Route::get('/calendar_events', [CalendarController::class, 'calendar_events']);
+Route::post('/calendar_update', [CalendarController::class, 'calendar_update']);
 
 /********** Search Routes ********/
 Route::get('/search', [SearchController::class, 'search']);

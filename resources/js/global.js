@@ -8,7 +8,6 @@ if (perfEntries[0].type === 'back_forward') {
 }
 
 
-
 // check for duplicate ids
 /* setTimeout(function() {
     $('[id]').each(function(){

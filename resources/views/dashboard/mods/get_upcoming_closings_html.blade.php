@@ -27,7 +27,7 @@
                 @endphp
                 <tr>
                     <td>
-                        <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> id }}/contract" class="d-block h-100 line-height-px-40">{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</a>
+                        <a href="/agents/doc_management/transactions/transaction_details/{{ $contract -> Contract_ID }}/contract" class="d-block h-100 line-height-px-40">{{ $contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode }}</a>
                     </td>
                     <td>
                         <div title="Settle Date" data-toggle="tooltip">

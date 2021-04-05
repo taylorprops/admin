@@ -3,6 +3,7 @@ if(document.URL.match(/document_review/)) {
     $(function() {
 
         $('.page-wrapper').removeClass('toggled').css({ overflow: 'hidden' });
+        $('.show-sidebar').css({ 'z-index': '3' });
 
         $('.property-item').off('click').on('click', function() {
             $('.documents-div').children().addClass('animate__animated animate__bounceOutDown');

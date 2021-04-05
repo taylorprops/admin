@@ -10242,7 +10242,9 @@ __webpack_require__(/*! ./nav/nav.js */ "./resources/js/nav/nav.js");
 __webpack_require__(/*! ./nav/search.js */ "./resources/js/nav/search.js"); // dashboard
 
 
-__webpack_require__(/*! ./dashboard/dashboard.js */ "./resources/js/dashboard/dashboard.js"); // Document Management
+__webpack_require__(/*! ./dashboard/dashboard.js */ "./resources/js/dashboard/dashboard.js");
+
+__webpack_require__(/*! ./calendar/calendar.js */ "./resources/js/calendar/calendar.js"); // Document Management
 
 
 __webpack_require__(/*! ./doc_management/resources/resources.js */ "./resources/js/doc_management/resources/resources.js");
@@ -10467,6 +10469,161 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/calendar/calendar.js":
+/*!*******************************************!*\
+  !*** ./resources/js/calendar/calendar.js ***!
+  \*******************************************/
+/***/ (() => {
+
+if (document.URL.match(/calendar/)) {
+  var get_event_details = function get_event_details(info) {
+    var event_start_date = null,
+        event_start_time = null,
+        event_end_date = null,
+        event_end_time = null,
+        event_start = null,
+        event_end = null,
+        start_hours = null,
+        start_minutes = null,
+        start_seconds = null,
+        end_date = null,
+        end_year = null,
+        end_month = null,
+        end_day = null,
+        end_hours = null,
+        end_minutes = null,
+        end_seconds = null,
+        repeat_frequency = null,
+        repeat_interval = null,
+        repeat_until = null,
+        rrule = null;
+    var event_id = info.event.id;
+    var event_title = info.event.title;
+
+    if (info.event._def.recurringDef) {
+      rrule = info.event._def.recurringDef.typeData.rruleSet._rrule[0].options;
+    }
+
+    var start_date = new Date(info.event.start);
+    var start_year = start_date.getFullYear();
+    var start_month = parseInt(start_date.getMonth()) + 1;
+    start_month = ('0' + start_month).slice(-2);
+    var start_day = ('0' + start_date.getDate()).slice(-2);
+    event_start_date = start_year + '-' + start_month + '-' + start_day;
+
+    if (info.event.allDay == false) {
+      start_hours = ('0' + start_date.getHours()).slice(-2);
+      start_minutes = ('0' + start_date.getMinutes()).slice(-2);
+      start_seconds = '00';
+      event_start_time = start_hours + ':' + start_minutes + ':' + start_seconds;
+
+      if (info.event.end) {
+        end_date = new Date(info.event.end);
+        end_year = end_date.getFullYear();
+        end_month = parseInt(end_date.getMonth()) + 1;
+        end_month = ('0' + end_month).slice(-2);
+        end_day = ('0' + end_date.getDate()).slice(-2);
+        event_end_date = end_year + '-' + end_month + '-' + end_day;
+
+        if (end_date.getHours() != '00' && end_date.getMinutes() != '00') {
+          end_hours = ('0' + end_date.getHours()).slice(-2);
+          end_minutes = ('0' + end_date.getMinutes()).slice(-2);
+          end_seconds = '00';
+          event_end_time = end_hours + ':' + end_minutes + ':' + end_seconds;
+        }
+      }
+    }
+
+    if (rrule) {
+      event_end_date = '';
+      event_end_time = '';
+      repeat_frequency = rrule.freq;
+      repeat_interval = rrule.interval;
+      repeat_until = rrule.until;
+    }
+
+    event_details = {};
+    event_details.event_id = event_id;
+    event_details.event_title = event_title;
+    event_details.start_date = event_start_date;
+    event_details.start_time = event_start_time;
+    event_details.end_date = event_end_date;
+    event_details.end_time = event_end_time;
+    event_details.repeat_frequency = repeat_frequency;
+    event_details.repeat_interval = repeat_interval;
+    event_details.repeat_until = repeat_until;
+    return event_details;
+  };
+
+  var save_event = function save_event(form) {
+    var formData = new FormData(form[0]);
+    axios.post('/calendar_update', formData, axios_options).then(function (response) {
+      console.log(response);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  $(function () {
+    var calendarEl = document.getElementById('calendar_div');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      events: '/calendar_events',
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      editable: true,
+      eventClick: function eventClick(info) {
+        var event_details = get_event_details(info);
+        var x = $(info.el).offset().left;
+        var y = $(info.el).offset().top;
+        var el_width = $(info.el).width();
+        var edit_event_div_width = $('#edit_event_div').width();
+        var edit_event_div_height = $('#edit_event_div').height();
+        var container_width = $(document).width();
+        var container_height = $(document).height();
+        $('.event-active').removeClass('event-active shadow');
+        $(info.el).addClass('event-active shadow');
+        var top, left; // if left side
+
+        if (x < container_width / 2) {
+          left = x + el_width; // if right side
+        } else if (x >= container_width / 2) {
+          left = x - edit_event_div_width - 35;
+        } // if top side
+
+
+        if (y < container_height / 2) {
+          top = y; // if bottom side
+        } else if (y >= container_height / 2) {
+          top = y - edit_event_div_height - 10;
+        }
+
+        var coords = {
+          top: top + 'px',
+          left: left + 'px'
+        }; // only remove hidden if not already opened. This way it animates to next position
+
+        if ($('#edit_event_div').hasClass('hidden')) {
+          $('#edit_event_div').removeClass('hidden').css(coords);
+        } else {
+          $('#edit_event_div').animate(coords);
+        }
+      }
+    });
+    calendar.render();
+    $(document).on('mousedown', function (e) {
+      if (!$(e.target).is('#edit_event_div *') && !$(e.target).is('.fc-daygrid-event-harness *')) {
+        $('#edit_event_div').addClass('hidden');
+      }
+    });
+  });
+}
 
 /***/ }),
 
@@ -14348,6 +14505,9 @@ if (document.URL.match(/document_review/)) {
     $('.page-wrapper').removeClass('toggled').css({
       overflow: 'hidden'
     });
+    $('.show-sidebar').css({
+      'z-index': '3'
+    });
     $('.property-item').off('click').on('click', function () {
       $('.documents-div').children().addClass('animate__animated animate__bounceOutDown');
       $('.details-div').children().addClass('animate__animated animate__fadeOut');
@@ -17724,20 +17884,20 @@ $(function () {
     }
   });
   $('#close-sidebar').on('click', function () {
-    $('.page-wrapper').removeClass('toggled');
+    $('.page-wrapper').removeClass('toggled'); //$('.top-search').show();
   });
   $('#show_sidebar').on('click', function () {
-    $('.page-wrapper').addClass('toggled');
+    $('.page-wrapper').addClass('toggled'); //$('.top-search').hide();
   });
 });
 
 function show_sidebar() {
   if ($(document).width() > 1600) {
-    $('.page-wrapper').addClass('toggled');
-    $('.top-search').hide();
+    $('.page-wrapper').addClass('toggled'); // $('.top-search').hide();
+    // $('.show-sidebar').css({ 'z-index': '0' });
   } else {
-    $('.page-wrapper').removeClass('toggled');
-    $('.top-search').show();
+    $('.page-wrapper').removeClass('toggled'); // $('.top-search').show();
+    // $('.show-sidebar').css({ 'z-index': '3' });
   }
 }
 

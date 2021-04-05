@@ -27,6 +27,7 @@
         "mikehaertl/phpwkhtmltopdf": "^2.4",
         "phpoffice/phpspreadsheet": "^1.17",
         "socrata/soda-php": "dev-develop",
+        "spatie/laravel-activitylog": "^3.17",
         "symfony/http-foundation": "^5.1.4",
         "symfony/http-kernel": "5.1.5",
         "therezor/laravel-transactional-jobs": "^1.1",

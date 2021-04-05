@@ -36,6 +36,7 @@ require('./nav/search.js');
 
 // dashboard
 require('./dashboard/dashboard.js');
+require('./calendar/calendar.js');
 
 // Document Management
 

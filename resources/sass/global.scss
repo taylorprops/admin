@@ -209,6 +209,15 @@ div[class*='container-']:not(.p-0) {
         line-height: #{$i}px;
     }
 }
+
+// height in pixels
+// 5 - 500
+// .hpx-55
+@for $i from 1 through 100 {
+    .hpx-#{$i * 5} {
+        height: #{$i * 5}px;
+    }
+}
 // height in vh
 // 5 - 100
 // .vh-20
