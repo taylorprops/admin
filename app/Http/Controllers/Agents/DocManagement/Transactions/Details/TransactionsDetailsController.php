@@ -29,8 +29,6 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Activitylog\Models\Activity;
-use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Jobs\OldDB\Earnest\EscrowExportJob;
@@ -49,6 +47,7 @@ use App\Models\DocManagement\Create\Upload\Upload;
 use App\Models\DocManagement\Earnest\EarnestNotes;
 use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Earnest\EarnestChecks;
+use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionIncomeDeductions;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Create\Upload\UploadPages;
@@ -739,8 +738,6 @@ class TransactionsDetailsController extends Controller
         if ($has_listing) {
             $property_listing -> save();
         }
-
-
 
         return response() -> json([
             'success' => 'ok',
