@@ -63,7 +63,7 @@ class SessionVariables
 
         } else {
 
-            if(!stristr($_SERVER['REQUEST_URI'], 'login')) {
+            if(!stristr($_SERVER['REQUEST_URI'], 'login') && !stristr($_SERVER['REQUEST_URI'], 'callback')) {
                 return redirect('/login');
             }
         }
