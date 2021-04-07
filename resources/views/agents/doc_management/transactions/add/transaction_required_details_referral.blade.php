@@ -149,7 +149,7 @@
 
                     <div class="row">
                         <div class="col-12 col-sm-6">
-                            <input type="text" class="custom-form-element form-input datepicker required" id="CloseDate" name="CloseDate" data-label="Settlement Date">
+                            <input type="date" class="custom-form-element form-input date-field required" id="CloseDate" name="CloseDate" data-label="Settlement Date">
                         </div>
                     </div>
 

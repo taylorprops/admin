@@ -70,7 +70,7 @@
                             </div>
                             <div class="col-7">
                                 <div class="pr-4">
-                                    <input type="text" class="custom-form-element form-input datepicker pr-2 form-value" name="close_date" id="close_date" value="{{ $property -> CloseDate }}">
+                                    <input type="date" class="custom-form-element form-input date-field pr-2 form-value" name="close_date" id="close_date" value="{{ $property -> CloseDate }}">
                                 </div>
                             </div>
 

@@ -13,51 +13,30 @@ if (document.URL.match(/calendar/)) {
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay',
             },
-            editable: true,
+            themeSystem: 'bootstrap',
+            editable: false,
+            selectable: true,
             eventClick: function(info) {
+                console.log(info.event);
+                $('.hide-multiple').show();
+                show_edit_event(calendar, info);
 
-                let event_details = get_event_details(info);
-                let x = $(info.el).offset().left;
-                let y = $(info.el).offset().top;
-                let el_width = $(info.el).width();
-                let edit_event_div_width = $('#edit_event_div').width();
-                let edit_event_div_height = $('#edit_event_div').height();
-                let container_width = $(document).width();
-                let container_height = $(document).height();
+            },
+            select: function (info) {
 
-                $('.event-active').removeClass('event-active shadow');
-                $(info.el).addClass('event-active shadow');
-
-                let top, left;
-
-                // if left side
-                if(x < container_width / 2) {
-                    left = x + el_width;
-                // if right side
-                } else if(x >= container_width / 2) {
-                    left = x - edit_event_div_width - 35;
-                }
-
-                // if top side
-                if(y < container_height / 2) {
-                    top = y;
-                // if bottom side
-                } else if(y >= container_height / 2) {
-                    top = y - edit_event_div_height - 10;
-                }
-
-                let coords = {
-                    top: top+'px',
-                    left: left+'px',
-                }
-
-                // only remove hidden if not already opened. This way it animates to next position
-                if($('#edit_event_div').hasClass('hidden')) {
-                    $('#edit_event_div').removeClass('hidden').css(coords);
+                if(info.event) {
+                    show_add_event(calendar, info, true);
                 } else {
-                    $('#edit_event_div').animate(coords);
+                    show_add_event(calendar, info, false);
                 }
 
+            },
+            dateClick: function(info) {
+
+                if($('.new-event').length > 0) {
+                    return false;
+                }
+                show_add_event(calendar, info, false);
             }
         });
 
@@ -69,53 +48,286 @@ if (document.URL.match(/calendar/)) {
             }
         });
 
-    });
+        $('#all_day').on('change', show_times);
 
-    function get_event_details(info) {
+        $('#repeat_frequency').on('change', show_repeat);
 
-        let event_start_date = null,
-        event_start_time = null,
-        event_end_date = null,
-        event_end_time = null,
-        event_start = null,
-        event_end = null,
-        start_hours = null,
-        start_minutes = null,
-        start_seconds = null,
-        end_date = null,
-        end_year = null,
-        end_month = null,
-        end_day = null,
-        end_hours = null,
-        end_minutes = null,
-        end_seconds = null,
-        repeat_frequency = null,
-        repeat_interval = null,
-        repeat_until = null,
-        rrule = null;
 
-        let event_id = info.event.id;
-        let event_title = info.event.title;
+        function show_add_event(calendar, info, multiple) {
 
-        if(info.event._def.recurringDef) {
-            rrule = info.event._def.recurringDef.typeData.rruleSet._rrule[0].options;
+            let id =  new Date().getTime();
+
+            if(multiple == true) {
+
+                calendar.addEvent({
+                    id: id,
+                    title: 'New Event',
+                    start: info.startStr,
+                    end: info.endStr,
+                    allDay: true,
+                    color: 'green',
+                    classNames: ['new-event'],
+                    extendedProps: ['new-event', 'multiple']
+                });
+
+            } else {
+
+                calendar.addEvent({
+                    id: id,
+                    title: 'New Event',
+                    start: info.dateStr,
+                    allDay: true,
+                    color: 'green',
+                    classNames: ['new-event'],
+                    extendedProps: ['new-event']
+                });
+
+            }
+
+            let new_event = calendar.getEventById(id);
+
+            $('.new-event .fc-event-title-container').trigger('click');
+
+            $('#repeat_frequency').val('none');
+            show_repeat();
+
+            $(document).on('mousedown', function(e) {
+
+                if(new_event) {
+                    if($(e.target).closest('.fc-daygrid-event').hasClass('new-event')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        return false;
+                    } else {
+                        if (!$(e.target).is('#edit_event_div *')) {
+                            new_event.remove();
+                        }
+                    }
+                }
+            });
+
+            $('#cancel_new_event_button').off('click').on('click', function() {
+                if(new_event) {
+                    new_event.remove();
+                    $('#edit_event_div').addClass('hidden');
+                }
+            });
+
+
+
+            $('#event_id').val('');
+
         }
 
-        let start_date = new Date(info.event.start);
-        let start_year = start_date.getFullYear();
-        let start_month = parseInt(start_date.getMonth()) + 1;
-        start_month = ('0' + start_month).slice(-2);
-        let start_day = ('0' + start_date.getDate()).slice(-2);
+        function show_edit_event(calendar, info) {
 
-        event_start_date = start_year+'-'+start_month+'-'+start_day;
+            let event_details = get_event_details(info);
 
-        if(info.event.allDay == false) {
+            $('#event_id').val(event_details.event_id);
+            $('#delete_event_button').data('event-id', event_details.event_id);
+            $('#event_title').val(event_details.event_title);
+            if($(info.el).hasClass('new-event')) {
+                $('#event_title').val('');
+            }
 
-            start_hours = ('0' + start_date.getHours()).slice(-2);
-            start_minutes = ('0' + start_date.getMinutes()).slice(-2);
-            start_seconds = '00';
+            $('#start_date').val(event_details.start_date);
+            $('#start_time').val(event_details.start_time);
 
-            event_start_time = start_hours+':'+start_minutes+':'+start_seconds;
+            $('#end_date').val(info.event.extendedProps.end_actual);
+            if($(info.el).hasClass('new-event')) {
+                $('#end_date').val(event_details.end_date);
+            }
+            $('#end_time').val(event_details.end_time);
+
+
+            let frequency = 'none';
+            if(event_details.repeat_frequency) {
+                frequency = event_details.repeat_frequency;
+            }
+
+            let multiple = false;
+            let properties = Object.values(info.event.extendedProps);
+            if(properties && properties.includes('multiple')) {
+                multiple = true;
+            }
+
+            if(!multiple) {
+
+                $('.hide-multiple').show();
+
+                $('#repeat_frequency').val(frequency);
+                $('#repeat_interval').val(event_details.repeat_interval);
+                $('#repeat_until').val(event_details.repeat_until);
+
+                show_repeat();
+
+                // hide end date and show time if not all day
+                if(event_details.all_day == false) {
+                    $('#all_day').prop('checked', false);
+                    $('.end-date').hide();
+                    $('.times').show();
+                } else  if(event_details.all_day == true) {
+                    $('#all_day').prop('checked', true);
+                    $('.end-date').show();
+                    $('.times').hide();
+                }
+
+            } else {
+
+                $('.hide-multiple').hide();
+
+            }
+
+            $('.event-active').removeClass('event-active shadow');
+            $(info.el).addClass('event-active shadow');
+
+            let top, left;
+            let x = $(info.el).offset().left;
+            let y = $(info.el).offset().top;
+            let el_width = $(info.el).width();
+            let edit_event_div_width = $('#edit_event_div').width();
+            let edit_event_div_height = $('#edit_event_div').height();
+            let container_width = $(document).width();
+            let container_height = $(document).height();
+
+            if(el_width > 200) {
+                el_width = 200;
+            }
+
+            // if left side
+            if(x < container_width / 2) {
+                left = x + el_width;
+            // if right side
+            } else if(x >= container_width / 2) {
+                left = x - edit_event_div_width - 35;
+            }
+
+            // if top side
+            if(y < container_height / 2) {
+                top = y;
+            // if bottom side
+            } else if(y >= container_height / 2) {
+                top = y - edit_event_div_height - 10;
+            }
+
+            let coords = {
+                top: top+'px',
+                left: left+'px',
+            }
+
+            // only remove hidden if not already opened. This way it animates to next position
+            if($('#edit_event_div').hasClass('hidden')) {
+                $('#edit_event_div').removeClass('hidden').css(coords);
+            } else {
+                $('#edit_event_div').animate(coords);
+            }
+
+            $('#cancel_new_event_button').on('click', function() {
+                $('#edit_event_div').addClass('hidden');
+                $('.event-active').removeClass('event-active shadow');
+            });
+
+            $('#save_event_button').off('click').on('click', function() {
+                save_event(calendar, info);
+            });
+
+            $('#delete_event_button').off('click').on('click', function() {
+                delete_event($(this).data('event-id'));
+            });
+
+            $('#start_time').on('change', function() {
+                let start = new Date($('#start_date').val()+' '+$(this).val());
+                start = new Date(start.setHours(start.getHours() + 1));
+
+                end_hours = ('0' + start.getHours()).slice(-2);
+                end_minutes = ('0' + start.getMinutes()).slice(-2);
+                end_seconds = '00';
+                event_end_time = end_hours+':'+end_minutes+':'+end_seconds;
+
+                $('#end_time').val(event_end_time);
+            });
+
+            $('#start_date, #end_date').on('change', function(e) {
+                if(e.target.id == 'start_date') {
+                    $('#end_date').prop('min', $('#start_date').val());
+                }
+                if($('#start_date').val() == $('#end_date').val()) {
+                    $('.hide-multiple').show();
+                } else {
+                    $('.hide-multiple').hide();
+                }
+            });
+
+        }
+
+        Date.prototype.addHours = function(h) {
+            this.setTime(this.getTime() + (h*60*60*1000));
+            return this;
+        }
+
+        function show_repeat() {
+
+            if($('#repeat_frequency').val() == 'none') {
+                $('.repeat').hide();
+            } else {
+                $('.repeat').show();
+                $('#frequency_text').text($('#repeat_frequency option:selected').data('text'));
+            }
+        }
+
+        function show_times() {
+            if($('#all_day').is(':checked')) {
+                $('.times').hide();
+                $('.end-date').show();
+            } else {
+                $('.times').show();
+                $('.end-date').hide();
+            }
+        }
+
+        function get_event_details(info) {
+
+            let event_start_date = null,
+            event_start_time = null,
+            event_end_date = null,
+            event_end_time = null,
+            event_start = null,
+            event_end = null,
+            start_hours = null,
+            start_minutes = null,
+            start_seconds = null,
+            end_date = null,
+            end_year = null,
+            end_month = null,
+            end_day = null,
+            end_hours = null,
+            end_minutes = null,
+            end_seconds = null,
+            repeat_frequency = null,
+            repeat_interval = null,
+            repeat_until = null;
+
+            let event_id = info.event ? info.event.id : '';
+            let event_title = info.event.title;
+
+            let start_date = new Date(info.event.start);
+            let start_year = start_date.getFullYear();
+            let start_month = parseInt(start_date.getMonth()) + 1;
+            start_month = ('0' + start_month).slice(-2);
+            let start_day = ('0' + start_date.getDate()).slice(-2);
+            let all_day = info.event.allDay;
+
+            event_start_date = start_year+'-'+start_month+'-'+start_day;
+
+            if(start_date.getHours() != '00') {
+                start_hours = ('0' + start_date.getHours()).slice(-2);
+                start_minutes = ('0' + start_date.getMinutes()).slice(-2);
+                start_seconds = '00';
+                event_start_time = start_hours+':'+start_minutes+':'+start_seconds;
+            } else {
+                event_start_time = '09:00:00';
+            }
 
             if(info.event.end) {
 
@@ -127,58 +339,102 @@ if (document.URL.match(/calendar/)) {
 
                 event_end_date = end_year+'-'+end_month+'-'+end_day;
 
-                if(end_date.getHours() != '00' && end_date.getMinutes() != '00') {
-                    end_hours = ('0' + end_date.getHours()).slice(-2);
-                    end_minutes = ('0' + end_date.getMinutes()).slice(-2);
-                    end_seconds = '00';
+                end_hours = ('0' + end_date.getHours()).slice(-2);
+                end_minutes = ('0' + end_date.getMinutes()).slice(-2);
+                end_seconds = '00';
 
-                    event_end_time = end_hours+':'+end_minutes+':'+end_seconds;
+                event_end_time = end_hours+':'+end_minutes+':'+end_seconds;
 
-                }
+            } else {
+
+                event_end_date = event_start_date;
+                event_end_time = '10:00:00';
 
             }
 
+            if(info.event.extendedProps.freq) {
+
+                repeat_frequency = info.event.extendedProps.freq;
+                repeat_interval = info.event.extendedProps.interval;
+                repeat_until = info.event.extendedProps.until;
+
+            }
+
+            let event_details = {};
+
+            event_details.event_id = event_id;
+            event_details.event_title = event_title;
+            event_details.all_day = all_day;
+            event_details.start_date = event_start_date;
+            event_details.start_time = event_start_time;
+            event_details.end_date = event_end_date;
+            event_details.end_time = event_end_time;
+            event_details.repeat_frequency = repeat_frequency;
+            event_details.repeat_interval = repeat_interval;
+            event_details.repeat_until = repeat_until;
+
+
+            return event_details;
+
         }
 
-        if(rrule) {
+        function save_event(calendar, info) {
 
-            event_end_date = '';
-            event_end_time = '';
-            repeat_frequency = rrule.freq;
-            repeat_interval = rrule.interval;
-            repeat_until = rrule.until;
+            let form = $('#edit_event_form');
+            let formData = new FormData(form[0]);
+
+            // let new_event = null;
+
+            // if(Object.keys(info.event.extendedProps).length !== 0) {
+            //     Object.values(info.event.extendedProps).forEach(function(value, index) {
+            //         if(value == 'new-event') {
+            //             new_event = info.event.extendedProps.includes('new-event') ? true : false;
+            //         }
+            //     });
+            // }
+
+            let all_day = $('#all_day').is(':checked') ? true : false;
+            formData.append('all_day', all_day);
+
+            axios.post('/calendar_update', formData, axios_options)
+            .then(function (response) {
+                toastr['success']('Event Saved');
+                $('#edit_event_div').addClass('hidden');
+                $('.event-active').removeClass('event-active shadow');
+
+                calendar.getEventById(info.event.id).remove();
+                $('.new-event').closest('.fc-daygrid-event-harness').remove();
+                calendar.refetchEvents();
+
+            })
+            .catch(function (error) {
+
+            });
 
         }
 
-        event_details = {};
+        function delete_event(event_id) {
 
-        event_details.event_id = event_id;
-        event_details.event_title = event_title;
-        event_details.start_date = event_start_date;
-        event_details.start_time = event_start_time;
-        event_details.end_date = event_end_date;
-        event_details.end_time = event_end_time;
-        event_details.repeat_frequency = repeat_frequency;
-        event_details.repeat_interval = repeat_interval
-        event_details.repeat_until = repeat_until;
+            let event = calendar.getEventById(event_id);
+            event.remove();
 
+            let formData = new FormData();
+            formData.append('event_id', event_id);
 
-        return event_details;
+            axios.post('/calendar_delete', formData, axios_options)
+            .then(function (response) {
 
-    }
+                $('#edit_event_div').addClass('hidden');
+                $('.event-active').removeClass('event-active shadow');
+                toastr['success']('Event Successfully Deleted');
 
-    function save_event(form) {
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-        let formData = new FormData(form[0]);
+        }
 
-        axios.post('/calendar_update', formData, axios_options)
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
-    }
+    });
 
 }

@@ -53,21 +53,21 @@
                                         </div>
                                         <div class="col-12 col-sm-6">
                                             @if($transaction_type == 'listing')
-                                                <input type="text" class="custom-form-element form-input datepicker required" data-label="List Date" name="MLSListDate" id="MLSListDate" value="{{ $property -> MLSListDate }}" @if($listing_closed) disabled @endif>
+                                                <input type="date" class="custom-form-element form-input date-field required" data-label="List Date" name="MLSListDate" id="MLSListDate" value="{{ $property -> MLSListDate }}" @if($listing_closed) disabled @endif>
                                             @else
-                                                <input type="text" class="custom-form-element form-input datepicker required" data-label="Contract Date" name="ContractDate" id="ContractDate" value="{{ $property -> ContractDate }}" @if($contract_closed) disabled @endif>
+                                                <input type="date" class="custom-form-element form-input date-field required" data-label="Contract Date" name="ContractDate" id="ContractDate" value="{{ $property -> ContractDate }}" @if($contract_closed) disabled @endif>
                                             @endif
                                         </div>
                                         <div class="col-12 col-sm-6">
                                             @if($transaction_type == 'listing')
-                                                <input type="text" class="custom-form-element form-input datepicker required" data-label="Expiration Date" name="ExpirationDate" id="ExpirationDate" value="{{ $property -> ExpirationDate }}" @if($listing_closed) disabled @endif>
+                                                <input type="date" class="custom-form-element form-input date-field required" data-label="Expiration Date" name="ExpirationDate" id="ExpirationDate" value="{{ $property -> ExpirationDate }}" @if($listing_closed) disabled @endif>
                                             @else
-                                                <input type="text" class="custom-form-element form-input datepicker required" data-label="Settle Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}" @if($contract_closed) disabled @endif>
+                                                <input type="date" class="custom-form-element form-input date-field required" data-label="Settle Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}" @if($contract_closed) disabled @endif>
                                             @endif
                                         </div>
                                     @else
                                         <div class="col-12 col-md-6">
-                                            <input type="text" class="custom-form-element form-input datepicker" data-label="Lease Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}">
+                                            <input type="date" class="custom-form-element form-input date-field" data-label="Lease Date" name="CloseDate" id="CloseDate" value="{{ $property -> CloseDate }}">
                                         </div>
                                     @endif
                                     <div class="col-12 col-sm-6">

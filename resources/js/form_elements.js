@@ -166,6 +166,7 @@ window.form_elements = function () {
 
                     let small = element.hasClass('form-small') ? 'form-small' : '';
                     let large = element.hasClass('form-large') ? 'form-large' : '';
+                    let date_field = element.hasClass('date-field') ? 'date-field' : '';
 
                     if($(document).width() < 576) {
                         large = '';
@@ -177,7 +178,7 @@ window.form_elements = function () {
 
                     if (form_type == 'form-input' || form_type == 'form-textarea') {
 
-                        element.wrap('<div class="form-ele '+small+' '+large+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+large+' '+label_view+'">' + label + '</label>');
+                        element.wrap('<div class="form-ele '+small+' '+large+'"></div>').parent('.form-ele').append('<label for="' + id + '" class="' + form_type + '-label ' + active_label + ' '+small+' '+large+' '+date_field+' '+label_view+'">' + label + '</label>');
 
                     } else if (form_type == 'form-input-file') {
 
@@ -549,9 +550,20 @@ function show_dropdown(input) {
     let wrapper = input.closest('.form-ele');
     let select = wrapper.find('select');
     let dropdown = input.next('.form-select-dropdown');
+    let dropdown_container = dropdown.find('.form-select-options-div');
 
     $('.form-select-value-input').removeClass('form-select-value-input-focus');
     wrapper.find('.form-select-li').removeClass('hidden');
+
+    let active_option = dropdown.find('.form-select-li.active');
+    if(active_option.length > 0) {
+
+        setTimeout(function() {
+            dropdown_container.scrollTop(0);
+            dropdown_container.scrollTop(active_option.position().top);
+        }, 10);
+
+    }
 
     if(wrapper.find('select').prop('disabled') == false) {
         // close dropdown if already open

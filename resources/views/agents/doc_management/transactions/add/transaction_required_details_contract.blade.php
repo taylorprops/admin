@@ -242,13 +242,13 @@ if($property -> Owner2 != '') {
                                     <div class="col-12 col-md-6">
                                         <div class="p-3">
                                             <div class="h5 text-orange mb-3">Contract Date</div>
-                                            <input type="text" class="custom-form-element form-input datepicker required" name="ContractDate" id="ContractDate" data-label="Contract Date" value="{{ ($property -> ContractDate != '0000-00-00' ? $property -> ContractDate : '') }}" readonly>
+                                            <input type="date" class="custom-form-element form-input date-field required" name="ContractDate" id="ContractDate" data-label="Contract Date" value="{{ $property -> ContractDate != '' && $property -> ContractDate != '0000-00-00' ? $property -> ContractDate : '' }}">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="p-3">
                                             <div class="h5 text-orange mb-3">Settlement Date</div>
-                                            <input type="text" class="custom-form-element form-input datepicker required" name="CloseDate" id="CloseDate" data-label="Settlement Date" value="{{ ($property -> CloseDate != '0000-00-00' ? $property -> CloseDate : '') }}" readonly>
+                                            <input type="date" class="custom-form-element form-input date-field required" name="CloseDate" id="CloseDate" data-label="Settlement Date" value="{{ $property -> CloseDate != '' && $property -> CloseDate != '0000-00-00' ? $property -> CloseDate : '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -318,7 +318,7 @@ if($property -> Owner2 != '') {
 
                                 <div class="p-3">
                                     <div class="h5 text-orange mb-3">Lease Date</div>
-                                    <input type="text" class="custom-form-element form-input datepicker required" name="CloseDate" id="CloseDate" data-label="Lease Date" value="{{ ($property -> CloseDate != '0000-00-00' ? $property -> CloseDate : '') }}">
+                                    <input type="date" class="custom-form-element form-input date-field required" name="CloseDate" id="CloseDate" data-label="Lease Date" value="{{ $property -> CloseDate != '' && $property -> CloseDate != '0000-00-00' ? $property -> CloseDate : '' }}">
                                 </div>
 
                             </div>

@@ -1402,7 +1402,7 @@
                                     <div class="h5 text-orange">Check Details</div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <input type="text" class="custom-form-element form-input datepicker required" name="check_in_date" id="check_in_date" data-label="Date On Check">
+                                    <input type="date" class="custom-form-element form-input date-field required" name="check_in_date" id="check_in_date" data-label="Date On Check">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input numbers-only required" name="check_in_number" id="check_in_number" data-label="Check Number">
@@ -1417,10 +1417,10 @@
                                     <div class="h5 text-orange">Dates</div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <input type="text" class="custom-form-element form-input datepicker required" name="check_in_date_received" id="check_in_date_received" value="{{ date('Y-m-d') }}" data-label="Date Received">
+                                    <input type="date" class="custom-form-element form-input date-field required" name="check_in_date_received" id="check_in_date_received" value="{{ date('Y-m-d') }}" data-label="Date Received">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="check_in_date_deposited" id="check_in_date_deposited" data-label="Date Deposited">
+                                    <input type="date" class="custom-form-element form-input date-field" name="check_in_date_deposited" id="check_in_date_deposited" data-label="Date Deposited">
                                 </div>
                             </div>
 
@@ -1468,7 +1468,7 @@
                             <div class="h5 text-orange">Check Details</div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <input type="text" class="custom-form-element form-input datepicker required" name="edit_check_in_date" id="edit_check_in_date" data-label="Date On Check">
+                            <input type="date" class="custom-form-element form-input date-field required" name="edit_check_in_date" id="edit_check_in_date" data-label="Date On Check">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <input type="text" class="custom-form-element form-input numbers-only required" name="edit_check_in_number" id="edit_check_in_number" data-label="Check Number">
@@ -1483,10 +1483,10 @@
                             <div class="h5 text-orange">Dates</div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <input type="text" class="custom-form-element form-input datepicker required" name="edit_check_in_date_received" id="edit_check_in_date_received" value="{{ date('Y-m-d') }}" data-label="Date Received">
+                            <input type="date" class="custom-form-element form-input date-field required" name="edit_check_in_date_received" id="edit_check_in_date_received" value="{{ date('Y-m-d') }}" data-label="Date Received">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <input type="text" class="custom-form-element form-input datepicker" name="edit_check_in_date_deposited" id="edit_check_in_date_deposited" data-label="Date Deposited">
+                            <input type="date" class="custom-form-element form-input date-field" name="edit_check_in_date_deposited" id="edit_check_in_date_deposited" data-label="Date Deposited">
                         </div>
                     </div>
                     <input type="hidden" name="edit_check_in_id" id="edit_check_in_id">
@@ -1529,7 +1529,7 @@
                                 <div class="h5 text-orange mb-0">Check Details</div>
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
-                                <input type="text" class="custom-form-element form-input datepicker required" name="check_out_date" id="check_out_date" data-label="Date On Check">
+                                <input type="date" class="custom-form-element form-input date-field required" name="check_out_date" id="check_out_date" data-label="Date On Check">
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
                                 <input type="text" class="custom-form-element form-input numbers-only required" name="check_out_number" id="check_out_number" data-label="Check Number">
@@ -1579,7 +1579,7 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
-                                <input type="text" class="custom-form-element form-input datepicker" id="check_out_date_ready" name="check_out_date_ready" data-label="Date Ready">
+                                <input type="date" class="custom-form-element form-input date-field" id="check_out_date_ready" name="check_out_date_ready" data-label="Date Ready">
                             </div>
                         </div>
 
@@ -1644,7 +1644,7 @@
                                 <div class="h5 text-orange mb-0">Check Details</div>
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
-                                <input type="text" class="custom-form-element form-input datepicker required" name="edit_check_out_date" id="edit_check_out_date" data-label="Date On Check">
+                                <input type="date" class="custom-form-element form-input date-field required" name="edit_check_out_date" id="edit_check_out_date" data-label="Date On Check">
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
                                 <input type="text" class="custom-form-element form-input numbers-only required" name="edit_check_out_number" id="edit_check_out_number" data-label="Check Number">
@@ -1694,7 +1694,7 @@
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
-                                <input type="text" class="custom-form-element form-input datepicker" id="edit_check_out_date_ready" name="edit_check_out_date_ready" data-label="Date Ready">
+                                <input type="date" class="custom-form-element form-input date-field" id="edit_check_out_date_ready" name="edit_check_out_date_ready" data-label="Date Ready">
                             </div>
                         </div>
 
@@ -1776,7 +1776,7 @@
                                     <input type="text" class="custom-form-element form-input required" name="add_earnest_check_payable_to" id="add_earnest_check_payable_to" data-label="Payable To">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <input type="text" class="custom-form-element form-input datepicker required" name="add_earnest_check_date" id="add_earnest_check_date" data-label="Date On Check">
+                                    <input type="date" class="custom-form-element form-input date-field required" name="add_earnest_check_date" id="add_earnest_check_date" data-label="Date On Check">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input numbers-only required" name="add_earnest_check_number" id="add_earnest_check_number" data-label="Check Number">
@@ -1786,11 +1786,11 @@
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-4 check-in">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_deposited" id="add_earnest_check_date_deposited" data-label="Date Deposited">
+                                    <input type="date" class="custom-form-element form-input date-field" name="add_earnest_check_date_deposited" id="add_earnest_check_date_deposited" data-label="Date Deposited">
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-4 check-out">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="add_earnest_check_date_sent" id="add_earnest_check_date_sent" data-label="Date Sent">
+                                    <input type="date" class="custom-form-element form-input date-field" name="add_earnest_check_date_sent" id="add_earnest_check_date_sent" data-label="Date Sent">
                                 </div>
 
                                 <div class="col-12 col-lg-9 check-out">
@@ -1853,7 +1853,7 @@
                                     <input type="text" class="custom-form-element form-input required" name="edit_earnest_payable_to" id="edit_earnest_payable_to" data-label="Payable To">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
-                                    <input type="text" class="custom-form-element form-input datepicker required" name="edit_earnest_check_date" id="edit_earnest_check_date" data-label="Date On Check">
+                                    <input type="date" class="custom-form-element form-input date-field required" name="edit_earnest_check_date" id="edit_earnest_check_date" data-label="Date On Check">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <input type="text" class="custom-form-element form-input numbers-only required" name="edit_earnest_check_number" id="edit_earnest_check_number" data-label="Check Number">
@@ -1863,11 +1863,11 @@
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-4 edit-check-in">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_date_deposited" id="edit_earnest_date_deposited" data-label="Date Deposited">
+                                    <input type="date" class="custom-form-element form-input date-field" name="edit_earnest_date_deposited" id="edit_earnest_date_deposited" data-label="Date Deposited">
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-4 edit-check-out">
-                                    <input type="text" class="custom-form-element form-input datepicker" name="edit_earnest_date_sent" id="edit_earnest_date_sent" data-label="Date Sent">
+                                    <input type="date" class="custom-form-element form-input date-field" name="edit_earnest_date_sent" id="edit_earnest_date_sent" data-label="Date Sent">
                                 </div>
 
                                 <div class="col-12 col-lg-4 edit-check-out">
@@ -2093,10 +2093,10 @@
                         @if($for_sale)
                             <div class="row">
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="custom-form-element form-input datepicker required" id="accept_contract_contract_date" data-label="Contract Date">
+                                    <input type="date" class="custom-form-element form-input date-field required" id="accept_contract_contract_date" data-label="Contract Date">
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="custom-form-element form-input datepicker required" id="accept_contract_close_date" data-label="Settle Date">
+                                    <input type="date" class="custom-form-element form-input date-field required" id="accept_contract_close_date" data-label="Settle Date">
                                 </div>
                             </div>
                             <div class="row">
@@ -2107,7 +2107,7 @@
                         @else
                             <div class="row">
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="custom-form-element form-input datepicker required" id="accept_contract_close_date" data-label="Lease Date">
+                                    <input type="date" class="custom-form-element form-input date-field required" id="accept_contract_close_date" data-label="Lease Date">
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <input type="text" class="custom-form-element form-input money-decimal numbers-only required" id="accept_contract_lease_amount" data-label="Lease Price">

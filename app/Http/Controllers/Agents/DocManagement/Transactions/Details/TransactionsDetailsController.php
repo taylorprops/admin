@@ -2462,14 +2462,14 @@ class TransactionsDetailsController extends Controller
             }
 
             $storage_full_path = $storage_path.'/doc_management/transactions/'.$path.'/'.$file_id.'_user';
-            chmod($storage_full_path.'/'.$new_file_name, 0775);
+            //chmod($storage_full_path.'/'.$new_file_name, 0775);
 
             // if size is not exactly letter but is close convert to letter or a4
             if ($page_size == '') {
                 $this -> convert_pdf_to_standard_size($page_width, $page_height, $storage_full_path, $new_file_name, $upload);
             }
 
-            exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+            //exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
 
             Storage::disk('public') -> makeDirectory($storage_dir.'/converted');
 

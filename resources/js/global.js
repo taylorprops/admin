@@ -403,13 +403,15 @@ window.notifications_mark_read = function(id, mark) {
 }
 
 window.datepicker_custom = function() {
+
     $('.datepicker').not('.datepicker-added').not('.field-datepicker').each(function() {
+
         $(this).addClass('datepicker-added');
         let id = $(this).prop('id');
         if(!id) {
             id = new Date().getTime();
         }
-        window.picker = datepicker('#'+id, {
+        const picker = datepicker('#'+id, {
             onSelect: (instance, date) => {
                 let element = $('#' + instance.el.id);
                 let wrapper = element.closest('.form-ele');
@@ -419,6 +421,7 @@ window.datepicker_custom = function() {
 
             },
             formatter: (input, date, instance) => {
+                console.log(date);
                 const value = date.toJSON().slice(0, 10);
                 input.value = value;
                 $('#'+id).focus().trigger('click');

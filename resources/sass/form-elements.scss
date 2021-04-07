@@ -180,6 +180,18 @@
         transition: all .1s;
         z-index: 1;
 
+        &.date-field {
+            top: -9px;
+            width: auto;
+            font-size: .7rem;
+            color: $default;
+            background: rgba(white, 0.9);
+            line-height: .7rem;
+            border-radius: 2px;
+            padding-bottom: 1px;
+            padding-top: 1px;
+        }
+
         &:not(:disabled) {
             cursor: pointer;
         }
@@ -223,6 +235,7 @@
         padding-top: 1px;
         //box-shadow: 0px 4px 7px 4px rgba(255,255,255,0.59);
         z-index: 1;
+
 
         &.form-small {
             top: -7px !important;

@@ -7,4 +7,23 @@
 #edit_event_div {
     position: absolute;
     z-index: 500;
+    width: 400px;
+
+    .times {
+        display: none;
+    }
+
+    .datepicker {
+        text-align: center;
+    }
+
+    .repeat {
+        display: none;
+    }
+
+
+    .datepicker-div, .form-datepicker-cancel {
+        display: none !important;
+    }
+
 }

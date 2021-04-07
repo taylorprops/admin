@@ -100,13 +100,13 @@
                                 <div class="col-12 col-md-6">
                                     <div class="p-3">
                                         <div class="h5 text-orange mb-3">List Date</div>
-                                        <input type="text" class="custom-form-element form-input datepicker required" name="MLSListDate" id="MLSListDate" data-label="List Date" value="{{ ($property -> MLSListDate != '0000-00-00' ? $property -> MLSListDate : '') }}">
+                                        <input type="date" class="custom-form-element form-input date-field required" name="MLSListDate" id="MLSListDate" data-label="List Date" value="{{ $property -> MLSListDate != '' && $property -> MLSListDate != '0000-00-00' ? $property -> MLSListDate : '' }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="p-3">
                                         <div class="h5 text-orange mb-3">Expiration Date</div>
-                                        <input type="text" class="custom-form-element form-input datepicker required" name="ExpirationDate" id="ExpirationDate" data-label="Expiration Date" value="{{ $property -> ExpirationDate }}">
+                                        <input type="date" class="custom-form-element form-input date-field required" name="ExpirationDate" id="ExpirationDate" data-label="Expiration Date" value="{{ $property -> ExpirationDate }}">
                                     </div>
                                 </div>
                             </div>

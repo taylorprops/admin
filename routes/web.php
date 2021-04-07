@@ -61,6 +61,7 @@ Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 Route::get('/calendar', [CalendarController::class, 'calendar']);
 Route::get('/calendar_events', [CalendarController::class, 'calendar_events']);
 Route::post('/calendar_update', [CalendarController::class, 'calendar_update']);
+Route::post('/calendar_delete', [CalendarController::class, 'calendar_delete']);
 
 /********** Search Routes ********/
 Route::get('/search', [SearchController::class, 'search']);
