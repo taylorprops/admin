@@ -22,17 +22,18 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/logout',
+        '/esign_callback'
     ];
 
     private $openRoutes = [
-        'esign_callback',
+        '/esign_callback',
         'login',
     ];
 
     public function handle($request, Closure $next)
     {
-        foreach ($this->openRoutes as $route) {
-            if ($request->is($route)) {
+        foreach ($this -> openRoutes as $route) {
+            if ($request -> is($route)) {
                 return $next($request);
             }
         }
