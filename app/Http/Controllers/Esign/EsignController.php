@@ -979,8 +979,8 @@ class EsignController extends Controller
 
     public function esign_send_for_signatures(Request $request) {
 
-		DB::beginTransaction();
-        try {
+		// DB::beginTransaction();
+        // try {
 
             $envelope_id = $request -> envelope_id ?? 0;
             $template_id = $request -> template_id ?? 0;
@@ -1172,16 +1172,16 @@ class EsignController extends Controller
 
             return response() -> json(['status' => 'sent']);
 
-        } catch (Throwable $e) {
+        // } catch (Throwable $e) {
 
-            DB::rollBack();
+        //     DB::rollBack();
 
-            return response() -> json([
-                'status' => 'error',
-                'message' => $e -> getMessage()
-            ]);
+        //     return response() -> json([
+        //         'status' => 'error',
+        //         'message' => $e -> getMessage()
+        //     ]);
 
-        }
+        // }
 
 
 
