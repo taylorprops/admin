@@ -25,8 +25,56 @@ class CalendarController extends Controller
             $title = $event -> event_title;
 
             $all_day = $event -> all_day == 1 ? true : false;
-
             $start = $event -> start_date;
+            $end = $event -> end_date;
+            $end_actual = $end;
+            $extendedProps = [];
+            $extendedProps['end_actual'] = $end_actual;
+
+            if($all_day == true) {
+
+                if($event -> start_date != $event -> end_date) {
+                    $extendedProps['multiple'] = 'multiple';
+                    $end = date("Y-m-d", strtotime("$end +1 day"));
+                }
+
+            } else if($all_day == false) {
+
+                $start .= 'T'.$event -> start_time;
+                $end .= 'T'.$event -> end_time;
+
+            }
+
+            $event_details = [
+                'id' => $id,
+                'title' => $title,
+                'allDay' => $all_day,
+                'start' => $start,
+                'end' => $end,
+                'groupId' => $event -> group_id,
+                'extendedProps' => $extendedProps
+            ];
+
+            if($event -> repeat_frequency != 'none') {
+
+                $event_details['extendedProps']['freq'] = $event -> repeat_frequency;
+                $event_details['extendedProps']['interval'] = $event -> repeat_interval;
+                $event_details['extendedProps']['dtstart'] = $start;
+                $event_details['extendedProps']['until'] = !stristr($event -> repeat_until, '0000') ? $event -> repeat_until : '';
+
+                $event_details['rrule']['freq'] = $event -> repeat_frequency;
+                $event_details['rrule']['interval'] = $event -> repeat_interval;
+                $event_details['rrule']['dtstart'] = $start;
+                $event_details['rrule']['until'] = !stristr($event -> repeat_until, '0000') ? $event -> repeat_until : '';
+
+            }
+
+
+
+
+
+
+            /* $start = $event -> start_date;
             if($event -> start_time && $all_day == false) {
                 $start .= 'T'.$event -> start_time;
             }
@@ -77,7 +125,7 @@ class CalendarController extends Controller
                         'until' =>  !stristr($event -> repeat_until, '0000') ? $event -> repeat_until : ''
                     ]
                 ];
-            }
+            } */
 
 
             $calendar_events[] = $event_details;

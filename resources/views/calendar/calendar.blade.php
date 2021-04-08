@@ -31,13 +31,13 @@
     <form id="edit_event_form">
 
         <div class="">
-            <textarea class="custom-form-element form-textarea" name="event_title" id="event_title" data-label="Event Description"></textarea>
+            <textarea class="custom-form-element form-textarea required" name="event_title" id="event_title" data-label="Event Description"></textarea>
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
 
             <div>
-                <input type="date" class="custom-form-element form-input date-field" name="start_date" id="start_date" data-label="Start Date">
+                <input type="date" class="custom-form-element form-input date-field required" name="start_date" id="start_date" data-label="Start Date">
             </div>
 
             <div class="end-date mx-1">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="end-date">
-                <input type="date" class="custom-form-element form-input date-field" name="end_date" id="end_date" data-label="End Date">
+                <input type="date" class="custom-form-element form-input date-field required" name="end_date" id="end_date" data-label="End Date">
             </div>
 
             <div class="times ml-2">
@@ -148,7 +148,7 @@
                 </div>
 
                 <div class="wpx-80 repeat">
-                    <input type="text" class="custom-form-element form-input" id="repeat_interval" name="repeat_interval" data-label="Interval">
+                    <input type="text" class="custom-form-element form-input numbers-only required" id="repeat_interval" name="repeat_interval" data-label="Interval">
                 </div>
 
                 <div class="repeat ml-2" id="frequency_text">Weeks</div>

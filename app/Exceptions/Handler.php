@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -38,5 +40,16 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /* public function render($request, Throwable $exception) {
+        if($this -> pageExpired($exception)) {
+            return back(fallback: '/dashboard');
+        }
+        return parent::render($request, $exception);
+    }
+
+    private function pageExpired(Throwable $exception): bool {
+        return $exception instanceof TokenMismatchException || ($exception instanceof HttpException && $exception -> getStatusCode() == 419);
+    } */
 
 }
