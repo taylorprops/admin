@@ -1396,7 +1396,7 @@ class EsignController extends Controller
             'signer_bounced' => 'Signer Bounced',
             'document_completed' => 'Completed',
             'document_expired' => 'Expired',
-            'document_canceled' => 'Canceled',
+            'document_cancelled' => 'Canceled',
         ][$event_type] ?? null;
 
 
@@ -1436,7 +1436,7 @@ class EsignController extends Controller
                 'signer_bounced' => 'Signer Bounced',
                 'document_completed' => 'Completed',
                 'document_expired' => 'Expired',
-                'document_canceled' => 'Canceled',
+                'document_cancelled' => 'Canceled',
             ][$event_type] ?? null;
 
             //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {
