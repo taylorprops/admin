@@ -112,11 +112,11 @@ class EsignController extends Controller
         return view('/esign/get_deleted_system_templates_html', compact('deleted_templates'));
     }
 
-    public function get_cancelled(Request $request) {
+    public function get_canceled(Request $request) {
 
-		$envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired']) -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
+		$envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Canceled', 'Expired']) -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
 
-        return view('/esign/get_cancelled_html', compact('envelopes'));
+        return view('/esign/get_canceled_html', compact('envelopes'));
     }
 
     public function cancel_envelope(Request $request) {
@@ -126,7 +126,18 @@ class EsignController extends Controller
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
+
+        if($document -> getIsCanceled() == true) {
+            $envelope -> update([
+                'status' => 'Canceled'
+            ]);
+            return response() -> json(['status' => 'canceled']);
+        }
+
         $client -> cancelDocument($document);
+
+        return response() -> json(['status' => 'success']);
+
     }
 
     public function resend_envelope(Request $request) {
@@ -137,21 +148,19 @@ class EsignController extends Controller
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
-        $signers = $document -> getSigners();
 
+        if($document -> getIsCanceled() == true) {
+            $envelope -> update([
+                'status' => 'Canceled'
+            ]);
+            return response() -> json(['status' => 'canceled']);
+        }
+
+        $signers = $document -> getSigners();
         $signer = null;
         foreach ($signers as $signer) {
             if ($signer -> getStatus() == 'waiting_for_signature') {
-                try {
-                    $client -> sendReminderForDocument($document, $signer);
-                } catch (\Exception $e) {
-                    if(stristr($e -> getMessage(), 'document_deleted')) {
-                        $envelope -> status = 'Cancelled';
-                        $envelope -> save();
-                        return response() -> json(['status' => 'document_deleted']);
-                    }
-                    return $e -> getMessage();
-                }
+                $client -> sendReminderForDocument($document, $signer);
             }
         }
 
@@ -1387,7 +1396,7 @@ class EsignController extends Controller
             'signer_bounced' => 'Signer Bounced',
             'document_completed' => 'Completed',
             'document_expired' => 'Expired',
-            'document_cancelled' => 'Cancelled',
+            'document_canceled' => 'Canceled',
         ][$event_type] ?? null;
 
 
@@ -1427,7 +1436,7 @@ class EsignController extends Controller
                 'signer_bounced' => 'Signer Bounced',
                 'document_completed' => 'Completed',
                 'document_expired' => 'Expired',
-                'document_cancelled' => 'Cancelled',
+                'document_canceled' => 'Canceled',
             ][$event_type] ?? null;
 
             //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {

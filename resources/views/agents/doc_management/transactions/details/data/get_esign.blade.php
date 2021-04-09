@@ -20,7 +20,7 @@
 
 
                 <li class="nav-item">
-                    <a class="nav-link" id="cancelled_tab" data-tab="cancelled" data-toggle="tab" href="#cancelled_content" role="tab" aria-controls="cancelled_content" aria-selected="false">Cancelled</a>
+                    <a class="nav-link" id="canceled_tab" data-tab="canceled" data-toggle="tab" href="#canceled_content" role="tab" aria-controls="canceled_content" aria-selected="false">Canceled</a>
                 </li>
 
             </ul>
@@ -46,9 +46,9 @@
 
                 </div>
 
-                <div class="tab-pane fade" id="cancelled_content" role="tabpanel" aria-labelledby="cancelled_tab">
+                <div class="tab-pane fade" id="canceled_content" role="tabpanel" aria-labelledby="canceled_tab">
 
-                    <div id="cancelled_esign_div"></div>
+                    <div id="canceled_esign_div"></div>
 
                 </div>
 

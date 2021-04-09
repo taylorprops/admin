@@ -63,7 +63,7 @@
                                 'document_declined' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Declined <i class="fal fa-ban ml-2"></i></div>',
                                 'signer_bounced' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Bounced <i class="fal fa-ban ml-2"></i></div>',
                                 'document_expired' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Expired <i class="fad fa-ban ml-2"></i></div>',
-                                'document_cancelled' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Cancelled <i class="fal fa-ban ml-2"></i></div>'
+                                'document_canceled' => '<div class="text-danger no-wrap">'.$signer -> signer_name.'</div><div class="text-danger"> Canceled <i class="fal fa-ban ml-2"></i></div>'
                             ][$signer_status] ?? '<div>'.$signer -> signer_name.'</div>';
 
                             echo '<div class="d-flex justify-content-between">'.$signer_status_html.'</div>';

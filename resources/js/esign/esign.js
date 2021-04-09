@@ -145,9 +145,9 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                         }
                     }, 200);
 
-                } else if(tab == 'cancelled') {
+                } else if(tab == 'canceled') {
 
-                    data_table('10', $('#cancelled_table'), [4, 'desc'], [0], [], false, true, true, true, true);
+                    data_table('10', $('#canceled_table'), [4, 'desc'], [0], [], false, true, true, true, true);
 
                 }
 
@@ -278,10 +278,10 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                 .then(function (response) {
                     setTimeout(function() {
                         load_tab('in_process');
-                        load_tab('cancelled');
+                        load_tab('canceled');
                         $('#confirm_cancel_modal').modal('hide');
                     }, 1000);
-                    toastr['success']('Signature Request Cancelled');
+                    toastr['success']('Signature Request Canceled');
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -307,13 +307,13 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
                 formData.append('singer_id', singer_id);
                 axios.post('/esign/resend_envelope', formData, axios_options)
                 .then(function (response) {
+
                     load_tab('in_process');
                     $('#resend_envelope_modal').modal('hide');
                     $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
 
-
                     if(response.data.status == 'document_deleted') {
-                        $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+                        $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already canceled. It may have expired or been declined by a signer. It has been moved to the Canceled folder');
                     } else {
                         toastr['success']('Signature Request Resent');
                     }

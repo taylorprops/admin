@@ -2720,7 +2720,7 @@ class TransactionsDetailsController extends Controller
         return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
     }
 
-    public function get_cancelled(Request $request) {
+    public function get_canceled(Request $request) {
 
 		$transaction_type = $request -> transaction_type;
         $Listing_ID = $request -> Listing_ID ?? 0;
@@ -2731,25 +2731,36 @@ class TransactionsDetailsController extends Controller
             -> where('Listing_ID', $Listing_ID)
             -> where('Contract_ID', $Contract_ID)
             -> where('Referral_ID', $Referral_ID)
-            -> whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Cancelled', 'Expired'])
+            -> whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Canceled', 'Expired'])
             -> with(['signers', 'documents'])
             -> orderBy('created_at', 'desc')
             -> get();
 
-        return view('/esign/get_cancelled_html', compact('envelopes'));
+        return view('/esign/get_canceled_html', compact('envelopes'));
     }
 
-    public function cancel_envelope(Request $request) {
+    /* public function cancel_envelope(Request $request) {
 
 		$envelope_id = $request -> envelope_id;
         $envelope = EsignEnvelopes::find($envelope_id);
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
-        $client -> cancelDocument($document);
-    }
 
-    public function resend_envelope(Request $request) {
+        if($document -> getIsCanceled() == true) {
+            $envelope -> update([
+                'status' => 'Canceled'
+            ]);
+            return response() -> json(['status' => 'canceled']);
+        }
+
+        $client -> cancelDocument($document);
+
+        return response() -> json(['status' => 'success']);
+
+    } */
+
+    /* public function resend_envelope(Request $request) {
 
 		$signer_id = $request -> signer_id;
         $envelope_id = $request -> envelope_id;
@@ -2757,6 +2768,14 @@ class TransactionsDetailsController extends Controller
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
+
+        if($document -> getIsCanceled() == true) {
+            $envelope -> update([
+                'status' => 'Canceled'
+            ]);
+            return response() -> json(['status' => 'canceled']);
+        }
+
         $signers = $document -> getSigners();
         $signer = null;
         foreach ($signers as $signer) {
@@ -2764,7 +2783,7 @@ class TransactionsDetailsController extends Controller
                 $client -> sendReminderForDocument($document, $signer);
             }
         }
-    }
+    } */
 
     // End Esign Tab
 

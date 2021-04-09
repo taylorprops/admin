@@ -81,9 +81,9 @@
 
             </div>
 
-            <div class="user-auth d-flex justify-content-around align-items-center font-8">
+            <div class="user-auth d-flex justify-content-around align-items-center font-8 mt-3">
                 <div>
-                    <i class="fa fa-user mr-2 text-white"></i> <a href="/users/user_profile" class="text-light">Edit Profile</a>
+                    <i class="fad fa-edit mr-2 text-white"></i> <a href="/users/user_profile" class="text-light">Edit Profile</a>
                 </div>
                 <div>
                     <a class="text-light" href="/logout">Logout <i class="fal fa-sign-out ml-2 text-orange"></i></a>

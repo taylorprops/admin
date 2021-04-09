@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // esign
-Route::get('/esign', 'Esign\EsignController@esign')->name('esign');
+Route::get('/esign', 'Esign\EsignController@esign') -> name('esign');
 // esign after sending docs for signatures
 Route::get('/esign_show_sent', 'Esign\EsignController@esign');
 
@@ -50,7 +50,7 @@ Route::get('/esign/get_templates', 'Esign\EsignController@get_templates');
 Route::get('/esign/get_deleted_templates', 'Esign\EsignController@get_deleted_templates');
 Route::get('/esign/get_system_templates', 'Esign\EsignController@get_system_templates');
 Route::get('/esign/get_deleted_system_templates', 'Esign\EsignController@get_deleted_system_templates');
-Route::get('/esign/get_cancelled', 'Esign\EsignController@get_cancelled');
+Route::get('/esign/get_canceled', 'Esign\EsignController@get_canceled');
 
 // add documents
 Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', 'Esign\EsignController@esign_add_documents');
@@ -100,4 +100,4 @@ Route::get('/agents/doc_management/transactions/esign/get_drafts', 'Agents\DocMa
 Route::get('/agents/doc_management/transactions/esign/get_deleted_drafts', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_deleted_drafts');
 Route::get('/agents/doc_management/transactions/esign/get_in_process', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_in_process');
 Route::get('/agents/doc_management/transactions/esign/get_completed', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_completed');
-Route::get('/agents/doc_management/transactions/esign/get_cancelled', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_cancelled');
+Route::get('/agents/doc_management/transactions/esign/get_canceled', 'Agents\DocManagement\Transactions\Details\TransactionsDetailsController@get_canceled');

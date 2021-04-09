@@ -86,9 +86,9 @@ if (document.URL.match(/transaction_details/)) {
 
                 data_table('10', $('#completed_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
-            } else if(tab == 'cancelled') {
+            } else if(tab == 'canceled') {
 
-                data_table('10', $('#cancelled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
+                data_table('10', $('#canceled_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
             }
 
@@ -145,15 +145,15 @@ if (document.URL.match(/transaction_details/)) {
 
             let formData = new FormData();
             formData.append('envelope_id', envelope_id);
-            axios.post('/agents/doc_management/transactions/esign/cancel_envelope', formData, axios_options)
+            axios.post('/esign/cancel_envelope', formData, axios_options)
             .then(function (response) {
                 setTimeout(function() {
                     $('[data-envelope-id="'+envelope_id+'"]').closest('tr').fadeOut();
                     $('#confirm_cancel_modal').modal('hide');
                     $('#confirm_cancel_button').html('<i class="fal fa-check mr-2"></i> Confirm');
-                    load_tab('cancelled');
+                    load_tab('canceled');
                 }, 1000);
-                toastr['success']('Signature Request Cancelled');
+                toastr['success']('Signature Request Canceled');
             })
             .catch(function (error) {
                 console.log(error);
@@ -177,15 +177,14 @@ if (document.URL.match(/transaction_details/)) {
             let formData = new FormData();
             formData.append('envelope_id', envelope_id);
             formData.append('singer_id', singer_id);
-            axios.post('/agents/doc_management/transactions/esign/resend_envelope', formData, axios_options)
+            axios.post('/esign/resend_envelope', formData, axios_options)
             .then(function (response) {
 
-                load_tab('in_process');
                 $('#resend_envelope_modal').modal('hide');
                 $('#resend_envelope_button').html('<i class="fal fa-check mr-2"></i> Confirm</a>');
 
-                if(response.data.status == 'document_deleted') {
-                    $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already cancelled. It may have expired or been declined by a signer. It has been moved to the Cancelled folder');
+                if(response.data.status == 'canceled') {
+                    $('#modal_info').modal().find('.modal-body').html('The document you were trying to send was already canceled. It may have expired or been declined by a signer. It has been moved to the Canceled folder');
                 } else {
                     toastr['success']('Signature Request Resent');
                 }

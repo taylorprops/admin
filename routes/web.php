@@ -672,7 +672,7 @@ Route::middleware(['agent']) -> group(function () {
     Route::get('/esign/get_deleted_templates', [EsignController::class, 'get_deleted_templates']);
     Route::get('/esign/get_system_templates', [EsignController::class, 'get_system_templates']);
     Route::get('/esign/get_deleted_system_templates', [EsignController::class, 'get_deleted_system_templates']);
-    Route::get('/esign/get_cancelled', [EsignController::class, 'get_cancelled']);
+    Route::get('/esign/get_canceled', [EsignController::class, 'get_canceled']);
 
     // add documents
     Route::get('/esign/esign_add_documents/{User_ID?}/{document_ids?}/{Agent_ID?}/{Listing_ID?}/{Contract_ID?}/{Referral_ID?}/{transaction_type?}', [EsignController::class, 'esign_add_documents']);
@@ -711,18 +711,18 @@ Route::middleware(['agent']) -> group(function () {
     // restore template
     Route::post('/agents/doc_management/transactions/esign/restore_template', [TransactionsDetailsController::class, 'restore_template']);
 
-    // cancel envelope
+    /* // cancel envelope
     Route::post('/agents/doc_management/transactions/esign/cancel_envelope', [TransactionsDetailsController::class, 'cancel_envelope']);
 
     // resend envelope
-    Route::post('/agents/doc_management/transactions/esign/resend_envelope', [TransactionsDetailsController::class, 'resend_envelope']);
+    Route::post('/agents/doc_management/transactions/esign/resend_envelope', [TransactionsDetailsController::class, 'resend_envelope']); */
 
     // get esign dashboard tabs
     Route::get('/agents/doc_management/transactions/esign/get_drafts', [TransactionsDetailsController::class, 'get_drafts']);
     Route::get('/agents/doc_management/transactions/esign/get_deleted_drafts', [TransactionsDetailsController::class, 'get_deleted_drafts']);
     Route::get('/agents/doc_management/transactions/esign/get_in_process', [TransactionsDetailsController::class, 'get_in_process']);
     Route::get('/agents/doc_management/transactions/esign/get_completed', [TransactionsDetailsController::class, 'get_completed']);
-    Route::get('/agents/doc_management/transactions/esign/get_cancelled', [TransactionsDetailsController::class, 'get_cancelled']);
+    Route::get('/agents/doc_management/transactions/esign/get_canceled', [TransactionsDetailsController::class, 'get_canceled']);
 
 
 });
