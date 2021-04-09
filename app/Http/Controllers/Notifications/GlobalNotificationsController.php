@@ -10,11 +10,15 @@ class GlobalNotificationsController extends Controller
 
     public function get_notifications(Request $request) {
 
-        // notifications
-        $notifications = auth() -> user() -> unreadNotifications;
-        $read_notifications = auth() -> user() -> readNotifications -> where('created_at', '>', date('Y-m-d', strtotime('-1 month')));
+        if(auth() -> user()) {
+            // notifications
+            $notifications = auth() -> user() -> unreadNotifications;
+            $read_notifications = auth() -> user() -> readNotifications -> where('created_at', '>', date('Y-m-d', strtotime('-1 month')));
 
-        return view('/notifications/get_notifications_html', compact('notifications', 'read_notifications'));
+            return view('/notifications/get_notifications_html', compact('notifications', 'read_notifications'));
+        } else {
+            return response() -> json(['status' => 'error']);
+        }
 
     }
 

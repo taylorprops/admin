@@ -20,7 +20,9 @@ class Agent
                 return $next($request);
             }
         }
-        //return redirect('/') -> with('error','Session Has Expired');
+
+        //return abort(403);
+        return redirect('/dashboard') -> with('error','You do not have access');
         //echo '<script>top.location.href="/";</script>';
     }
 }

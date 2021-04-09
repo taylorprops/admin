@@ -340,6 +340,10 @@ function get_global_notifications() {
     axios.get('/notifications/get_notifications')
     .then(function (response) {
 
+        if(response.data.status == 'error') {
+            window.location = '/login';
+        }
+
         $('.global-notifications-div').html(response.data);
 
         $('.notifications-unread-count').text($('.global-notifications-count').first().text());

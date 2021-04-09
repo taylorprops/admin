@@ -23,9 +23,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard) -> check()) {
-                if($request -> path() != 'password/email') {
-                    return redirect(RouteServiceProvider::HOME);
-                }
+                return redirect(RouteServiceProvider::HOME);
             }
         }
 

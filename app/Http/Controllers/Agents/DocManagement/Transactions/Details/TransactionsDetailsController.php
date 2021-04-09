@@ -85,6 +85,10 @@ class TransactionsDetailsController extends Controller
     // Transaction Details
     public function transaction_details(Request $request) {
 
+        if(!auth() -> user()) {
+            return redirect('/login');
+        }
+
 		$transaction_type = $request -> transaction_type;
         $id = $request -> id;
 

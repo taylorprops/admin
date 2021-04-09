@@ -8,7 +8,7 @@
             <th>Expiration Date</th>
             <th>Clients</th>
             <th>Checklist Status</th>
-            <th></th>
+            <th><span class="hidden">Image</span></th>
         </thead>
         <tbody>
             @foreach($transactions as $transaction)

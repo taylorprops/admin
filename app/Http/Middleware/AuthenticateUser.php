@@ -13,6 +13,8 @@ class AuthenticateUser
      * @param  \Closure  $next
      * @return mixed
      */
+
+    /*  NOT USED */
     public function handle($request, Closure $next)
     {
         if (basename(request() -> path()) != 'login') {
