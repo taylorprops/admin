@@ -126,7 +126,7 @@ class EsignController extends Controller
 
         $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
         $document = $client -> getDocumentByHash($envelope -> document_hash);
-        dd($document);
+
         if($document -> getIsCancelled() == true) {
             $envelope -> update([
                 'status' => 'Canceled'
