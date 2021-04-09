@@ -192,6 +192,10 @@ class EmployeesController extends Controller {
             $emp = TransactionCoordinators::find($emp_id);
         }
 
+        $user = User::where('email', $emp -> email) -> first() -> update([
+            'photo_location' => ''
+        ]);
+
         Storage::disk('public') -> delete(str_replace('/storage/', '', $emp -> photo_location));
         $emp -> update([
             'photo_location' => ''
