@@ -84,7 +84,7 @@
                         <div class="text-gray d-flex justify-content-around">
                             <div>
                                 Enter your email address to reset your password
-                                <input type="text" class="custom-form-element form-large form-input" id="forgot_email" name="email" data-label="Email Address">
+                                <input type="email" class="custom-form-element form-large form-input required" id="forgot_email" name="email" data-label="Email Address">
                             </div>
                         </div>
                     </div>

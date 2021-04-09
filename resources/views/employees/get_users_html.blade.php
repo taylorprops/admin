@@ -17,8 +17,8 @@
         <tbody>
             @foreach($users as $user)
                 <tr>
-                    <td width="100"><button class="btn btn-primary btn-sm send-password-reset-button">Reset Password</button></td>
-                    <td width="100"><button class="btn btn-primary btn-sm send-register-email-button">Registration Email</button></td>
+                    <td width="100"><button class="btn btn-primary btn-sm send-password-reset-button" data-email="{{ $user -> email }}">Reset Password</button></td>
+                    <td width="100"><button class="btn btn-primary btn-sm send-register-email-button" data-email="{{ $user -> email }}">Registration Email</button></td>
                     <td>{{ $user -> last_name.', '.$user -> first_name }}</td>
                     <td>{{ ucwords(str_replace('_', ' ', $user -> group)) }}</td>
                     <td><a href="mailto:{{ $user -> email }}">{{ $user -> email }}</a></td>

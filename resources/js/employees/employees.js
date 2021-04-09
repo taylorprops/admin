@@ -196,6 +196,25 @@ if (document.URL.match(/employees/)) {
                 $('#users_div').html(response.data);
                 data_table(25, $('#users_table'), [2, 'asc'], [0, 1, 5], [], true, true, true, true, true, false);
 
+                $('.send-password-reset-button').on('click', function() {
+
+                    let email = $(this).data('email');
+                    let formData = new FormData();
+                    formData.append('email', email);
+
+                    axios.post('/password/email', formData, axios_options)
+                    .then(function (response) {
+
+                        let message = response.data.message;
+                        if(message.match(/password\sreset/)) {
+                            toastr['success']('Reset Password Email Sent')
+                        } else {
+                            alert('error');
+                        }
+
+                    });
+                });
+
             })
             .catch(function (error) {
 

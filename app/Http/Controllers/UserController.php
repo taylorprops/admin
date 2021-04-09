@@ -27,19 +27,9 @@ class UserController extends Controller
 
     public function save_profile(Request $request) {
 
-        $user = User::find(auth() -> user() -> id);
-
-        // if in house, transaction coordinator update those tables
-        if(auth() -> user() -> group == 'admin') {
-            $employee = InHouse::where('email', $user -> email) -> first();
-        } else if(auth() -> user() -> group == 'transaction_coordinator') {
-            $employee = TransactionCoordinators::where('email', $user -> email) -> first();
-        }
-
-        $employee -> first_name = $request -> first_name;
-        $employee -> last_name = $request -> last_name;
-        $employee -> email = $request -> email;
-        $employee -> save();
+        $user = User::find(auth() -> user() -> id) -> update([
+            'signature' => $request -> signature
+        ]);
 
         return response() -> json(['status' => 'success']);
 

@@ -36,6 +36,17 @@ if (document.URL.match(/user_profile/)) {
 
         $('.filepond--credits').hide();
 
+        let options = {
+            menubar: 'edit format table',
+            statusbar: false,
+            toolbar: 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |',
+            selector: '#signature',
+            plugins: 'table',
+            table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+            height: '300'
+        }
+        text_editor(options);
+
 
     });
 
@@ -92,6 +103,7 @@ if (document.URL.match(/user_profile/)) {
                 cropper.destroy();
                 $('#crop_modal').modal('hide');
                 $('#photo_location').attr('src', response.data.path);
+                $('.user-pic').html('<img class="img-responsive img-rounded" src="'+response.data.path+'" alt="User picture"></img>');
                 $('.has-photo').removeClass('hidden');
                 $('.no-photo').addClass('hidden');
                 agent_photo_file_pond.removeFiles();
@@ -114,6 +126,7 @@ if (document.URL.match(/user_profile/)) {
         axios.post('/users/delete_photo', formData, axios_options)
         .then(function (response) {
             $('#photo_location').attr('src', '');
+            $('.user-pic').html('<i class="fad fa-user fa-2x mt-2 text-white"></i>');
             $('.has-photo').addClass('hidden');
             $('.no-photo').removeClass('hidden');
         })
@@ -125,24 +138,17 @@ if (document.URL.match(/user_profile/)) {
 
     function save_profile() {
 
-        let form = $('#edit_user_form');
+        let formData = new FormData();
+        formData.append('signature', tinymce.get('signature').getContent());
 
-        let validate = validate_form(form);
+        axios.post('/users/save_profile', formData, axios_options)
+            .then(function (response) {
 
-        if (validate == 'yes') {
+                toastr['success']('Profile Details Successfully Saved');
 
-            let formData = new FormData(form[0]);
-
-            axios.post('/users/save_profile', formData, axios_options)
-                .then(function (response) {
-
-                    toastr['success']('Profile Details Successfully Saved');
-
-                })
-                .catch(function (error) {
-                });
-
-        }
+            })
+            .catch(function (error) {
+            });
 
     }
 

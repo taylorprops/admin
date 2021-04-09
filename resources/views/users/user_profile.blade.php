@@ -5,17 +5,25 @@
 
 <div class="container-1200 page-container page-user-profile mt-5">
 
-    <div class="h2 text-orange">Profile</div>
-
     <div class="row">
 
-        <div class="col-6 mx-auto">
+        <div class="col-8 mx-auto">
 
-            <div class="container mt-5 border rounded p-5">
+            <div class="h2 text-orange">Profile</div>
+
+            <div class="container mt-2 border rounded p-5">
 
                 <div class="row">
 
                     <div class="col-12">
+
+                        <div class="row">
+
+                            <div class="col-12 mb-4">
+                                <div class="font-11 text-primary">{{ $user -> first_name.' '.$user -> last_name }} - {{ $user -> email }}</div>
+                            </div>
+
+                        </div>
 
                         <div class="text-orange font-11 mb-3">Your Signature</div>
 
@@ -23,24 +31,18 @@
 
                             <div class="row">
 
-                                <div class="col-12 col-sm-6">
-                                    <input type="text" class="custom-form-element form-input required" id="first_name" name="first_name" data-label="First Name" value="{{ $user -> first_name }}">
-                                </div>
-
-                                <div class="col-12 col-sm-6">
-                                    <input type="text" class="custom-form-element form-input required" id="last_name" name="last_name" data-label="Last Name" value="{{ $user -> last_name }}">
-                                </div>
-
                                 <div class="col-12">
-                                    <input type="text" class="custom-form-element form-input required" id="email" name="email" data-label="Email" value="{{ $user -> email }}">
+
+                                    <textarea class="text-editor" id="signature" name="signature">{!! $user -> signature !!}</textarea>
+
                                 </div>
 
                             </div>
 
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-12 mt-4">
                                     <div class="d-flex justify-content-around">
-                                        <a class="btn btn-primary" id="save_profile_button"><i class="fad fa-save mr-2"></i> Save</a>
+                                        <a class="btn btn-lg btn-primary" id="save_profile_button"><i class="fad fa-save mr-2"></i> Save</a>
                                     </div>
                                 </div>
                             </div>
@@ -49,6 +51,12 @@
 
                     </div>
 
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr>
+                    </div>
                 </div>
 
                 <div class="row">

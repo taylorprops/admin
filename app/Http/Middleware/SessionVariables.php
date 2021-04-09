@@ -61,12 +61,12 @@ class SessionVariables
 
             session(['user_details' => $user_details]);
 
-        } else {
+        }/*  else {
 
             if(!stristr($_SERVER['REQUEST_URI'], 'login') && !stristr($_SERVER['REQUEST_URI'], 'callback')) {
                 return redirect('/login');
             }
-        }
+        } */
 
         return $next($request);
 

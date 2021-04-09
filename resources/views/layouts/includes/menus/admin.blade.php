@@ -114,7 +114,7 @@
         <li>
             <a href="/employees">
                 <i class="fa fa-users"></i>
-                Employees</a>
+                Employees/Users</a>
         </li>
     @endif
 
