@@ -202,7 +202,7 @@
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 @if($is_template == 'yes') hidden @endif font-weight-bold">{{ $signer -> signer_name }}</div>
                             <div class="col-3">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
-                            <div class="col-4 @if($is_template == 'yes') hidden @else required @endif"><input type="text" class="custom-form-element form-input signer-email " data-type="signer" value="{{ $signer -> signer_email }}" data-label="Email"></div>
+                            <div class="col-4"><input type="text" class="custom-form-element form-input signer-email  @if($is_template == 'yes') hidden @else required @endif" data-type="signer" value="{{ $signer -> signer_email }}" data-label="Email"></div>
                         </div>
                         <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
