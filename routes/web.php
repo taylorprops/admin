@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Cron\CronController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Email\EmailController;
 use App\Http\Controllers\Esign\EsignController;
@@ -298,12 +300,20 @@ Route::middleware(['admin']) -> group(function () {
     /************ Employees ************/
     Route::get('/employees', [EmployeesController::class, 'employees']);
     Route::get('/employees/get_employees', [EmployeesController::class, 'get_employees']);
+    Route::get('/employees/get_users', [EmployeesController::class, 'get_users']);
     Route::post('/employees/save_employee', [EmployeesController::class, 'save_employee']);
     Route::post('/employees/save_cropped_upload', [EmployeesController::class, 'save_cropped_upload']);
     Route::post('/employees/delete_photo', [EmployeesController::class, 'delete_photo']);
     Route::post('/employees/docs_upload', [EmployeesController::class, 'docs_upload']);
     Route::get('/employees/get_docs', [EmployeesController::class, 'get_docs']);
     Route::post('/employees/delete_doc', [EmployeesController::class, 'delete_doc']);
+
+
+    /************ Users Profile ************/
+    Route::get('/users/user_profile', [UserController::class, 'user_profile']);
+    Route::post('/users/save_profile', [UserController::class, 'save_profile']);
+    Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
+    Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {
@@ -725,3 +735,6 @@ Route::post('/oauth_callback', [EsignController::class, 'oauth_callback']);
 
 
 
+// **************** CRON ****************//
+Route::get('/cron/update_agents', [CronController::class, 'update_tables_agents']);
+Route::get('/cron/update_others', [CronController::class, 'update_tables_other']);

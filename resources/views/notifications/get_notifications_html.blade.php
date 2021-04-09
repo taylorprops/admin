@@ -1,10 +1,12 @@
 
 
-<div class="list-group mt-2 font-8">
+<div class="list-group font-8">
 
     @if(count($notifications) == 0)
 
-        <div class="text-white bg-success w-100 text-center font-10 p-2 rounded"><i class="fal fa-check mr-2"></i> No new notifications</div>
+    <div class="text-gray font-10 text-center p-2">
+        <i class="fal fa-check mr-2"></i> No New Notifications
+    </div>
 
     @else
 

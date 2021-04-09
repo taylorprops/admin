@@ -93,7 +93,7 @@
                         <div class="col-10 pl-0">
                             <div id="email_agent_message" class="text-editor font-9">
                                 Hello {{ $agent_details -> first_name }},
-                                <br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif
+                                <br><br>{!! auth() -> user() -> signature !!}
                             </div>
                         </div>
                     </div>

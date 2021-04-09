@@ -34,7 +34,13 @@
                     <td>{{ ucwords($employee -> emp_position) }}</td>
                     <td><a href="mailto:{{ $employee -> email }}">{{ $employee -> email }}</a></td>
                     <td>{{ $employee -> cell_phone }}</td>
-                    <td><img src="{{ $employee -> photo_location }}" height="60"></td>
+                    <td align="center">
+                        @if($employee -> photo_location != '')
+                            <img src="{{ $employee -> photo_location }}" height="50">
+                        @else
+                            <i class="fa fa-user fa-2x text-primary"></i>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </body>

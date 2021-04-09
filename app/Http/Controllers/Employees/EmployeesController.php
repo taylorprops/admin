@@ -17,7 +17,6 @@ use App\Models\Employees\LoanOfficers;
 use App\Models\Resources\LocationData;
 use App\Notifications\RegisterEmployee;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Employees\EmployeeImages;
 use Illuminate\Support\Facades\Notification;
 use App\Models\Employees\TransactionCoordinators;
 use App\Models\Employees\TransactionCoordinatorsDocs;
@@ -76,6 +75,14 @@ class EmployeesController extends Controller {
         }
 
         return view('/employees/get_employees_html', compact('employees', 'emp_type', 'active'));
+
+    }
+
+    public function get_users(Request $request) {
+
+        $users = User::where('active', 'yes') -> get();
+
+        return view('/employees/get_users_html', compact('users'));
 
     }
 
@@ -168,8 +175,6 @@ class EmployeesController extends Controller {
         $user = User::where('email', $employee -> email) -> first();
         $user -> photo_location = $path;
         $user -> save();
-
-
 
         return response() -> json(['status' => 'success', 'path' => $path]);
 

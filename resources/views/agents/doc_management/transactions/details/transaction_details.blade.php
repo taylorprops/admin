@@ -259,7 +259,7 @@
 
                             <div class="font-10 text-orange mb-2">Notify Agent of Bounced Earnest Deposit</div>
 
-                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif</textarea>
+                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>{!! auth() -> user() -> signature !!}</textarea>
 
                         </div>
 
@@ -519,7 +519,7 @@
                                         </div>
                                     </div>
                                     <div class="col-10">
-                                        <textarea class="text-editor" id="email_message"><br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif</textarea>
+                                        <textarea class="text-editor" id="email_message"><br><br>{!! auth() -> user() -> signature !!}</textarea>
                                     </div>
                                 </div>
 
@@ -1572,10 +1572,10 @@
                             <div class="col-12 col-sm-6 col-lg-4">
                                 <select class="custom-form-element form-select form-select-no-search" id="check_out_delivery_method" name="check_out_delivery_method" data-label="Select Delivery Method">
                                     <option value=""></option>
-                                    <option value="pickup">Picking Up</option>
-                                    <option value="mail">Mailing To</option>
-                                    <option value="fedex">FedEx</option>
-                                    <option value="settlement">At Settlement</option>
+                                    <option value="pickup" @if($breakdown && $breakdown -> delivery_method == 'pickup') selected @endif>Picking Up</option>
+                                    <option value="mail" @if($breakdown && $breakdown -> delivery_method == 'mail') selected @endif>Mailing To</option>
+                                    <option value="fedex" @if($breakdown && $breakdown -> delivery_method == 'fedex') selected @endif>FedEx</option>
+                                    <option value="settlement" @if($breakdown && $breakdown -> delivery_method == 'settlement') selected @endif>At Settlement</option>
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4">
@@ -1588,21 +1588,21 @@
                             <span class="text-gray">Enter the address to send the check to</span>
                             <div class="row mb-3">
                                 <div class="col-5">
-                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_street" name="check_out_mail_to_street" data-label="Street Address">
+                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_street" name="check_out_mail_to_street" data-label="Street Address" value="{{ $breakdown ? $breakdown -> check_mail_to_street : '' }}">
                                 </div>
                                 <div class="col-3">
-                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_city" name="check_out_mail_to_city" data-label="City">
+                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_city" name="check_out_mail_to_city" data-label="City" value="{{ $breakdown ? $breakdown -> check_mail_to_city : '' }}">
                                 </div>
                                 <div class="col-2">
                                     <select class="custom-form-element form-select form-select-no-cancel required" id="check_out_mail_to_state" name="check_out_mail_to_state" data-label="State">
                                         <option value=""></option>
                                         @foreach($states as $state)
-                                            <option value="{{ $state -> state }}">{{ $state -> state }}</option>
+                                            <option value="{{ $state -> state }}" @if($breakdown && $state -> state == $breakdown -> check_mail_to_state) selected @endif>{{ $state -> state }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-2">
-                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_zip" name="check_out_mail_to_zip" data-label="Zip Code">
+                                    <input type="text" class="custom-form-element form-input required" id="check_out_mail_to_zip" name="check_out_mail_to_zip" data-label="Zip Code" value="{{ $breakdown ? $breakdown -> check_mail_to_zip : '' }}">
                                 </div>
                             </div>
 

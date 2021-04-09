@@ -705,6 +705,13 @@
         <div class="row">
 
             <div class="col-12 col-lg-5 pr-2 pr-lg-0">
+
+                <div class="row">
+                    <div class="col-5"></div>
+                    <div class="col-7 my-2">
+                        <a href="javascript: void(0)" class="export-deductions-button text-success">+ Import deductions from agent's CB</a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-5">
                         <div class="h-100 d-flex justify-content-end align-items-center">

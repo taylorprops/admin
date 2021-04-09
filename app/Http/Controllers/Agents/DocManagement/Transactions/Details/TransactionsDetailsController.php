@@ -113,7 +113,7 @@ class TransactionsDetailsController extends Controller
 
             $member_type_id = ResourceItems::SellerResourceId();
         } elseif ($transaction_type == 'contract') {
-            $property = Contracts::find($id);
+            $property = Contracts::with('commission_breakdown') -> find($id);
             if (! $property) {
                 return redirect('dashboard');
             }
@@ -148,6 +148,7 @@ class TransactionsDetailsController extends Controller
         // check if earnest and title questions are complete before allowing adding docs to the checklist
         $questions_confirmed = 'yes';
 
+        $breakdown = null;
         if ($transaction_type == 'contract' && $property -> SaleRent != 'rental') {
             if ($property -> EarnestAmount == '' || $property -> EarnestHeldBy == '') {
                 $questions_confirmed = 'no';
@@ -156,6 +157,8 @@ class TransactionsDetailsController extends Controller
             if ($property -> UsingHeritage == '' || ($property -> UsingHeritage == 'no' && $property -> TitleCompany == '')) {
                 $questions_confirmed = 'no';
             }
+
+            $breakdown = $property -> commission_breakdown;
         }
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
@@ -228,7 +231,7 @@ class TransactionsDetailsController extends Controller
         $contracts = Contracts::select($contracts_select) -> where('Agent_ID', $Agent_ID) -> where('Status', $active_status_id) -> with(['status', 'earnest']) -> orderBy('CloseDate', 'desc') -> get();
 
 
-        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
+        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'breakdown', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
     }
 
     // Transaction Details Header
@@ -3465,45 +3468,29 @@ class TransactionsDetailsController extends Controller
     public function get_commission(Request $request) {
 
 		$Commission_ID = $request -> Commission_ID;
-        //$commission = Commission::find($Commission_ID);
+        $commission = Commission::find($Commission_ID);
 
-        $commission = Cache::remember('commission', 1000, function () use ($Commission_ID) {
-            return Commission::find($Commission_ID);
-        });
-
-        //$agent_details = Agents::find($commission -> Agent_ID);
-        $agent_details = Cache::remember('agent_details', 1000, function () use ($commission) {
-            return Agents::find($commission -> Agent_ID);
-        });
+        $agent_details = Agents::find($commission -> Agent_ID);
 
         if ($commission -> Contract_ID > 0) {
 
-            //$property = Contracts::find($commission -> Contract_ID);
-            $property = Cache::remember('property', 1000, function () use ($commission) {
-                return Contracts::find($commission -> Contract_ID);
-            });
+            $property = Contracts::find($commission -> Contract_ID);
             $rep_both_sides = $property -> Listing_ID > 0 ? 'yes' : null;
             $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? 'yes' : null;
             $type = 'sale';
+
         } elseif ($commission -> Referral_ID > 0) {
-            //$property = Referrals::find($commission -> Referral_ID);
-            $property = Cache::remember('property', 1000, function () use ($commission) {
-                return Referrals::find($commission -> Referral_ID);
-            });
+
+            $property = Referrals::find($commission -> Referral_ID);
             $rep_both_sides = null;
             $for_sale = null;
             $type = 'referral';
+
         }
 
-        //$commission_percentages = Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
-        $commission_percentages = Cache::remember('commission_percentages', 1000, function () {
-            return Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
-        });
+        $commission_percentages = Agents::select('commission_percent') -> groupBy('commission_percent') -> pluck('commission_percent');
 
-        //$agents = Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
-        $agents = Cache::remember('agents', 1000, function () {
-            return Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
-        });
+        $agents = Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
 
 
         return view('/agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));

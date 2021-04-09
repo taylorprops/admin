@@ -25,7 +25,7 @@ class CronController extends Controller
     public function update_tables_agents(Request $request) {
 
 		$delete_agents = Agents::truncate();
-        $delete_users = User::where('group', 'agent') -> delete();
+        $delete_users = User::where('group', 'agent') -> orWhere('group', 'agent_referral') -> delete();
 
         $agents = OldAgents::where('active', 'yes') -> get();
 
@@ -48,7 +48,11 @@ class CronController extends Controller
             // TODO: remove fake number
             $add_agent -> social_security = /* $agent -> soc_sec */ '111-22-3333';
             // TODO: remove test_
-            $add_agent -> email = 'test_'.$agent -> email1;
+            if($agent -> email == 'mike@taylorprops.com') {
+                $add_agent -> email = $agent -> email1;
+            } else {
+                $add_agent -> email = 'test_'.$agent -> email1;
+            }
             $add_agent -> cell_phone = $agent -> cell_phone;
             $add_agent -> home_phone = $agent -> home_phone;
             $add_agent -> address_street = $agent -> street;
@@ -89,6 +93,8 @@ class CronController extends Controller
                 $add_user -> group = 'agent_referral';
             }
             $add_user -> name = $agent -> fullname;
+            $add_user -> first_name = $agent -> first;
+            $add_user -> last_name = $agent -> last;
             // TODO: remove test_
             $add_user -> email = 'test_'.$agent -> email1;
             $add_user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';

@@ -791,6 +791,7 @@ window.validate_form = function (form, debug = false) {
                 }
             }
             if (has_val == 'no') {
+                console.log(ele);
                 ele.addClass(classname);
                 ele.prev('label').addClass('invalid-label');
                 pass = 'no';

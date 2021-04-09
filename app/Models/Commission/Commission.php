@@ -15,6 +15,10 @@ class Commission extends Model
         return $this -> belongsTo(\App\Models\Employees\Agents::class, 'Agent_ID');
     }
 
+    public function breakdown() {
+        return $this -> hasOne(\App\Models\Commission\CommissionBreakdowns::class, 'Commission_ID');
+    }
+
     public function property_contract() {
         return $this -> belongsTo(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID');
     }

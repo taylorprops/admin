@@ -142,7 +142,7 @@
                         @elseif($is_template == 'yes')
 
                             <div class="col-12 col-sm-6 add-template-signer-fields">
-                                <select class="custom-form-element form-select form-select-no-search add-signer-role add-signer-field required" data-label="Role">
+                                <select class="custom-form-element form-select form-select-no-search add-signer-role add-signer-field" data-label="Role">
                                     <option value=""></option>
                                     <option value="Seller One">Seller One</option>
                                     <option value="Seller Two">Seller Two</option>
@@ -202,7 +202,7 @@
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
                             <div class="col-3 @if($is_template == 'yes') hidden @endif font-weight-bold">{{ $signer -> signer_name }}</div>
                             <div class="col-3">@if($is_template == 'no') {{ $signer -> signer_role }} @else {{ $signer -> template_role }} @endif</div>
-                            <div class="col-4 @if($is_template == 'yes') hidden @endif"><input type="text" class="custom-form-element form-input signer-email required" data-type="signer" value="{{ $signer -> signer_email }}" data-label="Email"></div>
+                            <div class="col-4 @if($is_template == 'yes') hidden @else required @endif"><input type="text" class="custom-form-element form-input signer-email " data-type="signer" value="{{ $signer -> signer_email }}" data-label="Email"></div>
                         </div>
                         <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>
@@ -353,9 +353,9 @@
                         <div class="row d-flex align-items-center w-100">
                             <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div>
                             <div class="col-1"><span class="signer-count font-11 text-orange">{{ $loop -> iteration }}</span></div>
-                            <div class="col-3 '+hidden+' font-weight-bold">{{ $recipient -> signer_name }}</div>
+                            <div class="col-3 font-weight-bold @if($is_template == 'yes') hidden @endif">{{ $recipient -> signer_name }}</div>
                             <div class="col-3">{{ $recipient -> signer_role }}</div>
-                            <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email required" value="{{ $recipient -> signer_email }}" data-type="recipient" data-label="Email"></div>
+                            <div class="col-4"><input type="text" class="custom-form-element form-input signer-email @if($is_template == 'yes') hidden @else required @endif" value="{{ $recipient -> signer_email }}" data-type="recipient" data-label="Email"></div>
                         </div>
                         <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="recipient"><i class="fal fa-times fa-lg"></i></button></div>
                     </div>

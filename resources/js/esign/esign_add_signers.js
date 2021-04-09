@@ -29,6 +29,13 @@ if(document.URL.match(/esign_add_signers/)) {
             $(this).closest('.'+type+'-item').data('email', $(this).val());
         });
 
+        $('#add_signer_div').on('shown.bs.collapse', function () {
+            $('.add-signer-role').addClass('required');
+        });
+        $('#add_signer_div').on('hidden.bs.collapse', function () {
+            $('.add-signer-role').removeClass('required');
+        });
+
 
         $(document).on('click', '#add_fields_button', save_signers);
 

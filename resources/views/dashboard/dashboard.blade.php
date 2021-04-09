@@ -44,7 +44,7 @@
 
                             @if(!$show_alerts)
 
-                                <div class="text-gray font-11 text-center p-2">
+                                <div class="text-gray font-10 text-center p-2">
                                     <i class="fal fa-check mr-2"></i> No Transaction Alerts
                                 </div>
 
@@ -165,21 +165,25 @@
 
                 @endif
 
-                <div class="row mt-4">
+                @if(auth() -> user() -> group != 'agent_referral')
 
-                    <div class="col-12">
+                    <div class="row mt-4">
 
-                        <div class="bg-white text-gray p-3 rounded">
+                        <div class="col-12">
 
-                            <div class="font-11 text-orange">Upcoming Closings</div>
+                            <div class="bg-white text-gray p-3 rounded">
 
-                            <div id="upcoming_closings_mod"></div>
+                                <div class="font-11 text-orange">Upcoming Closings</div>
+
+                                <div id="upcoming_closings_mod"></div>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
+                @endif
 
             </div>
 

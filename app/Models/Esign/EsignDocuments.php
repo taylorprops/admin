@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class EsignDocuments extends Model
 {
+
+    use \Awobaz\Compoships\Compoships;
+
     public $table = 'esign_documents';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
@@ -17,7 +20,12 @@ class EsignDocuments extends Model
 
     public function images() {
         //return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'transaction_document_id');
-        return $this -> hasMany(\App\Models\Esign\EsignDocumentsImages::class, 'envelope_id', 'envelope_id');
+        return $this -> hasMany(\App\Models\Esign\EsignDocumentsImages::class, ['document_id', 'envelope_id'], ['transaction_document_id', 'envelope_id']);
+    }
+
+    public function images_template() {
+        //return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'transaction_document_id');
+        return $this -> hasMany(\App\Models\Esign\EsignDocumentsImages::class, ['document_id', 'envelope_id'], ['id', 'envelope_id']);
     }
 
     public function fields() {

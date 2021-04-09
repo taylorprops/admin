@@ -73,7 +73,7 @@
 
                             <div class="font-10 text-orange mb-2">Notify Agent of Bounced Earnest Deposit</div>
 
-                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>@if(session('user_details')) {!! session('user_details') -> signature !!} @endif</textarea>
+                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>{!! auth() -> user() -> signature !!}</textarea>
 
                         </div>
 

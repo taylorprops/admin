@@ -5,6 +5,7 @@ if (document.URL.match(/employees/)) {
 
         get_employees('in_house', 'yes');
         get_employees('transaction_coordinator', 'yes');
+        get_users();
 
         $(document).on('click', '#add_employee_button', function () {
             edit_employee(null);
@@ -187,6 +188,21 @@ if (document.URL.match(/employees/)) {
 
     }
 
+    function get_users() {
+
+        axios.get('/employees/get_users')
+            .then(function (response) {
+
+                $('#users_div').html(response.data);
+                data_table(25, $('#users_table'), [2, 'asc'], [0, 1, 5], [], true, true, true, true, true, false);
+
+            })
+            .catch(function (error) {
+
+            });
+
+    }
+
     function edit_employee(ele) {
 
         $('#edit_employee_modal').find('input, select').val('').trigger('change');
@@ -263,7 +279,6 @@ if (document.URL.match(/employees/)) {
                             $('#employee_saved_modal').modal('hide');
                             setTimeout(function() {
                                 let emp_id = response.data.emp_id;
-                                console.log(emp_id, $('.edit-employee-button[data-id="'+emp_id+'"]').length);
                                 $('.edit-employee-button[data-id="'+emp_id+'"]').trigger('click');
                             }, 500);
                         });

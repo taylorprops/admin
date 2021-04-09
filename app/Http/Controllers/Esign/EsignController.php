@@ -416,7 +416,9 @@ class EsignController extends Controller
             $envelope -> transaction_type = $transaction_type;
             $envelope -> save();
             $envelope_id = $envelope -> id;
+
         } else {
+
             $template = EsignTemplates::where('upload_file_id', $document_id) -> first();
             $docs_added = 'yes';
 
@@ -437,6 +439,7 @@ class EsignController extends Controller
                 // update uploads with template id
                 $update_upload = Upload::find($document_id) -> update(['template_id' => $template_id]);
             }
+
         }
 
         // Add documents and images to envelope and add files to storage
@@ -930,6 +933,7 @@ class EsignController extends Controller
         $error = null;
 
         if ($envelope_id > 0) {
+
             $envelope = EsignEnvelopes::find($envelope_id);
 
             if ($envelope -> status != 'not_sent') {
@@ -948,15 +952,19 @@ class EsignController extends Controller
             $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> with('fields') -> get();
 
             $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
-        } else {
-            $envelopes = EsignEnvelopes::where('template_id', $template_id) -> get();
 
-            $template = EsignTemplates::find($template_id);
+        } else {
+
+            // TODO: document and probably image ids are all wrong
+
+            //$envelopes = EsignEnvelopes::where('template_id', $template_id) -> get();
+            $template = EsignTemplates::with(['envelopes']) -> find($template_id);
+            $envelopes = $template -> envelopes;
             $template_name = $template -> template_name;
 
             $documents = collect();
             foreach ($envelopes as $envelope) {
-                $doc = EsignDocuments::where('envelope_id', $envelope -> id) -> with('images') -> with('fields') -> get();
+                $doc = EsignDocuments::where('envelope_id', $envelope -> id) -> with(['images_template', 'fields']) -> get();
                 $documents = $documents -> merge($doc);
             }
 

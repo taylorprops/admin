@@ -824,13 +824,6 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         });
 
-        $('#check_out_agent_id').on('change', function() {
-            if($(this).val() != '') {
-                $('#check_out_recipient').val($(this).find('option:selected').data('recipient'));
-            } else {
-                $('#check_out_recipient').val('');
-            }
-        });
 
         $('#check_out_agent_id').val($('#Agent_ID').val());
 
@@ -838,6 +831,16 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         show_mail_to_address();
         $('#check_out_delivery_method').on('change', function() {
             show_mail_to_address();
+        });
+
+        $('#check_out_agent_id').on('change', function() {
+            if($(this).val() != '') {
+                $('#check_out_recipient').val($(this).find('option:selected').data('recipient'));
+            } else {
+                $('#check_out_recipient').val('');
+            }
+
+            $('#check_out_delivery_method, #check_out__mail_to_street, #check_out__mail_to_city, #check_out__mail_to_state, #check_out__mail_to_zip').val('');
         });
 
     }
@@ -1029,7 +1032,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
     }
 
     function clear_add_check_form() {
-        $('#add_check_in_form, #edit_check_in_form, #add_check_out_form, #edit_check_out_form').find('input.custom-form-element, select.custom-form-element').val('');
+        $('#add_check_in_form, #edit_check_in_form, #edit_check_out_form').find('input.custom-form-element, select.custom-form-element').val('');
         $('.check-in-preview-div, .edit-check-in-preview-div, .check-out-preview-div, .edit-check-out-preview-div').html('');
     }
 

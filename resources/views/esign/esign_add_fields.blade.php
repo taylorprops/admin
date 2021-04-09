@@ -6,13 +6,13 @@
 @if($error && $error == 'sent')
 <script>window.location = "/esign";</script>
 @endif
-<div class="container-1350 mx-auto page-esign-add-fields mt-1">
+<div class="container-full mx-auto page-esign-add-fields mt-1">
 
-    <div class="row border-bottom">
+    <div class="row border-bottom no-gutters">
 
         <div class="col-12">
 
-            <div class="form-options-container w-100 d-flex justify-content-between align-items-center">
+            <div class="form-options-container w-100 d-flex justify-content-around align-items-center">
 
                 <div class="d-flex justify-content-start align-items-center">
 
@@ -89,7 +89,7 @@
                         @foreach($documents as $document)
 
                             @php
-                            $images = $document -> images;
+                            $images = $document -> images_template ? $document -> images_template : $document -> images;
                             $total_pages = count($images);
                             $active = $loop -> first ? 'active' : '';
                             @endphp
@@ -238,7 +238,7 @@
                     <div class="text-primary small @if(!$loop -> first) border-top @endif py-2 text-center">{{ $document -> file_name }}</div>
 
                     @php
-                    $images = $document -> images;
+                    $images = $document -> images_template ? $document -> images_template : $document -> images;
                     $active_doc = $loop -> first ? 'active' : '';
                     @endphp
 
