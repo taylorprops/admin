@@ -147,6 +147,8 @@ if (document.URL.match(/transaction_details/)) {
             formData.append('envelope_id', envelope_id);
             axios.post('/esign/cancel_envelope', formData, axios_options)
             .then(function (response) {
+
+                ele.closest('tr').fadeOut();
                 setTimeout(function() {
                     $('[data-envelope-id="'+envelope_id+'"]').closest('tr').fadeOut();
                     $('#confirm_cancel_modal').modal('hide');
