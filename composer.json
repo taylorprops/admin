@@ -10,6 +10,7 @@
     "require": {
         "php": ">=7.4",
         "awobaz/compoships": "^2.1",
+        "dmcbrn/laravel-email-database-log": "^5.0",
         "eversign/eversign-php-sdk": "^1.18",
         "facade/ignition": "^2.5",
         "fideloper/proxy": "^4.4",
