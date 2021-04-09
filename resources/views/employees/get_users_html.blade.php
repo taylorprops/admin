@@ -24,7 +24,7 @@
                     <td><a href="mailto:{{ $user -> email }}">{{ $user -> email }}</a></td>
                     <td align="center">
                         @if($user -> photo_location != '')
-                            <img src="{{ $user -> photo_location }}" height="50">
+                            <img src="{{ $user -> photo_location }}" class="rounded" height="50">
                         @else
                             <i class="fa fa-user fa-2x text-primary"></i>
                         @endif

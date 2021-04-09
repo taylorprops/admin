@@ -36,7 +36,7 @@
                     <td>{{ $employee -> cell_phone }}</td>
                     <td align="center">
                         @if($employee -> photo_location != '')
-                            <img src="{{ $employee -> photo_location }}" height="50">
+                            <img src="{{ $employee -> photo_location }}" class="rounded" height="50">
                         @else
                             <i class="fa fa-user fa-2x text-primary"></i>
                         @endif

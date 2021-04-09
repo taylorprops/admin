@@ -22,14 +22,12 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/logout',
-        'esign_callback',
-        'password/email'
+        'esign_callback'
     ];
 
     private $openRoutes = [
         'esign_callback',
-        'login',
-        'password/email'
+        'login'
     ];
 
     public function handle($request, Closure $next)

@@ -68,6 +68,8 @@ class SessionVariables
             }
         } */
 
+        session([]);
+
         return $next($request);
 
     }
