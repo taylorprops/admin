@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-        <img class="email-header-logo" src="http://taylor-properties.net/images/emails/AAP-flat-white.png{{-- {{ \Session::get('email_logo_src') }} --}}">
+        <img class="email-header-logo" src="{{ \Session::get('email_logo_src') }}">
         @endcomponent
     @endslot
 
