@@ -274,7 +274,10 @@
 
                                 <div class="h5 text-orange">Why is this document being rejected?</div>
 
-                                <div class="my-2">Select from the list below</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="my-2">Select from the list below</div>
+                                    <a href="/admin/resources/resources_admin" target="_blank" class="btn btn-primary btn-sm"><i class="fal fa-plus"></i> Edit List</a>
+                                </div>
 
                                 <div class="rejected-reasons-div list-group w-100 mb-2">
                                     @foreach($rejected_reasons as $rejected_reason)

@@ -43,7 +43,7 @@
                             </td>
                             <td class="text-center">{{ $check -> date_received }}</td>
                             <td>@if($check -> agent){{ $check -> agent -> first_name.' '.$check -> agent -> last_name }}@endif</td>
-                            <td>{{ $check -> street.' '.$check -> city.', '.$check -> state.' '.$check -> zip }}</td>
+                            <td>{{ ucwords(strtolower($check -> street)).' '.$check -> city.', '.$check -> state.' '.$check -> zip }}</td>
                             <td class="text-right">{{ $check -> check_number }}</td>
                             <td class="text-center">{{ $check -> check_date }}</td>
                             <td class="text-right">${{ number_format($check -> check_amount, 2) }}</td>

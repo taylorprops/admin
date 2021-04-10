@@ -40,28 +40,8 @@ class LoginController extends Controller
 
     public function redirectTo() {
 
-        $super_user = false;
-
-        if (auth() -> user() -> group == 'admin') {
-
-            session(['header_logo_src' => '/images/logo/logos.png']);
-            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
-
-            if (auth() -> user() -> super_user == 'yes') {
-                session(['super_user' => true]);
-            }
-
-        } elseif (stristr(auth() -> user() -> group, 'agent')) {
-
-
-
-        } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
-
-        } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
-
-            session(['header_logo_src' => '/images/logo/logos.png']);
-            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
-
+        if (auth() -> user() -> super_user == 'yes') {
+            session(['super_user' => true]);
         }
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);

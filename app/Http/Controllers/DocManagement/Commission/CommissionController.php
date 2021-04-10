@@ -27,8 +27,42 @@ class CommissionController extends Controller
 
     public function get_commissions_pending(Request $request) {
 
-		$select = ['id', 'commission_type', 'Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'total_left'];
+		$select = ['id', 'commission_type', 'Agent_ID', 'Contract_ID', 'Referral_ID', 'close_date', 'earnest_deposit_amount', 'checks_in_total', 'checks_out_total', 'total_left'];
+
         $commission_contracts = Commission::select($select)
+            -> where(function($query) {
+                $query -> where(function ($query) {
+                    $query -> where('total_left', '!=', '0')
+                    -> where('checks_in_total', '>', '0');
+                })
+                -> orWhereHas('breakdown', function ($query) {
+                    $query -> where('submitted', 'yes');
+                });
+            })
+            -> where('Contract_ID', '>', '0')
+            -> with(['property_contract:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode,created_at'])
+            -> with(['agent:id,first_name,last_name,full_name'])
+            -> with(['breakdown'])
+            -> get();
+
+
+        $commission_referrals = Commission::select($select)
+            -> where(function($query) {
+                $query -> where(function ($query) {
+                    $query -> where('total_left', '!=', '0')
+                    -> where('checks_in_total', '>', '0');
+                })
+                -> orWhereHas('breakdown', function ($query) {
+                    $query -> where('submitted', 'yes');
+                });
+            })
+            -> where('Referral_ID', '>', '0')
+            -> with(['property_referral:Referral_ID,FullStreetAddress,City,StateOrProvince,PostalCode,ClientFirstName,ClientLastName,created_at'])
+            -> with(['agent:id,first_name,last_name,full_name'])
+            -> get();
+
+
+        /* $commission_contracts = Commission::select($select)
             -> where(function ($query) {
                 $query -> where('total_left', '>', '0')
                 -> orWhere('total_left', '<', '0');
@@ -43,7 +77,7 @@ class CommissionController extends Controller
             -> where('Referral_ID', '>', '0')
             -> with('property_referral:Referral_ID,FullStreetAddress,City,StateOrProvince,PostalCode,ClientFirstName,ClientLastName,created_at')
             -> with('agent:id,first_name,last_name,full_name')
-            -> get();
+            -> get(); */
 
         $commissions = $commission_contracts -> merge($commission_referrals);
 

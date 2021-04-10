@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div class="container-1200 mx-auto">
+    <div class="container-1300 mx-auto">
 
         <div class="row">
             <div class="col-12">

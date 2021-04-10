@@ -7,11 +7,11 @@
 
     <div class="row">
 
-        <div class="col-8 mx-auto">
+        <div class="col-12 col-md-8 mx-auto">
 
             <div class="h2 text-orange">Profile</div>
 
-            <div class="container mt-2 border rounded p-5">
+            <div class="container mt-2 border rounded p-1 p-md-5">
 
                 <div class="row">
 
@@ -19,7 +19,7 @@
 
                         <div class="row">
 
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-4 mt-2">
                                 <div class="font-11 text-primary">{{ $user -> first_name.' '.$user -> last_name }} - {{ $user -> email }}</div>
                             </div>
 
@@ -53,50 +53,46 @@
 
                 </div>
 
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-12">
                         <hr>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mt-5">
 
                     <div class="col-12">
 
                         <div class="edit-div">
 
-                            <div>
+                            <div class="employee-image-div">
 
-                                <div class="employee-image-div">
+                                <div class="text-orange font-11 mb-3">Profile Picture</div>
 
-                                    <div class="text-orange font-11 mb-3">Profile Picture</div>
+                                <div class="row">
 
-                                    <div class="row">
+                                    <div class="col-12 col-sm-6">
 
-                                        <div class="col-12 col-sm-6">
+                                        <div class="d-flex justify-content-center h-100 mt-4">
 
-                                            <div class="d-flex justify-content-center h-100 mt-4">
-
-                                                <div class="image-div relative has-photo @if($user -> photo_location == '') hidden @endif">
-                                                    <div class="delete-image-div">
-                                                        <a href="javascript: void(0)" class="delete-image-button"><i class="fal fa-times fa-lg text-danger"></i></a>
-                                                    </div>
-                                                    <img class="shadow rounded" id="photo_location" src="{{ $user -> photo_location }}">
+                                            <div class="image-div relative has-photo @if($user -> photo_location == '') hidden @endif">
+                                                <div class="delete-image-div">
+                                                    <a href="javascript: void(0)" class="delete-image-button"><i class="fal fa-times fa-lg text-danger"></i></a>
                                                 </div>
+                                                <img class="shadow rounded" id="photo_location" src="{{ $user -> photo_location }}">
+                                            </div>
 
-                                                <div class="no-photo my-auto @if($user -> photo_location != '') hidden @endif">
-                                                    <i class="fad fa-user fa-5x text-primary"></i>
-                                                </div>
-
+                                            <div class="no-photo my-auto @if($user -> photo_location != '') hidden @endif">
+                                                <i class="fad fa-user fa-5x text-primary"></i>
                                             </div>
 
                                         </div>
 
-                                        <div class="col-12 col-sm-6">
-                                            <div class="text-gray mb-3">Add/Replace Photo</div>
-                                            <input type="file" id="agent_photo_file" name="agent_photo_file">
-                                        </div>
+                                    </div>
 
+                                    <div class="col-12 col-sm-6">
+                                        <div class="text-gray mb-3">Add/Replace Photo</div>
+                                        <input type="file" id="agent_photo_file" name="agent_photo_file">
                                     </div>
 
                                 </div>
