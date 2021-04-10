@@ -40,15 +40,22 @@ class LoginController extends Controller
 
     public function redirectTo() {
 
+
         if (auth() -> user() -> super_user == 'yes') {
             session(['super_user' => true]);
         }
 
-        session(['header_logo_src' => '/images/logo/logo_tp.png']);
+        $user_id = auth() -> user() -> user_id;
+
+        session(['header_logo_src' => '/images/logo/logos.png']);
         session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
-        if (stristr(auth() -> user() -> group, 'agent')) {
-            $user_id = auth() -> user() -> user_id;
+        if (auth() -> user() -> group == 'admin') {
+
+            $user_details = InHouse::whereId($user_id) -> first();
+
+        } elseif (stristr(auth() -> user() -> group, 'agent')) {
+
             $user_details = Agents::whereId($user_id) -> first();
 
             if (stristr($user_details -> company, 'Anne')) {
@@ -56,7 +63,13 @@ class LoginController extends Controller
                 session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
             }
 
+        } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+
+            $user_details = TransactionCoordinators::whereId($user_id) -> first();
+
         }
+
+        session(['user_details' => $user_details]);
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
 
