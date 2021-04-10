@@ -26,8 +26,6 @@ class SessionVariables
 
             $user_id = auth() -> user() -> user_id;
 
-            $super_user = false;
-
             if (auth() -> user() -> group == 'admin') {
 
                 $user_details = InHouse::whereId($user_id) -> first();
@@ -42,12 +40,6 @@ class SessionVariables
 
             }
 
-            session(['header_logo_src' => '/images/logo/logo_tp.png']);
-            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
-            if (stristr($user_details -> company, 'Anne')) {
-                session(['header_logo_src' => '/images/logo/logo_aap.png']);
-                session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
-            }
 
             session(['user_details' => $user_details]);
 

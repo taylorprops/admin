@@ -44,15 +44,19 @@ class LoginController extends Controller
             session(['super_user' => true]);
         }
 
-        /* if (auth() -> user() -> group == 'admin') {
+        session(['header_logo_src' => '/images/logo/logo_tp.png']);
+        session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
-        } elseif (stristr(auth() -> user() -> group, 'agent')) {
+        if (stristr(auth() -> user() -> group, 'agent')) {
+            $user_id = auth() -> user() -> user_id;
+            $user_details = Agents::whereId($user_id) -> first();
 
-        } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
+            if (stristr($user_details -> company, 'Anne')) {
+                session(['header_logo_src' => '/images/logo/logo_aap.png']);
+                session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
+            }
 
-        } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
-
-        } */
+        }
 
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
 
