@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TextEditor;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class FileUploadController extends Controller {
@@ -70,8 +71,22 @@ class FileUploadController extends Controller {
             $file_name = time().'_'.sanitize($file_name).'.'.$ext;
 
             // Accept upload if there was no origin, or if it is an accepted origin
-            $filetowrite = $imageFolder . $file_name;
-            move_uploaded_file($temp['tmp_name'], $filetowrite);
+            $new_file_location = $imageFolder . $file_name;
+            move_uploaded_file($temp['tmp_name'], $new_file_location);
+
+            $img = Image::make($new_file_location);
+            $width = null;
+            $height = null;
+            if($img -> width() > 700) {
+                $width = 700;
+            }
+            if($img -> height() > 700) {
+                $height = 700;
+            }
+            $img -> resize($width, $height, function ($constraint) {
+                $constraint -> aspectRatio();
+            });
+            $img -> save($new_file_location);
 
             // Determine the base URL
             $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https://" : "http://";
