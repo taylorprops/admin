@@ -44,7 +44,10 @@ if (document.URL.match(/user_profile/)) {
             toolbar: 'image | undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |',
             images_upload_url: '/text_editor/file_upload',
             table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
-            height: '300'
+            height: '300',
+            relative_urls : false,
+            //remove_script_host : true,
+            document_base_url: location.hostname
         }
         text_editor(options);
 

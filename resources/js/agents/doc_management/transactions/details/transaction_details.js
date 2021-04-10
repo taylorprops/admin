@@ -35,9 +35,9 @@ if (document.URL.match(/transaction_details/)) {
             statusbar: false,
             toolbar: true,
             selector: '#email_agent_message',
-            //relative_urls : true,
+            relative_urls : false,
             //remove_script_host : true,
-            //document_base_url: location.hostname
+            document_base_url: location.hostname
         }
         text_editor(options);
 
