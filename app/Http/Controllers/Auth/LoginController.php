@@ -44,6 +44,32 @@ class LoginController extends Controller
             session(['super_user' => true]);
         }
 
+        if (auth() -> user() -> group == 'admin') {
+
+            session(['header_logo_src' => '/images/logo/logos.png']);
+            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+
+        } elseif (stristr(auth() -> user() -> group, 'agent')) {
+
+            session(['header_logo_src' => '/images/logo/logo_aap.png']);
+            session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
+            if (stristr($user_details -> company, 'Taylor')) {
+                session(['header_logo_src' => '/images/logo/logo_tp.png']);
+                session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+            }
+
+        } elseif (stristr(auth() -> user() -> group, 'agent_referral')) {
+
+            session(['header_logo_src' => '/images/logo/logos.png']);
+            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+
+        } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
+
+            session(['header_logo_src' => '/images/logo/logos.png']);
+            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+
+        }
+
         $path = parse_url($this -> previous_url, PHP_URL_PATH);
 
         // redirect to page requested or dashboard
