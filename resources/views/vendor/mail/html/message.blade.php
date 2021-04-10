@@ -25,7 +25,7 @@
             @if(auth() -> user() && stristr(auth() -> user() -> group, 'agent'))
                 {{ \Session::get('user_details') -> company }}
                 @else
-                {{ config('app.url') . \Session::get('email_logo_src') }}
+                {{ \Session::get('user_details') -> company }}
                 @endif
                 @lang('All rights reserved.')
         @endcomponent
