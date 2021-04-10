@@ -32,8 +32,8 @@ class SessionVariables
 
                 $user_details = InHouse::whereId($user_id) -> first();
 
-                session(['header_logo_src' => config('app.url').'/images/logo/logos.png']);
-                session(['email_logo_src' => config('app.url').'/images/emails/TP-flat-white.png']);
+                session(['header_logo_src' => '/images/logo/logos.png']);
+                session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
                 if (auth() -> user() -> super_user == 'yes') {
                     session(['super_user' => true]);
@@ -43,19 +43,19 @@ class SessionVariables
 
                 $user_details = Agents::whereId($user_id) -> first();
                 // set logo for header logo and EMAILS by company and add to session
-                session(['header_logo_src' => config('app.url').'/images/logo/logo_aap.png']);
-                session(['email_logo_src' => config('app.url').'/images/emails/AAP-flat-white.png']);
+                session(['header_logo_src' => '/images/logo/logo_aap.png']);
+                session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
                 if (stristr($user_details -> company, 'Taylor')) {
-                    session(['header_logo_src' => config('app.url').'/images/logo/logo_tp.png']);
-                    session(['email_logo_src' => config('app.url').'/images/emails/TP-flat-white.png']);
+                    session(['header_logo_src' => '/images/logo/logo_tp.png']);
+                    session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
                 }
 
             } elseif (auth() -> user() -> group == 'transaction_coordinator') {
 
                 $user_details = TransactionCoordinators::whereId($user_id) -> first();
 
-                session(['header_logo_src' => config('app.url').'/images/logo/logos.png']);
-                session(['email_logo_src' => config('app.url').'/images/emails/TP-flat-white.png']);
+                session(['header_logo_src' => '/images/logo/logos.png']);
+                session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
             }
 
