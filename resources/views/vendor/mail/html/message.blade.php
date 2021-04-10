@@ -1,8 +1,8 @@
 @component('mail::layout')
     {{-- Header --}}
     @slot('header')
-        @component('mail::header', ['url' => config('app.url')])
-        <img class="email-header-logo" src="{{ \Session::get('email_logo_src') }}">
+        @component('mail::header', ['url' => config('app.url')], ['logo' => config('app.url') . session('email_logo_src')')])
+        {{-- <img class="email-header-logo" src="{{ \Session::get('email_logo_src') }}"> --}}
         @endcomponent
     @endslot
 
