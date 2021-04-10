@@ -26,6 +26,9 @@ class SessionVariables
 
             $user_id = auth() -> user() -> user_id;
 
+            session(['header_logo_src' => '/images/logo/logos.png']);
+            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+
             if (auth() -> user() -> group == 'admin') {
 
                 $user_details = InHouse::whereId($user_id) -> first();
@@ -34,14 +37,18 @@ class SessionVariables
 
                 $user_details = Agents::whereId($user_id) -> first();
 
-            } elseif (auth() -> user() -> group == 'transaction_coordinator') {
+                if (stristr($user_details -> company, 'Anne')) {
+                    session(['header_logo_src' => '/images/logo/logo_aap.png']);
+                    session(['email_logo_src' => '/images/emails/AAP-flat-white.png']);
+                }
+
+            } elseif (stristr(auth() -> user() -> group, 'transaction_coordinator')) {
 
                 $user_details = TransactionCoordinators::whereId($user_id) -> first();
 
             }
 
-
-            session(['user_details' => $user_details]);
+        session(['user_details' => $user_details]);
 
         }/*  else {
 

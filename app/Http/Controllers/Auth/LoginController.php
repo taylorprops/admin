@@ -41,21 +41,6 @@ class LoginController extends Controller
     public function redirectTo() {
 
 
-        $path = parse_url($this -> previous_url, PHP_URL_PATH);
-
-        // redirect to page requested or dashboard
-        if ($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === false && $path != '/' && ! preg_match('/dashboard/', $path)) {
-            $this -> redirectTo = $this -> previous_url;
-        } else {
-            $this -> redirectTo = '/dashboard';
-        }
-
-        return $this -> redirectTo;
-
-    }
-
-    public function handle(Request $request) {
-
         if (auth() -> user() -> super_user == 'yes') {
             session(['super_user' => true]);
         }
@@ -85,6 +70,17 @@ class LoginController extends Controller
         }
 
         session(['user_details' => $user_details]);
+
+        $path = parse_url($this -> previous_url, PHP_URL_PATH);
+
+        // redirect to page requested or dashboard
+        if ($this -> previous_url != '' && stristr($this -> previous_url, $_SERVER['HTTP_HOST']) && stristr($this -> previous_url, 'login') === false && $path != '/' && ! preg_match('/dashboard/', $path)) {
+            $this -> redirectTo = $this -> previous_url;
+        } else {
+            $this -> redirectTo = '/dashboard';
+        }
+
+        return $this -> redirectTo;
 
     }
 
