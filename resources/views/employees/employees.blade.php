@@ -23,9 +23,6 @@
                 <li class="nav-item">
                     <a class="nav-link employee-nav-link" id="transaction_coordinator_tab" data-toggle="tab" href="#transaction_coordinator_div" role="tab" aria-controls="transaction_coordinator_div" aria-selected="false" data-type="transaction_coordinator">Transaction Coordinators</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link employee-nav-link" id="users_tab" data-toggle="tab" href="#users_div" role="tab" aria-controls="users_div" aria-selected="false" data-type="users">Website Users</a>
-                </li>
             </ul>
 
             <div class="tab-content pt-2 pb-3 px-4" id="employee_tabs_content">
@@ -40,8 +37,6 @@
                 <div class="tab-pane fade show active" id="in_house_div" role="tabpanel" aria-labelledby="in_house_tab"></div>
 
                 <div class="tab-pane fade" id="transaction_coordinator_div" role="tabpanel" aria-labelledby="transaction_coordinator_tab"></div>
-
-                <div class="tab-pane fade" id="users_div" role="tabpanel" aria-labelledby="users_tab"></div>
 
             </div>
 

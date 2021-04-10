@@ -101,7 +101,8 @@ require('./agents/doc_management/documents/documents.js');
 // employees
 require('./employees/employees.js');
 
-// user profile
+// users
+require('./users/users.js');
 require('./users/user_profile.js');
 
 

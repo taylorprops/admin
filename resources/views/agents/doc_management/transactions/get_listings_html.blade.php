@@ -56,7 +56,7 @@
                     <td>
                         <div class="d-flex justify-content-around">
                             @if($transaction -> ListPictureURL)
-                                <img src="{{ $transaction -> ListPictureURL }}" height="50">
+                                <img src="{{ $transaction -> ListPictureURL }}" class="rounded" height="50">
                             @else
                                 <i class="fad fa-home fa-3x text-primary"></i>
                             @endif

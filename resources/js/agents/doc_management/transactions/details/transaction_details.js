@@ -23,6 +23,24 @@ if (document.URL.match(/transaction_details/)) {
 
         data_table(10, $('#transfer_table'), [3, 'desc'], [0], [], false, true, true, true, true);
 
+        $(document).on('click', '#email_agent_general', function() {
+            let subject = $('#email_agent_subject').val().replace('Commission Breakdown Needed - ', '');
+            $('#email_agent_subject').val(subject);
+            $('#email_agent_modal').modal('show');
+            $('#send_email_agent_button').off('click').on('click', send_email_agent);
+        });
+
+        let options = {
+            menubar: false,
+            statusbar: false,
+            toolbar: true,
+            selector: '#email_agent_message',
+            //relative_urls : true,
+            //remove_script_host : true,
+            //document_base_url: location.hostname
+        }
+        text_editor(options);
+
         let agent_search_request = null;
 
         function search_bright_agents() {
@@ -807,19 +825,9 @@ if (document.URL.match(/transaction_details/)) {
                 $('.undo-cancel-referral-button').off('click').on('click', undo_cancel_referral);
                 $('#merge_with_listing_button').off('click').on('click', show_merge_with_listing);
                 $('#undo_merge_with_listing_button').off('click').on('click', undo_merge_with_listing);
-                $('#email_agent_general').off('click').on('click', function() {
-                    let subject = $('#email_agent_subject').val().replace('Commission Breakdown Needed - ', '');
-                    $('#email_agent_subject').val(subject);
-                    $('#email_agent_modal').modal('show');
-                });
 
-                let options = {
-                    menubar: false,
-                    statusbar: false,
-                    toolbar: true,
-                    selector: '#email_agent_message'
-                }
-                text_editor(options);
+
+
 
             })
             .catch(function (error) {

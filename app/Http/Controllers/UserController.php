@@ -17,6 +17,14 @@ class UserController extends Controller
         $this -> middleware('auth');
     }
 
+    public function get_users(Request $request) {
+
+        $users = User::where('active', 'yes') -> get();
+
+        return view('/users/users', compact('users'));
+
+    }
+
     public function user_profile(Request $request) {
 
         $user = User::select('first_name', 'last_name', 'email', 'signature', 'photo_location') -> find(auth() -> user() -> id);

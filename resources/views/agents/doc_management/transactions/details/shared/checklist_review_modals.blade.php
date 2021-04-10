@@ -35,36 +35,36 @@
                 <form id="email_agent_form">
                     <div class="row">
                         <div class="col-12">
-                            <div class="row">
-                                <div class="col-2">
-                                    <div class="h-100 d-flex justify-content-end align-items-center">
-                                        <div>From:</div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">From:</div>
                                     </div>
                                 </div>
-                                <div class="col-10 pl-0">
-                                    <input type="text" class="custom-form-element form-input form-small" id="email_agent_from" value="{{ \Auth::user() -> name.' - '.$agent_details -> company }} <{{ \Auth::user() -> email }}>">
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_agent_from" value="{{ \Auth::user() -> name.' - '.$agent_details -> company }} <{{ \Auth::user() -> email }}>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-2">
-                                    <div class="h-100 d-flex justify-content-end align-items-center">
-                                        <div>To:</div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">To:</div>
                                     </div>
                                 </div>
-                                <div class="col-10 pl-0">
-                                    <input type="text" class="custom-form-element form-input form-small" id="email_agent_to" value="{{ $agent_details -> first_name.' '.$agent_details -> last_name }} <{{ $agent_details -> email }}>">
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_agent_to" value="{{ $agent_details -> first_name.' '.$agent_details -> last_name }} <{{ $agent_details -> email }}>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-2">
-                                    <div class="h-100 d-flex justify-content-end align-items-center">
-                                        <div>CC:</div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">CC:</div>
                                     </div>
                                 </div>
-                                <div class="col-10 pl-0">
-                                    <input type="text" class="custom-form-element form-input form-small" id="email_agent_cc">
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_agent_cc">
                                 </div>
-                                <div class="col-10 ml-auto p-0 small">
+                                <div class="col-12 col-sm-10 ml-sm-auto p-sm-0 small">
                                     Separate multiple addresses with "," or ";"
                                 </div>
                             </div>
@@ -73,24 +73,24 @@
 
                     <hr>
 
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="h-100 d-flex justify-content-end align-items-center">
-                                <div>Subject:</div>
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-2">
+                            <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                <div class="email-heading text-gray">Subject:</div>
                             </div>
                         </div>
-                        <div class="col-10 pl-0">
-                            <input type="text" class="custom-form-element form-input form-small" id="email_agent_subject" value="{{ $property -> FullStreetAddress }} {{ $property -> City }}, {{ $property -> StateOrProvince }} {{ $property -> PostalCode }}">
+                        <div class="col-12 col-sm-10 pl-sm-0">
+                            <input type="text" class="custom-form-element form-input" id="email_agent_subject" value="{{ $property -> FullStreetAddress }} {{ $property -> City }}, {{ $property -> StateOrProvince }} {{ $property -> PostalCode }}">
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="h-100 d-flex justify-content-end align-items-top">
-                                <div>Message:</div>
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-2">
+                            <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-top">
+                                <div class="email-heading text-gray">Message:</div>
                             </div>
                         </div>
-                        <div class="col-10 pl-0">
+                        <div class="col-12 col-sm-10 pl-sm-0">
                             <div id="email_agent_message" class="text-editor font-9">
                                 Hello {{ $agent_details -> first_name }},
                                 <br><br>{!! auth() -> user() -> signature !!}

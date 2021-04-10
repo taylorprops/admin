@@ -110,14 +110,6 @@
     <li><hr class="my-2"></li>
 
 
-    @if(stristr(config('global_db.permission_edit_employees'), auth() -> user() -> email))
-        <li>
-            <a href="/employees">
-                <i class="fa fa-users"></i>
-                Employees/Users</a>
-        </li>
-    @endif
-
     <li>
         <a href="/esign">
             <i class="fa fa-signature"></i>
@@ -125,9 +117,19 @@
         </a>
     </li>
 
-    @if(stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email) || auth() -> user() -> super_user == 'yes' || stristr(config('global_db.permission_edit_notifications'), auth() -> user() -> email))
+    @if(auth() -> user() -> super_user == 'yes' ||
+        stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email) ||
+        stristr(config('global_db.permission_edit_notifications'), auth() -> user() -> email))
 
     <li><hr class="my-2"></li>
+
+    @if(stristr(config('global_db.permission_edit_employees'), auth() -> user() -> email))
+        <li>
+            <a href="/employees">
+                <i class="fa fa-users"></i>
+                Employees</a>
+        </li>
+    @endif
 
     <li class="sidebar-dropdown">
         <a href="javascript:void(0)">
@@ -136,7 +138,8 @@
         </a>
         <div class="sidebar-submenu">
             <ul>
-                @if(stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email) || auth() -> user() -> super_user == 'yes')
+                @if(auth() -> user() -> super_user == 'yes' ||
+                    stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email))
                 <li>
                     <a href="/permissions/permissions">Permissions</a>
                 </li>
@@ -151,6 +154,14 @@
         </div>
     </li>
 
+    @endif
+
+    @if(auth() -> user() -> group == 'admin')
+    <li>
+        <a href="/users">
+            <i class="fa fa-users"></i>
+            Website Users</a>
+    </li>
     @endif
 
 

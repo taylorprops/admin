@@ -14,6 +14,7 @@ use App\Http\Controllers\Calendar\CalendarController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Files\FilepondUploadController;
+use App\Http\Controllers\TextEditor\FileUploadController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
 use App\Http\Controllers\DocManagement\Create\UploadController;
 use App\Http\Controllers\Admin\Permissions\PermissionsController;
@@ -309,7 +310,8 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/employees/delete_doc', [EmployeesController::class, 'delete_doc']);
 
 
-    /************ Users Profile ************/
+    /************ Users************/
+    Route::get('/users', [UserController::class, 'get_users']);
     Route::get('/users/user_profile', [UserController::class, 'user_profile']);
     Route::post('/users/save_profile', [UserController::class, 'save_profile']);
     Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
@@ -321,7 +323,7 @@ Route::middleware(['admin']) -> group(function () {
     }); */
 
     // Test Controller
-    Route::get('/tests/test', 'TestController@test');
+    //Route::get('/tests/test', 'TestController@test');
 
 });
 
@@ -342,6 +344,9 @@ Route::middleware(['agent']) -> group(function () {
 
     // Global functions
     Route::get('/agents/doc_management/global_functions/get_location_details', [GlobalFunctionsController::class, 'get_location_details']);
+
+    // tinymce file upload
+    Route::post('/text_editor/file_upload', [FileUploadController::class, 'file_upload']);
 
     // all transactions page
     Route::get('/agents/doc_management/transactions', [TransactionsController::class, 'transactions_all']);

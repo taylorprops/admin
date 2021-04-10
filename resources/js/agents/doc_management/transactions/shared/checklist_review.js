@@ -15,7 +15,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
         });
 
         $(document).on('click', '#email_agent_modal [data-dismiss="modal"]', function() {
-            tinymce.remove('#email_agent_message');
+            //tinymce.remove('#email_agent_message');
             reset_email();
         });
 
@@ -123,7 +123,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             let message = tinymce.activeEditor.getContent();
             message += $('#email_agent_checklist_details').html();
 
-            tinymce.remove('#email_agent_message');
+            //tinymce.remove('#email_agent_message');
             reset_email();
 
             let formData = new FormData();

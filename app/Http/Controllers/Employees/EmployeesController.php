@@ -23,6 +23,10 @@ use App\Models\Employees\TransactionCoordinatorsDocs;
 
 class EmployeesController extends Controller {
 
+    public function __construct() {
+        $this -> middleware('auth');
+    }
+
     public function employees(Request $request) {
 
         $states = LocationData::AllStates();
@@ -75,14 +79,6 @@ class EmployeesController extends Controller {
         }
 
         return view('/employees/get_employees_html', compact('employees', 'emp_type', 'active'));
-
-    }
-
-    public function get_users(Request $request) {
-
-        $users = User::where('active', 'yes') -> get();
-
-        return view('/employees/get_users_html', compact('users'));
 
     }
 

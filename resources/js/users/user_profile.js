@@ -37,11 +37,12 @@ if (document.URL.match(/user_profile/)) {
         $('.filepond--credits').hide();
 
         let options = {
+            selector: '#signature',
             menubar: 'edit format table',
             statusbar: false,
-            toolbar: 'undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |',
-            selector: '#signature',
-            plugins: 'table',
+            plugins: 'image table',
+            toolbar: 'image | undo redo | styleselect | bold italic | forecolor backcolor | align outdent indent |',
+            images_upload_url: '/text_editor/file_upload',
             table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
             height: '300'
         }
@@ -139,8 +140,9 @@ if (document.URL.match(/user_profile/)) {
     function save_profile() {
 
         let formData = new FormData();
-        formData.append('signature', tinymce.get('signature').getContent());
-
+        let message = tinymce.get('signature').getContent().replace('../storage/', '/storage/');
+        formData.append('signature', message);
+        console.log(message);
         axios.post('/users/save_profile', formData, axios_options)
             .then(function (response) {
 

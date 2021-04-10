@@ -1025,3 +1025,34 @@
 #contacts_table tr:hover {
     cursor: pointer;
 }
+
+#email_agent_modal {
+
+    .form-ele {
+        margin-top: 2px;
+        margin-bottom: 2px;
+
+        input[type="text"] {
+            font-size: .9rem;
+        }
+
+    }
+
+}
+
+@media (max-width: 575px) {
+
+    #email_agent_modal {
+
+        .email-heading {
+
+            font-size: .8rem;
+        }
+
+        input[type="text"] {
+            font-size: .8rem;
+        }
+
+    }
+
+}
