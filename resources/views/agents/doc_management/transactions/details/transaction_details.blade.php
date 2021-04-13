@@ -2373,11 +2373,11 @@
                                 <div class="col-12">
                                     <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="required_fields_earnest_held_by" name="required_fields_earnest_held_by" data-label="Earnest Deposit Held By">
                                         <option value=""></option>
-                                        <option value="us" @if($property -> TitleCompany == "us") selected @endif>Taylor/Anne Arundel Properties</option>
-                                        <option value="other_company" @if($property -> TitleCompany == "other_company") selected @endif>Other Real Estate Company</option>
-                                        <option value="title" @if($property -> TitleCompany == "title") selected @endif>Title Company/Attorney</option>
-                                        <option value="heritage_title" @if($property -> TitleCompany == "heritage_title") selected @endif>Heritage Title</option>
-                                        <option value="builder" @if($property -> TitleCompany == "builder") selected @endif>Builder</option>
+                                        <option value="us" @if($property -> EarnestHeldBy == "us") selected @endif>Taylor/Anne Arundel Properties</option>
+                                        <option value="other_company" @if($property -> EarnestHeldBy == "other_company") selected @endif>Other Real Estate Company</option>
+                                        <option value="title" @if($property -> EarnestHeldBy == "title") selected @endif>Title Company/Attorney</option>
+                                        <option value="heritage_title" @if($property -> EarnestHeldBy == "heritage_title") selected @endif>Heritage Title</option>
+                                        <option value="builder" @if($property -> EarnestHeldBy == "builder") selected @endif>Builder</option>
                                     </select>
                                 </div>
                             </div>

@@ -279,8 +279,15 @@ class EsignController extends Controller
             $docs_to_display = [];
 
             foreach ($document_ids as $document_id) {
+
+                $transaction_doc = TransactionDocuments::find($document_id);
+                $signed = null;
+                if($transaction_doc -> signed == 'yes') {
+                    $signed = 'yes';
+                }
+
                 if ($from_upload == 'yes') {
-                    $doc = Upload::where('file_id', $document_id) -> with('images') -> first();
+                    $doc = Upload::where('file_id', $document_id) -> with(['images']) -> first();
                     $documents = $documents -> merge($doc);
                     $doc_template_id = $doc -> template_id;
 
@@ -291,7 +298,7 @@ class EsignController extends Controller
                     $file_type = 'system';
                     $data_upload_id = $doc -> file_id;
                 } else {
-                    $doc = TransactionDocuments::where('id', $document_id) -> with('images_converted') -> first();
+                    $doc = TransactionDocuments::with(['images_converted']) -> find($document_id);
                     $documents = $documents -> merge($doc);
                     $doc_template_id = $doc -> template_id;
 
@@ -322,6 +329,7 @@ class EsignController extends Controller
                     'image_location' => $image_location,
                     'template_id' => $doc_template_id,
                     'data_upload_id' => $data_upload_id,
+                    'signed' => $signed
                 ];
 
                 $docs_to_display[] = $details;

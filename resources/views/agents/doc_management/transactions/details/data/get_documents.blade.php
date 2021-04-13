@@ -245,7 +245,7 @@
 
                             @php
                             $assigned = $document -> assigned == 'yes' ? 'assigned' : null;
-                            $disabled = $assigned == 'yes' ? 'disabled' : null;
+                            /* $disabled = $assigned == 'yes' ? 'disabled' : null; */
                             @endphp
 
                             <div class="document-div row mx-0 py-0" data-folder-id="{{ $folder -> id }}" data-document-id="{{ $document -> id }}">

@@ -99,7 +99,7 @@
 
                                         <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0 ml-sm-3">
                                             <div class="mr-4 template-status">
-                                                @if($doc['file_type'] == 'system' && $doc['template_id'] > 0)
+                                                @if($doc['file_type'] == 'system' && $doc['template_id'] > 0 && !$doc['signed'])
                                                 <div class="no-wrap template-applied">
                                                     <span class="text-success"><i class="fal fa-check mr-2"></i> <span class="font-8">Template Applied</span></span>
                                                 </div>

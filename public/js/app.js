@@ -5232,7 +5232,8 @@ if (document.URL.match(/transaction_details/)) {
         doc_div.find('.document-title a').css({
           opacity: '0.4'
         });
-        doc_div.find('button').prop('disabled', true);
+        doc_div.find('button').removeClass('hidden'); //doc_div.find('button').prop('disabled', true);
+
         $('#in_process_div').show();
       });
     }
@@ -5248,7 +5249,7 @@ if (document.URL.match(/transaction_details/)) {
           doc_div.find('.document-title a').css({
             opacity: '1'
           });
-          doc_div.find('button').prop('disabled', false);
+          doc_div.find('button').removeClass('hidden'); //doc_div.find('button').prop('disabled', false);
         });
       }
     } else {
@@ -5435,12 +5436,12 @@ if (document.URL.match(/transaction_details/)) {
         load_tabs('documents');
       }
 
-      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
-      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').prop('disabled', false);
+      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').removeClass('hidden');
+      $('.document-div').not('.sent').not('.completed').not('.in-process').find('button').removeClass('hidden');
       $('.document-div').not('.sent').not('.completed').find('.sent-info, .completed-info').hide();
-      $('.document-div.sent').find('button').prop('disabled', true);
+      $('.document-div.sent').find('button').addClass('hidden');
       $('.document-div.sent').find('.sent-info').show();
-      $('.document-div.completed').find('button.disabled-completed').prop('disabled', true);
+      $('.document-div.completed').find('button.disabled-completed').addClass('hidden');
       $('.document-div.completed').find('.completed-info').show();
     })["catch"](function (error) {
       console.log(error);
