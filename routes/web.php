@@ -15,6 +15,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Files\FilepondUploadController;
 use App\Http\Controllers\TextEditor\FileUploadController;
+use App\Http\Controllers\OldDB\CommissionPaymentsController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
 use App\Http\Controllers\DocManagement\Create\UploadController;
 use App\Http\Controllers\Admin\Permissions\PermissionsController;
@@ -282,6 +283,8 @@ Route::middleware(['admin']) -> group(function () {
     Route::get('/doc_management/commission_other/commission_other_details/{Commission_ID}', [CommissionController::class, 'commission_other_details']);
     // save edit check in
     Route::post('/doc_management/commission/save_edit_queue_check', [CommissionController::class, 'save_edit_queue_check']);
+    // make payment from commission
+    Route::post('/doc_management/commission/make_payment_from_commission', [CommissionPaymentsController::class, 'make_payment_from_commission']);
 
 
     /**********  File review /**********/
@@ -740,6 +743,3 @@ Route::post('/oauth_callback', [EsignController::class, 'oauth_callback']);
 
 
 
-// **************** CRON ****************//
-Route::get('/cron/update_agents', [CronController::class, 'update_tables_agents']);
-Route::get('/cron/update_others', [CronController::class, 'update_tables_other']);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommissionChecksInQueue extends Model
 {
-    public $table = 'commission_checks_in_queue';
+    protected $table = 'commission_checks_in_queue';
     protected $_connection = 'mysql';
     protected $_primaryKey = 'id';
     protected $guarded = [];

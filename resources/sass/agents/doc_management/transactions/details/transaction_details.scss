@@ -319,25 +319,7 @@
         opacity: 0.6;
     }
 
-    .form-groups-container {
-        height: 300px;
-        overflow: auto;
-    }
 
-    #form_search_div {
-        position: relative;
-    }
-
-    #form_search_div:after {
-        position: absolute;
-        font-family: 'Font Awesome 5 Pro';
-        top: 0;
-        right: 10px;
-        content: "\f002";
-        color: $primary;
-        font-size: 1.6rem;
-        z-index: 1;
-    }
     .dropleft .dropdown-toggle::before {
         display: inline-block;
         margin-right: 0.255em;
@@ -773,6 +755,28 @@
 
 }
 
+#add_individual_template_modal {
+    .form-groups-container {
+        height: 500px;
+        overflow: auto;
+    }
+
+    #form_search_div {
+        position: relative;
+    }
+
+    #form_search_div:after {
+        position: absolute;
+        font-family: 'Font Awesome 5 Pro';
+        top: 2px;
+        right: 10px;
+        content: "\f002";
+        color: $primary;
+        font-size: 1.3rem;
+        z-index: 1;
+    }
+}
+
 .invalid-border {
     border: 1px solid $danger !important;
     box-shadow: 0 0 5px $danger !important;
@@ -1034,6 +1038,8 @@
 
         input[type="text"] {
             font-size: .9rem;
+            padding-top: 2px;
+            padding-bottom: 0px;
         }
 
     }

@@ -1040,7 +1040,8 @@ class EsignController extends Controller
 
             if ($request -> is_draft == 'yes') {
                 return response() -> json(['status' => 'draft saved']);
-            } elseif ($request -> is_template == 'yes') {
+            }
+            if ($request -> is_template == 'yes') {
                 return response() -> json(['status' => 'template saved']);
             }
 
@@ -1437,7 +1438,8 @@ class EsignController extends Controller
                 'document_completed' => 'Completed',
                 'document_expired' => 'Expired',
                 'document_cancelled' => 'Canceled',
-            ][$event_type] ?? null;
+                'email_validation_waived' => 'Email Validation Waived',
+            ][$event_type];
 
             //if(hash_hmac('sha256', $event_time . $event_type, config('esign.key')) == $request -> event_hash) {
 
@@ -1488,7 +1490,7 @@ class EsignController extends Controller
 
                 if ($status == 'Completed') {
 
-                    $subject = sanitize($envelope -> subject);
+                    $subject = sanitize($envelope -> subject).'_'.time();
                     $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
                     $file_location = $path.'/'.$subject.'.pdf';
                     $public_link = '/storage/esign/'.$envelope -> id.'/'.$subject.'.pdf';
@@ -1498,12 +1500,30 @@ class EsignController extends Controller
                     $envelope -> file_location = $public_link;
 
                     // update transaction docs with completed link and set status to signed
-                    $documents = $envelope -> documents;
+                    $documents = $envelope -> documents -> where('transaction_document_id', '>', '0');
+
                     if ($documents) {
+
+                        $start = 1;
                         foreach ($documents as $document) {
-                            $update_transaction_docs = TransactionDocuments::where('id', $document -> transaction_document_id) -> update(['signed' => 'yes', 'file_location_converted' => $public_link]);
+
+                            $pages = $document -> pages_total;
+                            $end = $start + $pages - 1;
+
+                            $file_name = $document -> file_name.'_'.time().'.pdf';
+
+                            $split_doc_location = $path.'/'.$file_name;
+                            $split_doc_location_public = '/storage/esign/'.$envelope -> id.'/'.$file_name;
+
+                            exec('pdftk '.$file_location.' cat '.$start.'-'.$end.' output '.$split_doc_location);
+
+                            $update_transaction_docs = TransactionDocuments::where('id', $document -> transaction_document_id) -> update(['signed' => 'yes', 'file_location_converted' => $split_doc_location_public]);
+
+                            $start = $end + 1;
                         }
+
                     }
+
                 }
 
                 $envelope -> save();

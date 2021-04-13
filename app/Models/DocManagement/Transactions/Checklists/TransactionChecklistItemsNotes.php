@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TransactionChecklistItemsNotes extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_checklist_item_notes';
+    protected $table = 'docs_transactions_checklist_item_notes';
     protected $primaryKey = 'id';
     protected $guarded = [];
 

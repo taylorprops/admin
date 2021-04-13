@@ -81,6 +81,28 @@ if (document.URL.match(/transaction_details/)) {
             total_agent_commission();
         });
 
+        $('.pay-from-commission-button').on('click', function() {
+
+            let type = $(this).data('type');
+            let amount = $(this).data('amount');
+
+            let desc = type == 'dues' ? 'Dues Payment' : 'E&O Payment';
+
+            let html = $('#deduction_template').html();
+            $('#deduction_container').append(html);
+            $('#deduction_container').find('.row.template').find('input').addClass('custom-form-element form-input');
+            $('#deduction_container').find('.row.template').removeClass('template');
+            $('.deduction-description').last().val(desc);
+            $('.deduction-amount').last().val('$'+amount);
+            $('.deduction-payment-type').last().val(type);
+            $('.delete-deduction-button').last().addClass('fedex-delete');
+
+            numbers_only_agent();
+
+            total_agent_commission();
+
+        });
+
         if($('#referral_company_deduction').length > 0) {
             $('#checks_in_total').on('change', function() {
                 let deduction = parseFloat($(this).val().replace(/[,\$]/g, '')) * .15;

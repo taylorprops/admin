@@ -215,10 +215,12 @@
     display: none;
 }
 
+#add_checklist_item_modal {
 
-.form-groups-container {
-    height: 300px;
-    overflow: auto;
+    .form-groups-container {
+        height: 300px;
+        overflow: auto;
+    }
 }
 
 .rejected-reasons-container {

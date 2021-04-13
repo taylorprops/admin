@@ -560,7 +560,7 @@ function show_dropdown(input) {
 
         setTimeout(function() {
             dropdown_container.scrollTop(0);
-            dropdown_container.scrollTop(active_option.position().top);
+            dropdown_container.scrollTop(active_option.position().top - 40);
         }, 10);
 
     }

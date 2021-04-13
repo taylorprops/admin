@@ -84,7 +84,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary btn-lg p-3" id="send_email_agents_missing_earnest_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Send Emails</a>
+                <a class="btn btn-primary btn-lg p-3" id="send_email_agents_missing_earnest_button" data-dismiss="modal"><i class="fad fa-share mr-2"></i> Send Emails</a>
             </div>
         </div>
     </div>

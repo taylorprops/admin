@@ -9,7 +9,7 @@ class AgentsLicenses extends Model {
 
     use HasFactory;
     protected $connection = 'mysql';
-    public $table = 'emp_agents_licenses';
+    protected $table = 'emp_agents_licenses';
     protected $primaryKey = 'id';
     protected $guarded = [];
 }

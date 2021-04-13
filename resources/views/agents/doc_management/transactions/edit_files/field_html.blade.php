@@ -115,13 +115,21 @@ if($field_created_by == 'user') {
     @php
     // add values to data-div for all fields with one input and a db field
     $user_field_inputs = $user_field -> user_field_inputs;
-
     $value = '';
 
     $input = null;
+    $input_id = null;
+    $input_db_column = null;
+    $input_name_display = null;
+    $input_value = null;
+
     if(count($user_field_inputs) == 1) {
         $input = $user_field_inputs -> first();
         $value = $input -> input_value;
+        $input_id = $input -> id;
+        $input_db_column = $input -> db_column;
+        $input_name_display = $input -> input_name_display;
+        $input_value = $input -> input_value;
     }
 
     if($value == '0000-00-00') {
@@ -150,14 +158,14 @@ if($field_created_by == 'user') {
 
     @if($field_category == 'date')
 
-        <input type="text" class="field-datepicker field-input" id="field_{{ $field_id }}" data-id="{{ $input -> id }}" value="{{ $value }}" data-default-value="{{ $value }}">
+        <input type="text" class="field-datepicker field-input" id="field_{{ $field_id }}" data-id="{{ $input_id }}" value="{{ $value }}" data-default-value="{{ $value }}">
 
     @elseif($field_category == 'number')
 
         <div class="inputs-container bg-white px-3 shadow @if($left_perc > 50) right @endif">
 
             <div class="input-div my-3">
-                <input type="text" class="custom-form-element form-input field-input numbers-only" data-id="{{ $input -> id }}" data-group-id="{{ $group_id }}" data-field-type="{{ $field_type }}" data-number-type="{{ $user_field -> number_type }}" data-db-column="{{ $input -> db_column }}" data-label="{{ $input -> input_name_display }}" value="{{ $input -> input_value }}">
+                <input type="text" class="custom-form-element form-input field-input numbers-only" data-id="{{ $input_id }}" data-group-id="{{ $group_id }}" data-field-type="{{ $field_type }}" data-number-type="{{ $user_field -> number_type }}" data-db-column="{{ $input_db_column }}" data-label="{{ $input_name_display }}" value="{{ $input_value }}">
             </div>
 
             <div class="d-flex justify-content-around mb-2">

@@ -10,7 +10,7 @@ class AgentsTeams extends Model {
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_agents_teams';
+    protected $table = 'emp_agents_teams';
     protected $primaryKey = 'id';
     protected $guarded = [];
 

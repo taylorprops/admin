@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TransactionUpload extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_uploads';
+    protected $table = 'docs_transactions_uploads';
     protected $primaryKey = 'file_id';
     protected $guarded = [];
 
     public function images() {
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Upload\TransactionUploadImages::class, 'file_id', 'file_id') -> orderBy('page_number');
+    }
+
+    public function user_fields() {
+        return $this -> hasMany(\App\Models\DocManagement\Transactions\EditFiles\UserFields::class, 'file_id', 'file_id') -> orderBy('id');
     }
 
     public function pages() {
@@ -56,7 +60,7 @@ class TransactionUpload extends Model
             return $form_name -> file_name_display;
         }
 
-        return  true;
+        return true;
     }
 
     public function scopeGetFormLocation($query, $form_id) {

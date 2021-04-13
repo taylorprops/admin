@@ -10,7 +10,7 @@ class InHouseDocs extends Model
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_in_house_docs';
+    protected $table = 'emp_in_house_docs';
     protected $guarded = [];
 
 }

@@ -23,11 +23,13 @@
                                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
                                 <div class="fields-container w-100 h-100">
                                     <img class="file-image-bg w-100 h-100" src="{{ $image -> file_location }}?r={{ date('YmdHis') }}">
-                                    @foreach($user_fields as $user_field)
-                                        @if($user_field -> page == $c)
-                                            @include('/agents/doc_management/transactions/edit_files/field_html', [$user_field, $c, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $Agent_ID])
-                                        @endif
-                                    @endforeach
+                                    @if(count($user_fields) > 0)
+                                        @foreach($user_fields as $user_field)
+                                            @if($user_field -> page == $c)
+                                                @include('/agents/doc_management/transactions/edit_files/field_html', [$user_field, $c, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $Agent_ID])
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                             <div class="h5 text-white bg-primary p-2 text-center page-foot">

@@ -10,7 +10,7 @@ class TransactionCoordinators extends Model
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_transaction_coordinators';
+    protected $table = 'emp_transaction_coordinators';
     protected $guarded = [];
 
     public function user_account() {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AgentRoster extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'bright_agent_roster';
+    protected $table = 'bright_agent_roster';
     protected $primaryKey = 'MemberKey';
     public $timestamps = false;
     protected $guarded = [];

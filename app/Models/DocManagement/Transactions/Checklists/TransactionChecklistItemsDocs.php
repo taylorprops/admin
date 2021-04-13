@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class TransactionChecklistItemsDocs extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_checklist_item_docs';
+    protected $table = 'docs_transactions_checklist_item_docs';
     protected $primaryKey = 'id';
     protected $guarded = [];
 

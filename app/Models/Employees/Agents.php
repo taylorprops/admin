@@ -10,7 +10,7 @@ class Agents extends Model {
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_agents';
+    protected $table = 'emp_agents';
     protected $primaryKey = 'id';
     protected $guarded = [];
 
@@ -19,13 +19,15 @@ class Agents extends Model {
     ];
 
     public function scopeAgentDetails($query, $id) {
-        $agent_details = $query -> find($id);
-
-        return $agent_details;
+        return $query -> find($id);
     }
 
     public function contracts() {
         return $this -> hasMany('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Agent_ID', 'id');
+    }
+
+    public function user_account() {
+        return $this -> hasOne('App\User', 'user_id', 'id') -> where('group', 'like', 'agent%');
     }
 
     /* public function earnest_deposits() {

@@ -10,7 +10,7 @@ class TransactionCoordinatorsDocs extends Model
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_transaction_coordinators_docs';
+    protected $table = 'emp_transaction_coordinators_docs';
     protected $guarded = [];
 
 }

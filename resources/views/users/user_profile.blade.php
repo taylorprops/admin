@@ -125,7 +125,7 @@
                 <div class="crop-container"></div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_crop_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_crop_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResourceItemsAdmin extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'admin_resource_items';
+    protected $table = 'admin_resource_items';
     protected $primaryKey = 'resource_id';
     protected $guarded = [];
     public $timestamps = false;

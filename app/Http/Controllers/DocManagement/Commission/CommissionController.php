@@ -62,23 +62,6 @@ class CommissionController extends Controller
             -> get();
 
 
-        /* $commission_contracts = Commission::select($select)
-            -> where(function ($query) {
-                $query -> where('total_left', '>', '0')
-                -> orWhere('total_left', '<', '0');
-            })
-            -> where('Contract_ID', '>', '0')
-            -> with('property_contract:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode,created_at')
-            -> with('agent:id,first_name,last_name,full_name')
-            -> get();
-
-        $commission_referrals = Commission::select($select)
-            -> where('total_left', '>', '0')
-            -> where('Referral_ID', '>', '0')
-            -> with('property_referral:Referral_ID,FullStreetAddress,City,StateOrProvince,PostalCode,ClientFirstName,ClientLastName,created_at')
-            -> with('agent:id,first_name,last_name,full_name')
-            -> get(); */
-
         $commissions = $commission_contracts -> merge($commission_referrals);
 
         return view('/doc_management/commission/get_commissions_pending_html', compact('commissions'));

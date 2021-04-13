@@ -48,10 +48,11 @@ if (document.URL.match(/transaction_details/)) {
             axios.post('/agents/doc_management/transactions/save_details', formData, axios_options)
             .then(function (response) {
                 if(response.data.success == 'ok') {
-                    //load_tabs('details');
-                    //load_tabs('commission');
                     load_details_header();
                     toastr['success']('Transaction Details Saved!');
+                    if(response.data.agent_changed == true) {
+                        window.location.reload();
+                    }
                 }
             })
             .catch(function (error) {

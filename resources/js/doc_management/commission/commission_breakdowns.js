@@ -152,6 +152,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
                 if(page == 'details' || page == 'other') {
                     get_checks_in(Commission_ID);
+                    save_commission();
                     /* if(page == 'other') {
                         save_commission();
                     } */

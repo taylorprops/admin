@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EsignCallbacks extends Model
 {
-    public $table = 'esign_callbacks';
+    protected $table = 'esign_callbacks';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

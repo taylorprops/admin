@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OldAgentsNotes extends Model
 {
     protected $connection = 'mysql_company';
-    public $table = 'tbl_agents_notes';
+    protected $table = 'tbl_agents_notes';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $guarded = [];

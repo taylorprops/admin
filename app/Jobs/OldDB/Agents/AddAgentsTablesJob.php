@@ -1,39 +1,64 @@
 <?php
 
-namespace App\Http\Controllers\Cron;
+namespace App\Jobs\OldDB\Agents;
 
-use App\Http\Controllers\Controller;
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocumentsEmailed;
-use App\Models\DocManagement\Transactions\Listings\Listings;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
-use App\Models\Employees\Agents;
-use App\Models\Employees\AgentsLicenses;
-use App\Models\Employees\AgentsNotes;
-use App\Models\Employees\AgentsTeams;
-use App\Models\OldDB\OldAgents;
-use App\Models\OldDB\OldAgentsLicenses;
-use App\Models\OldDB\OldAgentsNotes;
-use App\Models\OldDB\OldAgentsTeams;
 use App\User;
-use Config;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Bus\Queueable;
+use App\Models\OldDB\OldAgents;
+use App\Models\Employees\Agents;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class CronController extends Controller
+class AddAgentsTablesJob implements ShouldQueue
 {
-    public function update_tables_agents(Request $request) {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-		$delete_agents = Agents::truncate();
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+
+        $delete_agents = Agents::truncate();
         $delete_users = User::where('group', 'agent') -> orWhere('group', 'agent_referral') -> delete();
 
-        $agents = OldAgents::where('active', 'yes') -> get();
+        $agents = OldAgents::where('email1', '!=', '') -> get();
 
         foreach ($agents as $agent) {
+
             $full_name = $agent -> first.' '.$agent -> last;
             if ($agent -> suffix != '') {
                 $full_name .= ', '.$agent -> suffix;
             }
+
+            $agent_email = $agent -> email1;
+            $social_security = Crypt::encrypt($agent -> soc_sec);
+
+            if(config('app.env') == 'development') {
+
+                $agent_email = 'test_'.$agent -> email1;
+                $social_security = Crypt::encrypt('1111-22-333');
+                if($agent -> email1 == 'mike@taylorprops.com') {
+                    $agent_email = $agent -> email1;
+                }
+            }
+
 
             // add to emp_agents
             $add_agent = new Agents();
@@ -45,14 +70,8 @@ class CronController extends Controller
             $add_agent -> full_name = $full_name;
             $add_agent -> dob_day = $agent -> dob_day;
             $add_agent -> dob_month = $agent -> dob_month;
-            // TODO: remove fake number
-            $add_agent -> social_security = /* $agent -> soc_sec */ '111-22-3333';
-            // TODO: remove test_
-            if($agent -> email == 'mike@taylorprops.com') {
-                $add_agent -> email = $agent -> email1;
-            } else {
-                $add_agent -> email = 'test_'.$agent -> email1;
-            }
+            $add_agent -> social_security = $social_security;
+            $add_agent -> email = $agent_email;
             $add_agent -> cell_phone = $agent -> cell_phone;
             $add_agent -> home_phone = $agent -> home_phone;
             $add_agent -> address_street = $agent -> street;
@@ -92,53 +111,15 @@ class CronController extends Controller
             if (stristr($agent -> company, 'referral')) {
                 $add_user -> group = 'agent_referral';
             }
+            $add_user -> active = $agent -> active;
             $add_user -> name = $agent -> fullname;
             $add_user -> first_name = $agent -> first;
             $add_user -> last_name = $agent -> last;
-            // TODO: remove test_
-            $add_user -> email = 'test_'.$agent -> email1;
-            $add_user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
+            $add_user -> email = $agent_email;
+            //$add_user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
             $add_user -> save();
-        }
-    }
 
-    public function update_tables_other(Request $request) {
-
-		$delete_agents_licenses = AgentsLicenses::truncate();
-        $delete_agents_teams = AgentsTeams::truncate();
-        $delete_agents_notes = AgentsNotes::truncate();
-
-        $licenses = OldAgentsLicenses::where('active', 'yes') -> get();
-        $teams = OldAgentsTeams::get();
-        $notes = OldAgentsNotes::where('deleted', 'no') -> get();
-
-        foreach ($licenses as $license) {
-            $add_license = new AgentsLicenses();
-            $add_license -> Agent_ID = $license -> agent_id;
-            $add_license -> state = $license -> lic_state;
-            $add_license -> number = $license -> lic_number;
-            $add_license -> expiration = $license -> lic_expire;
-            $add_license -> company = $license -> lic_comp;
-            $add_license -> file_location = $license -> lic_location;
-            $add_license -> save();
         }
 
-        foreach ($teams as $team) {
-            $add_team = new AgentsTeams();
-            $add_team -> team_name = $team -> team_name;
-            $add_team -> team_leader_id = $team -> team_leader;
-            $add_team -> active = $team -> active;
-            $add_team -> save();
-        }
-
-        foreach ($notes as $note) {
-            $add_note = new AgentsNotes();
-            $add_note -> Agent_ID = $note -> agent_id;
-            $add_note -> agent_name = $note -> agent_name;
-            $add_note -> notes = $note -> notes;
-            $add_note -> created_by = $note -> creator;
-            $add_note -> created_at = $note -> date_added;
-            $add_note -> save();
-        }
     }
 }

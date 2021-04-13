@@ -221,7 +221,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_edit_employee_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_edit_employee_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>
@@ -240,7 +240,7 @@
                 <div class="crop-container"></div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_crop_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_crop_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>
@@ -261,7 +261,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary modal-confirm-button" id="employee_saved_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Continue</a>
+                <a class="btn btn-primary modal-confirm-button" id="employee_saved_button" data-dismiss="modal"><i class="fad fa-share mr-2"></i> Continue</a>
             </div>
         </div>
     </div>

@@ -219,8 +219,12 @@ class ChecklistsController extends Controller
 
 		$checklist_id = $request -> checklist_id;
         if ($checklist_id) {
-            $checklist = Checklists::where('id', $checklist_id) -> delete();
-            $checklist_items = ChecklistsItems::where('checklist_id', $checklist_id) -> delete();
+            $checklist = Checklists::where('id', $checklist_id) -> update([
+                'active' => 'no'
+            ]);
+            $checklist_items = ChecklistsItems::where('checklist_id', $checklist_id) -> update([
+                'active' => 'no'
+            ]);
         }
     }
 

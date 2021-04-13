@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EscrowExport extends Model
 {
     protected $connection = 'mysql_company';
-    public $table = 'escrow_import';
+    protected $table = 'escrow_import';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $guarded = [];

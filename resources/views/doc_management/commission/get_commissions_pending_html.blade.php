@@ -47,7 +47,7 @@
                         <td>{{ $details }}</td>
                         <td class="text-center">@if($commission -> breakdown -> submitted == 'yes') <i class="fal fa-check text-success"></i> @else <i class="fal fa-minus text-danger"></i> @endif</td>
                         <td class="text-right">${{ number_format($commission -> checks_in_total, 2) }}</td>
-                        <td class="text-right">@if($commission -> Contract_ID > 0) {{ number_format($commission -> earnest_deposit_amount, 2) }} @else -Referral @endif</td>
+                        <td class="text-right">@if($commission -> Contract_ID > 0) ${{ number_format($commission -> earnest_deposit_amount, 2) }} @else <span class="small">-Referral</span> @endif</td>
                         <td class="text-right">${{ number_format($commission -> checks_out_total, 2) }}</td>
                     </tr>
 

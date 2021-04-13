@@ -35,7 +35,7 @@
                 <form id="email_agent_form">
                     <div class="row">
                         <div class="col-12">
-                            <div class="row mt-2">
+                            <div class="row">
                                 <div class="col-12 col-sm-2">
                                     <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
                                         <div class="email-heading text-gray">From:</div>

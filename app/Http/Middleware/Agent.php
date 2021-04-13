@@ -22,7 +22,7 @@ class Agent
         }
 
         //return abort(403);
-        return redirect('/dashboard') -> with('error','You do not have access');
+        return redirect(url() -> previous()) -> with('error','You do not have access');
         //echo '<script>top.location.href="/";</script>';
     }
 }

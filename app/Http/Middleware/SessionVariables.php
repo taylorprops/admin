@@ -24,6 +24,10 @@ class SessionVariables
 
         if(auth() -> user()) {
 
+            if (auth() -> user() -> super_user == 'yes') {
+                session(['super_user' => true]);
+            }
+
             $user_id = auth() -> user() -> user_id;
 
             session(['header_logo_src' => '/images/logo/logos.png']);

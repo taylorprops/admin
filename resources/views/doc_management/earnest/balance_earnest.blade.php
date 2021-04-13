@@ -82,7 +82,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="send_bounced_check_notification_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Send Message</a>
+                <a class="btn btn-primary" id="send_bounced_check_notification_button" data-dismiss="modal"><i class="fad fa-share mr-2"></i> Send Message</a>
             </div>
         </div>
     </div>

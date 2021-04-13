@@ -89,11 +89,11 @@ class GlobalNotification extends Notification
                 -> subject($this -> notification['subject'])
                 -> line(new HtmlString($this -> notification['message_email']))
                 -> action($this -> link_text, url($this -> link_url));
-        } else {
-            return (new MailMessage)
-                -> subject($this -> notification['subject'])
-                -> line(new HtmlString($this -> notification['message_email']));
         }
+
+        return (new MailMessage)
+            -> subject($this -> notification['subject'])
+            -> line(new HtmlString($this -> notification['message_email']));
     }
 
     /**

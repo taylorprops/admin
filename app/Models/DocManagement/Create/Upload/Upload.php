@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Upload extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_create_uploads';
+    protected $table = 'docs_create_uploads';
     protected $primaryKey = 'file_id';
     protected $guarded = [];
 
@@ -211,7 +211,7 @@ class Upload extends Model
             return true;
         }
 
-        return  true;
+        return true;
     }
 
     public function scopeGetFormLocation($query, $form_id) {

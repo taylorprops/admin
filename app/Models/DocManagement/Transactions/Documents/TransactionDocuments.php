@@ -9,7 +9,7 @@ class TransactionDocuments extends Model
 {
     use SoftDeletes;
 
-    public $table = 'docs_transactions_docs';
+    protected $table = 'docs_transactions_docs';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

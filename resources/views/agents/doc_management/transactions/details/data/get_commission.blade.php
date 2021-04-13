@@ -709,7 +709,7 @@
                 <div class="row">
                     <div class="col-5"></div>
                     <div class="col-7 my-2">
-                        <a href="javascript: void(0)" class="export-deductions-button text-success">+ Import deductions from agent's CB</a>
+                        <a href="javascript: void(0)" class="export-deductions-button text-primary">+ Add Deductions From Agent's Breakdown</a>
                     </div>
                 </div>
                 <div class="row">

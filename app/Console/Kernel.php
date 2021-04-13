@@ -42,6 +42,12 @@ class Kernel extends ConsoleKernel
             // mysql backup locally
             //$schedule -> command('database:backup') -> dailyAt('08:25');
         }
+
+        if(config('app.env') != 'development') {
+            // update agents
+            $schedule -> command('old_db:update_agents') -> everyMinute() -> withoutOverlapping(1);
+            $schedule -> command('old_db:add_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
+        }
     }
 
     /**

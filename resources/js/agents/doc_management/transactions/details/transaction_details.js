@@ -35,6 +35,7 @@ if (document.URL.match(/transaction_details/)) {
             statusbar: false,
             toolbar: true,
             selector: '#email_agent_message',
+            height: 250,
             relative_urls : false,
             //remove_script_host : true,
             document_base_url: location.hostname

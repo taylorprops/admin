@@ -9,7 +9,7 @@ class EsignDocumentsImages extends Model
 
     use \Awobaz\Compoships\Compoships;
 
-    public $table = 'esign_documents_images';
+    protected $table = 'esign_documents_images';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

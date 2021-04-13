@@ -122,7 +122,7 @@ class UploadController extends Controller
         // to run functions from ResourceItems
         $resource_items = new ResourceItems();
         // checklists to add to
-        $checklists = Checklists::where('checklist_type', $request -> checklist_type) -> orderBy('checklist_state', 'ASC')
+        $checklists = Checklists::where('active', 'yes') -> where('checklist_type', $request -> checklist_type) -> orderBy('checklist_state', 'ASC')
             -> orderBy('checklist_location_id', 'ASC')
             -> orderBy('checklist_represent', 'DESC')
             -> orderBy('checklist_sale_rent', 'DESC')
@@ -179,7 +179,7 @@ class UploadController extends Controller
         $uploaded_file = Upload::where('file_id', $file_id) -> first();
         // all forms to select replacement from
         $uploads = Upload::where('form_group_id', $request -> form_group_id) -> where('published', 'yes') -> where('active', 'yes')
-        -> whereNotIn('file_id', function ($query) use ($file_id) {
+        -> whereNotIn('file_id', function ($query) {
             $query -> select('checklist_form_id')
                 -> from('docs_checklists_items')
                 -> groupBy('checklist_form_id');
@@ -215,7 +215,7 @@ class UploadController extends Controller
 
     public function get_uploaded_files(Request $request) {
 
-		$form_group_id = $request -> form_group_id ?: null;
+		$form_group_id = $request -> form_group_id ?? null;
         //$files = Upload::groupBy('file_id', 'file_name_orig') -> get();
         $upload = new Upload();
         $files = $upload -> orderBy('file_name_display') -> get();

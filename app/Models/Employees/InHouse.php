@@ -11,7 +11,7 @@ class InHouse extends Model {
     use HasFactory;
 
     protected $connection = 'mysql';
-    public $table = 'emp_in_house';
+    protected $table = 'emp_in_house';
     protected $guarded = [];
 
     public function docs() {

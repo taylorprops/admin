@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionUploadImages extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_uploads_images';
+    protected $table = 'docs_transactions_uploads_images';
     protected $guarded = [];
 }

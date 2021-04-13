@@ -92,6 +92,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
             }
 
             $('#create_envelope_button').prop('disabled', true).html('Adding Documents <span class="spinner-border spinner-border-sm ml-2"></span>');
+            $('.notification').removeClass('hidden');
 
             let Listing_ID = $('#Listing_ID').val() > 0 ? $('#Listing_ID').val() : 0;
             let Contract_ID = $('#Contract_ID').val() > 0 ? $('#Contract_ID').val() : 0;

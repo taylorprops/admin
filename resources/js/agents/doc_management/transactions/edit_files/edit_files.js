@@ -17,8 +17,6 @@ if (document.URL.match(/edit_files/)) {
             //document.getElementById('page_' + id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
         });
 
-
-
         // Functions
 
         function init() {
@@ -137,6 +135,7 @@ if (document.URL.match(/edit_files/)) {
             $('.field-input').each(function() {
                 $(this).data('original-value', $(this).val());
             });
+
 
             window.addEventListener("beforeunload", function (e) {
 
@@ -636,13 +635,21 @@ if (document.URL.match(/edit_files/)) {
 
                 if (field_div.data('category') == 'radio') {
 
-                    // clear x's and values for all radios in group
-                    $('.group_' + group_id).closest('.field-div-container').find('.data-div').html('');
-                    $('.group_' + group_id).closest('.field-div-container').find('.field-input').val('');
-                    // check clicked radio
-                    field_div_container.find('.data-div').html('x');
-                    // update input value
-                    field_div_container.find('.field-input').val('checked');
+                    if(field_div_container.find('.data-div').html() == 'x') {
+                        field_div_container.find('.data-div').html('');
+                    } else {
+
+                        // clear x's and values for all radios in group
+                        $('.group_' + group_id).closest('.field-div-container').find('.data-div').html('');
+                        $('.group_' + group_id).closest('.field-div-container').find('.field-input').val('');
+                        // check clicked radio
+                        field_div_container.find('.data-div').html('x');
+                        // update input value
+                        field_div_container.find('.field-input').val('checked');
+
+                    }
+
+
 
                 } else if (field_div.data('category') == 'checkbox') {
 
@@ -826,7 +833,7 @@ if (document.URL.match(/edit_files/)) {
             // set inline styles for PDF
             // system fields
             let font_size = '12px';
-            let top = '3px';
+            let top = '2px';
             if($('#page_size').val() == 'a4') {
                 font_size = '11px';
                 top = '3px';

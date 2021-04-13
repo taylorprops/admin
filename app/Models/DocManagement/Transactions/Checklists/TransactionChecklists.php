@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TransactionChecklists extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_checklists';
+    protected $table = 'docs_transactions_checklists';
     protected $primaryKey = 'id';
     protected $guarded = [];
 
@@ -56,7 +56,7 @@ class TransactionChecklists extends Model
         }
 
         // get checklist
-        $checklist = Checklists::where($where) -> with('checklist_items') -> first();
+        $checklist = Checklists::where('active', 'yes') -> where($where) -> with('checklist_items') -> first();
 
         /* $checklist = Checklists::where($where);
         dd(vsprintf(str_replace('?', '%s', $checklist -> toSql()), collect($checklist -> getBindings()) -> map(function($binding){

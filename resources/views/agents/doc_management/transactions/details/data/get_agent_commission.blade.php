@@ -203,6 +203,49 @@
                                     </div>
                                 </div>
 
+                                @if($agent -> balance > 0 || $agent -> balance_eno > 0)
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <div class="alert alert-danger font-9">
+
+                                                Would you like to pay the following from your commission?
+                                                <br>
+                                                <span class="small">You can change the amount after selecting "Yes"</span>
+
+                                                <div class="bg-white p-2">
+
+                                                    @if($agent -> balance > 0)
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>Dues Balance</div>
+                                                        <div class="d-flex justify-content-end align-items-center">
+                                                            <div>${{ number_format($agent -> balance, 2) }}</div>
+                                                            <div class="ml-3">
+                                                                <a href="javascript: void(0)" class="btn btn-primary btn-sm pay-from-commission-button" data-type="dues" data-amount="{{ $agent -> balance }}"><i class="fal fa-check mr-1"></i> Yes </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                @if($agent -> balance_eno > 0)
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>E&O Balance</div>
+                                                        <div class="d-flex justify-content-end align-items-center">
+                                                            <div>${{ number_format($agent -> balance_eno, 2) }}</div>
+                                                            <div class="ml-3">
+                                                                <a href="javascript: void(0)" class="btn btn-primary btn-sm pay-from-commission-button" data-type="eno" data-amount="{{ $agent -> balance_eno }}"><i class="fal fa-check mr-1"></i> Yes </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                @endif
+
 
                                 <div id="deduction_template" class="hidden">
 
@@ -219,6 +262,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" class="deduction-payment-type" name="deduction_payment_type[]" id="deduction_payment_type">
 
                                 </div>
 
@@ -240,7 +284,8 @@
                                                         <input type="text" class="custom-form-element form-input money-decimal numbers-only text-right text-danger deduction-amount" name="deduction_amount[]" value="{{ $deduction -> amount }}" data-label="Amount">
                                                     </div>
                                                 </div>
-                                        </div>
+                                                <input type="hidden" class="deduction-payment-type" name="deduction_payment_type[]" id="deduction_payment_type" value="{{ $deduction -> payment_type }}">
+                                            </div>
 
                                         @endforeach
 
@@ -260,6 +305,7 @@
                                                         <input type="text" class="custom-form-element form-input money-decimal numbers-only text-right text-danger deduction-amount" name="deduction_amount[]" data-label="Amount">
                                                     </div>
                                                 </div>
+                                                <input type="hidden" class="deduction-payment-type" name="deduction_payment_type[]" id="deduction_payment_type">
                                             </div>
 
                                             <div class="row d-flex align-items-center no-gutters">
@@ -274,6 +320,7 @@
                                                         <input type="text" class="custom-form-element form-input money-decimal numbers-only text-right text-danger deduction-amount" name="deduction_amount[]" data-label="Amount">
                                                     </div>
                                                 </div>
+                                                <input type="hidden" class="deduction-payment-type" name="deduction_payment_type[]" id="deduction_payment_type">
                                             </div>
 
                                         @endif

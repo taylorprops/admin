@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ChecklistsItems extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_checklists_items';
+    protected $table = 'docs_checklists_items';
     protected $guarded = [];
 
     public static function boot() {

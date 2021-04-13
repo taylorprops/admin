@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionChecklistItems extends Model
 {
-    public $table = 'docs_transactions_checklist_items';
+    protected $table = 'docs_transactions_checklist_items';
     protected $_connection = 'mysql';
     protected $_primaryKey = 'id';
     protected $guarded = [];

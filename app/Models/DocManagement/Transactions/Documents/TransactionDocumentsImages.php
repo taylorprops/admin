@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionDocumentsImages extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_docs_images';
+    protected $table = 'docs_transactions_docs_images';
     protected $primaryKey = 'id';
     protected $guarded = [];
 }

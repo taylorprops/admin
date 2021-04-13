@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Earnest extends Model
 {
-    public $table = 'earnest';
+    protected $table = 'earnest';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

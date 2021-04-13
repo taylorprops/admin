@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class OldEarnest extends Model
 {
     protected $connection = 'mysql_company';
-    public $table = 'escrow';
+    protected $table = 'escrow';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $guarded = [];

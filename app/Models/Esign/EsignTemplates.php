@@ -9,7 +9,7 @@ class EsignTemplates extends Model
 {
     use SoftDeletes;
 
-    public $table = 'esign_templates';
+    protected $table = 'esign_templates';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

@@ -21,8 +21,9 @@
 
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="documents"  data-target="#documents_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-folder-open mr-2 d-none d-md-inline-block"></i> Documents</a></li>
 
+                @if(auth() -> user() -> group != 'admin')
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="esign"  data-target="#esign_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-signature mr-2 d-none d-md-inline-block"></i> Esign</a></li>
-
+                @endif
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="checklist"  data-target="#checklist_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-tasks mr-2 d-none d-md-inline-block"></i> Checklist</a></li>
 
                 @if($transaction_type == 'listing')
@@ -139,7 +140,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_cancel_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-success modal-confirm-button" id="confirm_cancel_button" data-dismiss="modal"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -164,7 +165,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="resend_envelope_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-success modal-confirm-button" id="resend_envelope_button" data-dismiss="modal"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -234,7 +235,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_transfer_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save</a>
+                <a class="btn btn-primary" id="save_transfer_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save</a>
             </div>
         </div>
     </div>
@@ -268,7 +269,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="send_bounced_check_notification_button" data-dismiss"modal"><i class="fad fa-share mr-2"></i> Send Message</a>
+                <a class="btn btn-primary" id="send_bounced_check_notification_button" data-dismiss="modal"><i class="fad fa-share mr-2"></i> Send Message</a>
             </div>
         </div>
     </div>
@@ -293,7 +294,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-around">
                 <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times mr-2"></i> Cancel</a>
-                <a class="btn btn-success modal-confirm-button" id="confirm_set_status_to_waiting_button" data-dismiss"modal"><i class="fal fa-check mr-2"></i> Confirm</a>
+                <a class="btn btn-success modal-confirm-button" id="confirm_set_status_to_waiting_button" data-dismiss="modal"><i class="fal fa-check mr-2"></i> Confirm</a>
             </div>
         </div>
     </div>
@@ -549,11 +550,11 @@
                         <i class="fal fa-times mt-2 fa-lg"></i>
                     </a>
                 </div>
-                <div class="modal-body pb-0">
+                <div class="modal-body">
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
-                                <div class="row mt-2 mb-3">
+                                <div class="row">
                                     <div class="col-12 col-lg-6">
                                         <select class="custom-form-element form-select form-select-no-cancel form-select-no-search select-form-group mt-3" data-label="Select Form Group">
                                             <option value="all" selected>All</option>
@@ -583,12 +584,12 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="form-groups-container p-1 p-md-3 p-lg-4 mt-2">
+                                <div class="form-groups-container p-1 p-md-2 mt-2">
 
                                     @foreach($form_groups as $form_group)
 
                                     <ul class="list-group form-group-div" data-form-group-id="{{ $form_group -> resource_id }}">
-                                        <li class="h5 text-orange list-group-header @if($loop -> first) mt-3 @else mt-1 @endif">
+                                        <li class="h5 text-orange list-group-header py-1">
                                             {{ $form_group -> resource_state }}
                                             @if($form_group -> resource_state != $form_group -> resource_name) | {{ $form_group -> resource_name }} @endif
                                         </li>
@@ -612,7 +613,7 @@
                                             } */
                                             @endphp
 
-                                            <li class="list-group-item form-name p-1 {{ $form_status_class }}" data-form-id="{{ $form -> file_id }}" data-template-id="{{ $form -> template_id }}" data-text="{{ $form -> file_name_display }}" data-tags="{{ $form_categories }}">
+                                            <li class="list-group-item form-name p-0 {{ $form_status_class }}" data-form-id="{{ $form -> file_id }}" data-template-id="{{ $form -> template_id }}" data-text="{{ $form -> file_name_display }}" data-tags="{{ $form_categories }}">
 
                                                 <div class="d-flex justify-content-between align-items-center">
 
@@ -643,7 +644,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <a href="{{ $form -> file_location }}" class="btn btn-sm btn-primary" target="_blank"><i class="fad fa-eye mr-2"></i> View File</a>
+                                                        <a href="{{ $form -> file_location }}" class="btn btn-sm btn-primary my-0" target="_blank"><i class="fad fa-eye mr-2"></i> View File</a>
                                                     </div>
 
                                                     {{-- <div class="col-12 col-lg-3 d-none d-lg-block">
@@ -667,9 +668,10 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-12 col-lg-4 mx-auto">
-                                <div class="my-5">
-                                    <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="individual_templates_folder" data-label="Select Folder To Add Forms To">
+                            <div class="col-12 col-lg-6 mx-auto">
+                                <div class="my-2">
+                                    <div class="text-orange font-10">Select Folder To Add Forms To</div>
+                                    <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="individual_templates_folder" data-label="Select Folder">
                                         @foreach($folders as $folder)
                                             @php
                                             $folder_name = $folder -> folder_name;
@@ -724,7 +726,8 @@
                                 <div class="h5 text-primary">Import the selected templates below</div>
                                 <br>
                                 <div class="row">
-                                    <div class="col-12 col-lg-6 col-xl-4">
+                                    <div class="col-12 col-lg-6 col-xl-5">
+                                        <div class="text-orange font-10">Select Folder To Add Forms To</div>
                                         <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="checklist_templates_folder" data-label="Select Folder">
                                             @foreach($folders as $folder)
                                                 @php
@@ -755,7 +758,8 @@
 
                                 <ul class="list-group mt-2 template-docs-div">
 
-                                    <div class="h5 text-orange">Required Documents</div>
+                                    <div class="text-orange font-10 mt-3">Select The Forms To Add</div>
+                                    <div class="font-9 text-primary mt-2">Required Documents</div>
 
                                     @foreach($checklist_items_required as $checklist_item_required)
 
@@ -784,7 +788,7 @@
                                         @endif
                                     @endforeach
 
-                                    <div class="h5 text-orange mt-4">If Applicable Documents</div>
+                                    <div class="font-9 text-primary mt-2">If Applicable Documents</div>
 
                                     @foreach($checklist_items_if_applicable as $checklist_item_if_applicable)
                                         @php
@@ -908,6 +912,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-4">Move Documents To:</div>
+
                                 <select class="custom-form-element form-select form-select-no-search form-select-no-cancel required" id="move_documents_folder" data-label="Select Folder">
                                     @foreach($folders as $folder)
                                         @php
@@ -1091,7 +1096,7 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-around align-items-center w-100">
-                    <button type="button" class="btn btn-lg btn-primary p-3 modal-dismiss" data-dismiss="modal"><i class="fal fa fa-times mr-2"></i> Finish and Close</button>
+                    <button type="button" class="btn btn-lg btn-danger p-3 modal-dismiss" id="close_split_document_button" data-dismiss="modal"><i class="fal fa fa-times mr-2"></i> Cancel</button>
                 </div>
             </div>
         </div>
@@ -1198,7 +1203,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_add_address_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Address</a>
+                <a class="btn btn-primary" id="save_add_address_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Address</a>
             </div>
         </div>
     </div>
@@ -1735,6 +1740,50 @@
     </div>
 </div>
 
+<div class="modal fade draggable" id="make_payments_modal" tabindex="-1" role="dialog" aria-labelledby="make_payments_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="make_payments_modal_title">Make Payment From Commission</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="mb-4 text-success font-13 w-100 text-center">
+                            <i class="fad fa-check-circle mr-2"></i> Deductions Successfully Imported
+                        </div>
+
+                        <hr>
+
+                        <div class=" alert alert-danger mt-4">
+                            <div>
+                                The agent has requested the following payments be made from their commission.<br>
+                                Confirm if you want to apply portions of the agent's commission to their balance owed.
+                            </div>
+                        </div>
+
+                        <div class="font-9 mt-3 w-100 text-center">
+                            <a href="javascript: void(0)" class="mr-3 font-10" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Payment From Commission" data-content="When a commission deduction includes payments towards an agent's dues or E&O balance a payment must be made towards their account. This will create the payments in our billing system and apply the payments towards their balance."><i class="fad fa-question-circle ml-2"></i></a>
+                            <span class="text-gray">Make a payment for the following balances</span>
+                        </div>
+
+
+                        <div class="list-group font-9 text-primary mt-4 mx-auto wpx-300" id="payments_div"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-danger make-payment-button" data-create="no" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary btn-lg make-payment-button" data-create="yes" data-dismiss="modal"><i class="fal fa-check mr-2"></i> Apply Commission to Balance Owed</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{-- earnest --}}
 

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class ResourceItems extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_resource_items';
+    protected $table = 'docs_resource_items';
     protected $primaryKey = 'resource_id';
     public $timestamps = false;
     protected $guarded = [];

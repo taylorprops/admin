@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jobs extends Model
 {
-    public $table = 'jobs';
+    protected $table = 'jobs';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

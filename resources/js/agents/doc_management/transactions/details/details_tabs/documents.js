@@ -694,10 +694,12 @@ if (document.URL.match(/transaction_details/)) {
                     $('#save_document_name_button').on('click', function() {
                         $(this).html('<i class="fas fa-spinner fa-pulse mr-2"></i> Saving...');
                         save_document_name($(this));
+                        $('#close_split_document_button').removeClass('btn-danger').addClass('btn-success').html('<i class="fal fa fa-check mr-2"></i> Finish and Close');
                     });
                     $('.add-docs-to-checklist-item-button').on('click', function() {
                         $(this).html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding...');
                         save_document_name($(this));
+                        $('#close_split_document_button').removeClass('btn-danger').addClass('btn-success').html('<i class="fal fa fa-check mr-2"></i> Finish and Close');
                     });
 
                 }, 500);
@@ -1421,7 +1423,7 @@ if (document.URL.match(/transaction_details/)) {
 
         let loading_html = ' \
         <div class="h5 text-white mb-3">Importing Documents...</div> \
-        <div class="font-10 text-yellow mb-3">After the import is complete inputs and signature fields will be added in the background. Some forms might require an additional 10 seconds before you can edit them.</div> \
+        <div class="font-10 text-yellow mb-3">After the import is complete inputs and signature fields will be added in the background. Some forms might require a few additional seconds before you can edit them.</div> \
         <div class="w-100 text-left document-loading-container"> \
             <div id="loading_div"></div> \
         </div> \
@@ -1432,9 +1434,9 @@ if (document.URL.match(/transaction_details/)) {
         files.forEach(function(file, index) {
 
             // bigger the interval longer it takes
-            let multiplier = 800;
+            let multiplier = 400;
             if(file['pages_total']) {
-                multiplier = 600;
+                multiplier = 300;
             }
 
             let interval = file['file_size'] * multiplier;

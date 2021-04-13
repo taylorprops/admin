@@ -12,6 +12,7 @@
 
             <div class="d-flex justify-content-end next-div @if(!$docs_to_display) hidden @endif">
                 <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+                <div class="notification text-orange font-8 hidden">Please be patient, this may take a moment...</div>
             </div>
 
         </div>

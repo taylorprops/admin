@@ -92,11 +92,16 @@
 
             <div id="emailed_documents_container" class="p-4 mb-3 border rounded animate__animated animate__fadeIn">
 
-                <h5 class="text-orange"><i class="fad fa-envelope mb-3 mr-3"></i> Pending Emailed Documents</h5>
+                <h5 class="text-orange"><i class="fad fa-envelope mb-5 mr-3"></i> Pending Emailed Documents</h5>
 
-                <div class="list-group mb-3" id="emailed_documents_div"></div>
+                <div class="list-group mb-4" id="emailed_documents_div"></div>
 
-                <div class="pt-3 mt-4 d-flex justify-content-around border-top">
+                <hr>
+
+                <div class="pt-3 mt-2 wpx-300 mx-auto">
+
+                    <div class="text-orange font-10">Select Folder To Add Forms To</div>
+
                     <select class="custom-form-element form-select form-select-no-search" id="emailed_documents_folder" data-label="Select Folder">
                         @foreach($folders as $folder)
                             @php
@@ -121,6 +126,7 @@
                             @endif
                         @endforeach
                     </select>
+
                 </div>
 
                 <div class="d-flex justify-content-around mt-3">
@@ -291,15 +297,15 @@
 
                                                 $menu_options .= '<div class="mr-1 mb-2 ml-2 mb-xl-0 ml-xl-0 text-success"><i class="fal fa-check mr-2"></i> <span class="d-inline-block d-xl-inline-block"> Assigned</span></div>';
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
-
                                             } else {
 
                                                 $menu_options .= '<button type="button" class="dropdown-item text-primary add-to-checklist-button" data-document-id="'.$document -> id.'"  data-checklist-id="'.$checklist_id.'" title="Assign Document To Checklist Item"><i class="fad fa-tasks mr-1 "></i> Assign</button>';
 
-                                                $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
+                                                if($document -> file_type == 'user') {
+                                                    $menu_options .= '<button type="button" class="dropdown-item text-primary doc-rename-button" data-document-id="'.$document -> id.'" data-document-name="'.$document -> file_name_display.'" title="Rename Document"><i class="fad fa-repeat mr-1 "></i> Rename</button>';
+                                                }
 
-                                                if($document -> pages_total > 1 && $document -> file_type == 'user') {
+                                                if($document -> pages_total > 1/*  && $document -> file_type == 'user' */) {
                                                     $menu_options .= '<button type="button" class="dropdown-item text-primary doc-split-button disabled-completed" data-document-id="'.$document -> id.'" data-checklist-id="'.$checklist_id.'" data-file-name="'.$document -> file_name_display.'" data-file-type="'.$document -> file_type.'" data-folder="'.$folder -> id.'" title="Split Document"><i class="fad fa-page-break mr-1 "></i> Split</button>';
                                                 }
 
@@ -311,7 +317,7 @@
 
 
 
-                                            $menu_options .= '<button type="button" class="dropdown-item text-primary doc-duplicate-button" data-document-id="'.$document -> id.'" data-file-type="'.$document -> file_type.'" title="Make Copy Of Form"><i class="fad fa-clone mr-2 mr-xl-0"></i><span class="d-inline-block d-xl-none"> Make Copy</span></button>';
+                                            /* $menu_options .= '<button type="button" class="dropdown-item text-primary doc-duplicate-button" data-document-id="'.$document -> id.'" data-file-type="'.$document -> file_type.'" title="Make Copy Of Form"><i class="fad fa-clone mr-2 mr-xl-0"></i><span class="d-inline-block d-xl-none"> Make Copy</span></button>'; */
 
                                             $menu_options .= '<button type="button" class="dropdown-item text-primary doc-email-button" data-document-id="'.$document -> id.'" title="Email Form"><i class="fad fa-envelope mr-2 mr-xl-0"></i><span class="d-inline-block d-xl-none"> Email</span></button>';
 

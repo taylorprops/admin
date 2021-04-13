@@ -241,7 +241,7 @@ if (document.URL.match(/transaction_details/)) {
 
     window.delete_member = function(id) {
         let transaction_type = $('#transaction_type').val();
-        let Listing_ID = $('#listing_id').val();
+        let Listing_ID = $('#Listing_ID').val();
         let Contract_ID = $('#Contract_ID').val();
 
         let formData = new FormData();

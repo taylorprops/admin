@@ -9,7 +9,7 @@ class EsignEnvelopes extends Model
 {
     use SoftDeletes;
 
-    public $table = 'esign_envelopes';
+    protected $table = 'esign_envelopes';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

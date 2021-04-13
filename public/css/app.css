@@ -17842,23 +17842,6 @@ input.search-menu {
 .page-transaction-details .form-in-use {
   opacity: 0.6;
 }
-.page-transaction-details .form-groups-container {
-  height: 300px;
-  overflow: auto;
-}
-.page-transaction-details #form_search_div {
-  position: relative;
-}
-.page-transaction-details #form_search_div:after {
-  position: absolute;
-  font-family: "Font Awesome 5 Pro";
-  top: 0;
-  right: 10px;
-  content: "";
-  color: #3596e6;
-  font-size: 1.6rem;
-  z-index: 1;
-}
 .page-transaction-details .dropleft .dropdown-toggle::before {
   display: inline-block;
   margin-right: 0.255em;
@@ -18187,6 +18170,24 @@ input.search-menu {
   border-top-width: thin !important;
 }
 
+#add_individual_template_modal .form-groups-container {
+  height: 500px;
+  overflow: auto;
+}
+#add_individual_template_modal #form_search_div {
+  position: relative;
+}
+#add_individual_template_modal #form_search_div:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Pro";
+  top: 2px;
+  right: 10px;
+  content: "";
+  color: #3596e6;
+  font-size: 1.3rem;
+  z-index: 1;
+}
+
 .invalid-border {
   border: 1px solid #9e4c4b !important;
   box-shadow: 0 0 5px #9e4c4b !important;
@@ -18414,6 +18415,8 @@ input.search-menu {
 }
 #email_agent_modal .form-ele input[type=text] {
   font-size: 0.9rem;
+  padding-top: 2px;
+  padding-bottom: 0px;
 }
 
 @media (max-width: 575px) {
@@ -19176,7 +19179,7 @@ input.search-menu {
   display: none;
 }
 
-.form-groups-container {
+#add_checklist_item_modal .form-groups-container {
   height: 300px;
   overflow: auto;
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FieldTypes extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_create_field_types';
+    protected $table = 'docs_create_field_types';
     public $timestamps = false;
     protected $guarded = [];
 }

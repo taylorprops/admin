@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ListingsRemovedData extends Model
 {
     protected $connection = 'mysql_taylorproperties';
-    public $table = 'listings_removed';
+    protected $table = 'listings_removed';
     protected $guarded = [];
 
     public static function boot() {
@@ -18,7 +18,7 @@ class ListingsRemovedData extends Model
     }
 
     public function scopeListingSearch($query, $state, $zip, $street_number, $street_name, $unit, $street_dir_suffix, $street_dir_suffix_alt) {
-        $listings = $query -> where('StateOrProvince', $state) -> where('PostalCode', $zip)
+        return $query -> where('StateOrProvince', $state) -> where('PostalCode', $zip)
         -> where('StreetNumber', $street_number)
         -> where('StreetName', 'LIKE', $street_name.'%')
         -> where('UnitNumber', 'LIKE', '%'.$unit.'%')
@@ -26,6 +26,5 @@ class ListingsRemovedData extends Model
         -> orderBy('MLSListDate', 'DESC')
         -> get() -> toArray();
 
-        return $listings;
     }
 }

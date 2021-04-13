@@ -3559,6 +3559,21 @@ if (document.URL.match(/transaction_details/)) {
 
       total_agent_commission();
     });
+    $('.pay-from-commission-button').on('click', function () {
+      var type = $(this).data('type');
+      var amount = $(this).data('amount');
+      var desc = type == 'dues' ? 'Dues Payment' : 'E&O Payment';
+      var html = $('#deduction_template').html();
+      $('#deduction_container').append(html);
+      $('#deduction_container').find('.row.template').find('input').addClass('custom-form-element form-input');
+      $('#deduction_container').find('.row.template').removeClass('template');
+      $('.deduction-description').last().val(desc);
+      $('.deduction-amount').last().val('$' + amount);
+      $('.deduction-payment-type').last().val(type);
+      $('.delete-deduction-button').last().addClass('fedex-delete');
+      numbers_only_agent();
+      total_agent_commission();
+    });
 
     if ($('#referral_company_deduction').length > 0) {
       $('#checks_in_total').on('change', function () {
@@ -4113,7 +4128,6 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
       $('#commission_deduction_description, #commission_deduction_amount').val('');
     });
     $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
-    $(document).on('click', '.export-deductions-button', add_deductions_to_breakdown);
     $(document).on('click', '#email_agent_breakdown_reminder', function () {
       $('#email_agent_modal').modal('show');
       setTimeout(function () {
@@ -4143,15 +4157,58 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
       Commission_ID = $('#Commission_Other_ID').val();
     }
 
+    var Agent_ID = $('#Agent_ID').val();
+    var Contract_ID = $('#Contract_ID').val();
+    var payments = [];
     $('.deduction-row').each(function () {
-      var description = $(this).find('.deduction-description').text();
-      var amount = $(this).find('.deduction-amount').text();
+      var description = $(this).find('.deduction-description').text().trim();
+      var amount = $(this).find('.deduction-amount').text().trim();
+      var payment_type = $(this).find('.deduction-payment-type').text().trim();
+
+      if (payment_type != '') {
+        var payment = {};
+        payment['description'] = description;
+        payment['amount'] = amount;
+        payment['type'] = payment_type;
+        payments.push(payment);
+      }
+
       var formData = new FormData();
       formData.append('Commission_ID', Commission_ID);
       formData.append('description', description);
       formData.append('amount', amount);
+      formData.append('payment_type', payment_type);
       axios.post('/agents/doc_management/transactions/save_add_commission_deduction', formData, axios_options).then(function (response) {})["catch"](function (error) {});
     });
+
+    if (payments.length > 0) {
+      $('#make_payments_modal').modal('show');
+      $('#payments_div').html('');
+      payments.forEach(function (payment) {
+        var item = ' \
+                    <div class="list-group-item d-flex justify-content-between align-items-center"> \
+                        <div>' + payment.description + '</div> \
+                        <div>' + global_format_number_with_decimals(payment.amount) + '</div> \
+                    </div> \
+                ';
+        $('#payments_div').append(item);
+      });
+      $('.make-payment-button').off('click').on('click', function () {
+        if ($(this).data('create') == 'yes') {
+          var formData = new FormData();
+          formData.append('payments', JSON.stringify(payments));
+          formData.append('Agent_ID', Agent_ID);
+          formData.append('Contract_ID', Contract_ID);
+          axios.post('/doc_management/commission/make_payment_from_commission', formData, axios_options).then(function (response) {
+            var balances = response.data.balances;
+            $('#modal_success').modal().find('.modal-body').html('Payments successfully made.<br><br>' + balances);
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      });
+    }
+
     $('.commission-popout-button').trigger('click');
     document.getElementById('commission_deductions_popout').scrollIntoView();
     toastr['success']('Deduction Successfully Added');
@@ -4173,6 +4230,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
       }
     }).then(function (response) {
       $('.agent-commission-div').html(response.data);
+      $('.export-deductions-button').off('click').on('click', add_deductions_to_breakdown);
     })["catch"](function (error) {});
   };
 
@@ -5042,10 +5100,12 @@ if (document.URL.match(/transaction_details/)) {
       formData.append('transaction_type', transaction_type);
       axios.post('/agents/doc_management/transactions/save_details', formData, axios_options).then(function (response) {
         if (response.data.success == 'ok') {
-          //load_tabs('details');
-          //load_tabs('commission');
           load_details_header();
           toastr['success']('Transaction Details Saved!');
+
+          if (response.data.agent_changed == true) {
+            window.location.reload();
+          }
         }
       })["catch"](function (error) {});
     }
@@ -5722,10 +5782,12 @@ if (document.URL.match(/transaction_details/)) {
         $('#save_document_name_button').on('click', function () {
           $(this).html('<i class="fas fa-spinner fa-pulse mr-2"></i> Saving...');
           save_document_name($(this));
+          $('#close_split_document_button').removeClass('btn-danger').addClass('btn-success').html('<i class="fal fa fa-check mr-2"></i> Finish and Close');
         });
         $('.add-docs-to-checklist-item-button').on('click', function () {
           $(this).html('<i class="fas fa-spinner fa-pulse mr-2"></i> Adding...');
           save_document_name($(this));
+          $('#close_split_document_button').removeClass('btn-danger').addClass('btn-success').html('<i class="fal fa fa-check mr-2"></i> Finish and Close');
         });
       }, 500);
     })["catch"](function (error) {});
@@ -6330,7 +6392,7 @@ if (document.URL.match(/transaction_details/)) {
     global_loading_off();
     var loading_html = ' \
         <div class="h5 text-white mb-3">Importing Documents...</div> \
-        <div class="font-10 text-yellow mb-3">After the import is complete inputs and signature fields will be added in the background. Some forms might require an additional 10 seconds before you can edit them.</div> \
+        <div class="font-10 text-yellow mb-3">After the import is complete inputs and signature fields will be added in the background. Some forms might require a few additional seconds before you can edit them.</div> \
         <div class="w-100 text-left document-loading-container"> \
             <div id="loading_div"></div> \
         </div> \
@@ -6338,10 +6400,10 @@ if (document.URL.match(/transaction_details/)) {
     global_loading_on('', loading_html);
     files.forEach(function (file, index) {
       // bigger the interval longer it takes
-      var multiplier = 800;
+      var multiplier = 400;
 
       if (file['pages_total']) {
-        multiplier = 600;
+        multiplier = 300;
       }
 
       var interval = file['file_size'] * multiplier;
@@ -7497,7 +7559,7 @@ if (document.URL.match(/transaction_details/)) {
 
   window.delete_member = function (id) {
     var transaction_type = $('#transaction_type').val();
-    var Listing_ID = $('#listing_id').val();
+    var Listing_ID = $('#Listing_ID').val();
     var Contract_ID = $('#Contract_ID').val();
     var formData = new FormData();
     formData.append('id', id);
@@ -8058,6 +8120,7 @@ if (document.URL.match(/transaction_details/)) {
       statusbar: false,
       toolbar: true,
       selector: '#email_agent_message',
+      height: 250,
       relative_urls: false,
       //remove_script_host : true,
       document_base_url: location.hostname
@@ -8915,13 +8978,17 @@ if (document.URL.match(/edit_files/)) {
         }
       } else {
         if (field_div.data('category') == 'radio') {
-          // clear x's and values for all radios in group
-          $('.group_' + group_id).closest('.field-div-container').find('.data-div').html('');
-          $('.group_' + group_id).closest('.field-div-container').find('.field-input').val(''); // check clicked radio
+          if (field_div_container.find('.data-div').html() == 'x') {
+            field_div_container.find('.data-div').html('');
+          } else {
+            // clear x's and values for all radios in group
+            $('.group_' + group_id).closest('.field-div-container').find('.data-div').html('');
+            $('.group_' + group_id).closest('.field-div-container').find('.field-input').val(''); // check clicked radio
 
-          field_div_container.find('.data-div').html('x'); // update input value
+            field_div_container.find('.data-div').html('x'); // update input value
 
-          field_div_container.find('.field-input').val('checked');
+            field_div_container.find('.field-input').val('checked');
+          }
         } else if (field_div.data('category') == 'checkbox') {
           // if checked, uncheck
           if (field_div_container.find('.data-div').text().match(/x/)) {
@@ -9063,7 +9130,7 @@ if (document.URL.match(/edit_files/)) {
       // system fields
 
       var font_size = '12px';
-      var top = '3px';
+      var top = '2px';
 
       if ($('#page_size').val() == 'a4') {
         font_size = '11px';
@@ -10361,10 +10428,18 @@ $(function () {
     e.preventDefault();
     var form = $('#login_form');
     var validate = validate_form(form);
+    var previous_url = $('#previous_url').val();
 
     if (validate == 'yes') {
       var formData = new FormData(form[0]);
       axios.post('/login', formData, axios_options).then(function (response) {
+        console.log(previous_url);
+
+        if (previous_url != '' && !previous_url.match(/login/) && previous_url != location.hostname) {
+          window.location = previous_url;
+          return false;
+        }
+
         window.location = '/dashboard';
       })["catch"](function (error) {
         var error_message = error.response.data.errors.email[0];
@@ -11698,6 +11773,7 @@ if (document.URL.match(/commission/) || document.URL.match(/transaction_details/
 
         if (page == 'details' || page == 'other') {
           get_checks_in(Commission_ID);
+          save_commission();
           /* if(page == 'other') {
               save_commission();
           } */
@@ -15468,6 +15544,7 @@ if (document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_t
       }
 
       $('#create_envelope_button').prop('disabled', true).html('Adding Documents <span class="spinner-border spinner-border-sm ml-2"></span>');
+      $('.notification').removeClass('hidden');
       var Listing_ID = $('#Listing_ID').val() > 0 ? $('#Listing_ID').val() : 0;
       var Contract_ID = $('#Contract_ID').val() > 0 ? $('#Contract_ID').val() : 0;
       var Referral_ID = $('#Referral_ID').val() > 0 ? $('#Referral_ID').val() : 0;
@@ -17010,7 +17087,7 @@ function show_dropdown(input) {
   if (active_option.length > 0) {
     setTimeout(function () {
       dropdown_container.scrollTop(0);
-      dropdown_container.scrollTop(active_option.position().top);
+      dropdown_container.scrollTop(active_option.position().top - 40);
     }, 10);
   }
 

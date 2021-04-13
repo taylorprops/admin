@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommonFields extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_create_common_fields';
+    protected $table = 'docs_create_common_fields';
     public $timestamps = false;
     protected $guarded = [];
 
@@ -37,7 +37,7 @@ class CommonFields extends Model
         return $common;
     } */
 
-    public function ScopeGetCommonNameValue($query, $common_name, $input_id, $field_type, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $Agent_ID) {
+    /* public function ScopeGetCommonNameValue($query, $common_name, $input_id, $field_type, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $Agent_ID) {
         if ($field_type == 'system') {
             $field_input = UserFieldsInputs::where('id', $input_id) -> where('field_type', 'common') -> get();
             $common_name_search = $this -> where('field_name', $common_name) -> first();
@@ -57,7 +57,7 @@ class CommonFields extends Model
 
             $value = '';
 
-            if (! empty($common_name_search) && $common_name_search -> db_column_name != '') {
+            if ($common_name_search && $common_name_search -> db_column_name != '') {
                 $db_column_name = $common_name_search -> db_column_name;
                 if ($property -> $db_column_name != '') {
                     $value = $property -> $db_column_name;
@@ -149,7 +149,6 @@ class CommonFields extends Model
             }
 
             return trim($value);
-        } elseif ($field_type == 'user') {
         }
-    }
+    } */
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommonFieldsGroups extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_create_common_fields_groups';
+    protected $table = 'docs_create_common_fields_groups';
     public $timestamps = false;
     protected $guarded = [];
 

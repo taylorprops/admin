@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InProcess extends Model
 {
-    public $table = 'docs_transactions_docs_in_process';
+    protected $table = 'docs_transactions_docs_in_process';
     protected $connection = 'mysql';
     protected $primaryKey = 'id';
     protected $guarded = [];

@@ -115,7 +115,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_add_check_in_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Check</a>
+                <a class="btn btn-primary" id="save_add_check_in_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check</a>
             </div>
         </div>
     </div>
@@ -464,7 +464,7 @@
 
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_edit_queue_check_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
+                <a class="btn btn-primary" id="save_edit_queue_check_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Check Details</a>
             </div>
         </div>
     </div>

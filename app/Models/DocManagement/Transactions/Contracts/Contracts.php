@@ -11,7 +11,7 @@ class Contracts extends Model
 {
     use SoftDeletes;
     protected $connection = 'mysql';
-    public $table = 'docs_transactions_contracts';
+    protected $table = 'docs_transactions_contracts';
     protected $primaryKey = 'Contract_ID';
     //public $timestamps = false;
     protected $guarded = [];

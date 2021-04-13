@@ -318,7 +318,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_template_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Template</a>
+                <a class="btn btn-primary" id="save_template_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Template</a>
             </div>
         </div>
     </div>
@@ -347,7 +347,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_draft_button" data-dismiss"modal"><i class="fad fa-save mr-2"></i> Save Draft</a>
+                <a class="btn btn-primary" id="save_draft_button" data-dismiss="modal"><i class="fad fa-save mr-2"></i> Save Draft</a>
             </div>
         </div>
     </div>
@@ -374,7 +374,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-lg btn-primary" id="save_send_for_signatures_button" data-dismiss"modal">Send <i class="fad fa-share-all ml-2"></i></a>
+                <a class="btn btn-lg btn-primary" id="save_send_for_signatures_button" data-dismiss="modal">Send <i class="fad fa-share-all ml-2"></i></a>
             </div>
         </div>
     </div>

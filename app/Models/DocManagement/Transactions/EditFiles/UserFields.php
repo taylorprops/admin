@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserFields extends Model
 {
     protected $connection = 'mysql';
-    public $table = 'docs_transaction_fields';
+    protected $table = 'docs_transaction_fields';
     protected $guarded = [];
 
     public function user_field_inputs() {

@@ -116,7 +116,9 @@ class TransactionsDetailsController extends Controller
             }
 
             $member_type_id = ResourceItems::SellerResourceId();
+
         } elseif ($transaction_type == 'contract') {
+
             $property = Contracts::with('commission_breakdown') -> find($id);
             if (! $property) {
                 return redirect('dashboard');
@@ -136,6 +138,7 @@ class TransactionsDetailsController extends Controller
 
 
         } elseif ($transaction_type == 'referral') {
+
             $property = Referrals::find($id);
             if (! $property) {
                 return redirect('dashboard');
@@ -209,7 +212,7 @@ class TransactionsDetailsController extends Controller
             $members = Members::where($field, $id) -> where('member_type_id', $member_type_id) -> get();
         }
 
-        $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
+        $contacts = CRMContacts::get();
 
         $rejected_reasons = ResourceItemsAdmin::where('resource_type', 'rejected_reason') -> orderBy('resource_order') -> get();
 
@@ -265,10 +268,8 @@ class TransactionsDetailsController extends Controller
             }
         }
 
-        //$resource_items = new ResourceItems();
-        $resource_items = Cache::remember('resource_items', 1000, function () use ($property) {
-            return new ResourceItems();
-        });
+        $resource_items = new ResourceItems();
+
 
         if ($transaction_type != 'referral') {
             $members = Members::where('Contract_ID', $Contract_ID) -> get();
@@ -610,14 +611,16 @@ class TransactionsDetailsController extends Controller
 
         if ($transaction_type == 'listing') {
             $property = Listings::find($Listing_ID);
+            $id = $Listing_ID;
         } elseif ($transaction_type == 'contract') {
             $property = Contracts::find($Contract_ID);
-
+            $id = $Contract_ID;
             if ($property -> Listing_ID > 0) {
                 $has_listing = true;
                 $property_listing = Listings::find($property -> Listing_ID);
             }
         } elseif ($transaction_type == 'referral') {
+            $id = $Referral_ID;
             $property = Referrals::find($Referral_ID);
         }
 
@@ -725,6 +728,10 @@ class TransactionsDetailsController extends Controller
             $property -> Status = $new_status;
         }
 
+        // update agents and members if our agent changes
+        $Agent_ID_old = $property -> Agent_ID;
+        $Agent_ID = $request -> Agent_ID;
+
         foreach ($request -> all() as $col => $val) {
             $ignore_cols = ['Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type'];
             if (! in_array($col, $ignore_cols) && ! stristr($col, '_submit')) {
@@ -742,12 +749,107 @@ class TransactionsDetailsController extends Controller
         }
 
         $property -> save();
+
         if ($has_listing) {
             $property_listing -> save();
         }
 
+        $agent_changed = false;
+
+        if($Agent_ID != $Agent_ID_old) {
+
+            $agent_changed = true;
+
+            $agent = Agents::find($Agent_ID);
+            $state = $property -> StateOrProvince;
+
+            $agent_bright_mls_id = $agent -> bright_mls_id_md_dc_tp;
+            $office_bright_mls_id = 'TAYL1';
+            $office_name = 'Taylor Properties';
+            if ($state == 'MD' && $agent -> company == 'Anne Arundel Properties') {
+                $agent_bright_mls_id = $agent -> bright_mls_id_md_aap;
+                $office_bright_mls_id = 'AAP1';
+                $office_name = 'Anne Arundel Properties';
+            } elseif ($state == 'VA') {
+                $agent_bright_mls_id = $agent -> bright_mls_id_va_tp;
+                $office_bright_mls_id = 'TAYL13';
+            }
+
+            if ($transaction_type == 'listing') {
+
+                $property -> ListAgentEmail = $agent -> email;
+                $property -> ListAgentFirstName = $agent -> first_name;
+                $property -> ListAgentLastName = $agent -> last_name;
+                $property -> ListAgentFullName = $agent -> first_name.' '.$agent -> last_name;
+                $property -> ListAgentEmail = $agent -> email;
+                $property -> ListAgentMlsId = $agent_bright_mls_id;
+                $property -> ListAgentPreferredPhone = $agent -> cell_phone;
+                $property -> ListOfficeMlsId = $office_bright_mls_id;
+                $property -> ListOfficeName = $office_name;
+
+                // update member
+                $listing_agent = Members::where('Listing_ID', $Listing_ID) -> where('member_type_id', ResourceItems::ListingAgentResourceId()) -> first();
+
+                $listing_agent -> first_name = $agent -> first_name;
+                $listing_agent -> last_name = $agent -> last_name;
+                $listing_agent -> cell_phone = $agent -> cell_phone;
+                $listing_agent -> email = $agent -> email;
+                $listing_agent -> company = $agent -> company;
+                $listing_agent -> bright_mls_id = $agent_bright_mls_id;
+                $listing_agent -> address_office_street = config('global.company_street');
+                $listing_agent -> address_office_city = config('global.company_city');
+                $listing_agent -> address_office_state = config('global.company_state');
+                $listing_agent -> address_office_zip = config('global.company_zip');
+                $listing_agent -> Listing_ID = $Listing_ID;
+                $listing_agent -> Agent_ID = $Agent_ID;
+                $listing_agent -> member_type_id = ResourceItems::ListingAgentResourceId();
+                $listing_agent -> transaction_type = 'listing';
+                $listing_agent -> disabled = true;
+                $listing_agent -> save();
+
+            } elseif ($transaction_type == 'contract') {
+
+                $property -> BuyerAgentEmail = $agent -> email;
+                $property -> BuyerAgentFirstName = $agent -> first_name;
+                $property -> BuyerAgentLastName = $agent -> last_name;
+                $property -> BuyerAgentFullName = $agent -> first_name.' '.$agent -> last_name;
+                $property -> BuyerAgentEmail = $agent -> email;
+                $property -> BuyerAgentMlsId = $agent_bright_mls_id;
+                $property -> BuyerAgentPreferredPhone = $agent -> cell_phone;
+                $property -> BuyerOfficeMlsId = $office_bright_mls_id;
+                $property -> BuyerOfficeName = $office_name;
+
+                // update member
+                $buyers_agent = Members::where('Contract_ID', $Contract_ID) -> where('member_type_id', ResourceItems::BuyerAgentResourceId()) -> first();
+
+                $buyers_agent -> first_name = $agent -> first_name;
+                $buyers_agent -> last_name = $agent -> last_name;
+                $buyers_agent -> cell_phone = $agent -> cell_phone;
+                $buyers_agent -> email = $agent -> email;
+                $buyers_agent -> company = $agent -> company;
+                $buyers_agent -> bright_mls_id = $agent_bright_mls_id;
+                $buyers_agent -> address_office_street = config('global.company_street');
+                $buyers_agent -> address_office_city = config('global.company_city');
+                $buyers_agent -> address_office_state = config('global.company_state');
+                $buyers_agent -> address_office_zip = config('global.company_zip');
+                $buyers_agent -> Contract_ID = $Contract_ID;
+                $buyers_agent -> Agent_ID = $Agent_ID;
+                $buyers_agent -> member_type_id = ResourceItems::BuyerAgentResourceId();
+                $buyers_agent -> transaction_type = 'contract';
+                $buyers_agent -> disabled = true;
+                $buyers_agent -> save();
+
+            }
+
+            $property -> save();
+
+
+        }
+
+
         return response() -> json([
             'success' => 'ok',
+            'agent_changed' => $agent_changed
         ]);
     }
 
@@ -830,17 +932,16 @@ class TransactionsDetailsController extends Controller
 
     public function delete_member(Request $request) {
 
-		if ($member = Members::find($request -> id) -> delete()) {
-            if ($request -> transaction_type == 'listing') {
-                $this -> update_transaction_members($request -> Listing_ID, 'listing');
-            } else {
-                $this -> update_transaction_members($request -> Contract_ID, 'contract');
-            }
-
-            return response() -> json([
-                'status' => 'ok',
-            ]);
+		$member = Members::find($request -> id) -> delete();
+        if ($request -> transaction_type == 'listing') {
+            $this -> update_transaction_members($request -> Listing_ID, 'listing');
+        } else {
+            $this -> update_transaction_members($request -> Contract_ID, 'contract');
         }
+
+        return response() -> json([
+            'status' => 'ok',
+        ]);
     }
 
     public function save_member(Request $request) {
@@ -2135,6 +2236,7 @@ class TransactionsDetailsController extends Controller
 
         $folder_id = $request -> folder_id;
         $document_name = $request -> document_name;
+
         if (preg_match('/^[0-9]*$/', $document_name) && $document_name > 0) {
             $document_name = Upload::GetFormName($document_name);
         }
@@ -2245,13 +2347,13 @@ class TransactionsDetailsController extends Controller
             $upload_images -> Contract_ID = $Contract_ID;
             $upload_images -> Referral_ID = $Referral_ID;
             $upload_images -> file_name = $file_name;
-            $upload_images -> file_location = '/storage/'.$files_path.'_user/images/'.$image_file_name;
+            $upload_images -> file_location = '/storage/'.$files_path.'/images/'.$image_file_name;
             $upload_images -> pages_total = count($document_image_files);
             $upload_images -> page_number = $page_number;
             $upload_images -> save();
 
             // copy from docs_transaction_fields ** update new page for each
-            $add_user_fields = UserFields::where('file_id', $image_file['file_id']) -> where('page', $image_file['page_number']) -> get();
+            /* $add_user_fields = UserFields::where('file_id', $image_file['file_id']) -> where('page', $image_file['page_number']) -> get();
             $field_ids = [];
 
             foreach ($add_user_fields as $add_user_field) {
@@ -2271,7 +2373,7 @@ class TransactionsDetailsController extends Controller
                 $add_user_fields_input_copy -> file_id = $new_file_id;
                 $add_user_fields_input_copy -> file_type = 'user';
                 $add_user_fields_input_copy -> save();
-            }
+            } */
 
             // copy from docs_transaction_fields_inputs_values
             /* $add_user_field_values = UserFieldsValues::whereIn('input_id', $field_ids) -> get();
@@ -2818,9 +2920,11 @@ class TransactionsDetailsController extends Controller
         $transaction_checklist_items_model = new TransactionChecklistItems();
 
         $transaction_checklist = TransactionChecklists::where($field, $id)
-            -> with(['checklist_items' => function($query) {
-                $query -> orderBy('checklist_item_order');
-            }])
+            -> with([
+                'checklist_items' => function($query) {
+                    $query -> orderBy('checklist_item_order');
+                }
+            ])
             -> with('checklist_items.notes.user','checklist_items.docs','checklist_items.upload','checklist')
             -> first();
 
@@ -3709,7 +3813,7 @@ class TransactionsDetailsController extends Controller
 
 		$Commission_ID = $request -> Commission_ID;
 
-        $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> with('deductions:commission_breakdown_id,description,amount') -> first();
+        $breakdown = CommissionBreakdowns::where('Commission_ID', $Commission_ID) -> with('deductions:commission_breakdown_id,description,amount,payment_type') -> first();
 
         $Agent_ID = $breakdown -> Agent_ID;
         $Contract_ID = $breakdown -> Contract_ID;
@@ -3840,9 +3944,11 @@ class TransactionsDetailsController extends Controller
 
 		$data = $request -> all();
 
+        $notify = null;
+
         $breakdown = CommissionBreakdowns::where('Commission_ID', $request -> Commission_ID) -> first();
         foreach ($data as $key => $value) {
-            $ignore = ['deduction_description', 'deduction_amount'];
+            $ignore = ['deduction_description', 'deduction_amount', 'deduction_payment_type'];
 
             if (! in_array($key, $ignore)) {
                 if (preg_match('/\$/', $value)) {
@@ -3852,6 +3958,7 @@ class TransactionsDetailsController extends Controller
             }
         }
         if ($breakdown -> submitted == 'no') {
+            $notify = 'yes';
             $breakdown -> submitted = 'yes';
         }
 
@@ -3861,6 +3968,7 @@ class TransactionsDetailsController extends Controller
 
         $deduction_descriptions = $request -> deduction_description;
         $deduction_amounts = $request -> deduction_amount;
+        $deduction_payment_types = $request -> deduction_payment_type;
 
         // remove current deductions
         $delete_deductions = CommissionBreakdownsDeductions::where('commission_breakdown_id', $commission_breakdown_id) -> delete();
@@ -3873,6 +3981,7 @@ class TransactionsDetailsController extends Controller
                     $add_deduction -> commission_breakdown_id = $commission_breakdown_id;
                     $add_deduction -> description = $deduction_description;
                     $add_deduction -> amount = preg_replace('/[\$,]+/', '', $deduction_amounts[$c]);
+                    $add_deduction -> payment_type = $deduction_payment_types[$c];
                     $add_deduction -> save();
                 }
                 $c += 1;
@@ -3880,29 +3989,33 @@ class TransactionsDetailsController extends Controller
         }
 
 
-        // notify admin
-        $notification = config('global_db.in_house_notification_commission_breakdown_submitted');
-        $users = User::whereIn('email', $notification['emails']) -> get();
+        if($notify) {
 
-        $property = $breakdown -> property_contract;
-        if(!$property) {
-            $property = $breakdown -> property_referral;
+            // notify admin
+            $notification = config('global_db.in_house_notification_commission_breakdown_submitted');
+            $users = User::whereIn('email', $notification['emails']) -> get();
+
+            $property = $breakdown -> property_contract;
+            if(!$property) {
+                $property = $breakdown -> property_referral;
+            }
+            $address =  $property -> FullStreetAddress.' '.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
+
+            $subject = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name;
+            $message = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address;
+            $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> State.' '.$property -> PostalCode;
+            $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br><br>'.$address_email;
+
+            $notification['type'] = 'commission';
+            $notification['transaction_type'] = 'contract';
+            $notification['transaction_id'] = $breakdown -> Contract_ID;
+            $notification['subject'] = $subject;
+            $notification['message'] = $message;
+            $notification['message_email'] = $message_email;
+
+            Notification::send($users, new GlobalNotification($notification));
+
         }
-        $address =  $property -> FullStreetAddress.' '.$property -> City.' '.$property -> State.' '.$property -> PostalCode;
-
-        $subject = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name;
-        $message = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br>'.$address;
-        $address_email =  $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> State.' '.$property -> PostalCode;
-        $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br><br>'.$address_email;
-
-        $notification['type'] = 'commission';
-        $notification['transaction_type'] = 'contract';
-        $notification['transaction_id'] = $breakdown -> Contract_ID;
-        $notification['subject'] = $subject;
-        $notification['message'] = $message;
-        $notification['message_email'] = $message_email;
-
-        Notification::send($users, new GlobalNotification($notification));
 
         return response() -> json(['status' => 'success']);
     }
@@ -4346,6 +4459,7 @@ class TransactionsDetailsController extends Controller
         $deduction -> Commission_ID = $request -> Commission_ID;
         $deduction -> amount = preg_replace('/[\$,]+/', '', $request -> amount);
         $deduction -> description = $request -> description;
+        $deduction -> payment_type = $request -> payment_type;
         $deduction -> save();
 
         return response() -> json(['success' => true]);
@@ -4641,7 +4755,7 @@ class TransactionsDetailsController extends Controller
             'status' => $status,
             'link' => $link,
             'check' => $earnest_check
-            ]);
+        ]);
     }
 
     public function notify_agent_bounced_earnest(Request $request) {

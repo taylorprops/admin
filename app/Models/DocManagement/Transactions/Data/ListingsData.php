@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ListingsData extends Model
 {
     protected $connection = 'mysql_taylorproperties';
-    public $table = 'listings';
+    protected $table = 'listings';
     protected $guarded = [];
 
     public function scopeListingSearch($query, $state, $zip, $street_number, $street_name, $unit, $street_dir_suffix, $street_dir_suffix_alt) {

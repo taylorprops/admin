@@ -9,7 +9,7 @@ class Calendar extends Model
 {
     use HasFactory;
 
-    public $table = 'calendar';
+    protected $table = 'calendar';
     protected $_connection = 'mysql';
     protected $_primaryKey = 'id';
     protected $guarded = [];

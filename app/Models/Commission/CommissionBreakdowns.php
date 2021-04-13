@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommissionBreakdowns extends Model
 {
-    public $table = 'commission_breakdowns';
+    protected $table = 'commission_breakdowns';
     protected $_connection = 'mysql';
     protected $_primaryKey = 'id';
     protected $guarded = [];

@@ -133,22 +133,33 @@
 
             @if(count($deductions) > 0)
 
-                <div class="border-top border-bottom py-2 mb-3">
+                <div class="py-2 mb-3">
 
-                    @foreach($deductions as $deduction)
+                    <div class="p-2 border rounded">
 
-                        <div class="row d-flex align-items-center no-gutters deduction-row">
-                            <div class="col-7 deduction-description">
-                                {{ $deduction -> description }}
-                            </div>
-                            <div class="col-5 d-flex justify-content-end deduction-amount">
-                                ${{ number_format($deduction -> amount, 2) }}
-                            </div>
+                        <div class="p-2 bg-orange-light rounded">
+
+                            @foreach($deductions as $deduction)
+
+                                <div class="row d-flex align-items-center no-gutters deduction-row">
+                                    <div class="col-7 deduction-description">
+                                        {{ $deduction -> description }}
+                                    </div>
+                                    <div class="col-5 d-flex justify-content-end deduction-amount">
+                                        ${{ number_format($deduction -> amount, 2) }}
+                                    </div>
+                                    <span class="hidden deduction-payment-type">{{ $deduction -> payment_type }}</span>
+                                </div>
+
+                            @endforeach
+
                         </div>
 
-                    @endforeach
+                        <div class="mt-3">
+                            <a href="javascript:void(0)" class="export-deductions-button"><i class="fal fa-plus mr-2"></i> Add Deductions To Breakdown</a>
+                        </div>
 
-                    <a href="javascript:void(0)" class="export-deductions-button"><i class="fal fa-plus mr-2"></i> Add Deductions To Breakdown</a>
+                    </div>
 
                 </div>
 

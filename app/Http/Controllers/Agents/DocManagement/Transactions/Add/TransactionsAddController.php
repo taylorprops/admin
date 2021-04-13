@@ -227,12 +227,12 @@ class TransactionsAddController extends Controller {
 
         $property_details = (object) $property_details;
 
-        $property_type_resource_ids = Checklists::all() -> pluck('checklist_property_type_id');
+        $property_type_resource_ids = Checklists::where('active', 'yes') -> pluck('checklist_property_type_id');
         $property_types = ResourceItems::where('resource_type', 'checklist_property_types')
             -> whereIn('resource_id', $property_type_resource_ids)
             -> orderBy('resource_order') -> get();
 
-        $property_sub_type_resource_ids = Checklists::all() -> pluck('checklist_property_sub_type_id');
+        $property_sub_type_resource_ids = Checklists::where('active', 'yes') -> pluck('checklist_property_sub_type_id');
         $property_sub_types = ResourceItems::where('resource_type', 'checklist_property_sub_types')
             -> whereIn('resource_id', $property_sub_type_resource_ids)
             -> orderBy('resource_order') -> get();
@@ -803,6 +803,9 @@ class TransactionsAddController extends Controller {
         $seller_address_zip = $request -> seller_zip;
         $seller_crm_contact_id = $request -> seller_crm_contact_id;
 
+        $seller_member_type_id = ResourceItems::SellerResourceId();
+        $buyer_member_type_id = ResourceItems::BuyerResourceId();
+
         for ($i = 0; $i < count($seller_first); $i++) {
             $sellers = null;
             if ($seller_email) {
@@ -825,7 +828,7 @@ class TransactionsAddController extends Controller {
             $sellers -> address_home_state = $seller_address_state[$i] ?? null;
             $sellers -> address_home_zip = $seller_address_zip[$i] ?? null;
             $sellers -> CRMContact_ID = $seller_crm_contact_id[$i] ?? 0;
-            $sellers -> member_type_id = ResourceItems::SellerResourceId();
+            $sellers -> member_type_id = $seller_member_type_id;
             $sellers -> transaction_type = 'listing';
             $sellers -> Agent_ID = $Agent_ID;
             $sellers -> Listing_ID = $Listing_ID;
@@ -882,7 +885,7 @@ class TransactionsAddController extends Controller {
                 $buyers -> address_home_state = $buyer_address_state[$i] ?? null;
                 $buyers -> address_home_zip = $buyer_address_zip[$i] ?? null;
                 $buyers -> CRMContact_ID = $buyer_crm_contact_id[$i] ?? 0;
-                $buyers -> member_type_id = ResourceItems::BuyerResourceId();
+                $buyers -> member_type_id = $buyer_member_type_id;
                 $buyers -> transaction_type = 'contract';
                 $buyers -> Agent_ID = $Agent_ID;
                 $buyers -> Listing_ID = $Listing_ID;

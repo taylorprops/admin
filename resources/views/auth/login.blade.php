@@ -21,7 +21,7 @@
 
                         <form id="login_form" class="w-100">
 
-                        <div class="card w-100 shadow animate__animated animate__zoomIn">
+                            <div class="card w-100 shadow animate__animated animate__zoomIn">
 
                                 <div class="card-header bg-primary text-white shadow font-12 mb-n2">Login</div>
 
@@ -91,7 +91,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-primary" id="save_forgot_password_button" data-dismiss"modal">Reset Password <i class="fal fa-arrow-right ml-2"></i></a>
+                <a class="btn btn-primary" id="save_forgot_password_button" data-dismiss="modal">Reset Password <i class="fal fa-arrow-right ml-2"></i></a>
             </div>
         </div>
     </div>

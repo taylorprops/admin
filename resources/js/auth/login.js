@@ -13,12 +13,18 @@ $(function () {
 
         let form = $('#login_form');
         let validate = validate_form(form);
+        let previous_url = $('#previous_url').val();
 
         if(validate == 'yes') {
 
             let formData = new FormData(form[0]);
             axios.post('/login', formData, axios_options)
             .then(function (response) {
+                console.log(previous_url);
+                if(previous_url != '' && !previous_url.match(/login/) && previous_url != location.hostname) {
+                    window.location = previous_url;
+                    return false;
+                }
                 window.location = '/dashboard';
             })
             .catch(function(error) {

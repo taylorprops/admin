@@ -35,7 +35,7 @@ class CalendarController extends Controller
 
                 if($event -> start_date != $event -> end_date) {
                     $extendedProps['multiple'] = 'multiple';
-                    $end = date("Y-m-d", strtotime("$end +1 day"));
+                    $end = date("Y-m-d", strtotime("{$end} +1 day"));
                 }
 
             } else if($all_day == false) {
@@ -184,7 +184,7 @@ class CalendarController extends Controller
         return response() -> json([
             'status' => 'success',
             'event_id' => $event_id
-            ]);
+        ]);
 
 
     }

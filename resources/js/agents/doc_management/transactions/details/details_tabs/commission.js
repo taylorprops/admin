@@ -1,3 +1,4 @@
+
 if (document.URL.match(/transaction_details/) || document.URL.match(/commission_other/)) {
 
     let page = 'other';
@@ -74,8 +75,6 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
 
         $('.save-commission-notes-button').off('click').on('click', add_commission_notes);
 
-        $(document).on('click', '.export-deductions-button', add_deductions_to_breakdown);
-
         $(document).on('click', '#email_agent_breakdown_reminder', function() {
 
             $('#email_agent_modal').modal('show');
@@ -113,16 +112,28 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         if($('#Commission_Other_ID').length > 0) {
             Commission_ID = $('#Commission_Other_ID').val();
         }
+        let Agent_ID = $('#Agent_ID').val();
+        let Contract_ID = $('#Contract_ID').val();
 
+        let payments = [];
         $('.deduction-row').each(function() {
 
-            let description = $(this).find('.deduction-description').text();
-            let amount = $(this).find('.deduction-amount').text();
+            let description = $(this).find('.deduction-description').text().trim();
+            let amount = $(this).find('.deduction-amount').text().trim();
+            let payment_type = $(this).find('.deduction-payment-type').text().trim();
+            if(payment_type != '') {
+                let payment = {};
+                payment['description'] = description;
+                payment['amount'] = amount;
+                payment['type'] = payment_type;
+                payments.push(payment);
+            }
 
             let formData = new FormData();
             formData.append('Commission_ID', Commission_ID);
             formData.append('description', description);
             formData.append('amount', amount);
+            formData.append('payment_type', payment_type);
 
             axios.post('/agents/doc_management/transactions/save_add_commission_deduction', formData, axios_options)
             .then(function (response) {
@@ -132,6 +143,49 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             });
 
         });
+
+        if(payments.length > 0) {
+
+            $('#make_payments_modal').modal('show');
+            $('#payments_div').html('');
+
+            payments.forEach(function(payment) {
+
+                let item = ' \
+                    <div class="list-group-item d-flex justify-content-between align-items-center"> \
+                        <div>'+payment.description+'</div> \
+                        <div>'+ global_format_number_with_decimals(payment.amount)+'</div> \
+                    </div> \
+                ';
+                $('#payments_div').append(item);
+
+            });
+
+            $('.make-payment-button').off('click').on('click', function() {
+
+                if($(this).data('create') == 'yes') {
+
+                    let formData = new FormData();
+                    formData.append('payments', JSON.stringify(payments));
+                    formData.append('Agent_ID', Agent_ID);
+                    formData.append('Contract_ID', Contract_ID);
+
+                    axios.post('/doc_management/commission/make_payment_from_commission', formData, axios_options)
+                    .then(function (response) {
+
+                        let balances = response.data.balances;
+
+                        $('#modal_success').modal().find('.modal-body').html('Payments successfully made.<br><br>'+balances);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                }
+
+            });
+
+        }
 
         $('.commission-popout-button').trigger('click');
         document.getElementById('commission_deductions_popout').scrollIntoView();
@@ -159,6 +213,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         })
         .then(function (response) {
             $('.agent-commission-div').html(response.data);
+            $('.export-deductions-button').off('click').on('click', add_deductions_to_breakdown);
         })
         .catch(function (error) {
 
@@ -181,6 +236,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
             $('.show-soc-sec').on('click', function() {
                 $('.soc-sec').toggle();
             });
+
         })
         .catch(function (error) {
 
