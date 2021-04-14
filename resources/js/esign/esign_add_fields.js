@@ -240,13 +240,11 @@ if(document.URL.match(/esign_add_fields/)) {
 
                     if(validate == 'yes') {
 
-                        $('#send_for_signatures_modal').modal('hide');
-
                         send_for_signatures();
 
-                        $('#send_for_signatures_modal').modal('hide');
+                        //$('#send_for_signatures_modal').modal('hide');
 
-                        global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
+                        //global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
 
                         setTimeout(function() {
                             $('.loading-text').append('<br><br>Sending documents...');
@@ -361,7 +359,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
                         if(!is_draft && !is_template) {
                             setTimeout(function() {
-                                window.location = '/esign_show_sent';
+                                //window.location = '/esign_show_sent';
                             }, 1000);
                         }
 
@@ -371,10 +369,6 @@ if(document.URL.match(/esign_add_fields/)) {
                 .catch(function (error) {
 
                 });
-
-
-
-
 
             }
 

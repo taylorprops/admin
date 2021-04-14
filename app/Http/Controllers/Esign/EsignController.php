@@ -1128,6 +1128,12 @@ class EsignController extends Controller
                     $width = $document -> width;
                     $height = $document -> height;
 
+                    $doc_sizes = get_width_height(Storage::disk('public') -> path(str_replace('/storage', '', $document -> file_location)));
+                    $actual_width = $doc_sizes['width'];
+                    $actual_height = $doc_sizes['height'];
+
+                    dump($height, $actual_height, $width, $actual_width);
+
                     foreach ($fields -> where('document_id', $document_id) as $field) {
 
                         // increase move down and right
