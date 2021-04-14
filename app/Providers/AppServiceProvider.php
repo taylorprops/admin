@@ -2,10 +2,16 @@
 
 namespace App\Providers;
 
+use App\User;
 use App\Models\Config\Config;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use App\Notifications\GlobalNotification;
+use Illuminate\Support\Facades\Notification;
 use App\Models\BrightMLS\CompanyBrightOffices;
+use BeyondCode\QueryDetector\Outputs\Debugbar;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,8 +32,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot() {
 
+        //\Debugbar::disable();
+
         Schema::defaultStringLength(191);
         date_default_timezone_set('America/New_York');
+
 
         // add custom config vars from config table
         config([
@@ -81,6 +90,37 @@ class AppServiceProvider extends ServiceProvider
             -> toArray()
         ]);
 
-        //\Debugbar::disable();
+        Queue::failing(function (JobFailed $event) {
+            // $event -> connectionName
+            // $event -> job
+            // $event -> exception
+
+            $notification = config('notifications.admin_failed_job');
+            $users = User::whereIn('email', $notification['emails']) -> get();
+
+            $subject = 'Failed Job Notification';
+            $message = 'Failed Job: '.$event -> job;
+            $message_email = '
+            <div style="font-size: 15px;">
+            Failed Job: '.$event -> job.'
+            <br><br>
+            '.$event -> connectionName.'
+            <br><br>
+            '.$event -> exception.'
+            </div>';
+
+            $notification['type'] = 'admin';
+            $notification['transaction_type'] = 'failed_job';
+            $notification['transaction_id'] = '';
+            $notification['failed_job'] = $event -> job;
+            $notification['subject'] = $subject;
+            $notification['message'] = $message;
+            $notification['message_email'] = $message_email;
+
+            Notification::send($users, new GlobalNotification($notification));
+
+        });
+
+
     }
 }

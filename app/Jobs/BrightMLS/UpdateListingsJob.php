@@ -49,6 +49,7 @@ class UpdateListingsJob implements ShouldQueue
         $resource = 'Property';
         $class = 'ALL';
 
+
         try {
 
             $hours = 2;
@@ -200,6 +201,8 @@ class UpdateListingsJob implements ShouldQueue
 
             }
         }
+
+
 
     }
 }

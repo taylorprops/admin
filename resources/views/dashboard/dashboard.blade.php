@@ -113,9 +113,9 @@
 
         <div class="col-12 col-lg-8">
 
-            <div class="bg-blue-light p-2 rounded">
+            <div class="bg-blue-light p-3 rounded">
 
-                <div class="row mt-2">
+                <div class="row">
 
                     <div class="col-12">
 
@@ -127,7 +127,7 @@
 
                 @if(auth() -> user() -> group == 'admin')
 
-                    <div class="row mt-4">
+                    <div class="row mt-3">
 
                         <div class="col-12">
 
@@ -147,7 +147,7 @@
 
                 @if(stristr(auth() -> user() -> group, 'agent'))
 
-                    <div class="row mt-4">
+                    <div class="row mt-3">
 
                         <div class="col-12">
 
@@ -167,7 +167,7 @@
 
                 @if(auth() -> user() -> group != 'agent_referral')
 
-                    <div class="row mt-4">
+                    <div class="row mt-3">
 
                         <div class="col-12">
 

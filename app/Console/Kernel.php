@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         // get docs emailed for transactions
         $schedule -> command('doc_management:check_emailed_documents') -> everyMinute() -> withoutOverlapping(1);
 
-        // listings
+        // add, update, withdraw listings
         $schedule -> command('bright_mls:add_listings') -> everyFifteenMinutes();
         $schedule -> command('bright_mls:update_listings') -> everyThirtyMinutes();
         $schedule -> command('bright_mls:find_withdraw_listings') -> everyThirtyMinutes();
