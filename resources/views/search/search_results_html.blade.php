@@ -19,25 +19,25 @@
                         $transaction_coordinator = $property -> transaction_coordinator;
                         @endphp
 
-                        <div class="list-group-item search-item px-2 py-1 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
+                        <div class="list-group-item search-item px-2 py-1 my-1 @if(!$loop -> first) border-top @endif" data-href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing">
 
                                 <div class="row">
 
-                                    <div class="col-8 col-lg-5">
+                                    <div class="col-8 col-lg-6">
 
                                         <div class="font-9">
-                                            <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing">
+                                            <a class="search-item-link" href="/agents/doc_management/transactions/transaction_details/{{ $property -> Listing_ID }}/listing">
                                                 {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                             </a>
                                         </div>
 
                                     </div>
 
-                                    <div class="col-4 font-9 float-right float-lg-none" style="color: {{ $status_color }}">
+                                    <div class="col-3 font-8 float-right float-lg-none" style="color: {{ $status_color }}">
                                         {{ $status }}
                                         @if(stristr($status, 'Under Contract') || stristr($status, 'Closed'))
                                             <br>
-                                            <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract" class="font-8">View Contract</a>
+                                            <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract" class="search-item-link font-8">View Contract</a>
                                         @endif
                                     </div>
 
@@ -47,7 +47,7 @@
 
                                         <div class="overflow-hidden text-right">
                                             @if($property -> ListPictureURL)
-                                                <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
+                                                <img src="{{ $property -> ListPictureURL }}" height="40" class="search-result-image">
                                             @else
                                                 <i class="fad fa-home fa-3x text-primary"></i>
                                             @endif
@@ -135,17 +135,17 @@
 
                             <div class="row">
 
-                                <div class="col-8 col-lg-5">
+                                <div class="col-8 col-lg-6">
 
                                     <div class="font-9">
-                                        <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
+                                        <a class="search-item-link" href="/agents/doc_management/transactions/transaction_details/{{ $property -> Contract_ID }}/contract">
                                             {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                         </a>
                                     </div>
 
                                 </div>
 
-                                <div class="col-4 font-9 float-right float-lg-none" style="color: {{ $status_color }}">
+                                <div class="col-3 font-8 float-right float-lg-none" style="color: {{ $status_color }}">
                                     {{ $status }}
                                 </div>
 
@@ -154,7 +154,7 @@
 
                                     <div class="overflow-hidden text-right">
                                         @if($property -> ListPictureURL)
-                                            <img src="{{ $property -> ListPictureURL }}" class="search-result-image">
+                                            <img src="{{ $property -> ListPictureURL }}" height="40" class="search-result-image">
                                         @else
                                             <i class="fad fa-home fa-3x text-primary"></i>
                                         @endif
@@ -261,7 +261,7 @@
                                 <div class="col-8 col-lg-5">
 
                                     <div class="font-9 text-primary">
-                                        <a href="/agents/doc_management/transactions/transaction_details/{{ $property -> Referral_ID }}/referral">
+                                        <a class="search-item-link" href="/agents/doc_management/transactions/transaction_details/{{ $property -> Referral_ID }}/referral">
                                             {!! $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode !!}
                                         </a>
                                     </div>

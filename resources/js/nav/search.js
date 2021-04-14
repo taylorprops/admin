@@ -7,6 +7,14 @@ $(function() {
 
     $(document).on('click', '.hide-search', hide_search);
 
+    $(document).on('click', '.search-item-link', function(e) {
+        e.stopImmediatePropagation();
+    });
+
+    $(document).on('click', '.search-item', function(){
+        window.location = $(this).data('href');
+    });
+
     /* $(document).on('click', '.search-results-row .list-group-item', function() {
         window.open($(this).data('href'));
     }) */

@@ -1,18 +1,37 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Jobs\BrightMLS;
 
-use Illuminate\Http\Request;
+use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use App\Models\BrightMLS\CompanyListings;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class TestController extends Controller
+class UpdateListingsJob implements ShouldQueue
 {
-    public function test(Request $request) {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
 
         $rets_config = new \PHRETS\Configuration;
         $rets_config -> setLoginUrl(config('rets.rets.url'))
@@ -32,76 +51,37 @@ class TestController extends Controller
 
         try {
 
-            // get company listings count
-            $company_listings_keys = CompanyListings::get() -> pluck('ListingKey') -> toArray();
-            $company_listings_count = count($company_listings_keys);
+            $hours = 2;
+            if(config('app.env') == 'development') {
+                $hours = 24;
+            }
+            $start = str_replace(' ', 'T', date('Y-m-d H:i:s', strtotime('-'.$hours.' hour')));
 
-            // get bright listings count
             $bright_office_codes = implode(',', config('bright_office_codes'));
 
-            $query = '(ListOfficeMlsId=|'.$bright_office_codes.')';
+            $query = '(ModificationTimestamp='.$start.'+),(ListOfficeMlsId=|'.$bright_office_codes.')';
 
             $results = $rets -> Search(
                 $resource,
                 $class,
-                $query,
-                [
-                    'Count' => 1,
-                    'Select' => 'ListingKey'
-                ]
+                $query
             );
 
-            $bright_listings = $results -> toArray();
-            $bright_listings_count = $results -> count();
+            $listings = $results -> toArray();
 
-            $bright_listing_keys = [];
-            foreach($bright_listings as $bright_listing) {
-                $bright_listing_keys[] = $bright_listing['ListingKey'];
-            }
+            foreach($listings as $listing) {
 
-            if($company_listings_count != $bright_listings_count) {
+                $listing_key = $listing['ListingKey'];
 
-                // get missing listing keys
-                $missing_company = array_diff($bright_listing_keys, $company_listings_keys);
-                $withdrawn = array_diff($company_listings_keys, $bright_listing_keys);
+                $add_listing = CompanyListings::firstOrCreate([
+                    'ListingKey' => $listing_key
+                ]);
 
-                if(count($missing_company) > 0) {
-
-                    $query = '(ListingKey='.implode(',', $missing_company).')';
-
-                    $results = $rets -> Search(
-                        $resource,
-                        $class,
-                        $query
-                    );
-
-                    $listings = $results -> toArray();
-
-                    foreach($listings as $listing) {
-
-                        $listing_key = $listing['ListingKey'];
-
-                        $add_listing = CompanyListings::firstOrCreate([
-                            'ListingKey' => $listing_key
-                        ]);
-
-                        foreach($listing as $col => $val) {
-                            $add_listing -> $col = $val;
-                        }
-
-                        $add_listing -> save();
-
-                    }
-
-                } else if(count($withdrawn) > 0) {
-
-                    $update_listings = CompanyListings::whereIn('ListingKey', $withdrawn)
-                        -> update([
-                            'MlsStatus' => 'Withdrawn',
-                            'CloseDate' => date('Y-m-d')
-                        ]);
-
+                foreach($listing as $col => $val) {
+                    $add_listing -> $col = $val;
                 }
+
+                $add_listing -> save();
 
             }
 

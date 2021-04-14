@@ -504,8 +504,10 @@ if (document.URL.match(/edit_files/)) {
 
                     // only the written fields will be split.
                     let number_type = $(this).data('number-type');
+
                     let group_data_div = group_field_div_container.find('.data-div');
-                    if (number == '') {
+
+                    if (number_value == '') {
                         group_data_div.html('');
                     } else {
                         if (number_type == 'numeric') {
@@ -678,7 +680,6 @@ if (document.URL.match(/edit_files/)) {
 
             let field_div_container = $('.field-div-container.show');
             if(field_div_container.length > 0) {
-                set_field_text(field_div_container.find('.field-div'));
                 update_common_fields(field_div_container.find('.field-div'));
                 field_div_container.removeClass('show');
             }

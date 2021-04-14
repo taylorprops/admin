@@ -8873,7 +8873,7 @@ if (document.URL.match(/edit_files/)) {
           var number_type = $(this).data('number-type');
           var group_data_div = group_field_div_container.find('.data-div');
 
-          if (number == '') {
+          if (number_value == '') {
             group_data_div.html('');
           } else {
             if (number_type == 'numeric') {
@@ -9012,7 +9012,6 @@ if (document.URL.match(/edit_files/)) {
       var field_div_container = $('.field-div-container.show');
 
       if (field_div_container.length > 0) {
-        set_field_text(field_div_container.find('.field-div'));
         update_common_fields(field_div_container.find('.field-div'));
         field_div_container.removeClass('show');
       }
@@ -15846,6 +15845,7 @@ if (document.URL.match(/esign_add_fields/)) {
           var validate = validate_form(form);
 
           if (validate == 'yes') {
+            $('#send_for_signatures_modal').modal('hide');
             send_for_signatures();
             $('#send_for_signatures_modal').modal('hide');
             global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
@@ -18244,6 +18244,12 @@ $(function () {
     main_search($(this));
   });
   $(document).on('click', '.hide-search', hide_search);
+  $(document).on('click', '.search-item-link', function (e) {
+    e.stopImmediatePropagation();
+  });
+  $(document).on('click', '.search-item', function () {
+    window.location = $(this).data('href');
+  });
   /* $(document).on('click', '.search-results-row .list-group-item', function() {
       window.open($(this).data('href'));
   }) */

@@ -326,7 +326,7 @@ Route::middleware(['admin']) -> group(function () {
     }); */
 
     // Test Controller
-    //Route::get('/tests/test', 'TestController@test');
+    Route::get('/tests/test', [TestController::class, 'test']);
 
 });
 

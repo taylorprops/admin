@@ -2,10 +2,14 @@
 
 namespace App\Models\Admin\Resources;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ResourceItemsAdmin extends Model
 {
+
+    use HasFactory;
+
     protected $connection = 'mysql';
     protected $table = 'admin_resource_items';
     protected $primaryKey = 'resource_id';

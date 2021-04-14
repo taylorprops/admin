@@ -1,18 +1,37 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Jobs\BrightMLS;
 
-use Illuminate\Http\Request;
+use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use App\Models\BrightMLS\CompanyListings;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
-use App\Models\DocManagement\Transactions\Documents\TransactionDocuments;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class TestController extends Controller
+class FindWithdrawListingsJob implements ShouldQueue
 {
-    public function test(Request $request) {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
 
         $rets_config = new \PHRETS\Configuration;
         $rets_config -> setLoginUrl(config('rets.rets.url'))
@@ -208,7 +227,6 @@ class TestController extends Controller
                             $last_column = $cols[$columns_count -1];
 
                             DB::select("ALTER TABLE ".$table." ADD COLUMN `".$missing_column."` ".$column_type." AFTER `".$last_column."`");
-
 
                         }
 

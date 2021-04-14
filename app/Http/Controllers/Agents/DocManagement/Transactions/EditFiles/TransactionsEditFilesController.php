@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TransactionsEditFilesController extends Controller
 {
+
     public function convert_to_pdf(Request $request) {
 
 		$Listing_ID = $request -> Listing_ID ?? 0;

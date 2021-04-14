@@ -374,7 +374,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">
-                <a class="btn btn-lg btn-primary" id="save_send_for_signatures_button" data-dismiss="modal">Send <i class="fad fa-share-all ml-2"></i></a>
+                <a class="btn btn-lg btn-primary" id="save_send_for_signatures_button">Send <i class="fad fa-share-all ml-2"></i></a>
             </div>
         </div>
     </div>

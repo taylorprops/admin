@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Config\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use App\Models\BrightMLS\CompanyBrightOffices;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
         // add custom config vars from config table
         config([
-            'global_db' => Config::all([
+            'notifications' => Config::all([
                 'config_key','config_value','config_type', 'notify_by_email', 'notify_by_text'
             ])
             -> keyBy('config_key')
@@ -60,6 +61,22 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 return $setting -> config_value;
+            })
+            -> toArray()
+        ]);
+
+        config([
+            'bright_office_codes' => CompanyBrightOffices::all([
+                'bright_office_code'
+            ])
+            -> transform(function ($setting) {
+
+                if(stristr($setting -> bright_office_code, ',')) {
+                    return explode(',', $setting -> bright_office_code);
+                }
+
+                return $setting -> bright_office_code;
+
             })
             -> toArray()
         ]);

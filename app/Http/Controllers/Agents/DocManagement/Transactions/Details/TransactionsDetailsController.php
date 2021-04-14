@@ -682,7 +682,7 @@ class TransactionsDetailsController extends Controller
             if($property -> UsingHeritage != $request -> UsingHeritage && $request -> UsingHeritage == 'yes') {
 
                 // notify heritage title
-                $notification = config('global_db.in_house_notification_emails_using_heritage_title');
+                $notification = config('notifications.in_house_notification_emails_using_heritage_title');
                 $users = User::whereIn('email', $notification['emails']) -> get();
 
                 $agent = $property -> agent;
@@ -2146,7 +2146,7 @@ class TransactionsDetailsController extends Controller
             $agent = $property -> agent;
 
             // notify earnest admin
-            $notification = config('global_db.in_house_notification_emails_release_submitted');
+            $notification = config('notifications.in_house_notification_emails_release_submitted');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $subject = 'Release submitted for review by '.$property -> agent -> full_name;
@@ -3118,7 +3118,7 @@ class TransactionsDetailsController extends Controller
                 $agent = $contract -> agent;
 
                 // notify earnest admin
-                $notification = config('global_db.in_house_notification_emails_release_submitted');
+                $notification = config('notifications.in_house_notification_emails_release_submitted');
                 $users = User::whereIn('email', $notification['emails']) -> get();
 
                 $subject = 'Release submitted for review by '.$contract -> agent -> full_name;
@@ -3681,7 +3681,7 @@ class TransactionsDetailsController extends Controller
                 if($breakdown -> status != 'complete') {
 
                     //notify agent
-                    $notification = config('global_db.agent_notification_commission_complete');
+                    $notification = config('notifications.agent_notification_commission_complete');
 
                     if($notification['on_off'] == 'on') {
 
@@ -3992,7 +3992,7 @@ class TransactionsDetailsController extends Controller
         if($notify) {
 
             // notify admin
-            $notification = config('global_db.in_house_notification_commission_breakdown_submitted');
+            $notification = config('notifications.in_house_notification_commission_breakdown_submitted');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $property = $breakdown -> property_contract;
@@ -4719,7 +4719,7 @@ class TransactionsDetailsController extends Controller
         if($status == 'bounced') {
 
             // notify admin
-            $notification = config('global_db.in_house_notification_emails_bounced_earnest');
+            $notification = config('notifications.in_house_notification_emails_bounced_earnest');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $address =  $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> State.' '.$property -> PostalCode;
@@ -5159,7 +5159,7 @@ class TransactionsDetailsController extends Controller
             $add_heritage_to_members -> save();
 
             // notify heritage title
-            $notification = config('global_db.in_house_notification_emails_using_heritage_title');
+            $notification = config('notifications.in_house_notification_emails_using_heritage_title');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $subject = 'Agent Using Heritage Title Notification';
@@ -5203,7 +5203,7 @@ class TransactionsDetailsController extends Controller
         if($earnest_held_by == 'us') {
 
             // notify earnest admin
-            $notification = config('global_db.in_house_notification_emails_holding_earnest');
+            $notification = config('notifications.in_house_notification_emails_holding_earnest');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $subject = 'New Earnest Deposit Notification';
@@ -5436,7 +5436,7 @@ class TransactionsDetailsController extends Controller
         $contract -> save();
 
         // reject release if submitted
-        $checklist_items = TransactionChecklistItems::where('Contract_ID', $Contract_ID) -> get();
+        $checklist_items = TransactionChecklistItems::where('Contract_ID', $Contract_ID) -> has('docs') -> get();
         foreach ($checklist_items as $checklist_item) {
             if (Upload::IsRelease($checklist_item -> checklist_form_id)) {
 

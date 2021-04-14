@@ -118,12 +118,12 @@
     </li>
 
     @if(auth() -> user() -> super_user == 'yes' ||
-        stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email) ||
-        stristr(config('global_db.permission_edit_notifications'), auth() -> user() -> email))
+        stristr(config('notifications.permission_edit_permissions'), auth() -> user() -> email) ||
+        stristr(config('notifications.permission_edit_notifications'), auth() -> user() -> email))
 
     <li><hr class="my-2"></li>
 
-    @if(stristr(config('global_db.permission_edit_employees'), auth() -> user() -> email))
+    @if(stristr(config('notifications.permission_edit_employees'), auth() -> user() -> email))
         <li>
             <a href="/employees">
                 <i class="fa fa-users"></i>
@@ -139,13 +139,13 @@
         <div class="sidebar-submenu">
             <ul>
                 @if(auth() -> user() -> super_user == 'yes' ||
-                    stristr(config('global_db.permission_edit_permissions'), auth() -> user() -> email))
+                    stristr(config('notifications.permission_edit_permissions'), auth() -> user() -> email))
                 <li>
                     <a href="/permissions/permissions">Permissions</a>
                 </li>
                 @endif
 
-                @if(stristr(config('global_db.permission_edit_notifications'), auth() -> user() -> email))
+                @if(stristr(config('notifications.permission_edit_notifications'), auth() -> user() -> email))
                 <li class="nav-item">
                     <a href="/doc_management/notifications"> Notification Settings</a>
                 </li>

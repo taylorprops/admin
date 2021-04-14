@@ -240,6 +240,8 @@ if(document.URL.match(/esign_add_fields/)) {
 
                     if(validate == 'yes') {
 
+                        $('#send_for_signatures_modal').modal('hide');
+
                         send_for_signatures();
 
                         $('#send_for_signatures_modal').modal('hide');

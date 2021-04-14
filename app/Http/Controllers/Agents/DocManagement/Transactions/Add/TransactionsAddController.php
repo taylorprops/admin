@@ -699,7 +699,7 @@ class TransactionsAddController extends Controller {
 
 
                 // notify heritage title
-                $notification = config('global_db.in_house_notification_emails_using_heritage_title');
+                $notification = config('notifications.in_house_notification_emails_using_heritage_title');
                 $users = User::whereIn('email', $notification['emails']) -> get();
 
                 $agent = $property -> agent;
@@ -973,7 +973,7 @@ class TransactionsAddController extends Controller {
 
 
                 // notify earnest admin
-                $notification = config('global_db.in_house_notification_emails_holding_earnest');
+                $notification = config('notifications.in_house_notification_emails_holding_earnest');
                 $users = User::whereIn('email', $notification['emails']) -> get();
 
                 $subject = 'New Earnest Deposit Notification';
