@@ -234,7 +234,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 $('#envelope_subject').val(subject);
 
                 $('#save_send_for_signatures_button').off('click').on('click', function() {
-                    //$(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
+                    $(this).html('<span class="spinner-border spinner-border-sm mr-2"></span> Sending...');
                     let form = $('#send_for_signatures_form');
                     let validate = validate_form(form);
 
@@ -242,9 +242,9 @@ if(document.URL.match(/esign_add_fields/)) {
 
                         send_for_signatures();
 
-                        //$('#send_for_signatures_modal').modal('hide');
+                        $('#send_for_signatures_modal').modal('hide');
 
-                        //global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
+                        global_loading_on('', '<h4 class="text-white loading-text">Preparing documents...</h4>');
 
                         setTimeout(function() {
                             $('.loading-text').append('<br><br>Sending documents...');
@@ -359,7 +359,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
                         if(!is_draft && !is_template) {
                             setTimeout(function() {
-                                //window.location = '/esign_show_sent';
+                                window.location = '/esign_show_sent';
                             }, 1000);
                         }
 
