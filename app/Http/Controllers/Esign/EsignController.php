@@ -1132,8 +1132,6 @@ class EsignController extends Controller
                     $actual_width = $doc_sizes['width'];
                     $actual_height = $doc_sizes['height'];
 
-                    dump($height, $actual_height, $width, $actual_width);
-
                     foreach ($fields -> where('document_id', $document_id) as $field) {
 
                         // increase move down and right
@@ -1141,6 +1139,8 @@ class EsignController extends Controller
                         $y = ($field -> top_perc / 100) * $height;
                         $w = ($field -> width_perc / 100) * $width;
                         $h = ($field -> height_perc / 100) * $height;
+
+                        dump($x, $y, $w, $h);
 
                         if ($field -> field_type == 'signature') {
                             $document_field = new SignatureField();
