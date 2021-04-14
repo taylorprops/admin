@@ -82,7 +82,7 @@
 
             <div class="col-12 col-xl-10 pr-xl-0 mx-auto">
 
-                <div class="file-viewer-container border-right w-100">
+                <div class="file-viewer-container border-right mx-auto">
 
                     <div class="file-view animate__animated animate__fadeIn" id="file_viewer">
 
@@ -113,7 +113,7 @@
                                     </div>
 
                                 </div>
-                                <div class="file-view-page-container border border w-100 {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}">
+                                <div class="file-view-page-container border border mx-auto {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}" style="height: {{ $document -> height }}pt; width: {{ $document -> width }}pt">
                                     <div class="fields-container w-100 h-100">
 
                                         <img class="file-image-bg w-100 h-100" src="{{ $image -> image_location }}?r={{ date('YmdHis') }}">

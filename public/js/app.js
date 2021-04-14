@@ -17725,7 +17725,7 @@ $(function () {
     get_global_notifications();
     setInterval(function () {
       get_global_notifications();
-    }, 5000);
+    }, 10000);
   }
 });
 
