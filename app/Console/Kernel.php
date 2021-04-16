@@ -16,6 +16,12 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\CheckEmailedDocuments::class,
         \App\Console\Commands\DocManagement\SetListingStatus::class,
         \App\Console\Commands\DatabaseBackUp::class,
+        \App\Console\Commands\BrightMLS\AddListings::class,
+        \App\Console\Commands\BrightMLS\UpdateListings::class,
+        \App\Console\Commands\BrightMLS\FindWithdrawListings::class,
+        \App\Console\Commands\OldDB\Agents\AddAgentsTablesCommand::class,
+        \App\Console\Commands\OldDB\Agents\UpdateAgentsTablesCommand::class,
+        \App\Console\Commands\OldDB\Agents\UpdateAgentsTablesOtherCommand::class,
     ];
 
     /**
@@ -35,7 +41,7 @@ class Kernel extends ConsoleKernel
         $schedule -> command('bright_mls:update_listings') -> everyThirtyMinutes();
         $schedule -> command('bright_mls:find_withdraw_listings') -> everyThirtyMinutes();
 
-        // set listings to expired
+        // set listings  status
         $schedule -> command('doc_management:set_listing_status') -> dailyAt('00:01');
 
         // update agents

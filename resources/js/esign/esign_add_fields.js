@@ -23,6 +23,9 @@ if(document.URL.match(/esign_add_fields/)) {
 
         });
 
+        resize_docs();
+        $(window).on('resize', resize_docs);
+
         // change highlighted thumb on scroll when doc is over half way in view
         $('#file_viewer').on('scroll', function () {
 
@@ -136,6 +139,31 @@ if(document.URL.match(/esign_add_fields/)) {
 
 
         ///////////////////// Functions //////////////////////
+
+
+        function resize_docs() {
+
+            let win = $(window);
+
+            $('.file-view-page-container').each(function() {
+
+                let h = $(this).data('height');
+                let w = $(this).data('width');
+
+                h = parseFloat(h) * 1.2;
+                w = parseFloat(w) * 1.2;
+
+                if (win.width() <= 1000) {
+                    h = parseFloat(h) * win.height() / 1000;
+                    w = parseFloat(w) * win.width() / 1000;
+                }
+
+                console.log(h,w);
+                $(this).css({ 'height': h+'pt', 'width': w+'pt' });
+
+            });
+
+        }
 
         function add_text(ele) {
             let text = ele.val();
@@ -404,7 +432,6 @@ if(document.URL.match(/esign_add_fields/)) {
                 let field = field_html(h_perc, w_perc, x_perc, y_perc, field_id, $('#active_page').val(), field_type, document_id, field_id, is_template);
                 // append new field
                 container.append(field);
-                console.log(x_perc, parseFloat(x_perc) + 18);
 
                 let field_date = '';
                 if(field_type == 'signature') {

@@ -5,9 +5,9 @@
 
 <div class="container-fluid page-container page-document-review px-0">
 
-    <div class="row no-gutters">
+    <div class="d-flex justify-content-between">
 
-        <div class="col-3">
+        <div class="w-28">
 
             <div class="transactions-container border-right h-100">
 
@@ -230,7 +230,7 @@
 
         </div>
 
-        <div class="col-6">
+        <div class="w-50">
 
             <div class="documents-container">
 
@@ -242,7 +242,7 @@
 
         </div>
 
-        <div class="col-3">
+        <div class="w-22">
 
             <div class="details-container border-left">
 

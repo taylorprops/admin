@@ -19,10 +19,13 @@
 
     <ul class="nav nav-tabs" id="earnest_tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="active_tab" data-toggle="tab" href="#active_content" role="tab" aria-controls="active_content" aria-selected="true">Active Deposits</a>
+            <a class="nav-link active" id="pending_tab" data-toggle="tab" href="#pending_content" role="tab" aria-controls="pending_content" aria-selected="true">Pending Releases</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="missing_tab" data-toggle="tab" href="#missing_content" role="tab" aria-controls="missing_content" aria-selected="false">Missing Deposits</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="active_tab" data-toggle="tab" href="#active_content" role="tab" aria-controls="active_content" aria-selected="true">Active Deposits</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="waiting_tab" data-toggle="tab" href="#waiting_content" role="tab" aria-controls="waiting_content" aria-selected="false">Waiting For Release</a>
@@ -35,9 +38,12 @@
             <a href="javascript:void(0)" class="btn btn-primary btn-lg p-3 email-agent"><i class="fal fa-envelope mr-2"></i> Email Selected Agents</a>
         </div>
 
-        <div class="tab-pane fade show active" id="active_content" role="tabpanel" aria-labelledby="active_tab"></div>
+        <div class="tab-pane fade show active" id="pending_content" role="tabpanel" aria-labelledby="pending_tab"></div>
 
         <div class="tab-pane fade" id="missing_content" role="tabpanel" aria-labelledby="missing_tab"></div>
+
+        <div class="tab-pane fade" id="active_content" role="tabpanel" aria-labelledby="active_tab"></div>
+
 
         <div class="tab-pane fade" id="waiting_content" role="tabpanel" aria-labelledby="waiting_tab"></div>
 

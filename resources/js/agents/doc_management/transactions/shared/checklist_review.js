@@ -73,7 +73,8 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             axios.get('/agents/doc_management/transactions/get_email_checklist_html', {
                 params: {
                     checklist_id: $('#transaction_checklist_id').val(),
-                    transaction_type: $('#transaction_type').val()
+                    transaction_type: $('#transaction_type').val(),
+                    url: document.URL
                 },
                 headers: {
                     'Accept-Version': 1,
@@ -83,6 +84,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             })
             .then(function (response) {
                 $('#email_agent_checklist_details').html(response.data);
+                $('.checklist-include').removeClass('hidden');
                 $('#send_email_agent_button').off('click').on('click', send_email_agent);
 
                 let options = {

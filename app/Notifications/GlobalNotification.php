@@ -61,10 +61,13 @@ class GlobalNotification extends Notification
                 $this -> show_link = 'no';
             }
 
-        } else if($notification['type'] == 'failed_job') {
+        } else if($notification['type'] == 'admin') {
 
-            $this -> link_url = '';
-            $this -> link_text = 'Failed Queued Job!! - '.$notification['failed_job'];
+            if($notification['transaction_type'] == 'failed_job') {
+                $this -> link_url = '';
+                $this -> link_text = 'Failed Queued Job!!';
+                $this -> show_link = 'no';
+            }
 
         }
 

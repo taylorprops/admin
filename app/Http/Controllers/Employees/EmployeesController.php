@@ -119,6 +119,8 @@ class EmployeesController extends Controller {
 
                 $user -> update([
                     'active' => $request -> active,
+                    'first_name' => $request -> first_name,
+                    'last_name' => $request -> last_name,
                     'name' => $request -> first_name.' '.$request -> last_name,
                     'email' => $request -> email,
                     'group' => $request -> emp_type,
@@ -129,6 +131,8 @@ class EmployeesController extends Controller {
                 $temp_pass = 'Akd'.time().'zlq70k30wj';
                 $user -> password = Hash::make($temp_pass);
                 $user -> active = 'yes';
+                $user -> first_name = $request -> first_name;
+                $user -> last_name = $request -> last_name;
                 $user -> name = $request -> first_name.' '.$request -> last_name;
                 $user -> email = $request -> email;
                 $user -> group = $request -> emp_type;

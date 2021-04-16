@@ -78,6 +78,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/commission_
         $(document).on('click', '#email_agent_breakdown_reminder', function() {
 
             $('#email_agent_modal').modal('show');
+            $('.checklist-include').addClass('hidden');
 
             setTimeout(function() {
                 let subject = $('#email_agent_subject').val().replace('Commission Breakdown Needed - ', '');

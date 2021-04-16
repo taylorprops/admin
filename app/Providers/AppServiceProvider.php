@@ -91,18 +91,15 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Queue::failing(function (JobFailed $event) {
-            // $event -> connectionName
-            // $event -> job
-            // $event -> exception
 
             $notification = config('notifications.admin_failed_job');
             $users = User::whereIn('email', $notification['emails']) -> get();
 
             $subject = 'Failed Job Notification';
-            $message = 'Failed Job: '.$event -> job;
+            $message = 'Failed Job: '.$event -> job -> uuid();
             $message_email = '
             <div style="font-size: 15px;">
-            Failed Job: '.$event -> job.'
+            Failed Job: '.$event -> job -> uuid().'
             <br><br>
             '.$event -> connectionName.'
             <br><br>
@@ -112,7 +109,7 @@ class AppServiceProvider extends ServiceProvider
             $notification['type'] = 'admin';
             $notification['transaction_type'] = 'failed_job';
             $notification['transaction_id'] = '';
-            $notification['failed_job'] = $event -> job;
+            $notification['failed_job'] = $event -> job -> uuid();
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;

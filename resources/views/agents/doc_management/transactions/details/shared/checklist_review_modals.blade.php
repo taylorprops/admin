@@ -99,6 +99,13 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-10">
+                            <div class="text-gray w-100 text-center mt-2 checklist-include hidden">A list of the checklist items and their status will be included in this email</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-12">
                             <div id="email_agent_checklist_details"></div>
                         </div>

@@ -48,7 +48,6 @@
         "laravel/ui": "^3.2",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "nunomaduro/phpinsights": "^1.14",
         "oscarafdev/migrations-generator": "^2.0",
         "phpunit/phpunit": "^9.3.3"
     },

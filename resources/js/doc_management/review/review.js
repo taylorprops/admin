@@ -132,8 +132,9 @@ if(document.URL.match(/document_review/)) {
                 }
 
                 let checklist_item_div = $(this).closest('.checklist-item-div');
-                $('.checklist-item-div').removeClass('active').find('.checklist-item-name').removeClass('active text-white');
-                checklist_item_div.addClass('active').find('.checklist-item-name').addClass('active text-white');
+
+                $('.checklist-item-div.active').removeClass('active').find('.checklist-item-name').removeClass('active');
+                checklist_item_div.addClass('active').find('.checklist-item-name').addClass('active');
                 get_documents($(this).data('checklist-item-id'), $(this).data('checklist-item-name'));
 
             });
@@ -213,7 +214,7 @@ if(document.URL.match(/document_review/)) {
         let item_id = item_div.prop('id');
         $('.checklist-items-container').scrollTop(0);
         $('.checklist-items-container').animate({
-            scrollTop: $('#'+item_id).offset().top - 210
+            scrollTop: $('#'+item_id).offset().top - 150
         },'fast');
     }
 
@@ -243,7 +244,7 @@ if(document.URL.match(/document_review/)) {
             // add documents to checklist item and open it
             if($('.checklist-item-docs-div').length > 0) {
                 $('.list-group-item.checklist-item-div.active').find('.documents-list').show()
-                    .append('<div class="font-weight-bold text-primary border-bottom mb-2 pb-3">Documents</div>')
+                    .append('<div class="font-weight-bold text-primary border-bottom mb-2 pb-1">Documents</div>')
                     .append($('.checklist-item-docs-div'))
                     .find('.document-link').on('click', function() {
                         let id = $(this).data('document-id');

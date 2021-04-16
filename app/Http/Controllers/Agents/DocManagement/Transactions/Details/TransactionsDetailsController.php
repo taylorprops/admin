@@ -3021,8 +3021,12 @@ class TransactionsDetailsController extends Controller
                 $earnest = Earnest::where('Contract_ID', $checklist_item -> Contract_ID) -> first();
                 $earnest_id = $earnest -> id;
                 if ($earnest) {
-                    if ($earnest -> release_to_street == '') {
-                        return response() -> json(['status' => 'no_address', 'earnest_id' => $earnest_id]);
+                    if($earnest -> amount_total > 0) {
+                        if ($earnest -> release_to_street == '') {
+                            return response() -> json(['status' => 'no_address', 'earnest_id' => $earnest_id]);
+                        }
+                    } else {
+                        return response() -> json(['status' => 'no_earnest']);
                     }
                 }
             }
@@ -3266,6 +3270,7 @@ class TransactionsDetailsController extends Controller
 
 		$checklist_id = $request -> checklist_id;
         $transaction_type = $request -> transaction_type;
+        $url = $request -> url;
 
         $checklist_items_model = new ChecklistsItems();
         $transaction_checklist_items_model = new TransactionChecklistItems();
@@ -3283,7 +3288,7 @@ class TransactionsDetailsController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_email_checklist_html', compact('transaction_checklist_items', 'checklist_groups', 'checklist_items_model', 'transaction_checklist_items_model', 'transaction_checklist_item_notes'));
+        return view('/agents/doc_management/transactions/details/data/get_email_checklist_html', compact('url', 'transaction_checklist_items', 'checklist_groups', 'checklist_items_model', 'transaction_checklist_items_model', 'transaction_checklist_item_notes'));
     }
 
     public function mark_note_read(Request $request) {

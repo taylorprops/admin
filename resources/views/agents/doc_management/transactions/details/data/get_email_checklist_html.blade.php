@@ -1,5 +1,6 @@
 <hr>
-<h3 class="text-orange" style="margin-top: 25px; margin-bottom: 0px;">Checklist Details</h3>
+<a style="margin-top: 15px; color: #4c9bdb; text-decoration: none; font-size: 1rem;" href="{{ $url }}" target="_blank">View Transaction</a>
+<h3 class="text-orange" style="margin-top: 15px; margin-bottom: 0px;">Checklist Details</h3>
 <table width="600">
 
     @foreach($checklist_groups as $checklist_group)

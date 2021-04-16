@@ -15,20 +15,28 @@
         <hr>
 
         <div class="d-flex justify-content-around align-items-center transaction-details p-2 pb-3">
+
+            <div class="text-orange font-11">
+                @if($transaction_type == 'listing')
+                Listing
+                @elseif($transaction_type =='contract')
+                Contract
+                @elseif($transaction_type =='contract')
+                Referral
+                @endif
+            </div>
+
             @if($transaction_type != 'referral')
-                <div>
-                    @if($transaction_type == 'listing')
-                    <i class="fad fa-sign fa-3x text-orange"></i>
-                    @elseif($transaction_type =='contract')
-                    <i class="fad fa-file-signature fa-3x text-orange"></i>
-                    @endif
-                </div>
-                <span class="badge bg-primary"><span class="transaction-sub-type text-white">{{ $sale_rent }}</span></span>
-                <span class="badge bg-primary"><span class="transaction-sub-type text-white">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span></span>
+                <span class="font-12 text-primary mx-1 mx-sm-2">|</span>
+                <span class="text-gray font-9">{{ $sale_rent }}</span>
+                <span class="font-12 text-primary mx-1 mx-sm-2">|</span>
+                <span class="text-gray font-9">{{ $resource_items -> GetResourceName($property -> PropertyType) }}</span>
                 @if($sale_rent != 'Rental' && $property -> PropertySubType > '0')
-                    <span class="badge bg-primary"><span class="transaction-sub-type text-white">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span></span>
+                    <span class="font-12 text-primary mx-1 mx-sm-2">|</span>
+                    <span class="text-gray font-9">{{ $resource_items -> GetResourceName($property -> PropertySubType) }}</span>
                 @endif
             @endif
+
         </div>
 
         <div class="details-content p-2">
@@ -147,9 +155,11 @@
                                     <td class="font-weight-bold pl-2">${{ number_format($property -> ContractPrice) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-gray text-right align-middle">Earnest Held By</td>
-                                    <td>
-                                        <select class="custom-form-element form-select" id="EarnestHeldBy" data-label="">
+                                    <td colspan="2" class="divider"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <select class="custom-form-element form-select" id="EarnestHeldBy" data-label="Earnest Held By">
                                             <option value="us" @if($property -> EarnestHeldBy == 'us') selected @endif>Taylor/Anne Arundel Properties</option>
                                             <option value="other_company" @if($property -> EarnestHeldBy == 'other_company') selected @endif>Other Real Estate Company</option>
                                             <option value="title" @if($property -> EarnestHeldBy == 'title') selected @endif>Title Company/Attorney</option>
@@ -159,9 +169,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-gray text-right align-middle">Using Heritage Title</td>
-                                    <td class="font-weight-bold pl-2">
-                                        <select class="custom-form-element form-select" id="UsingHeritage" data-label="">
+                                    <td colspan="2">
+                                        <select class="custom-form-element form-select" id="UsingHeritage" data-label="Using Heritage Title">
                                             <option value=""></option>
                                             <option value="yes" @if($property -> UsingHeritage == 'yes') selected @endif>Yes</option>
                                             <option value="no" @if($property -> UsingHeritage == 'no') selected @endif>No</option>

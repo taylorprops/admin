@@ -407,49 +407,51 @@
 
     }
 
+    @media (min-width: 768px) and (max-width: 1200px) {
+        .form-options-container {
+            margin-left: 100px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .fill-form-option {
+            padding: 3px 10px !important;
+            width: auto !important;
+
+        }
+        .form-options-div {
+            width: 100% !important;
+            display: inline-block;
+        }
+    }
+    @media (max-width: 992px) {
+
+        .data-div {
+            font-size: 11px !important;
+            letter-spacing: -1px;
+        }
+
+    }
+
+    @media (max-width: 768px) {
+
+        .data-div {
+            font-size: 9px !important;
+        }
+
+    }
+
+    @media (max-width: 650px) {
+
+        .data-div {
+            font-size: 8px !important;
+        }
+
+    }
+
 
 
 }
 
-@media (min-width: 768px) and (max-width: 1200px) {
-    .form-options-container {
-        margin-left: 100px;
-    }
-}
 
-@media (max-width: 1200px) {
-    .fill-form-option {
-        padding: 3px 10px !important;
-        width: auto !important;
-
-    }
-    .form-options-div {
-        width: 100% !important;
-        display: inline-block;
-    }
-}
-@media (max-width: 992px) {
-
-    .data-div {
-        font-size: 11px !important;
-        letter-spacing: -1px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .data-div {
-        font-size: 9px !important;
-    }
-
-}
-
-@media (max-width: 650px) {
-
-    .data-div {
-        font-size: 8px !important;
-    }
-
-}
 

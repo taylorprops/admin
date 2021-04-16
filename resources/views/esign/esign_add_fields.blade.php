@@ -6,13 +6,13 @@
 @if($error && $error == 'sent')
 <script>window.location = "/esign";</script>
 @endif
-<div class="container-full mx-auto page-esign-add-fields">
+<div class="container-full ml-0 page-esign-add-fields">
 
-    <div class="row border-bottom no-gutters">
+    <div class="row border-bottom">
 
         <div class="col-12">
 
-            <div class="form-options-container w-100 d-flex justify-content-around align-items-center">
+            <div class="form-options-container w-100 d-flex justify-content-start align-items-center pr-5">
 
                 <div class="d-flex justify-content-start align-items-center">
 
@@ -43,30 +43,38 @@
 
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center w-100">
 
-                    @if($is_template == 'yes')
+                    <div>
 
-                        <div class="mr-3">
-                            <button class="btn btn-primary edit-signers-button" href="javascript:void(0)"><i class="fad fa-users mr-2"></i> Edit Signers</button>
-                        </div>
+                        @if($is_template == 'yes')
+                            <div class="mr-3">
+                                <button class="btn btn-primary edit-signers-button" href="javascript:void(0)"><i class="fad fa-users mr-2"></i> Edit Signers</button>
+                            </div>
+                            <div class="mr-3">
+                                <button class="btn btn-success fill-form-option font-11" id="save_as_template_button">Save Template <i class="fad fa-save ml-2"></i></button>
+                            </div>
+                        @else
+                            <div class="mr-3">
+                                @if($is_draft == 'yes')
+                                    <button class="btn btn-primary fill-form-option" id="save_as_draft_button">Save Changes To Draft <i class="fad fa-save ml-2"></i></button>
+                                @else
+                                    <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
+                                @endif
+                            </div>
+                        @endif
 
-                        <div class="mr-3">
-                            <button class="btn btn-success fill-form-option font-11" id="save_as_template_button">Save Template <i class="fad fa-save ml-2"></i></button>
-                        </div>
-                    @else
-                        <div class="mr-3">
-                            @if($is_draft == 'yes')
-                                <button class="btn btn-primary fill-form-option" id="save_as_draft_button">Save Changes To Draft <i class="fad fa-save ml-2"></i></button>
-                            @else
-                                <button class="btn btn-primary btn-sm fill-form-option" id="save_as_draft_button">Save As Draft <i class="fad fa-file-edit ml-2"></i></button>
-                            @endif
-                        </div>
+                    </div>
 
-                        <div class="mr-3">
+                    <div>
+
+                        @if($is_template == 'no')
+                        <div class="mr-5">
                             <button class="btn btn-success fill-form-option font-11" id="send_for_signatures_button">Send for Signatures <i class="fad fa-share-all ml-2"></i></button>
                         </div>
-                    @endif
+                        @endif
+
+                    </div>
 
                 </div>
 
@@ -76,11 +84,11 @@
 
     </div>
 
-    <div class="container-1350 mx-auto animate__animated animate__fadeIn">
+    <div class="container w-100 ml-0 pl-0 animate__animated animate__fadeIn">
 
         <div class="row">
 
-            <div class="col-12 col-xl-10 pr-xl-0 mx-auto">
+            <div class="col-12 col-xl-10 px-0">
 
                 <div class="file-viewer-container border-right mx-auto">
 
@@ -102,8 +110,8 @@
                                 $fields = $document -> fields;
                                 @endphp
 
-                                <div class="text-primary bg-blue-light mt-3 p-2 px-4" id="page_{{ $page_id }}">
-                                    <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-primary bg-blue-light pl-4 p-2" id="page_{{ $page_id }}">
+                                    <div class="d-flex justify-content-around align-items-center">
                                         <div>
                                             {{ $document -> file_name }}
                                         </div>
@@ -113,7 +121,7 @@
                                     </div>
 
                                 </div>
-                                <div class="file-view-page-container border border mx-auto {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}" style="height: {{ $document -> height }}pt; width: {{ $document -> width }}pt">
+                                <div class="file-view-page-container border border mx-auto {{ $active }}" data-page="{{ $c }}" data-id="{{ $page_id }}" data-document-id="{{ $document -> id }}" style="height: {{ $document -> height * 1.2 }}pt; width: {{ $document -> width * 1.2 }}pt" data-height="{{ $document -> height }}" data-width="{{ $document -> width }}">
                                     <div class="fields-container w-100 h-100">
 
                                         <img class="file-image-bg w-100 h-100" src="{{ $image -> image_location }}?r={{ date('YmdHis') }}">
@@ -146,7 +154,7 @@
                                                     $initials = get_initials($signer_name);
                                                     $field_div_html = '<span class="field-div-name">'.$initials.'</span>';
                                                 } else if($field_type == 'date') {
-                                                    $field_div_html = '<div class="field-div-details"><i class="fad fa-calendar mr-2"></i>  <span class="field-div-name">'.$signer_name.'</span></div>';
+                                                    $field_div_html = '<div class="field-div-details"><i class="fad fa-calendar ml-1 mr-2"></i>  <span class="field-div-name">'.$signer_name.'</span></div>';
                                                 } else if($field_type == 'name') {
                                                     $field_div_html = '<div class="field-div-details"><span class="field-div-name">'.$signer_name.'</span></div>';
                                                 } else if($field_type == 'text') {

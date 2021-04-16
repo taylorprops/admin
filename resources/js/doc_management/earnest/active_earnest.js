@@ -106,7 +106,7 @@ if(document.URL.match(/active_earnest/)) {
 
     function get_earnest(account_id) {
 
-        $.each(['active', 'missing', 'waiting'], function(index, tab) {
+        $.each(['pending', 'active', 'missing', 'waiting'], function(index, tab) {
 
             axios.get('/doc_management/get_earnest_deposits', {
                 params: {

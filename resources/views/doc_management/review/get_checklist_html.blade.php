@@ -6,9 +6,9 @@
 
             @foreach($checklist_groups as $checklist_group)
 
-                <div class="list-group-item bg-blue-light border border-primary border-left-0 border-right-0 d-flex justify-content-between align-items-center @if($loop -> first) mt-3 @else mt-5 @endif">
+                <div class="list-group-item py-1 bg-blue-light border border-primary border-left-0 border-right-0 d-flex justify-content-between align-items-center @if($loop -> first) mt-3 @else mt-2 @endif">
                     <div>
-                        <div class="h5 text-primary">{{ $checklist_group -> resource_name }}</div>
+                        <div class="font-12 text-primary">{{ $checklist_group -> resource_name }}</div>
                     </div>
                     <div>
                         <button type="button" class="btn btn-primary btn-sm add-checklist-item-button" data-toggle="tooltip" data-group-id="{{ $checklist_group -> resource_id }}" title="Add Checklist Item"><i class="fal fa-plus"></i></button>
@@ -62,15 +62,15 @@
 
                     @endphp
 
-                    <div class="list-group-item p-0 mt-2 mx-2 border-top shadow rounded checklist-item-div {{ $notes_unread }} @if($status == 'Pending') pending @elseif($status == 'Required') required @endif" id="checklist_item_{{ $checklist_item_id }}">
+                    <div class="list-group-item p-1 mt-2 mx-2 border-top rounded checklist-item-div {{ $notes_unread }} @if($status == 'Pending') pending @elseif($status == 'Required') required @endif" id="checklist_item_{{ $checklist_item_id }}">
 
-                        <div class="d-flex justify-content-between align-content-around mb-1 p-1">
+                        <div class="bg-white d-flex justify-content-between rounded">
 
-                            <div class="d-flex justify-content-start align-items-center w-100">
+                            <div class="w-75 d-flex justify-content-start align-items-center">
 
                                 <div class="dropdown">
 
-                                    <button class="btn btn-primary dropdown-toggle checklist-item-dropdown py-0 px-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fal fa-bars"></i></button>
+                                    <button class="btn btn-primary dropdown-toggle checklist-item-dropdown py-0 px-2 mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fal fa-bars"></i></button>
 
                                     <div class="dropdown-menu dropdown-primary">
 
@@ -84,33 +84,42 @@
 
                                 </div>
 
-                                <div class="mx-2 w-100 h-100 d-block">
-                                    <a href="javascript:void(0)" class="d-flex align-items-center checklist-item-name text-gray w-100 h-100 {{ $unused_status_class }}" data-checklist-item-id="{{ $checklist_item_id }}" data-checklist-item-name="{{ $checklist_item_name }}">{{ $checklist_item_name }}</a>
+                                <div class="w-100 h-100 d-block">
+                                    <a href="javascript:void(0)" class="checklist-item-name text-primary p-2 w-100 h-100 d-block {{ $unused_status_class }}" data-checklist-item-id="{{ $checklist_item_id }}" data-checklist-item-name="{{ $checklist_item_name }}" title="{{ $checklist_item_name }}">{{ shorten_text($checklist_item_name, 45) }}</a>
                                 </div>
+
                             </div>
 
-                            <div>
+                            <div class="w-25 d-flex justify-content-end align-items-center">
 
-                                <div class="status-badge badge {{ $admin_classes }} {{ $unused_status_class }} p-1 d-block">
-                                    {!! $status !!}
-                                </div>
-
-                                <div class="w-100 text-center mt-2" data-toggle="tooltip" data-html="true" title="{!! $notes_tooltip !!}">
+                                <div>
                                     <a class="notes-toggle" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
-                                        <span class="fa-stack fa-2x mt-1">
-                                            <i class="fad fa-comment fa-stack-1x @if($notes_unread_count > 0) text-orange @else @if($notes) text-primary @else text-blue-light @endif @endif"></i>
-                                            @if($notes_unread_count > 0) <span class="fa-stack-1x notes-count text-white">{{ $notes_unread_count }}</span> @endif
+                                        <span class="fa-stack fa-2x"  title=" @if($notes_unread_count > 0) {{ $notes_unread_count }} Unread Messages @else {{ $notes ? count($notes) : '0' }} Messages @endif">
+                                            @if($notes)
+                                                <i class="fa fa-comment fa-stack-1x @if($notes_unread_count > 0) text-orange @else text-primary @endif"></i>
+                                                @if($notes_unread_count > 0)
+                                                    <span class="fa-stack-1x notes-count text-white">{{ $notes_unread_count }}</span>
+                                                @endif
+                                            @else
+                                                <i class="fal fa-comment fa-stack-1x text-primary"></i>
+                                            @endif
                                         </span>
                                     </a>
+                                </div>
+
+                                <div class="d-flex justify-content-center align-items-center status-badge badge h-100 mx-0 {{ $admin_classes }} {{ $unused_status_class }} p-1">
+                                    {!! $status !!}
                                 </div>
 
                             </div>
 
                         </div>
 
-                        <div id="notes_{{ $checklist_item_id }}" class="collapse checklist-item-notes-div bg-white m-2 rounded" data-parent="#checklist_list_group">
+                        <div class="documents-list bg-white p-2 mt-2 rounded"></div>
+
+                        <div id="notes_{{ $checklist_item_id }}" class="collapse checklist-item-notes-div bg-white mt-2 rounded" data-parent="#checklist_list_group">
                             <div class="mt-1 p-2 bg-white text-gray rounded-top">
-                                <div class="d-flex justify-content-between align-items-center border-bottom mb-3 pb-3">
+                                <div class="d-flex justify-content-between align-items-center border-bottom mb-2 pb-1">
                                     <div class="font-weight-bold text-primary">Comments</div>
                                     <a data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
                                         <i class="fad fa-times-circle text-danger fa-lg"></i>
@@ -118,7 +127,7 @@
                                 </div>
 
                                 <div class="notes-div my-2" data-checklist-item-id="{{ $checklist_item_id }}">
-                                    <div class="text-gray">No Comments</div>
+                                    <div class="text-gray small mt-2">No Comments</div>
                                 </div>
 
                             </div>
@@ -133,9 +142,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="documents-list bg-white p-2 m-2 rounded"></div>
 
                     </div>
 

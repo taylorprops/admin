@@ -194,11 +194,11 @@ div[class*='container-']:not(.p-0) {
     }
 }
 // width in percent
-// 5 - 100
+// 2 - 100 by 2
 // .w-20
-@for $i from 1 through 20 {
-    .w-#{$i * 5} {
-        width: $i * 5%;
+@for $i from 1 through 50 {
+    .w-#{$i * 2} {
+        width: $i * 2%;
     }
 }
 // line height in pixels

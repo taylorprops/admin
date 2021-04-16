@@ -53,10 +53,12 @@ class EarnestController extends Controller
         ];
 
         if ($tab == 'active' || $tab == 'missing') {
+
             $contracts = Contracts::select($contracts_select)
                 -> where('EarnestHeldBy', 'us')
                 -> whereIn('Status', $active_status_ids)
                 -> with(['status:resource_id,resource_name']);
+
         } elseif ($tab == 'waiting') {
 
             // waiting for release
@@ -66,20 +68,33 @@ class EarnestController extends Controller
 
             $contracts = Contracts::select($contracts_select)
                 -> whereIn('Status', $waiting_status_ids);
+
+        } else if($tab == 'pending') {
+
+            $released_status_id = ResourceItems::GetResourceID('Released', 'contract_status');
+            $contracts = Contracts::select($contracts_select)
+                -> where('EarnestHeldBy', 'us')
+                -> where('Status', $released_status_id)
+                -> with(['status:resource_id,resource_name']);
+
         }
+
+
 
         $contracts = $contracts -> with('agent:id,full_name','earnest.earnest_account', 'earnest.notes')
             -> whereHas('earnest', function (Builder $query) use ($account_id, $tab) {
                 if ($account_id != 'all') {
                     $query -> where('earnest_account_id', $account_id);
                 }
-                if ($tab == 'active') {
+                if ($tab == 'active' || $tab == 'pending') {
                     $query -> where('amount_total', '>', '0');
                 } elseif ($tab == 'missing') {
                     $query -> where('amount_received', '0.00');
                 }
-            })
-            -> get();
+            });
+
+
+            $contracts = $contracts -> get();
 
         return view('/doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));
     }

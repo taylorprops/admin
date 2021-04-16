@@ -280,6 +280,16 @@ class DashboardController extends Controller
         })
         -> count();
 
+
+        $released_status_id = ResourceItems::GetResourceID('Released', 'contract_status');
+        $deposits_to_release_count = Contracts::select('ListingKey')
+            -> where('EarnestHeldBy', 'us')
+            -> where('Status', $released_status_id)
+            -> with(['status:resource_id,resource_name'])
+            -> whereHas('earnest', function (Builder $query) {
+                $query -> where('amount_total', '>', '0');
+            }) -> count();
+
         $listing_docs_to_review = TransactionChecklistItemsDocs::select('Listing_ID')
             -> where('doc_status', 'pending')
             -> where('Listing_ID', '>', '0')
@@ -312,7 +322,7 @@ class DashboardController extends Controller
 
         $docs_to_review_count = $listing_docs_to_review_count + $contract_docs_to_review_count + $referral_docs_to_review_count;
 
-        return view('/dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'docs_to_review_count', 'releases_to_review_count'));
+        return view('/dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'deposits_to_release_count', 'docs_to_review_count', 'releases_to_review_count'));
 
     }
 

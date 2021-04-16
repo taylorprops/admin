@@ -49,8 +49,8 @@
                         @endforeach
 
                         {{-- this will be removed and appended to list-group-item.active --}}
-                        <div class="checklist-item-docs-div bg-white p-1 small">
-                            <a href="javascript:void(0)" class="document-link d-block text-primary p-1 rounded" data-toggle="tooltip" @if(strlen($file_name) > 70) title="{{ $file_name }}" @endif data-document-id="{{ $document_id }}">{{ Str::limit($file_name, 70) }}</a>
+                        <div class="checklist-item-docs-div bg-white p-1 font-8">
+                            <a href="javascript:void(0)" class="document-link d-block text-gray p-1 rounded" data-toggle="tooltip" @if(strlen($file_name) > 70) title="{{ $file_name }}" @endif data-document-id="{{ $document_id }}">{{ Str::limit($file_name, 70) }}</a>
                         </div>
 
                     @endforeach
