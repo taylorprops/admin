@@ -31,9 +31,9 @@ class TransactionsEditFilesController extends Controller
         $file_type = $request -> file_type;
         $page_count = $request['page_count'];
 
-        //ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
+        ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
 
-        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        /* // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         // add to in_process table
         $in_process = new InProcess();
@@ -198,7 +198,7 @@ class TransactionsEditFilesController extends Controller
         // remove from in_process
         $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
 
-        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx */
 
         return response() -> json(['status' => 'success']);
     }

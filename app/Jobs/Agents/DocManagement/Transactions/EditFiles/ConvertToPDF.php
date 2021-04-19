@@ -179,7 +179,7 @@ class ConvertToPDF implements ShouldQueue
 
             if ($html_top != '') {
                 // remove background and resize top layer
-                exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -transparent white -compress Zip '.$layer_top);
+                exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -strip -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
                 exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
                 // if not bottom move combined_top to combined
