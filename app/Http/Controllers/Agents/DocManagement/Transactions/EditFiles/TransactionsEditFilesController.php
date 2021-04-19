@@ -31,21 +31,14 @@ class TransactionsEditFilesController extends Controller
         $file_type = $request -> file_type;
         $page_count = $request['page_count'];
 
-        ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
+        //ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
 
-        /*
-        $Listing_ID = $request -> Listing_ID ?? 0;
-        $Contract_ID = $request -> Contract_ID ?? 0;
-        $Referral_ID = $request -> Referral_ID ?? 0;
-        $transaction_type = $request -> transaction_type;
-        $file_id = $request -> file_id;
-        $document_id = $request -> document_id;
-        $file_type = $request -> file_type;
-
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         // add to in_process table
         $in_process = new InProcess();
         $in_process -> document_id = $document_id;
+        //$in_process -> uuid = $uuid;
         $in_process -> save();
 
         $path = [
@@ -71,11 +64,11 @@ class TransactionsEditFilesController extends Controller
         $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/layers');
         $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/combined');
         //$clean_dir -> cleanDirectory('storage/'.$upload_dir.'/converted');
-        exec('cp -p '.$file[0].' '.$full_path_dir.'/converted/backup.pdf');
+        exec('cp '.$file[0].' '.$full_path_dir.'/converted/backup.pdf');
         //exec('rm '.$file[0]);
 
         // pdf options - more added below depending on page size
-        $options = array(
+        $options = [
             //'binary' => '/usr/bin/xvfb-run -- /usr/bin/wkhtmltopdf',
             'no-outline',
             'margin-top' => 0,
@@ -85,12 +78,11 @@ class TransactionsEditFilesController extends Controller
             'encoding' => 'UTF-8',
             'dpi' => 96,
             'disable-smart-shrinking',
-            'tmpDir' => '/var/www/tmp'
-        );
+            'tmpDir' => '/var/www/tmp',
+        ];
 
         // loop through all pages
         for ($c = 1; $c <= $request['page_count']; $c++) {
-
             $page_number = $c;
 
             if (strlen($c) == 1) {
@@ -110,77 +102,70 @@ class TransactionsEditFilesController extends Controller
             $page_height = get_width_height($layer_pdf)['height'];
 
             // if not standard 612 by 792 get width and height and convert to mm
-            if($page_width == 612 && $page_height == 792) {
-
+            if ($page_width == 612 && $page_height == 792) {
                 $options['page-size'] = 'Letter';
-
-            } else if($page_width == 595 && $page_height == 842) {
-
+            } elseif ($page_width == 595 && $page_height == 842) {
                 $options['page-size'] = 'a4';
-
             } else {
-
                 $page_width = $page_width * 0.2745833333;
                 $page_height = $page_height * 0.2745833333;
 
                 $options['page-width'] = $page_width.'mm';
                 $options['page-height'] = $page_height.'mm';
-
             }
 
             $html = "
             <style>
-            @import 'https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap';
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+            * {
+                font-family: 'Roboto Condensed', sans-serif;
+            }
             </style>
             ";
 
             $html_top = '';
             $html_bottom = '';
 
-            if($request['page_html_top_'.$c]) {
-
+            if (isset($request['page_html_top_'.$c])) {
                 $html_top = $html.$request['page_html_top_'.$c];
 
-                $pdf = new Pdf($options);
+                $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
                 $pdf -> addPage($html_top);
 
-                if (!$pdf -> saveAs($layer_top_temp)) {
+                if (! $pdf -> saveAs($layer_top_temp)) {
                     $error = $pdf -> getError();
                     dd($error);
                 }
-
             }
 
-            if($request['page_html_bottom_'.$c]) {
-
+            if (isset($request['page_html_bottom_'.$c])) {
                 $html_bottom = $html.$request['page_html_bottom_'.$c];
 
-                $pdf = new Pdf($options);
+                $pdf = new \mikehaertl\wkhtmlto\Pdf($options);
                 $pdf -> addPage($html_bottom);
 
-                if (!$pdf -> saveAs($layer_bottom)) {
+                if (! $pdf -> saveAs($layer_bottom)) {
                     $error = $pdf -> getError();
                     dd($error);
                 }
-
             }
 
-            if($html_top != '') {
+            if ($html_top != '') {
                 // remove background and resize top layer
                 exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
                 exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
                 // if not bottom move combined_top to combined
-                if($html_bottom == '') {
+                if ($html_bottom == '') {
                     exec('mv '.$combined_top.' '.$combined);
                 }
                 // remove top layer file
                 exec('rm '.$layer_top);
             }
 
-            if($html_bottom != '') {
+            if ($html_bottom != '') {
                 // if html_top add it to pdf-top layer
-                if($html_top != '') {
+                if ($html_top != '') {
                     exec('pdftk '.$combined_top.' background '.$layer_bottom.' output '.$combined.' compress');
                     exec('rm '.$combined_top);
                     exec('rm '.$layer_bottom);
@@ -192,10 +177,9 @@ class TransactionsEditFilesController extends Controller
             }
 
             // if no fields to add to page
-            if($html_top == '' && $html_bottom == '') {
-                exec('cp -p '.$layer_pdf.' '.$combined);
+            if ($html_top == '' && $html_bottom == '') {
+                exec('cp '.$layer_pdf.' '.$combined);
             }
-
         }
 
         // merge all from combined and add final to converted - named $filename
@@ -213,7 +197,8 @@ class TransactionsEditFilesController extends Controller
 
         // remove from in_process
         $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
-        */
+
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         return response() -> json(['status' => 'success']);
     }
