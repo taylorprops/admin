@@ -83,18 +83,17 @@ Route::get('/dashboard/get_upcoming_closings', [DashboardController::class, 'get
 Route::get('/dashboard/get_admin_todo', [DashboardController::class, 'get_admin_todo']);
 
 
-
-// Route::get('/test', 'Testcontroller@test');
-/* Route::get('/testing', function() {
-    return view('/tests/test');
-});
-Route::get('/form_elements', function() {
-    return view('/tests/form_elements');
-}); */
-
 /********** Email Routes ********/
 // Send Emails
 Route::post('/send_email', [EmailController::class, 'send_email']);
+
+
+/************ Users************/
+Route::get('/users', [UserController::class, 'get_users']);
+Route::get('/users/user_profile', [UserController::class, 'user_profile']);
+Route::post('/users/save_profile', [UserController::class, 'save_profile']);
+Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
+Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {
@@ -313,12 +312,7 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/employees/delete_doc', [EmployeesController::class, 'delete_doc']);
 
 
-    /************ Users************/
-    Route::get('/users', [UserController::class, 'get_users']);
-    Route::get('/users/user_profile', [UserController::class, 'user_profile']);
-    Route::post('/users/save_profile', [UserController::class, 'save_profile']);
-    Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
-    Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {

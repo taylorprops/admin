@@ -22,7 +22,7 @@ class Admin
             if ($group == 'admin') {
                 return $next($request);
             }
-            $redirect_url = '/test';
+            $redirect_url = '/dashboard';
 
             return redirect($redirect_url) -> with('error', 'You do not have access');
         }
