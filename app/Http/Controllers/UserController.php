@@ -50,16 +50,16 @@ class UserController extends Controller
 
         $user = User::find(auth() -> user() -> id);
 
-        if(auth() -> user() -> group == 'admin') {
+        if($user -> group == 'admin') {
             $employee = InHouse::where('email', $user -> email) -> first();
-        } else if(auth() -> user() -> group == 'transaction_coordinator') {
+        } else if($user -> group == 'transaction_coordinator') {
             $employee = TransactionCoordinators::where('email', $user -> email) -> first();
-        } else if(stristr(auth() -> user() -> group, 'agent')) {
+        } else if(stristr($user -> group, 'agent')) {
             $employee = Agents::where('email', $user -> email) -> first();
-        } else if(auth() -> user() -> group == 'loan_officer') {
+        } else if($user -> group == 'loan_officer') {
             $employee = LoanOfficers::where('email', $user -> email) -> first();
         }
-
+dd($employee);
         $filename = $employee -> first_name.'-'.$employee -> last_name.'.'.$file -> extension();
         $filename = time().'_'.$filename;
 
