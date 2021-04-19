@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Employees\Agents;
 use App\Models\Employees\InHouse;
 use Intervention\Image\Facades\Image;
+use App\Models\Employees\LoanOfficers;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Employees\TransactionCoordinators;
 
@@ -53,6 +54,10 @@ class UserController extends Controller
             $employee = InHouse::where('email', $user -> email) -> first();
         } else if(auth() -> user() -> group == 'transaction_coordinator') {
             $employee = TransactionCoordinators::where('email', $user -> email) -> first();
+        } else if(stristr(auth() -> user() -> group, 'agent')) {
+            $employee = Agents::where('email', $user -> email) -> first();
+        } else if(auth() -> user() -> group == 'loan_officer') {
+            $employee = LoanOfficers::where('email', $user -> email) -> first();
         }
 
         $filename = $employee -> first_name.'-'.$employee -> last_name.'.'.$file -> extension();
