@@ -98,7 +98,7 @@ if (document.URL.match(/user_profile/)) {
         cropper.getCroppedCanvas().toBlob((blob) => {
 
             let formData = new FormData();
-            console.log(blob);
+
             // Pass the image file name as the third parameter if necessary.
             formData.append('cropped_image', blob/*, 'example.png' */);
 
