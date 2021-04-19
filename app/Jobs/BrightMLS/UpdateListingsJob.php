@@ -35,24 +35,23 @@ class UpdateListingsJob implements ShouldQueue
     public function handle()
     {
 
-        $rets_config = new \PHRETS\Configuration;
-        $rets_config -> setLoginUrl(config('rets.rets.url'))
-            -> setUsername(config('rets.rets.username'))
-            -> setPassword(config('rets.rets.password'))
-            -> setRetsVersion('RETS/1.8')
-            -> setUserAgent('Bright RETS Application/1.0')
-            -> setHttpAuthenticationMethod('digest')
-            -> setOption('disable_follow_location', false);
-            //-> setOption('use_post_method', true);
-
-        $rets = new \PHRETS\Session($rets_config);
-        $connect = $rets -> Login();
-
-        $resource = 'Property';
-        $class = 'ALL';
-
-
         try {
+
+            $rets_config = new \PHRETS\Configuration;
+            $rets_config -> setLoginUrl(config('rets.rets.url'))
+                -> setUsername(config('rets.rets.username'))
+                -> setPassword(config('rets.rets.password'))
+                -> setRetsVersion('RETS/1.8')
+                -> setUserAgent('Bright RETS Application/1.0')
+                -> setHttpAuthenticationMethod('digest')
+                -> setOption('disable_follow_location', false);
+                //-> setOption('use_post_method', true);
+
+            $rets = new \PHRETS\Session($rets_config);
+            $connect = $rets -> Login();
+
+            $resource = 'Property';
+            $class = 'ALL';
 
             $hours = 2;
             if(config('app.env') == 'development') {

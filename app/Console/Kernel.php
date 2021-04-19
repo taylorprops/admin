@@ -46,8 +46,8 @@ class Kernel extends ConsoleKernel
 
         // update agents
         if(config('app.env') != 'development') {
-            $schedule -> command('old_db:update_agents') -> everyMinute() -> withoutOverlapping(1);
-            $schedule -> command('old_db:add_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
+            //$schedule -> command('old_db:update_agents') -> everyMinute() -> withoutOverlapping(1);
+            //$schedule -> command('old_db:add_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
         }
 
         // clear temp files

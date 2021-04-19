@@ -23,7 +23,7 @@
             }
             @endphp
 
-            <div class="alert bg-blue-light p-1" role="alert" data-id="{{ $notification -> id }}">
+            <div class="alert bg-blue-light p-1 border" role="alert" data-id="{{ $notification -> id }}">
 
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="font-weight-bold font-italic">
@@ -35,8 +35,8 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="d-flex justify-content-between align-items-end">
+                <hr class="my-2">
+                <div class="d-flex justify-content-between align-items-end bg-white px-1 py-2 rounded">
                     <div>{!! $notification -> data['message'] !!}</div>
                     <div> <a href="{{ $notification -> data['link_url'] }}" target="_blank">{{ $notification -> data['link_text'] }}</a></div>
                 </div>

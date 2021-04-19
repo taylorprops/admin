@@ -38,7 +38,6 @@ require('./nav/search.js');
 require('./dashboard/dashboard.js');
 require('./calendar/calendar.js');
 
-require('./vendors/draganddrop.js');
 // Document Management
 
 require('./doc_management/resources/resources.js');

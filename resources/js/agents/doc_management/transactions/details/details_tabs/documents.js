@@ -266,12 +266,15 @@ if (document.URL.match(/transaction_details/)) {
         if(document_ids.length > 0) {
             document_ids.forEach(function (document_id) {
                 let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
-                doc_div.addClass('in-process').find('.check-document').prop('disabled', true);
-                doc_div.find('.in-process-icon').show();
-                doc_div.find('.document-title a').css({ opacity: '0.4' });
-                doc_div.find('button').removeClass('hidden');
-                //doc_div.find('button').prop('disabled', true);
+                if(!doc_div.hasClass('in-process')) {
+                    doc_div.addClass('in-process').find('.check-document').prop('disabled', true);
+                    doc_div.find('.in-process-icon').show();
+                    doc_div.find('.document-title a').css({ opacity: '0.4' });
+                    doc_div.find('button').removeClass('hidden');
+                }
                 $('#in_process_div').show();
+
+                //doc_div.find('button').prop('disabled', true);
             });
         }
     }
@@ -281,10 +284,13 @@ if (document.URL.match(/transaction_details/)) {
             if(document_ids.length > 0) {
                 document_ids.forEach(function (document_id) {
                     let doc_div = $('.document-div[data-document-id="' + document_id + '"]');
-                    doc_div.removeClass('in-process').find('.check-document').prop('disabled', false);
-                    doc_div.find('.in-process-icon').hide();
-                    doc_div.find('.document-title a').css({ opacity: '1' });
-                    doc_div.find('button').removeClass('hidden');
+                    if(doc_div.hasClass('in-process')) {
+                        doc_div.removeClass('in-process').find('.check-document').prop('disabled', false);
+                        doc_div.find('.in-process-icon').hide();
+                        doc_div.find('.document-title a').css({ opacity: '1' });
+                        doc_div.find('button').removeClass('hidden');
+                    }
+
                     //doc_div.find('button').prop('disabled', false);
                 });
             }
