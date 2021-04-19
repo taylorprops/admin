@@ -18384,7 +18384,11 @@ if (document.URL.match(/user_profile/)) {
       formData.append('cropped_image', blob
       /*, 'example.png' */
       );
-      axios.post('/users/save_cropped_upload', formData, axios_options).then(function (response) {
+      axios.post('/users/save_cropped_upload', formData, {
+        header: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
         cropper.destroy();
         $('#crop_modal').modal('hide');
         $('#photo_location').attr('src', response.data.path);

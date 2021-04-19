@@ -46,7 +46,6 @@ class UserController extends Controller
 
     public function save_cropped_upload(Request $request) {
 
-        dd($request -> all());
         $file = $request -> file('cropped_image');
 
         $user = User::find(auth() -> user() -> id);
