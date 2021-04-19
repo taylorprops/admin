@@ -18379,7 +18379,8 @@ if (document.URL.match(/user_profile/)) {
     // The default value for the second parameter of `toBlob` is 'image/png', change it if necessary.
 
     cropper.getCroppedCanvas().toBlob(function (blob) {
-      var formData = new FormData(); // Pass the image file name as the third parameter if necessary.
+      var formData = new FormData();
+      console.log(blob); // Pass the image file name as the third parameter if necessary.
 
       formData.append('cropped_image', blob
       /*, 'example.png' */
