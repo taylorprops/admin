@@ -59,7 +59,7 @@ class UserController extends Controller
         } else if($user -> group == 'loan_officer') {
             $employee = LoanOfficers::where('email', $user -> email) -> first();
         }
-dd($employee);
+
         $filename = $employee -> first_name.'-'.$employee -> last_name.'.'.$file -> extension();
         $filename = time().'_'.$filename;
 
