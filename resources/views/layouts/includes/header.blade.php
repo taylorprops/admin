@@ -97,9 +97,11 @@
         <!-- sidebar-content  -->
         <div class="sidebar-footer">
 
-            <a href="/logout">
+            {{-- <a href="/logout">
                 <i class="fal fa-sign-out fa-lg text-orange"></i>
-            </a>
+            </a> --}}
+
+            <button class="btn btn-secondary btn-sm bug-report-button">Report Bug <i class="fal fa-bug"></i></button>
 
             <a href="/calendar">
                 <i class="fad fa-calendar-alt fa-lg text-white"></i>

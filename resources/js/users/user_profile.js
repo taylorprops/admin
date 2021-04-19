@@ -102,11 +102,7 @@ if (document.URL.match(/user_profile/)) {
             // Pass the image file name as the third parameter if necessary.
             formData.append('cropped_image', blob/*, 'example.png' */);
 
-            axios.post('/users/save_cropped_upload', formData, {
-                header : {
-                    'Content-Type' : 'multipart/form-data'
-                }
-            })
+            axios.post('/users/save_cropped_upload', formData, axios_options)
             .then(function (response) {
                 cropper.destroy();
                 $('#crop_modal').modal('hide');

@@ -54,7 +54,7 @@ class UpdateListingsJob implements ShouldQueue
             $class = 'ALL';
 
             $hours = 2;
-            if(config('app.env') == 'development') {
+            if(config('global.app_stage') == 'development') {
                 $hours = 24;
             }
             $start = str_replace(' ', 'T', date('Y-m-d H:i:s', strtotime('-'.$hours.' hour')));

@@ -14,6 +14,7 @@ use App\Http\Controllers\Calendar\CalendarController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Files\FilepondUploadController;
+use App\Http\Controllers\BugReports\BugReportsController;
 use App\Http\Controllers\TextEditor\FileUploadController;
 use App\Http\Controllers\OldDB\CommissionPaymentsController;
 use App\Http\Controllers\DocManagement\Fill\FieldsController;
@@ -94,6 +95,9 @@ Route::get('/users/user_profile', [UserController::class, 'user_profile']);
 Route::post('/users/save_profile', [UserController::class, 'save_profile']);
 Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
 Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+
+/************ Bug reports ************/
+Route::post('/bug_reports/bug_report', [BugReportsController::class, 'bug_report']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {

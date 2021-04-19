@@ -19,6 +19,7 @@ class DashboardController extends Controller
 {
     public function dashboard(Request $request) {
 
+
         if(!auth() -> user()) {
             return redirect('/login');
         }

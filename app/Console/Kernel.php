@@ -55,7 +55,7 @@ class Kernel extends ConsoleKernel
         $schedule -> exec('sudo find '.base_path().'/storage/app/public/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
 
-        if(config('app.env') == 'development') {
+        if(config('global.app_stage') == 'development') {
             // mysql backup locally
             //$schedule -> command('database:backup') -> dailyAt('08:25');
         }

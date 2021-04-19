@@ -77,3 +77,38 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade draggable" id="bug_report_modal" tabindex="-1" role="dialog" aria-labelledby="bug_report_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="bug_report_modal_title"><i class="fad fa-bug text-danger mr-3"></i> Report Bug</h4>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bug_report_form">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-gray font-10">
+                                Please describe in as much detail as possible the issue you are having with the website. A screenshot of the page you are on will also be sent with your report.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea class="custom-form-element form-textarea required" id="bug_report_message" name="bug_report_message" data-label="Enter Details"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around py-3">
+                <button class="btn btn-primary" id="send_bug_report">Send Report <i class="fad fa-share ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
