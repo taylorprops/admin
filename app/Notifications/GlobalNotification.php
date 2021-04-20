@@ -23,6 +23,9 @@ class GlobalNotification extends Notification
         $this -> notify_by = ['database'];
 
         $this -> show_link = 'yes';
+        if(isset($notification['show_link']) && $notification['show_link'] == 'no') {
+            $this -> show_link = 'no';
+        }
 
         if($notification['notify_by_email'] == 'yes') {
             $this -> notify_by[] = 'mail';
@@ -33,40 +36,40 @@ class GlobalNotification extends Notification
 
         if($notification['type'] == 'commission') {
 
-            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['sub_type_id'].'/'.$notification['sub_type'].'?tab=commission';
             $this -> link_text = 'View Commission';
 
         } else if($notification['type'] == 'release') {
 
-            $this -> link_url = '/doc_management/document_review/'.$notification['transaction_id'];
+            $this -> link_url = '/doc_management/document_review/'.$notification['sub_type_id'];
             $this -> link_text = 'View Release';
 
         } else if($notification['type'] == 'earnest' || $notification['type'] == 'using_heritage_title') {
 
-            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'];
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['sub_type_id'].'/'.$notification['sub_type'];
             $this -> link_text = 'View Contract';
 
         }
         // agent notifications
         else if($notification['type'] == 'commission_ready') {
 
-            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'].'?tab=commission';
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['sub_type_id'].'/'.$notification['sub_type'].'?tab=commission';
             $this -> link_text = 'View Commission';
 
         } else if($notification['type'] == 'bounced_earnest') {
 
-            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['transaction_id'].'/'.$notification['transaction_type'];
+            $this -> link_url = '/agents/doc_management/transactions/transaction_details/'.$notification['sub_type_id'].'/'.$notification['sub_type'];
             $this -> link_text = 'View Contract';
-            if($notification['show_link'] == 'no') {
-                $this -> show_link = 'no';
-            }
+
 
         } else if($notification['type'] == 'admin') {
 
-            if($notification['transaction_type'] == 'failed_job') {
+            if($notification['sub_type'] == 'failed_job') {
                 $this -> link_url = '';
                 $this -> link_text = 'Failed Queued Job!!';
-                $this -> show_link = 'no';
+            } else if($notification['sub_type'] == 'bug_report') {
+                $this -> link_url = '/bug_reports/view_bug_report/'.$notification['sub_type_id'];
+                $this -> link_text = 'View Bug Report';
             }
 
         }
@@ -114,8 +117,8 @@ class GlobalNotification extends Notification
     {
         return [
             'type' => $this -> notification['type'],
-            'transaction_type' => $this -> notification['transaction_type'],
-            'transaction_id' => $this -> notification['transaction_id'],
+            'transaction_type' => $this -> notification['sub_type'],
+            'transaction_id' => $this -> notification['sub_type_id'],
             'message' => $this -> notification['message'],
             'link_url' => $this -> link_url,
             'link_text' => $this -> link_text

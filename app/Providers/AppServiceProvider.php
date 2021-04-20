@@ -107,12 +107,12 @@ class AppServiceProvider extends ServiceProvider
             </div>';
 
             $notification['type'] = 'admin';
-            $notification['transaction_type'] = 'failed_job';
-            $notification['transaction_id'] = '';
-            $notification['failed_job'] = $event -> job -> uuid();
+            $notification['sub_type'] = 'failed_job';
+            $notification['sub_type_id'] = '';
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;
+            $notification['show_link'] = 'no';
 
             Notification::send($users, new GlobalNotification($notification));
 

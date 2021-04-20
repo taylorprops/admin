@@ -17,6 +17,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "hashids/hashids": "^4.1",
+        "hisorange/browser-detect": "^4.4",
         "imanghafoori/laravel-masterpass": "^2.0",
         "intervention/image": "^2.5",
         "laravel/framework": "^8.31",

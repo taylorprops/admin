@@ -97,7 +97,15 @@ class UpdateListingsJob implements ShouldQueue
                 sleep(3);
                 \Artisan::call('bright_mls:update_listings');
 
-            } else  */ if ($exception instanceof QueryException) {
+            } else  */
+
+            /* if ($exception instanceof UserSessionExpiredException) {
+
+
+
+            } else  */
+
+            if ($exception instanceof QueryException) {
 
                 if(stristr($exception -> getMessage(), 'Column not found')) {
 

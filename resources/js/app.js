@@ -45,6 +45,7 @@ require('./doc_management/resources/common_fields.js');
 require('./admin/resources/resources.js');
 require('./admin/permissions/permissions.js');
 require('./doc_management/notifications/notifications.js');
+require('./bug_reports/bug_reports.js');
 
 require('./doc_management/create/add_fields.js');
 require('./doc_management/create/files.js');

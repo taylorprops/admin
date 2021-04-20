@@ -10341,6 +10341,8 @@ __webpack_require__(/*! ./admin/permissions/permissions.js */ "./resources/js/ad
 
 __webpack_require__(/*! ./doc_management/notifications/notifications.js */ "./resources/js/doc_management/notifications/notifications.js");
 
+__webpack_require__(/*! ./bug_reports/bug_reports.js */ "./resources/js/bug_reports/bug_reports.js");
+
 __webpack_require__(/*! ./doc_management/create/add_fields.js */ "./resources/js/doc_management/create/add_fields.js");
 
 __webpack_require__(/*! ./doc_management/create/files.js */ "./resources/js/doc_management/create/files.js"); //require('./doc_management/fill/fill_fields.js');
@@ -10563,6 +10565,20 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/bug_reports/bug_reports.js":
+/*!*************************************************!*\
+  !*** ./resources/js/bug_reports/bug_reports.js ***!
+  \*************************************************/
+/***/ (() => {
+
+if (document.URL.match(/bug_reports/)) {
+  $(function () {
+    data_table(10, $('#bug_report_table'), [3, 'desc'], [0], [], true, true, true, true, true);
+  });
+}
 
 /***/ }),
 
@@ -17771,7 +17787,7 @@ $(function () {
           $('.bug-report-button').html('Report Bug <i class="fal fa-bug"></i>');
         }
       }).then(function (canvas) {
-        $('#send_bug_report').on('click', function () {
+        $('#send_bug_report').off('click').on('click', function () {
           var validate = validate_form($('#bug_report_form'));
 
           if (validate == 'yes') {
@@ -17783,7 +17799,7 @@ $(function () {
             formData.append('message', message);
             formData.append('url', url);
             formData.append('image', image);
-            axios.post('/bug_reports/bug_report', formData, axios_options).then(function (response) {
+            axios.post('/bug_reports/submit_bug_report', formData, axios_options).then(function (response) {
               $('#bug_report_modal').modal('hide');
               $('.modal-backdrop').removeClass('hidden');
               $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');

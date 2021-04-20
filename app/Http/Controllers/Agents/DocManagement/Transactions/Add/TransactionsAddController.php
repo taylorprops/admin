@@ -730,8 +730,8 @@ class TransactionsAddController extends Controller {
                 </div>';
 
                 $notification['type'] = 'using_heritage_title';
-                $notification['transaction_type'] = 'contract';
-                $notification['transaction_id'] = $property -> Contract_ID;
+                $notification['sub_type'] = 'contract';
+                $notification['sub_type_id'] = $property -> Contract_ID;
                 $notification['subject'] = $subject;
                 $notification['message'] = $message;
                 $notification['message_email'] = $message_email;
@@ -1004,8 +1004,8 @@ class TransactionsAddController extends Controller {
                     </div>';
 
                 $notification['type'] = 'earnest';
-                $notification['transaction_type'] = 'contract';
-                $notification['transaction_id'] = $property -> Contract_ID;
+                $notification['sub_type'] = 'contract';
+                $notification['sub_type_id'] = $property -> Contract_ID;
                 $notification['subject'] = $subject;
                 $notification['message'] = $message;
                 $notification['message_email'] = $message_email;

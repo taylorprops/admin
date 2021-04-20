@@ -347,7 +347,7 @@ $(function() {
                 }
             }).then(canvas => {
 
-                $('#send_bug_report').on('click', function() {
+                $('#send_bug_report').off('click').on('click', function() {
 
                     let validate = validate_form($('#bug_report_form'));
 
@@ -364,7 +364,7 @@ $(function() {
                         formData.append('url', url);
                         formData.append('image', image);
 
-                        axios.post('/bug_reports/bug_report', formData, axios_options)
+                        axios.post('/bug_reports/submit_bug_report', formData, axios_options)
                         .then(function (response) {
                             $('#bug_report_modal').modal('hide');
                             $('.modal-backdrop').removeClass('hidden');

@@ -713,8 +713,8 @@ class TransactionsDetailsController extends Controller
                 </div>';
 
                 $notification['type'] = 'using_heritage_title';
-                $notification['transaction_type'] = 'contract';
-                $notification['transaction_id'] = $property -> Contract_ID;
+                $notification['sub_type'] = 'contract';
+                $notification['sub_type_id'] = $property -> Contract_ID;
                 $notification['subject'] = $subject;
                 $notification['message'] = $message;
                 $notification['message_email'] = $message_email;
@@ -2178,8 +2178,8 @@ class TransactionsDetailsController extends Controller
             </div>';
 
             $notification['type'] = 'release';
-            $notification['transaction_type'] = 'contract';
-            $notification['transaction_id'] = $property -> Contract_ID;
+            $notification['sub_type'] = 'contract';
+            $notification['sub_type_id'] = $property -> Contract_ID;
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;
@@ -3154,8 +3154,8 @@ class TransactionsDetailsController extends Controller
                 </div>';
 
                 $notification['type'] = 'release';
-                $notification['transaction_type'] = 'contract';
-                $notification['transaction_id'] = $contract -> Contract_ID;
+                $notification['sub_type'] = 'contract';
+                $notification['sub_type_id'] = $contract -> Contract_ID;
                 $notification['subject'] = $subject;
                 $notification['message'] = $message;
                 $notification['message_email'] = $message_email;
@@ -3753,8 +3753,8 @@ class TransactionsDetailsController extends Controller
 
 
                         $notification['type'] = 'commission_ready';
-                        $notification['transaction_type'] = 'contract';
-                        $notification['transaction_id'] = $Contract_ID;
+                        $notification['sub_type'] = 'contract';
+                        $notification['sub_type_id'] = $Contract_ID;
                         $notification['subject'] = $subject;
                         $notification['message'] = $message;
                         $notification['message_email'] = $message_email;
@@ -4012,8 +4012,8 @@ class TransactionsDetailsController extends Controller
             $message_email = 'Commission Breakdown submitted by '.$breakdown -> agent -> full_name.'<br><br>'.$address_email;
 
             $notification['type'] = 'commission';
-            $notification['transaction_type'] = 'contract';
-            $notification['transaction_id'] = $breakdown -> Contract_ID;
+            $notification['sub_type'] = 'contract';
+            $notification['sub_type_id'] = $breakdown -> Contract_ID;
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;
@@ -4744,8 +4744,8 @@ class TransactionsDetailsController extends Controller
             Check Amount: $'.number_format($earnest_check -> check_amount);
 
             $notification['type'] = 'bounced_earnest';
-            $notification['transaction_type'] = 'contract';
-            $notification['transaction_id'] = $property -> Contract_ID;
+            $notification['sub_type'] = 'contract';
+            $notification['sub_type_id'] = $property -> Contract_ID;
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;
@@ -4781,8 +4781,8 @@ class TransactionsDetailsController extends Controller
         $notification['type'] = 'bounced_earnest';
         $notification['notify_by_email'] = 'yes';
         $notification['notify_by_text'] = '';
-        $notification['transaction_type'] = 'contract';
-        $notification['transaction_id'] = $Contract_ID;
+        $notification['sub_type'] = 'contract';
+        $notification['sub_type_id'] = $Contract_ID;
         $notification['subject'] = $subject;
         $notification['message'] = $message;
         $notification['message_email'] = $message_email;
@@ -5193,8 +5193,8 @@ class TransactionsDetailsController extends Controller
             </div>';
 
             $notification['type'] = 'using_heritage_title';
-            $notification['transaction_type'] = 'contract';
-            $notification['transaction_id'] = $new_contract -> Contract_ID;
+            $notification['sub_type'] = 'contract';
+            $notification['sub_type_id'] = $new_contract -> Contract_ID;
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;
@@ -5239,8 +5239,8 @@ class TransactionsDetailsController extends Controller
                 </div>';
 
             $notification['type'] = 'earnest';
-            $notification['transaction_type'] = 'contract';
-            $notification['transaction_id'] = $new_contract -> Contract_ID;
+            $notification['sub_type'] = 'contract';
+            $notification['sub_type_id'] = $new_contract -> Contract_ID;
             $notification['subject'] = $subject;
             $notification['message'] = $message;
             $notification['message_email'] = $message_email;

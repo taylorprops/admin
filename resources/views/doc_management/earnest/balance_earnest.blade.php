@@ -60,9 +60,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="bounced_check_notification_modal_title">Notify Agent</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="modal-body">
                 <form id="bounced_check_notification_form">

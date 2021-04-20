@@ -117,9 +117,9 @@
         <div class="modal-content">
             <div class="modal-header draggable-handle">
                 <h4 class="modal-title" id="crop_modal_title">Crop Image</h4>
-                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
-                    <i class="fal fa-times mt-2"></i>
-                </button>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
             </div>
             <div class="d-flex justify-content-around align-items-center modal-body">
                 <div class="crop-container"></div>

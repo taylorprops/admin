@@ -107,6 +107,15 @@
         </div>
     </li>
 
+    @if(session('super_user') == true)
+        <li>
+            <a href="/bug_reports">
+                <i class="far fa-bug"></i>
+                Bug Reports
+            </a>
+        </li>
+    @endif
+
     <li><hr class="my-2"></li>
 
 

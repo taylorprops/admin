@@ -97,7 +97,9 @@ Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_
 Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
 
 /************ Bug reports ************/
-Route::post('/bug_reports/bug_report', [BugReportsController::class, 'bug_report']);
+Route::get('/bug_reports', [BugReportsController::class, 'bug_reports']);
+Route::get('/bug_reports/view_bug_report/{id}', [BugReportsController::class, 'view_bug_report']);
+Route::post('/bug_reports/submit_bug_report', [BugReportsController::class, 'submit_bug_report']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {
