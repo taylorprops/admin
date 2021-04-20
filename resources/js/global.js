@@ -347,7 +347,7 @@ $(function() {
                 }
             }).then(canvas => {
 
-                $('#send_bug_report').off('click').on('click', function() {
+                /* $('#send_bug_report').off('click').on('click', function() {
 
                     let validate = validate_form($('#bug_report_form'));
 
@@ -357,7 +357,8 @@ $(function() {
 
                         let formData = new FormData();
                         let url = document.URL;
-                        let image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+                        let image = canvas.toDataURL('image/png', 1);
+                        window.open(image);
                         let message = $('#bug_report_message').val();
 
                         formData.append('message', message);
@@ -377,13 +378,13 @@ $(function() {
 
                     }
 
-                });
+                }); */
 
-                /* canvas.toBlob(function(blob) {
+                canvas.toBlob(function(blob) {
 
                     let url = document.URL;
 
-                    $('#send_bug_report').on('click', function() {
+                    $('#send_bug_report').off('click').on('click', function() {
 
                         let validate = validate_form($('#bug_report_form'));
 
@@ -398,7 +399,7 @@ $(function() {
                             formData.append('url', url);
                             formData.append('image', blob);
 
-                            axios.post('/bug_reports/bug_report', formData, axios_options)
+                            axios.post('/bug_reports/submit_bug_report', formData, axios_options)
                             .then(function (response) {
                                 $('#bug_report_modal').modal('hide');
                                 $('.modal-backdrop').removeClass('hidden');
@@ -413,10 +414,10 @@ $(function() {
 
                     });
 
-                }, 'image/png'); */
+                }, 'image/png');
 
             });
-        }, 100);
+        }, 10);
     });
 
 });

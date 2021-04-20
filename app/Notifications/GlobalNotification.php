@@ -65,11 +65,15 @@ class GlobalNotification extends Notification
         } else if($notification['type'] == 'admin') {
 
             if($notification['sub_type'] == 'failed_job') {
+
                 $this -> link_url = '';
                 $this -> link_text = 'Failed Queued Job!!';
+
             } else if($notification['sub_type'] == 'bug_report') {
+
                 $this -> link_url = '/bug_reports/view_bug_report/'.$notification['sub_type_id'];
                 $this -> link_text = 'View Bug Report';
+
             }
 
         }

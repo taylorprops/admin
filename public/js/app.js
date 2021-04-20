@@ -17787,54 +17787,55 @@ $(function () {
           $('.bug-report-button').html('Report Bug <i class="fal fa-bug"></i>');
         }
       }).then(function (canvas) {
-        $('#send_bug_report').off('click').on('click', function () {
-          var validate = validate_form($('#bug_report_form'));
+        /* $('#send_bug_report').off('click').on('click', function() {
+             let validate = validate_form($('#bug_report_form'));
+             if(validate == 'yes') {
+                 $('#send_bug_report').html('Sending Report... <span class="spinner-border spinner-border-sm mr-2"></span>');
+                 let formData = new FormData();
+                let url = document.URL;
+                let image = canvas.toDataURL('image/png', 1);
+                window.open(image);
+                let message = $('#bug_report_message').val();
+                 formData.append('message', message);
+                formData.append('url', url);
+                formData.append('image', image);
+                 axios.post('/bug_reports/submit_bug_report', formData, axios_options)
+                .then(function (response) {
+                    $('#bug_report_modal').modal('hide');
+                    $('.modal-backdrop').removeClass('hidden');
+                    $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');
+                    $('#send_bug_report').html('Send Report <i class="fad fa-share ml-2"></i>');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+             }
+         }); */
+        canvas.toBlob(function (blob) {
+          var url = document.URL;
+          $('#send_bug_report').off('click').on('click', function () {
+            var validate = validate_form($('#bug_report_form'));
 
-          if (validate == 'yes') {
-            $('#send_bug_report').html('Sending Report... <span class="spinner-border spinner-border-sm mr-2"></span>');
-            var formData = new FormData();
-            var url = document.URL;
-            var image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-            var message = $('#bug_report_message').val();
-            formData.append('message', message);
-            formData.append('url', url);
-            formData.append('image', image);
-            axios.post('/bug_reports/submit_bug_report', formData, axios_options).then(function (response) {
-              $('#bug_report_modal').modal('hide');
-              $('.modal-backdrop').removeClass('hidden');
-              $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');
-              $('#send_bug_report').html('Send Report <i class="fad fa-share ml-2"></i>');
-            })["catch"](function (error) {
-              console.log(error);
-            });
-          }
-        });
-        /* canvas.toBlob(function(blob) {
-             let url = document.URL;
-             $('#send_bug_report').on('click', function() {
-                 let validate = validate_form($('#bug_report_form'));
-                 if(validate == 'yes') {
-                     $('#send_bug_report').html('Sending Report... <span class="spinner-border spinner-border-sm mr-2"></span>');
-                     let formData = new FormData();
-                    let message = $('#bug_report_message').val();
-                     formData.append('message', message);
-                    formData.append('url', url);
-                    formData.append('image', blob);
-                     axios.post('/bug_reports/bug_report', formData, axios_options)
-                    .then(function (response) {
-                        $('#bug_report_modal').modal('hide');
-                        $('.modal-backdrop').removeClass('hidden');
-                        $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');
-                        $('#send_bug_report').html('Send Report <i class="fad fa-share ml-2"></i>');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                 }
-             });
-         }, 'image/png'); */
+            if (validate == 'yes') {
+              $('#send_bug_report').html('Sending Report... <span class="spinner-border spinner-border-sm mr-2"></span>');
+              var formData = new FormData();
+              var message = $('#bug_report_message').val();
+              formData.append('message', message);
+              formData.append('url', url);
+              formData.append('image', blob);
+              axios.post('/bug_reports/submit_bug_report', formData, axios_options).then(function (response) {
+                $('#bug_report_modal').modal('hide');
+                $('.modal-backdrop').removeClass('hidden');
+                $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');
+                $('#send_bug_report').html('Send Report <i class="fad fa-share ml-2"></i>');
+              })["catch"](function (error) {
+                console.log(error);
+              });
+            }
+          });
+        }, 'image/png');
       });
-    }, 100);
+    }, 10);
   });
 });
 
