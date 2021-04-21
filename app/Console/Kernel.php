@@ -37,9 +37,9 @@ class Kernel extends ConsoleKernel
         $schedule -> command('doc_management:check_emailed_documents') -> everyMinute() -> withoutOverlapping(1);
 
         // add, update, withdraw listings
-        $schedule -> command('bright_mls:add_listings') -> cron('*/15 * * * *');
-        $schedule -> command('bright_mls:update_listings') -> cron('*/5,35 * * * *');
-        $schedule -> command('bright_mls:find_withdraw_listings') -> cron('*/55 * * * *');
+        $schedule -> command('bright_mls:add_listings') -> cron('15 * * * *');
+        $schedule -> command('bright_mls:update_listings') -> cron('5,35 * * * * ');
+        $schedule -> command('bright_mls:find_withdraw_listings') -> cron('55 * * * *');
 
         // set listings  status
         $schedule -> command('doc_management:set_listing_status') -> dailyAt('00:01');
