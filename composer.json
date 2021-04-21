@@ -20,6 +20,7 @@
         "hisorange/browser-detect": "^4.4",
         "imanghafoori/laravel-masterpass": "^2.0",
         "intervention/image": "^2.5",
+        "kouz/laravel-airbrake": "^0.7.0",
         "laravel/framework": "^8.31",
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.5",

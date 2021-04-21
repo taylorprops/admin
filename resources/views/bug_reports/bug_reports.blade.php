@@ -23,6 +23,7 @@
                             <th>Reported By</th>
                             <th>Message</th>
                             <th>Submitted</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
 
@@ -36,6 +37,7 @@
                             <td>{{ $bug_report -> user -> name }}</td>
                             <td>{{ $bug_report -> message }}</td>
                             <td>{{ $bug_report -> created_at }}</td>
+                            <td>{!! $bug_report -> active == 'yes' ? '<span class="text-danger"><i class="fal fa-exclamation-circle mr-2"></i> Active</span>' : '<span class="text-green"><i class="fal fa-check mr-2"></i> Resolved</span>' !!}</td>
                         </tr>
 
                         @endforeach

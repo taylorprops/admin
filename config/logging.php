@@ -37,8 +37,14 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => ['daily', 'airbrake'],
             'ignore_exceptions' => false,
+        ],
+
+        'airbrake' => [
+            'driver' => 'custom',
+            'via' => Kouz\LaravelAirbrake\AirbrakeLogger::class,
+            'level' => 'error',
         ],
 
         'single' => [

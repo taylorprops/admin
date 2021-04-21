@@ -494,6 +494,58 @@ window.notifications_mark_read = function(id, mark) {
 
 }
 
+window.send_email_general = function() {
+
+    $('#send_email_general_button').html('<i class="fas fa-spinner fa-pulse mr-2"></i> Sending Email');
+
+    let from = $('#email_general_from').val();
+    let to = $('#email_general_to').val();
+    let cc = $('#email_general_cc').val();
+
+    let to_addresses = [];
+    to_addresses.push({
+        type: 'to',
+        address: to
+    });
+    if(cc != '') {
+        to_addresses.push({
+            type: 'cc',
+            address: cc
+        });
+    }
+    let subject = $('#email_general_subject').val();
+    let message = tinymce.activeEditor.getContent();
+
+    let formData = new FormData();
+    formData.append('from', from);
+    formData.append('to_addresses', JSON.stringify(to_addresses));
+    formData.append('subject', subject);
+    formData.append('message', message);
+
+    axios.post('/send_email', formData, axios_options)
+    .then(function (response) {
+
+        $('#send_email_general_button').html('<i class="fad fa-share mr-2"></i> Send Email');
+        $('#email_general_modal').modal('hide');
+
+        toastr['success']('Email Successfully Sent');
+
+        reset_email_general();
+
+    })
+    .catch(function (error) {
+
+    });
+
+}
+
+window.reset_email_general = function () {
+    $('#email_general_to').val('');
+    $('#email_general_cc').val('');
+    $('#email_general_subject').val('');
+    $('#email_general_message').val('');
+}
+
 window.datepicker_custom = function() {
 
     $('.datepicker').not('.datepicker-added').not('.field-datepicker').each(function() {

@@ -16,7 +16,7 @@ class BugReportsController extends Controller
 
     public function bug_reports(Request $request) {
 
-        $bug_reports = BugReports::where('active', 'yes') -> with(['user']) -> get();
+        $bug_reports = BugReports::with(['user']) -> orderBy('active', 'desc') -> get();
 
         return view('/bug_reports/bug_reports', compact('bug_reports'));
 
@@ -30,6 +30,19 @@ class BugReportsController extends Controller
         $browser_info = (object)  json_decode($bug_report -> browser_info, true);
 
         return view('/bug_reports/view_bug_report', compact('bug_report', 'browser_info'));
+
+    }
+
+    public function mark_resolved(Request $request) {
+
+        $id = $request -> id;
+        $action = $request -> action;
+
+        BugReports::find($id) -> update([
+            'active' => $action
+        ]);
+
+        return response() -> json(['status' => 'success']);
 
     }
 
@@ -50,16 +63,20 @@ class BugReportsController extends Controller
         $image -> storeAs('bug_reports/', $image_name, 'public');
         $image_location = '/storage/bug_reports/'.$image_name;
 
+        $device = [
+            Browser::isMobile() => 'mobile',
+            Browser::isTablet() => 'tablet',
+            Browser::isDesktop() => 'desktop'
+        ][1];
+
         $browser = [
             'userAgent' => Browser::userAgent(),
-            'isMobile' => Browser::isMobile(),
-            'isTablet' => Browser::isTablet(),
-            'isDesktop' => Browser::isDesktop(),
-            'browserName' => Browser::browserName(),
-            'browserVersion' => Browser::browserVersion(),
-            'platformName' => Browser::platformName(),
-            'platformFamily' => Browser::platformFamily(),
-            'platformVersion' => Browser::platformVersion()
+            'Device' => $device,
+            'Browser Name' => Browser::browserName(),
+            'Browser Version' => Browser::browserVersion(),
+            'Platform Name' => Browser::platformName(),
+            'Platform Family' => Browser::platformFamily(),
+            'Platform Version' => Browser::platformVersion()
         ];
 
         $browser = json_encode($browser);

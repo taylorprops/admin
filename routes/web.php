@@ -100,6 +100,7 @@ Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
 Route::get('/bug_reports', [BugReportsController::class, 'bug_reports']);
 Route::get('/bug_reports/view_bug_report/{id}', [BugReportsController::class, 'view_bug_report']);
 Route::post('/bug_reports/submit_bug_report', [BugReportsController::class, 'submit_bug_report']);
+Route::post('/bug_reports/mark_resolved', [BugReportsController::class, 'mark_resolved']);
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {

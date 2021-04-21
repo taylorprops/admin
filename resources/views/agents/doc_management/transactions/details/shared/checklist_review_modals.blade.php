@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="modal fade draggable modal-shared" id="email_agent_modal" tabindex="-1" role="dialog" aria-labelledby="email_agent_modal_title" aria-hidden="true">
+<div class="modal fade draggable modal-shared email-modal" id="email_agent_modal" tabindex="-1" role="dialog" aria-labelledby="email_agent_modal_title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header draggable-handle">

@@ -41,6 +41,16 @@ class Handler extends ExceptionHandler
         });
     }
 
+    public function report(Exception $exception)
+    {
+        if ($this -> shouldReport($exception)) {
+            $airbrakeNotifier = \App::make('Airbrake\Notifier');
+            $airbrakeNotifier -> notify($exception);
+        }
+
+        parent::report($exception);
+    }
+
     /* public function render($request, Throwable $exception) {
         if($this -> pageExpired($exception)) {
             return back(fallback: '/dashboard');

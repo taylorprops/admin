@@ -14595,6 +14595,24 @@ a.ck.ck-button {
   overflow: auto;
 }
 
+.email-modal .form-ele {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.email-modal .form-ele input[type=text] {
+  font-size: 0.9rem;
+  padding-top: 2px;
+  padding-bottom: 0px;
+}
+
+@media (max-width: 575px) {
+  .email-modal .email-heading {
+    font-size: 0.8rem;
+  }
+  .email-modal input[type=text] {
+    font-size: 0.8rem;
+  }
+}
 .modal {
   padding-right: 0px !important;
   /* .modal-header.bg-success, .modal-header.bg-danger {
@@ -14783,6 +14801,10 @@ body.modal-open {
 
 .table.responsive {
   width: 100%;
+}
+
+.table {
+  color: #7a7979;
 }
 
 .dataTables_wrapper .dt-buttons .btn {
@@ -18732,24 +18754,6 @@ input.search-menu {
   cursor: pointer;
 }
 
-#email_agent_modal .form-ele {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-#email_agent_modal .form-ele input[type=text] {
-  font-size: 0.9rem;
-  padding-top: 2px;
-  padding-bottom: 0px;
-}
-
-@media (max-width: 575px) {
-  #email_agent_modal .email-heading {
-    font-size: 0.8rem;
-  }
-  #email_agent_modal input[type=text] {
-    font-size: 0.8rem;
-  }
-}
 #files_queue {
   overflow-y: auto;
   min-height: 500px;

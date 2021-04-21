@@ -114,3 +114,89 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade draggable modal-shared email-modal" id="email_general_modal" tabindex="-1" role="dialog" aria-labelledby="email_general_modal_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header draggable-handle">
+                <h4 class="modal-title" id="email_general_modal_title">Send Email</h4>
+                <a href="javascript: void(0)" class="text-danger font-13" data-dismiss="modal" aria-label="Close">
+                    <i class="fal fa-times mt-2 fa-lg"></i>
+                </a>
+            </div>
+            <div class="modal-body">
+                <form id="email_general_form">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">From:</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_general_from" value="{{ \Auth::user() -> name }} - Taylor Properties <{{ \Auth::user() -> email }}>">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">To:</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_general_to">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12 col-sm-2">
+                                    <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                        <div class="email-heading text-gray">CC:</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-10 pl-sm-0">
+                                    <input type="text" class="custom-form-element form-input" id="email_general_cc">
+                                </div>
+                                <div class="col-12 col-sm-10 ml-sm-auto p-sm-0 small">
+                                    Separate multiple addresses with "," or ";"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-2">
+                            <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-center">
+                                <div class="email-heading text-gray">Subject:</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-10 pl-sm-0">
+                            <input type="text" class="custom-form-element form-input" id="email_general_subject">
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12 col-sm-2">
+                            <div class="h-100 d-flex justify-content-start justify-content-sm-end align-items-top">
+                                <div class="email-heading text-gray">Message:</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-10 pl-sm-0">
+                            <div id="email_general_message" class="text-editor font-9">
+                                <br><br>{!! auth() -> user() -> signature !!}
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-around">
+                <a class="btn btn-danger" data-dismiss="modal"><i class="fal fa-times mr-2"></i> Cancel</a>
+                <a class="btn btn-primary" id="send_email_general_button"><i class="fad fa-share mr-2"></i> Send Message</a>
+            </div>
+        </div>
+    </div>
+</div>
