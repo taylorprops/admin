@@ -28,6 +28,8 @@
         <a href="javascript: void(0)" id="cancel_new_event_button"><i class="fa fa-times text-danger fa-2x"></i></a>
     </div>
 
+    <div class="transaction-details-div mt-2 mb-4"></div>
+
     <form id="edit_event_form">
 
         <div class="">
@@ -170,6 +172,7 @@
         <div class="d-flex justify-content-around mt-4 mb-2"><a href="javascript: void(0)" class="text-danger" id="delete_event_button" data-event-id=""><i class="fal fa-trash mr-2"></i> Delete Event</a></div>
 
         <input type="hidden" name="event_id" id="event_id">
+        <input type="hidden" name="event_type" id="event_type">
 
     </form>
 

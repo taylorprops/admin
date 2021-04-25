@@ -8,12 +8,14 @@ use App\User;
 use Eversign\Client;
 use App\Models\Jobs\Jobs;
 use App\Mail\DefaultEmail;
+use App\Models\Tasks\Tasks;
 use Illuminate\Http\Request;
 use App\Models\CRM\CRMContacts;
 use App\Models\Employees\Agents;
 use App\Models\Esign\EsignFields;
 use Illuminate\Http\UploadedFile;
 use App\Models\Esign\EsignSigners;
+use App\Models\Tasks\TasksMembers;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Esign\EsignCallbacks;
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
 use App\Jobs\OldDB\Earnest\EscrowExportJob;
@@ -47,7 +50,6 @@ use App\Models\DocManagement\Create\Upload\Upload;
 use App\Models\DocManagement\Earnest\EarnestNotes;
 use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Earnest\EarnestChecks;
-use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionIncomeDeductions;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Create\Upload\UploadPages;
@@ -250,6 +252,7 @@ class TransactionsDetailsController extends Controller
         $Referral_ID = $request -> Referral_ID ?? 0;
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
         $status = $property -> status -> resource_name;
 
         $status_html = '<span class="text-primary">'.$status.'</span>';
@@ -465,7 +468,7 @@ class TransactionsDetailsController extends Controller
 
         $represent = ($Listing_ID > 0 ? 'seller' : 'buyer');
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, null]);
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0']);
 
         $mls_search_details = bright_mls_search($MLS_ID);
         $mls_search_details = (object) $mls_search_details;
@@ -612,15 +615,18 @@ class TransactionsDetailsController extends Controller
         if ($transaction_type == 'listing') {
             $property = Listings::find($Listing_ID);
             $id = $Listing_ID;
+            $field = 'Listing_ID';
         } elseif ($transaction_type == 'contract') {
             $property = Contracts::find($Contract_ID);
             $id = $Contract_ID;
+            $field = 'Contract_ID';
             if ($property -> Listing_ID > 0) {
                 $has_listing = true;
                 $property_listing = Listings::find($property -> Listing_ID);
             }
         } elseif ($transaction_type == 'referral') {
             $id = $Referral_ID;
+            $field = 'Referral_ID';
             $property = Referrals::find($Referral_ID);
         }
 
@@ -657,12 +663,16 @@ class TransactionsDetailsController extends Controller
             $request -> merge(['FullStreetAddress' => $FullStreetAddress]);
         }
 
+        $update_listing_tasks = null;
+        $update_contract_tasks = null;
+
         $resource_items = new ResourceItems();
         $new_status = null;
         if ($transaction_type == 'listing') {
             // set status if list date or expire date has changed - only for properties that have not closed
             // compare old to new
             if ($property -> MLSListDate != $request -> MLSListDate || $property -> ExpirationDate != $request -> ExpirationDate) {
+
                 if ($request -> MLSListDate <= date('Y-m-d') && $request -> ExpirationDate >= date('Y-m-d')) {
                     $new_status = $resource_items -> GetResourceID('Active', 'listing_status');
                 } else {
@@ -675,6 +685,9 @@ class TransactionsDetailsController extends Controller
                         $new_status = $resource_items -> GetResourceID('Expired', 'listing_status');
                     }
                 }
+
+                $update_listing_tasks = 'yes';
+
             }
         } elseif ($transaction_type == 'contract') {
             // set status if settle date has changed???
@@ -723,14 +736,20 @@ class TransactionsDetailsController extends Controller
 
             }
 
+            if ($property -> ContractDate != $request -> ContractDate || $property -> CloseDate != $request -> CloseDate) {
+                $update_contract_tasks = 'yes';
+            }
+
         }
         if ($new_status) {
             $property -> Status = $new_status;
         }
 
-        // update agents and members if our agent changes
+        // update agents and members if our agent or transaction coordinator changes
         $Agent_ID_old = $property -> Agent_ID;
         $Agent_ID = $request -> Agent_ID;
+        $TransactionCoordinator_ID_old = $property -> TransactionCoordinator_ID;
+        $TransactionCoordinator_ID = $request -> TransactionCoordinator_ID;
 
         foreach ($request -> all() as $col => $val) {
             $ignore_cols = ['Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type'];
@@ -753,6 +772,38 @@ class TransactionsDetailsController extends Controller
         if ($has_listing) {
             $property_listing -> save();
         }
+
+        // update members if TransactionCoordinator_ID changed
+        if($TransactionCoordinator_ID_old != $TransactionCoordinator_ID) {
+
+            if($TransactionCoordinator_ID == 0) {
+
+                // remove current member if there
+                $member = Members::where('member_type_id', ResourceItems::TransactionCoordinatorResourceId())
+                    -> where($field, $id)
+                    -> delete();
+
+            } else {
+
+                $transaction_coordinator = TransactionCoordinators::find($TransactionCoordinator_ID);
+
+                $member = Members::firstOrCreate([
+                    'member_type_id' => ResourceItems::TransactionCoordinatorResourceId(),
+                    $field => $id
+                ]);
+                $member -> first_name = $transaction_coordinator -> first_name;
+                $member -> last_name = $transaction_coordinator -> last_name;
+                $member -> cell_phone = $transaction_coordinator -> cell_phone;
+                $member -> email = $transaction_coordinator -> email;
+                $member -> member_type_id = ResourceItems::TransactionCoordinatorResourceId();
+                $member -> TransactionCoordinator_ID = $TransactionCoordinator_ID;
+                $member -> disabled = false;
+                $member -> save();
+            }
+
+
+        }
+
 
         $agent_changed = false;
 
@@ -846,6 +897,17 @@ class TransactionsDetailsController extends Controller
 
         }
 
+        // update tasks
+
+        if($update_listing_tasks) {
+            // update tasks - MLSListDate, ExpirationDate
+            $this -> update_tasks_on_event_date_change($transaction_type, $Listing_ID, 0);
+        }
+        if($update_contract_tasks) {
+            // update tasks - ContractDate, CloseDate
+            $this -> update_tasks_on_event_date_change($transaction_type, 0, $Contract_ID);
+        }
+
 
         return response() -> json([
             'success' => 'ok',
@@ -896,6 +958,7 @@ class TransactionsDetailsController extends Controller
         }
 
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
         $contact_types = $resource_items -> where('resource_type', 'contact_type') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
@@ -3595,6 +3658,7 @@ class TransactionsDetailsController extends Controller
 
     // End Contracts Tab
 
+
     // Commission Tab
 
     public function get_commission(Request $request) {
@@ -3654,6 +3718,8 @@ class TransactionsDetailsController extends Controller
             $close_price = preg_replace('/[\$,]+/', '', $request -> close_price);
             $contract = Contracts::find($Contract_ID);
             $contract -> update(['CloseDate' => $request -> close_date, 'ClosePrice' => $close_price, 'UsingHeritage' => $request -> using_heritage, 'TitleCompany' => $request -> title_company]);
+            // update tasks - CloseDate
+            $this -> update_tasks_on_event_date_change($transaction_type, 0, $Contract_ID);
         }
 
         // if a commission other - update the check's agent, address and client name if changed
@@ -3675,6 +3741,8 @@ class TransactionsDetailsController extends Controller
                     if ($contract -> Listing_ID > 0) {
                         $closed_status = ResourceItems::GetResourceID('Closed', 'listing_status');
                         $update_listing_status = Listings::where('Contract_ID', $Contract_ID) -> update(['Status' => $closed_status, 'CloseDate', $update_contract_status -> CloseDate]);
+                        // update tasks - CloseDate
+                        $this -> update_tasks_on_event_date_change('Listing', $Listing_ID, 0);
                     }
                 }
             }
@@ -4977,6 +5045,228 @@ class TransactionsDetailsController extends Controller
 
     // End Earnest Tab
 
+
+    // Tasks Tab
+
+    public function get_tasks(Request $request) {
+
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $transaction_type = $request -> transaction_type;
+
+        $tasks = Tasks::where([
+            'Listing_ID' => $Listing_ID,
+            'Contract_ID' => $Contract_ID
+        ])
+        -> with(['members.member_details', 'task_action:resource_id,resource_name']) -> orderBy('task_date', 'ASC') -> orderBy('reminder') -> orderBy('task_time', 'ASC') -> get();
+
+
+        $select = ['Listing_ID', 'Contract_ID', 'created_at', 'MLSListDate', 'ContractDate', 'CloseDate', 'ExpirationDate'];
+
+        if($transaction_type == 'listing') {
+
+            $property = Listings::with(['members'])
+            -> find($Listing_ID, $select);
+
+        } else if($transaction_type == 'contract') {
+
+            $property = Contracts::with(['members'])
+                -> find($Contract_ID, $select);
+
+        }
+
+
+        $task_actions = ResourceItems::where('resource_type', 'task_option') -> orderBy('resource_order') -> get();
+
+        foreach($task_actions as $task_action) {
+
+            $db_column = $task_action -> resource_db_column;
+            if(!stristr($db_column, 'other_task')) {
+
+                $task_action -> has_db_column = 'yes';
+                if($property -> {$db_column} == '') {
+                    $task_action -> event_date = null;
+                } else {
+                    $task_action -> event_date = date('Y-m-d', strtotime($property -> {$db_column}));
+                }
+
+            } else {
+
+                $task_action -> has_db_column = 'no';
+                $task_action -> event_date = null;
+
+            }
+
+        }
+
+        $members = $property -> members;
+
+        return view('/agents/doc_management/transactions/details/data/get_tasks', compact('tasks', 'task_actions', 'members'));
+
+    }
+
+    public function save_task(Request $request) {
+
+        $task_id = $request -> task_id ?? null;
+
+        $task = Tasks::firstOrCreate([
+            'id' => $task_id
+        ]);
+
+        // update other tasks with task_date based on this date
+        $orig_task_date = $task -> task_date;
+        $new_task_date = $request -> task_date;
+        if($new_task_date != $orig_task_date) {
+
+            $this -> update_joined_tasks($task_id, $new_task_date);
+
+        }
+
+        $ignore_cols = ['task_id', 'task_members'];
+        foreach($request -> all() as $key => $val) {
+            if(!in_array($key, $ignore_cols)) {
+                $task[$key] = $val;
+            }
+        }
+        $task -> save();
+
+        TasksMembers::where('task_id', $task_id) -> delete();
+
+        foreach($request -> task_members as $key => $val) {
+
+            $member = Members::find($val, ['email']);
+
+            $new_task_member = new TasksMembers();
+            $new_task_member -> task_id = $task -> id;
+            $new_task_member -> member_id = $val;
+            $new_task_member -> member_email = $member -> email;
+            $new_task_member -> save();
+
+        }
+
+        return response() -> json(['status' => 'success']);
+
+
+    }
+
+    public function update_tasks_on_event_date_change($transaction_type, $Listing_ID, $Contract_ID) {
+
+        $tasks = Tasks::where('transaction_type', $transaction_type)
+            -> where('Listing_ID', $Listing_ID)
+            -> where('Contract_ID', $Contract_ID)
+            -> get();
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0'], ['MLSListDate', 'ContractDate', 'CloseDate', 'ExpirationDate']);
+
+        // if triggered by event
+        foreach($tasks -> whereNotIn('task_action', ['0', '222', '223']) as $task) {
+
+            // will get only the date associated with the task_action
+            $new_task_date = [
+                217 => $property -> MLSListDate,
+                218 => $property -> ContractDate,
+                219 => $property -> CloseDate,
+                221 => $property -> CloseDate,
+                220 => $property -> ExpirationDate,
+            ][$task -> task_action];
+
+            // update task
+            $days = $task -> task_option_days;
+
+            if($task -> task_position == 'before') {
+                $task -> task_date = date("Y-m-d", strtotime("$new_task_date -".$days." days"));
+            } else {
+                $task -> task_date = date("Y-m-d", strtotime("$new_task_date +".$days." days"));
+            }
+
+            $task -> save();
+
+            $this -> update_joined_tasks($task -> id, $new_task_date);
+
+        }
+
+        // if triggered by other task
+        foreach($tasks -> whereIn('task_action', ['222', '223']) as $task) {
+
+            $task_to_follow = Tasks::find($task -> task_action_task);
+            $this -> update_joined_tasks($task_to_follow -> id, $task_to_follow -> task_date);
+
+        }
+
+    }
+
+    public function update_joined_tasks($task_id, $new_task_date) {
+
+        $tasks_to_change = Tasks::where('task_action', '222') -> where('task_action_task', $task_id) -> get();
+
+        foreach($tasks_to_change as $task_to_change) {
+
+            $days = $task_to_change -> task_option_days;
+            $position = $task_to_change -> task_position;
+
+            if($position == 'before') {
+                $task_to_change -> task_date = date("Y-m-d", strtotime("$new_task_date -".$days." days"));
+            } else {
+                $task_to_change -> task_date = date("Y-m-d", strtotime("$new_task_date +".$days." days"));
+            }
+            $task_to_change -> save();
+
+            $tasks_to_change = Tasks::where('task_action_task', $task_to_change -> id) -> get();
+
+            if(count($tasks_to_change) > 0) {
+                $this -> update_joined_tasks($task_to_change -> id, $task_to_change -> task_date);
+            }
+
+        }
+
+    }
+
+    public function mark_task_completed(Request $request) {
+
+        $task_date_completed = null;
+        if($request -> status == 'completed') {
+            $task_date_completed = date('Y-m-d');
+        }
+
+        $task_to_update = Tasks::find($request -> task_id) -> update([
+            'status' => $request -> status,
+            'task_date_completed' => $task_date_completed
+            ]);
+
+        // update linked events based on completion date of this event
+        $tasks = Tasks::where('task_action', '223') -> where('task_action_task', $request -> task_id) -> get();
+        $new_task_date = date('Y-m-d');
+
+        foreach($tasks as $task) {
+
+            $days = $task -> task_option_days;
+
+            if($task -> task_position == 'before') {
+                $task -> task_date = date("Y-m-d", strtotime("$new_task_date -".$days." days"));
+            } else {
+                $task -> task_date = date("Y-m-d", strtotime("$new_task_date +".$days." days"));
+            }
+
+            $task -> save();
+
+            $this -> update_joined_tasks($task -> id, $new_task_date);
+
+        }
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    public function delete_task(Request $request) {
+
+        Tasks::find($request -> task_id) -> delete();
+
+        return response() -> json(['status' => 'success']);
+
+    }
+
+    // End Tasks Tab
+
     /////////////// END TABS //////////////
 
     public function update_contract_status(Request $request) {
@@ -5118,7 +5408,6 @@ class TransactionsDetailsController extends Controller
         $add_buyer_to_members -> first_name = $buyer_one_first;
         $add_buyer_to_members -> last_name = $buyer_one_last;
         $add_buyer_to_members -> Contract_ID = $Contract_ID;
-        $add_buyer_to_members -> Agent_ID = $Agent_ID;
         $add_buyer_to_members -> transaction_type = 'contract';
         $add_buyer_to_members -> save();
 
@@ -5128,7 +5417,6 @@ class TransactionsDetailsController extends Controller
             $add_buyer_to_members -> first_name = $buyer_two_first;
             $add_buyer_to_members -> last_name = $buyer_two_last;
             $add_buyer_to_members -> Contract_ID = $Contract_ID;
-            $add_buyer_to_members -> Agent_ID = $Agent_ID;
             $add_buyer_to_members -> transaction_type = 'contract';
             $add_buyer_to_members -> save();
         }
@@ -5147,7 +5435,6 @@ class TransactionsDetailsController extends Controller
             $add_buyer_agent_to_members -> address_office_state = $agent_state;
             $add_buyer_agent_to_members -> address_office_zip = $agent_zip;
             $add_buyer_agent_to_members -> Contract_ID = $Contract_ID;
-            $add_buyer_agent_to_members -> Agent_ID = $Agent_ID;
             $add_buyer_agent_to_members -> transaction_type = 'contract';
             $add_buyer_agent_to_members -> save();
         }
@@ -5159,7 +5446,6 @@ class TransactionsDetailsController extends Controller
             $add_heritage_to_members -> member_type_id = ResourceItems::TitleResourceId();
             $add_heritage_to_members -> company = 'Heritage Title';
             $add_heritage_to_members -> Contract_ID = $Contract_ID;
-            $add_heritage_to_members -> Agent_ID = $Agent_ID;
             $add_heritage_to_members -> transaction_type = 'contract';
             $add_heritage_to_members -> save();
 
@@ -5273,6 +5559,9 @@ class TransactionsDetailsController extends Controller
         $folder = TransactionDocumentsFolders::where('Listing_ID', $Listing_ID) -> update(['Contract_ID' => $Contract_ID]);
 
         $this -> update_transaction_members($Contract_ID, 'contract');
+
+        // update tasks - Contract Date and Close Date for listing
+        $this -> update_tasks_on_event_date_change($transaction_type, $Listing_ID, 0);
 
         return response() -> json([
             'Contract_ID' => $Contract_ID,

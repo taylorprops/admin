@@ -48,6 +48,11 @@
                     @endif
 
                 @endif
+
+                @if($transaction_type != 'referral')
+                    <li class="nav-item"><a href="javascript: void(0)" data-tab="tasks" data-target="#tasks_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-envelope-open-dollar mr-2 d-none d-md-inline-block"></i> Tasks</a></li>
+                @endif
+
             </ul>
 
             <div id="details_tabs" class="tab-content details-main-tabs">
@@ -99,6 +104,11 @@
                     </div>
                 </div>
                 @endif
+                <div id="tasks_tab" class="tab-pane fade">
+                    <div class="w-100 my-5 text-center">
+                        {!! config('global.loader') !!}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -60,50 +60,58 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/register_employee/{email}', [EmployeesController::class, 'register_employee']);
 
-Route::get('/dashboard', [DashboardController::class, 'dashboard']);
+Route::middleware(['agent']) -> group(function () {
 
-/********** Calendar ********/
-Route::get('/calendar', [CalendarController::class, 'calendar']);
-Route::get('/calendar_events', [CalendarController::class, 'calendar_events']);
-Route::post('/calendar_update', [CalendarController::class, 'calendar_update']);
-Route::post('/calendar_delete', [CalendarController::class, 'calendar_delete']);
+    Route::get('/dashboard', [DashboardController::class, 'dashboard']);
 
-/********** Search Routes ********/
-Route::get('/search', [SearchController::class, 'search']);
+    /********** Calendar ********/
+    Route::get('/calendar', [CalendarController::class, 'calendar']);
+    Route::get('/calendar_events', [CalendarController::class, 'calendar_events']);
+    Route::post('/calendar_update', [CalendarController::class, 'calendar_update']);
+    Route::post('/calendar_delete', [CalendarController::class, 'calendar_delete']);
 
-/***** file upload ******/
-Route::post('/filepond_upload', [FilepondUploadController::class, 'upload']);
+    /********** Search Routes ********/
+    Route::get('/search', [SearchController::class, 'search']);
 
-/***** notifications ******/
-Route::get('/notifications/get_notifications', [GlobalNotificationsController::class, 'get_notifications']);
-Route::post('/notifications/mark_as_read', [GlobalNotificationsController::class, 'mark_as_read']);
+    /***** file upload ******/
+    Route::post('/filepond_upload', [FilepondUploadController::class, 'upload']);
 
-Route::get('/dashboard/get_transactions', [DashboardController::class, 'get_transactions']);
-Route::get('/dashboard/get_commissions', [DashboardController::class, 'get_commissions']);
-Route::get('/dashboard/get_upcoming_closings', [DashboardController::class, 'get_upcoming_closings']);
-Route::get('/dashboard/get_admin_todo', [DashboardController::class, 'get_admin_todo']);
+    /***** notifications ******/
+    Route::get('/notifications/get_notifications', [GlobalNotificationsController::class, 'get_notifications']);
+    Route::post('/notifications/mark_as_read', [GlobalNotificationsController::class, 'mark_as_read']);
 
-
-/********** Email Routes ********/
-// Send Emails
-Route::post('/send_email', [EmailController::class, 'send_email']);
+    Route::get('/dashboard/get_transactions', [DashboardController::class, 'get_transactions']);
+    Route::get('/dashboard/get_commissions', [DashboardController::class, 'get_commissions']);
+    Route::get('/dashboard/get_upcoming_closings', [DashboardController::class, 'get_upcoming_closings']);
+    Route::get('/dashboard/get_admin_todo', [DashboardController::class, 'get_admin_todo']);
 
 
-/************ Users************/
-Route::get('/users', [UserController::class, 'get_users']);
-Route::get('/users/user_profile', [UserController::class, 'user_profile']);
-Route::post('/users/save_profile', [UserController::class, 'save_profile']);
-Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
-Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+    /********** Email Routes ********/
+    // Send Emails
+    Route::post('/send_email', [EmailController::class, 'send_email']);
 
-/************ Bug reports ************/
-Route::get('/bug_reports', [BugReportsController::class, 'bug_reports']);
-Route::get('/bug_reports/view_bug_report/{id}', [BugReportsController::class, 'view_bug_report']);
-Route::post('/bug_reports/submit_bug_report', [BugReportsController::class, 'submit_bug_report']);
-Route::post('/bug_reports/mark_resolved', [BugReportsController::class, 'mark_resolved']);
+});
+
+
 
 // ######### ADMIN ONLY ##########//
 Route::middleware(['admin']) -> group(function () {
+
+
+
+    /************ Users************/
+    Route::get('/users', [UserController::class, 'get_users']);
+    Route::get('/users/user_profile', [UserController::class, 'user_profile']);
+    Route::post('/users/save_profile', [UserController::class, 'save_profile']);
+    Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
+    Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+
+    /************ Bug reports ************/
+    Route::get('/bug_reports', [BugReportsController::class, 'bug_reports']);
+    Route::get('/bug_reports/view_bug_report/{id}', [BugReportsController::class, 'view_bug_report']);
+    Route::post('/bug_reports/submit_bug_report', [BugReportsController::class, 'submit_bug_report']);
+    Route::post('/bug_reports/mark_resolved', [BugReportsController::class, 'mark_resolved']);
+
 
     /* List of uploads */
     Route::get('/doc_management/create/upload/files', [UploadController::class, 'get_uploaded_files']) -> name('create.upload.files');
@@ -568,6 +576,19 @@ Route::middleware(['agent']) -> group(function () {
     Route::post('/agents/doc_management/transactions/transfer_earnest', [TransactionsDetailsController::class, 'transfer_earnest']);
     // undo transfer earnest
     Route::post('/agents/doc_management/transactions/undo_transfer_earnest', [TransactionsDetailsController::class, 'undo_transfer_earnest']);
+
+
+    /////// Tasks ////////////////
+    // get tasks
+    Route::get('/agents/doc_management/transactions/get_tasks', [TransactionsDetailsController::class, 'get_tasks']);
+    Route::post('/agents/doc_management/transactions/save_task', [TransactionsDetailsController::class, 'save_task']);
+    Route::post('/agents/doc_management/transactions/mark_task_completed', [TransactionsDetailsController::class, 'mark_task_completed']);
+    Route::post('/agents/doc_management/transactions/delete_task', [TransactionsDetailsController::class, 'delete_task']);
+
+
+
+
+
 
     // Accept new contract for listing
     Route::post('/agents/doc_management/transactions/accept_contract', [TransactionsDetailsController::class, 'accept_contract']);

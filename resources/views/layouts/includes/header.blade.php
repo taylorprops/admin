@@ -56,6 +56,7 @@
 
                     @php
                     $group = auth() -> user() -> group;
+
                     if(auth() -> user() -> group == 'transaction_coordinator') {
                         $group = 'agent';
                     }

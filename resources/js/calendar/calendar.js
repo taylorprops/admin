@@ -13,6 +13,7 @@ if (document.URL.match(/calendar/)) {
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay',
             },
+            stickyHeaderDates: true,
             themeSystem: 'bootstrap',
             editable: false,
             selectable: true,
@@ -56,8 +57,6 @@ if (document.URL.match(/calendar/)) {
         function show_add_event(calendar, info, multiple) {
 
             let id =  new Date().getTime();
-
-
 
             if(multiple == true) {
 
@@ -134,10 +133,17 @@ if (document.URL.match(/calendar/)) {
             }
 
             $('#event_id').val(event_details.event_id);
-            $('#delete_event_button').data('event-id', event_details.event_id);
+            $('#delete_event_button').data('event-id', event_details.event_id).data('event-type', event_details.event_type);
             $('#event_title').val(event_details.event_title);
             if($(info.el).hasClass('new-event')) {
                 $('#event_title').val('');
+            }
+
+            if(event_details.property_address) {
+
+                let property_link = '<a href="'+event_details.property_link+'" target="_blank">'+event_details.property_address+'</a>';
+                $('.transaction-details-div').html(property_link);
+
             }
 
             $('#start_date').val(event_details.start_date);
@@ -173,8 +179,6 @@ if (document.URL.match(/calendar/)) {
                 $('#repeat_interval').val(event_details.repeat_interval);
                 $('#repeat_until').val(event_details.repeat_until);
 
-                show_repeat();
-
             } else {
 
                 if($('#start_date').val() == $('#end_date').val()) {
@@ -200,6 +204,11 @@ if (document.URL.match(/calendar/)) {
 
             $('.event-active').removeClass('event-active shadow');
             $(info.el).addClass('event-active shadow');
+
+            $('#event_type').val(event_details.event_type);
+            if(event_details.event_type == 'tasks') {
+                $('.hide-multiple').hide();
+            }
 
             let top, left;
             let x = $(info.el).offset().left;
@@ -252,7 +261,7 @@ if (document.URL.match(/calendar/)) {
             });
 
             $('#delete_event_button').off('click').on('click', function() {
-                delete_event($(this).data('event-id'));
+                delete_event($(this).data('event-id'), $(this).data('event-type'));
             });
 
             $('#start_time').on('change', function() {
@@ -277,6 +286,8 @@ if (document.URL.match(/calendar/)) {
                     $('.hide-multiple').hide();
                 }
             });
+
+            show_repeat();
 
         }
 
@@ -308,6 +319,8 @@ if (document.URL.match(/calendar/)) {
 
         function get_event_details(info) {
 
+            $('.transaction-details-div').html('');
+
             let event_start_date = null,
             event_start_time = null,
             event_end_date = null,
@@ -326,7 +339,11 @@ if (document.URL.match(/calendar/)) {
             end_seconds = null,
             repeat_frequency = null,
             repeat_interval = null,
-            repeat_until = null;
+            repeat_until = null,
+            event_type = null
+            property_address = null,
+            property_link = null;
+
 
             let event_id = info.event ? info.event.id : '';
             let event_title = info.event.title;
@@ -380,9 +397,25 @@ if (document.URL.match(/calendar/)) {
 
             }
 
+            if(info.event.extendedProps.event_type) {
+
+                event_type = info.event.extendedProps.event_type;
+
+            }
+
+            if(info.event.extendedProps.property_address) {
+
+                property_address = info.event.extendedProps.property_address;
+                property_link = info.event.extendedProps.property_link;
+
+            }
+
+
+
             let event_details = {};
 
             event_details.event_id = event_id;
+            event_details.event_type = event_type;
             event_details.event_title = event_title;
             event_details.all_day = all_day;
             event_details.start_date = event_start_date;
@@ -392,6 +425,8 @@ if (document.URL.match(/calendar/)) {
             event_details.repeat_frequency = repeat_frequency;
             event_details.repeat_interval = repeat_interval;
             event_details.repeat_until = repeat_until;
+            event_details.property_address = property_address;
+            event_details.property_link = property_link;
 
 
             return event_details;
@@ -430,13 +465,14 @@ if (document.URL.match(/calendar/)) {
 
         }
 
-        function delete_event(event_id) {
+        function delete_event(event_id, event_type) {
 
             let event = calendar.getEventById(event_id);
             event.remove();
 
             let formData = new FormData();
             formData.append('event_id', event_id);
+            formData.append('event_type', event_type);
 
             axios.post('/calendar_delete', formData, axios_options)
             .then(function (response) {

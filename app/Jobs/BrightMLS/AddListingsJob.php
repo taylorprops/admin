@@ -84,13 +84,14 @@ class AddListingsJob implements ShouldQueue
 
         } catch (Throwable $exception) {
 
-            /* if ($exception instanceof ServerException) {
+            if ($exception instanceof UserSessionExpiredException) {
 
-                \Artisan::call('queue:forget '.$this -> job -> getJobId());
-                sleep(3);
-                \Artisan::call('bright_mls:find_withdraw_listings');
+                $rets = new \PHRETS\Session($rets_config);
+                $connect = $rets -> Login();
 
-            } else */ if ($exception instanceof QueryException) {
+            } else
+
+            if ($exception instanceof QueryException) {
 
                 if(stristr($exception -> getMessage(), 'Column not found')) {
 

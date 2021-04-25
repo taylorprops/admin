@@ -99,11 +99,12 @@ class UpdateListingsJob implements ShouldQueue
 
             } else  */
 
-            /* if ($exception instanceof UserSessionExpiredException) {
+            if ($exception instanceof UserSessionExpiredException) {
 
+                $rets = new \PHRETS\Session($rets_config);
+                $connect = $rets -> Login();
 
-
-            } else  */
+            } else
 
             if ($exception instanceof QueryException) {
 

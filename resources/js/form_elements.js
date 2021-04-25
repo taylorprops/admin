@@ -322,6 +322,21 @@ window.form_elements = function () {
                                 }
                             }
                             wrapper.find('label').addClass('active');
+
+                            if (!multiple) {
+
+                                let dropdown = input.next('.form-select-dropdown');
+                                let dropdown_container = dropdown.find('.form-select-options-div');
+                                let active_option = dropdown.find('.form-select-li.active');
+
+                                if(active_option.length > 0) {
+                                    setTimeout(function() {
+                                        dropdown_container.scrollTop(0);
+                                        dropdown_container.scrollTop(active_option.position().top - 40);
+                                    }, 10);
+                                }
+
+                            }
                         }
 
                         // add save button to exit out of multiple select
@@ -545,7 +560,7 @@ window.show_cancel_date = function(wrapper, element) {
 }
 
 
-function show_dropdown(input) {
+window.show_dropdown = function(input) {
 
     let wrapper = input.closest('.form-ele');
     let select = wrapper.find('select');
@@ -555,13 +570,17 @@ function show_dropdown(input) {
     $('.form-select-value-input').removeClass('form-select-value-input-focus');
     wrapper.find('.form-select-li').removeClass('hidden');
 
-    let active_option = dropdown.find('.form-select-li.active');
-    if(active_option.length > 0) {
+    if(select.prop('multiple') == false) {
 
-        setTimeout(function() {
-            dropdown_container.scrollTop(0);
-            dropdown_container.scrollTop(active_option.position().top - 40);
-        }, 10);
+        let active_option = dropdown.find('.form-select-li.active');
+        if(active_option.length > 0) {
+
+            setTimeout(function() {
+                dropdown_container.scrollTop(0);
+                dropdown_container.scrollTop(active_option.position().top - 40);
+            }, 10);
+
+        }
 
     }
 
@@ -791,7 +810,7 @@ window.validate_form = function (form, debug = false) {
                 }
             }
             if (has_val == 'no') {
-                console.log(ele);
+                console.log(required);
                 ele.addClass(classname);
                 ele.prev('label').addClass('invalid-label');
                 pass = 'no';

@@ -73,7 +73,7 @@
             }
 
             // create link details to item
-            $link = ' - <a href="/agents/doc_management/transactions/transaction_details/'.$read_notification -> data['transaction_id'].'/'.$read_notification -> data['transaction_type'].'?tab=commission" target="_blank">View Commission</a>';
+            $link = '<a href="/agents/doc_management/transactions/transaction_details/'.$read_notification -> data['transaction_id'].'/'.$read_notification -> data['transaction_type'].'?tab=commission" target="_blank">View Commission</a>';
             @endphp
             <div class="alert alert-notification-read bg-blue-light p-1" role="alert">
 

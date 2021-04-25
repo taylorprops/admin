@@ -56,6 +56,13 @@ class ResourceItems extends Model
         return false;
 
     } */
+
+    public function scopeTransactionCoordinatorResourceId() {
+        $resource_id = self::select('resource_id') -> where('resource_name', 'Transaction Coordinator') -> first();
+
+        return $resource_id -> resource_id;
+    }
+
     public function scopeSellerResourceId() {
         $resource_id = self::select('resource_id') -> where('resource_name', 'Seller') -> first();
 

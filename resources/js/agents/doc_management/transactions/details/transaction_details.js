@@ -901,6 +901,10 @@ if (document.URL.match(/transaction_details/)) {
 
                     earnest_init();
 
+                } else if(tab == 'tasks') {
+
+                    tasks_init();
+
                 }
 
                 $('.draggable').draggable({

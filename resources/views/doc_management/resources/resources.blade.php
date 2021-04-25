@@ -106,7 +106,7 @@
 
                                     @if($resources_item -> resource_color)<div class="resource-color-square mr-2 float-left list-item-handle" style="background-color: {{ $resources_item -> resource_color }}"></div> @endif
 
-                                    <span class="edit-resource-title list-item-handle float-left">@if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif  @if($resources_item -> resource_account_number) | {{ $resources_item -> resource_account_number }}@endif</span>
+                                    <span class="edit-resource-title list-item-handle float-left">{{ $resources_item -> resource_id }} - @if($resources_item -> resource_state) {{ $resources_item -> resource_state }} | @endif {{ $resources_item -> resource_name }} @if($resources_item -> resource_county_abbr) | {{ $resources_item -> resource_county_abbr }}@endif  @if($resources_item -> resource_account_number) | {{ $resources_item -> resource_account_number }}@endif</span>
 
                                     {{-- <a href="javascript: void(0)" class="delete-deactivate-resource-button text-danger float-right ml-3" data-resource-id="{{ $resources_item -> resource_id }}" data-resource-name="{{ $resources_item -> resource_name }}" data-action="delete"><i class="fal fa-ban fa-lg"></i></a> --}}
 

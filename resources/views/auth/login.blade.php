@@ -1,7 +1,11 @@
 @extends('layouts.login')
 @section('title', 'Login')
 @section('content')
-{{ Auth::logout() }}
+@if(auth() -> user())
+<script type="text/javascript">
+    window.location = '/dashboard';
+</script>
+@endif
 
 <div class="bg-primary login-page">
 

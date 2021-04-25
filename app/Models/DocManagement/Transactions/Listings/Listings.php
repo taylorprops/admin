@@ -2,10 +2,11 @@
 
 namespace App\Models\DocManagement\Transactions\Listings;
 
-use App\Models\DocManagement\Transactions\Contracts\Contracts;
-use App\Models\DocManagement\Transactions\Referrals\Referrals;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\DocManagement\Transactions\Contracts\Contracts;
+use App\Models\DocManagement\Transactions\Referrals\Referrals;
 
 class Listings extends Model
 {
@@ -62,26 +63,62 @@ class Listings extends Model
         return $this -> hasOne(\App\Models\DocManagement\Transactions\Checklists\TransactionChecklists::class, 'Listing_ID', 'Listing_ID');
     }
 
+    public function members() {
+        return $this -> hasMany(\App\Models\DocManagement\Transactions\Members\Members::class, 'Listing_ID', 'Listing_ID');
+    }
+
+
     public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null) {
-        if (is_array($id)) {
-            if ($transaction_type == 'listing') {
-                $id = $id[0];
-            } elseif ($transaction_type == 'contract') {
-                $id = $id[1];
-            } elseif ($transaction_type == 'referral') {
-                $id = $id[2];
-            }
+
+        if($select) {
+            array_push($select, 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'TransactionCoordinator_ID', 'Status');
         }
 
         if ($transaction_type == 'listing') {
-            $property = self::with(['agent', 'co_agent', 'team', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
+            if (is_array($id)) {
+                $id = $id[0];
+            }
+
         } elseif ($transaction_type == 'contract') {
-            $property = Contracts::with(['agent', 'team', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
+            if (is_array($id)) {
+                $id = $id[1];
+            }
+
         } elseif ($transaction_type == 'referral') {
-            $property = Referrals::with(['agent', 'transaction_coordinator', 'checklist', 'status']) -> find($id);
+            if (is_array($id)) {
+                $id = $id[2];
+            }
+
         }
-        if ($select) {
-            $property = $property -> select($select);
+
+
+        if ($transaction_type == 'listing') {
+
+            if($select) {
+                $property = self::select($select) -> where('Listing_ID', $id);
+            } else {
+                $property = self::where('Listing_ID', $id);
+            }
+            $property = $property -> with(['agent', 'co_agent', 'team', 'transaction_coordinator', 'checklist', 'status', 'members']) -> first();
+
+        } elseif ($transaction_type == 'contract') {
+
+            if($select) {
+                $property = Contracts::select($select) -> where('Contract_ID', $id);
+            } else {
+                $property = Contracts::where('Contract_ID', $id);
+            }
+            $property = $property -> with(['agent', 'team', 'transaction_coordinator', 'checklist', 'status', 'members']) -> first();
+
+        } elseif ($transaction_type == 'referral') {
+
+            if($select) {
+                $property = Referrals::select($select) -> where('Referral_ID', $id);
+            } else {
+                $property = Referrals::where('Referral_ID', $id);
+            }
+            $property = $property -> with(['agent', 'transaction_coordinator', 'checklist', 'status']) -> first();
+
         }
 
         return $property;

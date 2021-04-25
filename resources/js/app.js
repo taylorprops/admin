@@ -69,6 +69,7 @@ require('./agents/doc_management/transactions/details/details_tabs/commission.js
 require('./agents/doc_management/transactions/details/details_tabs/commission_other.js');
 require('./agents/doc_management/transactions/details/details_tabs/agent_commission.js');
 require('./agents/doc_management/transactions/details/details_tabs/earnest.js');
+require('./agents/doc_management/transactions/details/details_tabs/tasks.js');
 require('./agents/doc_management/transactions/upload/upload.js');
 
 require('./agents/doc_management/transactions/shared/checklist_review.js');

@@ -1,12 +1,5 @@
 import datepicker from 'js-datepicker';
 import html2canvas from 'html2canvas';
-// reload page on back button
-let perfEntries = performance.getEntriesByType('navigation');
-
-if (perfEntries[0].type === 'back_forward') {
-    window.location.reload();
-}
-
 
 // check for duplicate ids
 /* setTimeout(function() {
@@ -153,6 +146,7 @@ $(function() {
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "responsive": true,
         "destroy": true,
+        fixedHeader: true,
         "language": {
             search: '',
             searchPlaceholder: 'Search'

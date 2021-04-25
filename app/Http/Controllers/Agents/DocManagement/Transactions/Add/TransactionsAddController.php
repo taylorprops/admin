@@ -17,10 +17,11 @@ use App\Notifications\GlobalNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Models\DocManagement\Earnest\Earnest;
 use App\Models\Commission\CommissionBreakdowns;
+use App\Models\Employees\TransactionCoordinators;
 use App\Models\DocManagement\Checklists\Checklists;
-use App\Models\DocManagement\Resources\ResourceItems;
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Data\ListingsData;
 use App\Models\DocManagement\Transactions\Listings\Listings;
@@ -559,7 +560,7 @@ class TransactionsAddController extends Controller {
 		$transaction_type = $request -> transaction_type;
         $id = $request -> id;
 
-        $property = Contracts::find($id);
+        //$property = Contracts::find($id);
 
         $property = Listings::GetPropertyDetails($transaction_type, $id);
 
@@ -693,7 +694,6 @@ class TransactionsAddController extends Controller {
                 $add_heritage_to_members -> address_office_state = 'MD';
                 $add_heritage_to_members -> address_office_zip = '21401';
                 $add_heritage_to_members -> Contract_ID = $Contract_ID;
-                $add_heritage_to_members -> Agent_ID = $Agent_ID;
                 $add_heritage_to_members -> transaction_type = 'contract';
                 $add_heritage_to_members -> save();
 
@@ -791,6 +791,25 @@ class TransactionsAddController extends Controller {
             $property -> ListOfficeMlsId = $office_bright_mls_id;
         }
 
+        // add transaction coordinator to members
+        if($property -> TransactionCoordinator_ID > 0) {
+
+            $transaction_coordinator = TransactionCoordinators::find($property -> TransactionCoordinator_ID);
+
+            $transaction_coordinator_member = new Members();
+            $transaction_coordinator_member -> first_name = $transaction_coordinator -> first_name;
+            $transaction_coordinator_member -> last_name = $transaction_coordinator -> last_name;
+            $transaction_coordinator_member -> cell_phone = $transaction_coordinator -> cell_phone;
+            $transaction_coordinator_member -> email = $transaction_coordinator -> email;
+            $transaction_coordinator_member -> member_type_id = ResourceItems::TransactionCoordinatorResourceId();
+            $transaction_coordinator_member -> TransactionCoordinator_ID = $property -> TransactionCoordinator_ID;
+            $transaction_coordinator_member -> transaction_type = 'listing';
+            $transaction_coordinator_member -> Listing_ID = $Listing_ID;
+            $transaction_coordinator_member -> Contract_ID = $Contract_ID;
+            $transaction_coordinator_member -> save();
+
+        }
+
         // add sellers to doc_members
         $seller_first = $request -> seller_first_name;
         $seller_last = $request -> seller_last_name;
@@ -810,7 +829,7 @@ class TransactionsAddController extends Controller {
             $sellers = null;
             if ($seller_email) {
                 if ($seller_email[$i] != '') {
-                    $sellers = Members::where('email', $seller_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+                    $sellers = Members::where('email', $seller_email[$i]) -> where($field, $id) -> first();
                 }
             }
             if (! $sellers) {
@@ -830,7 +849,6 @@ class TransactionsAddController extends Controller {
             $sellers -> CRMContact_ID = $seller_crm_contact_id[$i] ?? 0;
             $sellers -> member_type_id = $seller_member_type_id;
             $sellers -> transaction_type = 'listing';
-            $sellers -> Agent_ID = $Agent_ID;
             $sellers -> Listing_ID = $Listing_ID;
             $sellers -> Contract_ID = $Contract_ID;
             $sellers -> save();
@@ -867,7 +885,7 @@ class TransactionsAddController extends Controller {
                 $buyers = null;
                 if ($buyer_email) {
                     if ($buyer_email[$i] != '') {
-                        $buyers = Members::where('email', $buyer_email[$i]) -> where($field, $id) -> where('Agent_ID', $Agent_ID) -> first();
+                        $buyers = Members::where('email', $buyer_email[$i]) -> where($field, $id) -> first();
                     }
                 }
                 if (! $buyers) {
@@ -887,7 +905,6 @@ class TransactionsAddController extends Controller {
                 $buyers -> CRMContact_ID = $buyer_crm_contact_id[$i] ?? 0;
                 $buyers -> member_type_id = $buyer_member_type_id;
                 $buyers -> transaction_type = 'contract';
-                $buyers -> Agent_ID = $Agent_ID;
                 $buyers -> Listing_ID = $Listing_ID;
                 $buyers -> Contract_ID = $Contract_ID;
                 $buyers -> save();

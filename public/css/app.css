@@ -15417,10 +15417,10 @@ body.modal-open {
 .form-ele .form-input-label.date-field, .form-ele .form-textarea-label.date-field, .form-ele .form-select-label.date-field {
   top: -9px;
   width: auto;
-  font-size: 0.7rem;
-  color: #647c96;
+  font-size: 0.8rem;
+  color: #6790c5;
   background: rgba(255, 255, 255, 0.9);
-  line-height: 0.7rem;
+  line-height: 0.8rem;
   border-radius: 2px;
   padding-bottom: 1px;
   padding-top: 1px;
@@ -15448,10 +15448,10 @@ body.modal-open {
   position: absolute;
   top: -9px;
   width: auto;
-  font-size: 0.7rem;
-  color: #647c96;
+  font-size: 0.8rem;
+  color: #6790c5;
   background: rgba(255, 255, 255, 0.9);
-  line-height: 0.7rem;
+  line-height: 0.8rem;
   border-radius: 2px;
   padding-bottom: 1px;
   padding-top: 1px;
@@ -17950,7 +17950,7 @@ input.search-menu {
 }
 
 .page-transaction-details {
-  min-height: 90VH;
+  min-height: 120VH;
   /* progress steps */
   /* end progress steps */
   /* #options_tab_content {
@@ -18053,9 +18053,8 @@ input.search-menu {
   } */
 }
 .page-transaction-details .details-list-group .nav-link {
-  text-transform: uppercase;
   font-size: 1rem;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 0px;
 }
 .page-transaction-details .details-list-group .nav-link.active {
@@ -18289,6 +18288,38 @@ input.search-menu {
 .page-transaction-details .save-split-doc-options {
   min-height: 50VH;
 }
+.page-transaction-details .filter-tasks:not(.active) {
+  background: #79c3ff;
+}
+.page-transaction-details .list-group-item-top {
+  border-top: 1px solid #dee2e6;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.page-transaction-details .task-container {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  z-index: 500;
+}
+.page-transaction-details .task-container .task-div {
+  width: 400px;
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+}
+.page-transaction-details .task-container .task-div .form-select-options-div {
+  max-height: 300px;
+}
+.page-transaction-details .task-container .task-div .form-select-ul {
+  max-height: 300px;
+}
+.page-transaction-details .task-container .task-div .form-ele input, .page-transaction-details .task-container .task-div .form-ele select, .page-transaction-details .task-container .task-div .form-ele label {
+  font-size: 0.9rem !important;
+}
+.page-transaction-details .task-container .task-div .form-ele label.active:not(.form-check-label) {
+  font-size: 0.7rem !important;
+}
 @media (min-width: 1200px) {
   .page-transaction-details #split_document_modal_dialog {
     max-width: 95% !important;
@@ -18391,6 +18422,24 @@ input.search-menu {
   }
   .page-transaction-details .add-buttons-div {
     float: none;
+  }
+  .page-transaction-details .task-container {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    z-index: 500;
+  }
+  .page-transaction-details .task-container .task-div {
+    width: 100%;
+    background: #fff;
+    padding: 5px;
+    border: 1px solid #dee2e6;
+  }
+  .page-transaction-details .task-container .task-div .form-select-options-div {
+    max-height: 200px;
+  }
+  .page-transaction-details .task-container .task-div .form-select-ul {
+    max-height: 200px;
   }
 }
 @media (max-width: 450px) {

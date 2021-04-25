@@ -7611,6 +7611,271 @@ if (document.URL.match(/transaction_details/)) {
 
 /***/ }),
 
+/***/ "./resources/js/agents/doc_management/transactions/details/details_tabs/tasks.js":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/agents/doc_management/transactions/details/details_tabs/tasks.js ***!
+  \***************************************************************************************/
+/***/ (() => {
+
+if (document.URL.match(/transaction_details/)) {
+  var mark_task_completed = function mark_task_completed(task_id, status) {
+    var formData = new FormData();
+    formData.append('task_id', task_id);
+    formData.append('status', status);
+    axios.post('/agents/doc_management/transactions/mark_task_completed', formData, axios_options).then(function (response) {
+      toastr['success']('Status Successfully Changed');
+      load_tabs('tasks');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var add_edit_task = function add_edit_task(ele) {
+    $('html, body').scrollTop(300);
+    $('.task-container').collapse('show');
+    $('.close-collapse').on('click', function () {
+      $('.collapse').collapse('hide');
+    });
+    $('.delete-div').removeClass('hidden');
+
+    if (ele.data('action') == 'add') {
+      $('#task_members').closest('.form-ele').find('.form-select-label').trigger('click');
+      $('.delete-div').addClass('hidden');
+    }
+
+    $('.task-ele, .reminder-ele').hide();
+    var type = ele.data('type');
+    $('#reminder').val(type == 'task' ? 0 : 1);
+    $('#task_action_task').closest('.form-ele').find('.form-select-li').show();
+    var action = 'Add';
+
+    if (ele.data('action') == 'edit') {
+      action = 'Edit';
+      $('#task_id').val(ele.data('task-id'));
+      $('#reminder').val(ele.data('reminder'));
+      $('#task_title').val(ele.data('task-title'));
+      $('#task_option_days').val(ele.data('task-option-days'));
+      $('#task_option_position').val(ele.data('task-option-position'));
+      $('#task_action').val(ele.data('task-action'));
+      $('#task_action_task').val(ele.data('task-action-task'));
+      $('#task_date').val(ele.data('task-date'));
+      $('#task_time').val(ele.data('task-time'));
+      $('#task_action_task').closest('.form-ele').find('.form-select-li[data-value="' + ele.data('task-id') + '"]').hide();
+      var task_members = '';
+
+      if (ele.data('task-members').toString().match(/,/)) {
+        task_members = ele.data('task-members').split(',');
+      } else {
+        task_members = [ele.data('task-members').toString()];
+      }
+
+      $('#task_members').val(task_members);
+      adjust_date();
+    }
+
+    if (type == 'task') {
+      $('.task-ele').show();
+      $('.task-header').html('<i class="fal fa-tasks mr-2"></i> ' + action + ' Task');
+      $('.task-type').text('Task');
+      $('.task-date').next('.form-input-label').text('Task Date');
+    } else if (type == 'reminder') {
+      $('.reminder-ele').show();
+      $('.task-header').html('<i class="fal fa-clock mr-2"></i>' + action + ' Reminder');
+      $('.task-type').text('Reminder');
+      $('.task-date').next('.form-input-label').text('Reminder Date');
+    }
+
+    $('#task_option_days').on('blur', function () {
+      if ($(this).val() == '') {
+        $(this).val('0');
+      }
+    });
+    $('#task_time').val('09:00:00');
+    $('#save_task_button').off('click').on('click', save_task);
+  };
+
+  var save_task = function save_task() {
+    $('#task_members, #task_title').addClass('required');
+
+    if ($('#task_action').val() == '') {
+      // no trigger event, only date required
+      $('#task_date').addClass('required');
+    } else {
+      // has trigger event
+      var task_action = $('#task_action option:selected');
+      var task_action_task = $('#task_action_task option:selected'); // see if date required. not required when trigger event has no date yet
+
+      var task_date_required = null; // if has db col get date
+
+      if (task_action.data('has-db-column') == 'yes') {
+        if (task_action.data('date') != '') {
+          task_date_required = 'yes';
+        }
+      } else {
+        // get date from task action task
+        if (task_action_task.data('date') != '' && task_action.prop('value') != '223') {
+          task_date_required = 'yes';
+        }
+      }
+
+      if (task_date_required) {
+        $('#task_date').addClass('required');
+      }
+    }
+
+    var form = $('#task_form');
+    var validate = validate_form(form);
+
+    if (validate == 'yes') {
+      $('#task_date').prop('disabled', false);
+      var formData = new FormData(form[0]);
+      formData.append('task_id', $('#task_id').val());
+      formData.append('reminder', $('#reminder').val());
+      formData.append('Listing_ID', $('#Listing_ID').val());
+      formData.append('Contract_ID', $('#Contract_ID').val());
+      formData.append('transaction_type', $('#transaction_type').val());
+      axios.post('/agents/doc_management/transactions/save_task', formData, axios_options).then(function (response) {
+        var text = $('#reminder').val() == '0' ? 'Task' : 'Reminder';
+        toastr['success'](text + ' Successfully Added');
+        load_tabs('tasks');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  };
+
+  var delete_task = function delete_task() {
+    var task_id = $('#task_id').val();
+    var formData = new FormData();
+    formData.append('task_id', task_id);
+    axios.post('/agents/doc_management/transactions/delete_task', formData, axios_options).then(function (response) {
+      $('.edit-task-button[data-task-id="' + task_id + '"]').closest('.list-group-item').fadeOut('slow');
+      $('.task-container').collapse('hide');
+      toastr['success']('Successfully Deleted');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  var filter_tasks = function filter_tasks(show) {
+    $('.list-group-item-top').removeClass('list-group-item-top');
+    $('.task').hide();
+    $('.task[data-status="' + show + '"]').show();
+    $('.task[data-status="' + show + '"]').eq(0).addClass('list-group-item-top');
+  };
+
+  var clear_form = function clear_form() {
+    $('#task_id').val('');
+    $('#reminder').val('');
+    $('#task_title').val('');
+    $('#task_option_days').val('0');
+    $('#task_option_position').val('after');
+    $('#task_action').val(''); //$('#task_action_task option').first().prop('selected', true);
+
+    $('#task_date').val('');
+    $('#task_time').val('09:00');
+    $('#task_members').val('').trigger('change');
+    $('.invalid, .invalid-input, .invalid-label').removeClass('invalid invalid-input invalid-label');
+  };
+
+  var adjust_date = function adjust_date() {
+    var days = parseInt($('#task_option_days').val());
+    var position = $('#task_option_position').val();
+    var event_date = null;
+    $('#task_date').val('');
+    $('.no-date-info-div').addClass('hidden');
+
+    if ($('#task_action option:selected').val() != '') {
+      $('#task_date').prop('disabled', true);
+
+      if ($('#task_action option:selected').data('has-db-column') == 'yes') {
+        event_date = $('#task_action option:selected').data('date');
+        $('.task-action-task').addClass('hidden');
+      } else {
+        if ($('#task_action option:selected').prop('value') == '222') {
+          event_date = $('#task_action_task option:selected').data('date');
+        } else {
+          if ($('#task_action_task option:selected').data('task-completed') == 'yes') {
+            $('#task_date').val($('#task_action_task option:selected').data('date-completed'));
+          } else {
+            $('#task_date').val('');
+            $('.no-date-info-div').removeClass('hidden');
+          }
+
+          $('.task-action-task').removeClass('hidden');
+          return true;
+        }
+
+        $('.task-action-task').removeClass('hidden');
+      }
+    } else {
+      $('#task_date').prop('disabled', false); //$('#task_date').val('');
+
+      $('.task-action-task').addClass('hidden');
+    }
+
+    if (event_date) {
+      event_date += ' 00:00:00';
+      $('.no-date-info-div').addClass('hidden');
+      var date_input = $('#task_date');
+      var date = new Date(event_date);
+      var new_date = '';
+
+      if (position == 'before') {
+        new_date = new Date(date.setDate(date.getDate() - days));
+      } else {
+        new_date = new Date(date.setDate(date.getDate() + days));
+      }
+
+      var year = new_date.getFullYear();
+      var month = parseInt(new_date.getMonth()) + 1;
+      month = ('0' + month).slice(-2);
+      var day = ('0' + new_date.getDate()).slice(-2);
+      event_date = year + '-' + month + '-' + day;
+      date_input.val(event_date);
+    } else {
+      if ($('#task_action option:selected').val() != '') {
+        $('#task_date').val('');
+        $('.no-date-info-div').removeClass('hidden');
+        $('.no-date-event').text($('#task_action option:selected').text());
+      }
+    }
+  };
+
+  window.tasks_init = function () {
+    $('.add-task-button, .edit-task-button').off('click').on('click', function () {
+      add_edit_task($(this));
+    });
+    $('#delete_task_button').on('click', delete_task);
+    $(document).on('mouseup', function (e) {
+      var task_div = $('.task-container, .add-task-button');
+
+      if (!task_div.is(e.target) && task_div.has(e.target).length === 0) {
+        $('.task-container').collapse('hide');
+      }
+    });
+    adjust_date();
+    $('.date-change-trigger').on('keyup input change', adjust_date);
+    filter_tasks('active');
+    $('.filter-tasks').on('click', function () {
+      $('.filter-tasks').removeClass('active');
+      filter_tasks($(this).data('show'));
+    }).addClass('active');
+    setTimeout(function () {
+      $('.filter-tasks[data-show="active"]').focus().trigger('click');
+    }, 500);
+    $('.task-container').on('hidden.bs.collapse', function () {
+      clear_form();
+    });
+    $('.mark-completed-button').on('click', function () {
+      mark_task_completed($(this).data('task-id'), $(this).data('status'));
+    });
+    $('.task.pending').appendTo('.tasks-list-group');
+  };
+}
+
+/***/ }),
+
 /***/ "./resources/js/agents/doc_management/transactions/details/transaction_details.js":
 /*!****************************************************************************************!*\
   !*** ./resources/js/agents/doc_management/transactions/details/transaction_details.js ***!
@@ -8338,6 +8603,8 @@ if (document.URL.match(/transaction_details/)) {
         agent_commission_init();
       } else if (tab == 'earnest') {
         earnest_init();
+      } else if (tab == 'tasks') {
+        tasks_init();
       }
 
       $('.draggable').draggable({
@@ -10382,6 +10649,8 @@ __webpack_require__(/*! ./agents/doc_management/transactions/details/details_tab
 
 __webpack_require__(/*! ./agents/doc_management/transactions/details/details_tabs/earnest.js */ "./resources/js/agents/doc_management/transactions/details/details_tabs/earnest.js");
 
+__webpack_require__(/*! ./agents/doc_management/transactions/details/details_tabs/tasks.js */ "./resources/js/agents/doc_management/transactions/details/details_tabs/tasks.js");
+
 __webpack_require__(/*! ./agents/doc_management/transactions/upload/upload.js */ "./resources/js/agents/doc_management/transactions/upload/upload.js");
 
 __webpack_require__(/*! ./agents/doc_management/transactions/shared/checklist_review.js */ "./resources/js/agents/doc_management/transactions/shared/checklist_review.js"); // edit files
@@ -10642,6 +10911,7 @@ if (document.URL.match(/calendar/)) {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
+      stickyHeaderDates: true,
       themeSystem: 'bootstrap',
       editable: false,
       selectable: true,
@@ -10737,11 +11007,17 @@ if (document.URL.match(/calendar/)) {
       }
 
       $('#event_id').val(event_details.event_id);
-      $('#delete_event_button').data('event-id', event_details.event_id);
+      $('#delete_event_button').data('event-id', event_details.event_id).data('event-type', event_details.event_type);
       $('#event_title').val(event_details.event_title);
 
       if ($(info.el).hasClass('new-event')) {
         $('#event_title').val('');
+      }
+
+      if (event_details.property_address) {
+        var _property_link = '<a href="' + event_details.property_link + '" target="_blank">' + event_details.property_address + '</a>';
+
+        $('.transaction-details-div').html(_property_link);
       }
 
       $('#start_date').val(event_details.start_date);
@@ -10771,7 +11047,6 @@ if (document.URL.match(/calendar/)) {
         $('#repeat_frequency').val(frequency);
         $('#repeat_interval').val(event_details.repeat_interval);
         $('#repeat_until').val(event_details.repeat_until);
-        show_repeat();
       } else {
         if ($('#start_date').val() == $('#end_date').val()) {
           $('.hide-multiple').show();
@@ -10794,6 +11069,12 @@ if (document.URL.match(/calendar/)) {
       $('#end_date').prop('min', $('#start_date').val());
       $('.event-active').removeClass('event-active shadow');
       $(info.el).addClass('event-active shadow');
+      $('#event_type').val(event_details.event_type);
+
+      if (event_details.event_type == 'tasks') {
+        $('.hide-multiple').hide();
+      }
+
       var top, left;
       var x = $(info.el).offset().left;
       var y = $(info.el).offset().top;
@@ -10840,7 +11121,7 @@ if (document.URL.match(/calendar/)) {
         save_event(calendar, info);
       });
       $('#delete_event_button').off('click').on('click', function () {
-        delete_event($(this).data('event-id'));
+        delete_event($(this).data('event-id'), $(this).data('event-type'));
       });
       $('#start_time').on('change', function () {
         var start = new Date($('#start_date').val() + ' ' + $(this).val());
@@ -10862,6 +11143,7 @@ if (document.URL.match(/calendar/)) {
           $('.hide-multiple').hide();
         }
       });
+      show_repeat();
     }
 
     function show_repeat() {
@@ -10888,6 +11170,7 @@ if (document.URL.match(/calendar/)) {
     }
 
     function get_event_details(info) {
+      $('.transaction-details-div').html('');
       var event_start_date = null,
           event_start_time = null,
           event_end_date = null,
@@ -10906,7 +11189,9 @@ if (document.URL.match(/calendar/)) {
           end_seconds = null,
           repeat_frequency = null,
           repeat_interval = null,
-          repeat_until = null;
+          repeat_until = null,
+          event_type = null;
+      property_address = null, property_link = null;
       var event_id = info.event ? info.event.id : '';
       var event_title = info.event.title;
       var start_date = new Date(info.event.start);
@@ -10948,8 +11233,18 @@ if (document.URL.match(/calendar/)) {
         repeat_until = info.event.extendedProps.until;
       }
 
+      if (info.event.extendedProps.event_type) {
+        event_type = info.event.extendedProps.event_type;
+      }
+
+      if (info.event.extendedProps.property_address) {
+        property_address = info.event.extendedProps.property_address;
+        property_link = info.event.extendedProps.property_link;
+      }
+
       var event_details = {};
       event_details.event_id = event_id;
+      event_details.event_type = event_type;
       event_details.event_title = event_title;
       event_details.all_day = all_day;
       event_details.start_date = event_start_date;
@@ -10959,6 +11254,8 @@ if (document.URL.match(/calendar/)) {
       event_details.repeat_frequency = repeat_frequency;
       event_details.repeat_interval = repeat_interval;
       event_details.repeat_until = repeat_until;
+      event_details.property_address = property_address;
+      event_details.property_link = property_link;
       return event_details;
     }
 
@@ -10981,11 +11278,12 @@ if (document.URL.match(/calendar/)) {
       }
     }
 
-    function delete_event(event_id) {
+    function delete_event(event_id, event_type) {
       var event = calendar.getEventById(event_id);
       event.remove();
       var formData = new FormData();
       formData.append('event_id', event_id);
+      formData.append('event_type', event_type);
       axios.post('/calendar_delete', formData, axios_options).then(function (response) {
         $('#edit_event_div').addClass('hidden');
         $('.event-active').removeClass('event-active shadow');
@@ -16956,6 +17254,19 @@ window.form_elements = function () {
             }
 
             wrapper.find('label').addClass('active');
+
+            if (!multiple) {
+              var dropdown = input.next('.form-select-dropdown');
+              var dropdown_container = dropdown.find('.form-select-options-div');
+              var active_option = dropdown.find('.form-select-li.active');
+
+              if (active_option.length > 0) {
+                setTimeout(function () {
+                  dropdown_container.scrollTop(0);
+                  dropdown_container.scrollTop(active_option.position().top - 40);
+                }, 10);
+              }
+            }
           } // add save button to exit out of multiple select
 
 
@@ -17005,7 +17316,7 @@ window.form_elements = function () {
 
               var _input = li.closest('.form-ele').find('.form-select-value-input');
 
-              var dropdown = li.closest('.form-ele').find('.form-select-dropdown');
+              var _dropdown = li.closest('.form-ele').find('.form-select-dropdown');
 
               var _element = li.closest('.form-ele').find('.form-select');
 
@@ -17019,7 +17330,8 @@ window.form_elements = function () {
 
               wrapper.find('label').addClass('active'); // remove active from all li and add to selected
 
-              dropdown.find('.form-select-li').removeClass('active');
+              _dropdown.find('.form-select-li').removeClass('active');
+
               li.addClass('active'); // update select element
 
               _element.val(value); //element.trigger('change');
@@ -17164,20 +17476,23 @@ window.show_cancel_date = function (wrapper, element) {
   }
 };
 
-function show_dropdown(input) {
+window.show_dropdown = function (input) {
   var wrapper = input.closest('.form-ele');
   var select = wrapper.find('select');
   var dropdown = input.next('.form-select-dropdown');
   var dropdown_container = dropdown.find('.form-select-options-div');
   $('.form-select-value-input').removeClass('form-select-value-input-focus');
   wrapper.find('.form-select-li').removeClass('hidden');
-  var active_option = dropdown.find('.form-select-li.active');
 
-  if (active_option.length > 0) {
-    setTimeout(function () {
-      dropdown_container.scrollTop(0);
-      dropdown_container.scrollTop(active_option.position().top - 40);
-    }, 10);
+  if (select.prop('multiple') == false) {
+    var active_option = dropdown.find('.form-select-li.active');
+
+    if (active_option.length > 0) {
+      setTimeout(function () {
+        dropdown_container.scrollTop(0);
+        dropdown_container.scrollTop(active_option.position().top - 40);
+      }, 10);
+    }
   }
 
   if (wrapper.find('select').prop('disabled') == false) {
@@ -17195,7 +17510,7 @@ function show_dropdown(input) {
       dropdown.find('.form-select-search-input').focus();
     }
   }
-}
+};
 
 function hide_dropdowns() {
   if ($('.form-select-dropdown.active').length > 0) {
@@ -17372,7 +17687,7 @@ window.validate_form = function (form) {
       }
 
       if (has_val == 'no') {
-        console.log(ele);
+        console.log(required);
         ele.addClass(classname);
         ele.prev('label').addClass('invalid-label');
         pass = 'no';
@@ -17526,13 +17841,7 @@ __webpack_require__.r(__webpack_exports__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
- // reload page on back button
-
-var perfEntries = performance.getEntriesByType('navigation');
-
-if (perfEntries[0].type === 'back_forward') {
-  window.location.reload();
-} // check for duplicate ids
+ // check for duplicate ids
 
 /* setTimeout(function() {
     $('[id]').each(function(){
@@ -17542,7 +17851,6 @@ if (perfEntries[0].type === 'back_forward') {
         }
     });
 }, 3000); */
-
 
 $(function () {
   global_loading_off();
@@ -17656,6 +17964,7 @@ $(function () {
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
     "responsive": true,
     "destroy": true,
+    fixedHeader: true,
     "language": {
       search: '',
       searchPlaceholder: 'Search'

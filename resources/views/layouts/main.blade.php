@@ -12,6 +12,12 @@
 
         @yield('js_scripts')
 
+        @if(!auth() -> user())
+        <script type="text/javascript">
+        window.location.href = '/login';
+        </script>
+        @endif
+
 
     </head>
 

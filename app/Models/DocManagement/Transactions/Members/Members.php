@@ -26,4 +26,5 @@ class Members extends Model
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_IDz');
     }
 
+
 }

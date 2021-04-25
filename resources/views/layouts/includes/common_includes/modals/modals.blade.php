@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-10 pl-sm-0">
-                                    <input type="text" class="custom-form-element form-input" id="email_general_from" value="{{ \Auth::user() -> name }} - Taylor Properties <{{ \Auth::user() -> email }}>">
+                                    <input type="text" class="custom-form-element form-input" id="email_general_from" value="{{ auth() -> user() ? auth() -> user() -> name : '' }} - Taylor Properties <{{ auth() -> user() ? auth() -> user() -> email : '' }}>">
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -186,7 +186,7 @@
                         </div>
                         <div class="col-12 col-sm-10 pl-sm-0">
                             <div id="email_general_message" class="text-editor font-9">
-                                <br><br>{!! auth() -> user() -> signature !!}
+                                <br><br>{!! auth() -> user() ? auth() -> user() -> signature : '' !!}
                             </div>
                         </div>
                     </div>
