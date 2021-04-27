@@ -19,7 +19,7 @@ class FileUploadController extends Controller {
         /*********************************************
          * Change this line to set the upload folder *
          *********************************************/
-        $imageFolder = Storage::disk('public') -> path('file_upload/tinymce/');
+        $imageFolder = Storage::path('file_upload/tinymce/');
 
         if (isset($_SERVER['HTTP_ORIGIN'])) {
 

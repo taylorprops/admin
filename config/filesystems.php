@@ -32,7 +32,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => '/var/www/admin/storage/app/public',
             'permissions' => [
                 'file' => [
                     'public' => 0664,
@@ -43,12 +43,13 @@ return [
                     'private' => 0700,
                 ],
             ],
+            'url' => '/storage',
             'visibility' => 'public',
         ],
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => '/mnt/vol2',
             'permissions' => [
                 'file' => [
                     'public' => 0664,
@@ -59,7 +60,7 @@ return [
                     'private' => 0700,
                 ],
             ],
-            'url' => env('APP_URL').'/storage',
+            'url' => '/storage',
             'visibility' => 'public',
         ],
 

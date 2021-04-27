@@ -327,6 +327,9 @@ $(function() {
         }, 10000);
     }
 
+    $(document).on('click', '#notifications_control', function() {
+        $('#notifications_collapse').scrollTop(0);
+    });
 
     $(document).on('click', '.bug-report-button', function() {
 

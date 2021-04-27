@@ -76,10 +76,10 @@ class ConvertToPDF implements ShouldQueue
 
         $upload_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type;
 
-        Storage::disk('public') -> makeDirectory($upload_dir.'/combined/');
-        Storage::disk('public') -> makeDirectory($upload_dir.'/layers/');
-        $full_path_dir = Storage::disk('public') -> path($upload_dir);
-        $pdf_output_dir = Storage::disk('public') -> path($upload_dir.'/combined/');
+        Storage::makeDirectory($upload_dir.'/combined/');
+        Storage::makeDirectory($upload_dir.'/layers/');
+        $full_path_dir = Storage::path($upload_dir);
+        $pdf_output_dir = Storage::path($upload_dir.'/combined/');
 
         // get file name to use for the final converted file
         $file = glob($full_path_dir.'/converted/*pdf');

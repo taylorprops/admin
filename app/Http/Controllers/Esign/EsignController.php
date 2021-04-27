@@ -273,8 +273,8 @@ class EsignController extends Controller
             // need documents to be in order of checked docs
             $documents = collect();
             $tmp_folder = date('YmdHis');
-            Storage::disk('public') -> makeDirectory('tmp/'.$tmp_folder);
-            $tmp_dir = Storage::disk('public') -> path('tmp/'.$tmp_folder);
+            Storage::makeDirectory('tmp/'.$tmp_folder);
+            $tmp_dir = Storage::path('tmp/'.$tmp_folder);
 
             $docs_to_display = [];
 
@@ -310,7 +310,7 @@ class EsignController extends Controller
                     $data_upload_id = '';
                 }
 
-                $file = Storage::disk('public') -> path(str_replace('/storage/', '', $file_location));
+                $file = Storage::path(str_replace('/storage/', '', $file_location));
                 exec('cp '.$file.' '.$tmp_dir.'/'.$file_name);
 
                 $image_name = str_replace('.pdf', '.jpg', $file_name);
@@ -371,7 +371,7 @@ class EsignController extends Controller
             $file_name_display = $clean_file_name.'.'.$ext;
             $new_file_name = date('YmdHis').'_'.$file_name_display;
 
-            $tmp_dir = Storage::disk('public') -> path('tmp');
+            $tmp_dir = Storage::path('tmp');
 
             // convert to pdf if image
             if ($ext != 'pdf') {
@@ -590,14 +590,14 @@ class EsignController extends Controller
                 // create directories for doc and images
                 $document_folder = 'esign/'.$envelope_id.'/'.$add_esign_document_id;
 
-                $doc_to_location = Storage::disk('public') -> path($document_folder);
+                $doc_to_location = Storage::path($document_folder);
                 if (! is_dir($doc_to_location)) {
-                    Storage::disk('public') -> makeDirectory($document_folder);
+                    Storage::makeDirectory($document_folder);
                 }
 
-                $image_to_location = Storage::disk('public') -> path($document_folder.'/images');
+                $image_to_location = Storage::path($document_folder.'/images');
                 if (! is_dir($image_to_location)) {
-                    Storage::disk('public') -> makeDirectory($document_folder.'/images');
+                    Storage::makeDirectory($document_folder.'/images');
                 }
 
                 if ($file['document_id'] > 0) {
@@ -605,7 +605,7 @@ class EsignController extends Controller
                     // transfer files and images from transactions docs
                     $doc = TransactionDocuments::where('id', $file['document_id']) -> with('images_converted') -> first();
                     // copy document
-                    $doc_from_location = Storage::disk('public') -> path(str_replace('/storage/', '', $doc -> file_location_converted));
+                    $doc_from_location = Storage::path(str_replace('/storage/', '', $doc -> file_location_converted));
                     exec('cp '.$doc_from_location.' '.$doc_to_location);
 
                     $doc_dimensions = get_width_height($doc_from_location);
@@ -632,7 +632,7 @@ class EsignController extends Controller
                     foreach ($images as $image) {
 
                         // copy images
-                        $image_from_location = Storage::disk('public') -> path(str_replace('/storage/', '', $image -> file_location));
+                        $image_from_location = Storage::path(str_replace('/storage/', '', $image -> file_location));
                         exec('cp '.$image_from_location.' '.$image_to_location);
 
                         $doc_dimensions = get_width_height($image_from_location);
@@ -657,7 +657,7 @@ class EsignController extends Controller
                     // add files from tmp and create images
 
                     // copy document
-                    $doc_from_location = Storage::disk('public') -> path(str_replace('/storage/', '', $file['file_location']));
+                    $doc_from_location = Storage::path(str_replace('/storage/', '', $file['file_location']));
                     exec('cp '.$doc_from_location.' '.$doc_to_location);
 
                     $doc_dimensions = get_width_height($doc_from_location);
@@ -683,7 +683,7 @@ class EsignController extends Controller
 
                     // get all image files images_storage_path to use as file location
                     $images_public_path = '/storage/'.$document_folder.'/images';
-                    $saved_images_directory = Storage::disk('public') -> files($document_folder.'/images');
+                    $saved_images_directory = Storage::files($document_folder.'/images');
 
                     foreach ($saved_images_directory as $saved_image) {
 
@@ -697,7 +697,7 @@ class EsignController extends Controller
                         }
                         $page_number = count($matches) > 1 ? $match + 1 : 1;
 
-                        $doc_location = Storage::disk('public') -> path($document_folder.'/images/'.$images_file_name);
+                        $doc_location = Storage::path($document_folder.'/images/'.$images_file_name);
                         $doc_dimensions = get_width_height($doc_location);
                         $doc_width = $doc_dimensions['width'];
                         $doc_height = $doc_dimensions['height'];
@@ -1120,7 +1120,7 @@ class EsignController extends Controller
                     //Add a File to the Document
                     $file = new File();
                     $file -> setName($document -> file_name);
-                    $file -> setFilePath(Storage::disk('public') -> path(str_replace('/storage/', '', $document -> file_location)));
+                    $file -> setFilePath(Storage::path(str_replace('/storage/', '', $document -> file_location)));
                     $file_to_sign -> appendFile($file);
 
                     $c = 0;
@@ -1128,7 +1128,7 @@ class EsignController extends Controller
                     $width = $document -> width;
                     $height = $document -> height;
 
-                    $doc_sizes = get_width_height(Storage::disk('public') -> path(str_replace('/storage', '', $document -> file_location)));
+                    $doc_sizes = get_width_height(Storage::path(str_replace('/storage', '', $document -> file_location)));
                     $actual_width = $doc_sizes['width'];
                     $actual_height = $doc_sizes['height'];
 
@@ -1505,7 +1505,7 @@ class EsignController extends Controller
                 if ($status == 'Completed') {
 
                     $subject = sanitize($envelope -> subject).'_'.time();
-                    $path = Storage::disk('public') -> path('/esign/'.$envelope -> id);
+                    $path = Storage::path('esign/'.$envelope -> id);
                     $file_location = $path.'/'.$subject.'.pdf';
                     $public_link = '/storage/esign/'.$envelope -> id.'/'.$subject.'.pdf';
 

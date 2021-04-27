@@ -40,6 +40,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function task_members() {
+        return $this -> hasMany(\App\Models\Tasks\TasksMembers::class, 'user_id', 'id');
+    }
+
+    public function calendar_events() {
+        return $this -> hasMany(\App\Models\Calendar\Calendar::class, 'user_id', 'id');
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this -> notify(new PasswordReset($token));

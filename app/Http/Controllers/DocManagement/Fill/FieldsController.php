@@ -31,15 +31,15 @@ class FieldsController extends Controller
 
         $files_remove = [$images -> file_location, $pages -> file_location];
         foreach ($files_remove as $file_remove) {
-            Storage::disk('public') -> delete(str_replace('/storage/', '', $file_remove));
+            Storage::delete(str_replace('/storage/', '', $file_remove));
         }
 
         $images -> delete();
         $pages -> delete();
 
-        $file = Storage::disk('public') -> path(str_replace('/storage/', '', $upload -> file_location));
-        $file_location = Storage::disk('public') -> path(str_replace('/storage/', '', $upload -> file_location));
-        $temp_location = Storage::disk('public') -> path('tmp/'.$upload -> file_name);
+        $file = Storage::path(str_replace('/storage/', '', $upload -> file_location));
+        $file_location = Storage::path(str_replace('/storage/', '', $upload -> file_location));
+        $temp_location = Storage::path('tmp/'.$upload -> file_name);
 
         exec('pdftk '.$file.' cat 1-r2 output '.$temp_location.' && mv '.$temp_location.' '.$file_location);
     }
@@ -120,9 +120,11 @@ class FieldsController extends Controller
     public function add_fields(Request $request) {
 
 		$file = Upload::whereFileId($request -> file_id) -> first();
+
         $file_name = $file -> file_name_display;
         $published = $file -> published;
         $images = UploadImages::where('file_id', $request -> file_id) -> orderBy('page_number') -> get();
+
         $fields = Fields::where('file_id', $request -> file_id) -> orderBy('id') -> get();
         //$common_fields = CommonFields::getCommonFields();
         //$field_types = FieldTypes::select('field_type') -> get();
@@ -194,13 +196,13 @@ class FieldsController extends Controller
             $upload_dir = 'doc_management/uploads/'.$file_id;
             // create or clear out directories if they already exist
             $clean_dir = new Filesystem;
-            if (! Storage::disk('public') -> exists($upload_dir.'/layers')) {
-                Storage::disk('public') -> makeDirectory($upload_dir.'/layers');
+            if (! Storage::exists($upload_dir.'/layers')) {
+                Storage::makeDirectory($upload_dir.'/layers');
             } else {
                 $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/layers');
             }
-            if (! Storage::disk('public') -> exists($upload_dir.'/combined')) {
-                Storage::disk('public') -> makeDirectory($upload_dir.'/combined');
+            if (! Storage::exists($upload_dir.'/combined')) {
+                Storage::makeDirectory($upload_dir.'/combined');
             } else {
                 $clean_dir -> cleanDirectory('storage/'.$upload_dir.'/combined');
             }

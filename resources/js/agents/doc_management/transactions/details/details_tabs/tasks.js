@@ -260,7 +260,7 @@ if (document.URL.match(/transaction_details/)) {
         let position = $('#task_option_position').val();
 
         let event_date = null;
-        $('#task_date').val('');
+
 
         $('.no-date-info-div').addClass('hidden');
 

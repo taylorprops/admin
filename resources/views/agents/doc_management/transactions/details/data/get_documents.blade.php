@@ -276,7 +276,7 @@
                                                     @else
                                                         <span class="badge badge-primary p-1 ml-2">System File</span>
                                                     @endif
-                                                    <span class="small ml-2">{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $document -> file_location_converted)))).'MB' }}</span>
+                                                    <span class="small ml-2">{{ get_mb(filesize(Storage::path(str_replace('/storage/', '', $document -> file_location_converted)))).'MB' }}</span>
                                                 </div>
                                             </div>
                                         </div>

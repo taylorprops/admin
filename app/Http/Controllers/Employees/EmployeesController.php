@@ -165,10 +165,10 @@ class EmployeesController extends Controller {
 
         $image_resize = Image::make($file -> getRealPath());
         $image_resize -> resize(300, 400);
-        $image_resize -> save(Storage::disk('public') -> path('/employee_photos/'.$filename));
+        $image_resize -> save(Storage::path('employee_photos/'.$filename));
 
 
-        $path = '/storage/employee_photos/'.$filename;
+        $path = Storage::url('employee_photos/'.$filename);
 
         $employee -> update(['photo_location' => $path]);
 
@@ -196,7 +196,7 @@ class EmployeesController extends Controller {
             'photo_location' => ''
         ]);
 
-        Storage::disk('public') -> delete(str_replace('/storage/', '', $emp -> photo_location));
+        Storage::delete(str_replace('/storage/', '', $emp -> photo_location));
         $emp -> update([
             'photo_location' => ''
         ]);
@@ -215,9 +215,9 @@ class EmployeesController extends Controller {
         $ext = $file -> extension();
         $file_name = preg_replace('/\.'.$ext.'/i', '', $file_name);
         $file_name = time().'_'.sanitize($file_name).'.'.$ext;
-        $file -> storeAs('employee_docs/', $file_name, 'public');
-        $file_location = Storage::disk('public') -> url('/employee_docs/'.$file_name);
-        $file_location = str_replace(config('app.url'), '', $file_location);
+        $file -> storeAs('employee_docs/', $file_name);
+        $file_location = Storage::url('employee_docs/'.$file_name);
+        //$file_location = str_replace(config('app.url'), '', $file_location);
 
         if($emp_type == 'in_house') {
             $add_file = InHouseDocs::create([

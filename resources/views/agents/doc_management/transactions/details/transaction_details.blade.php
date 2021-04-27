@@ -642,7 +642,7 @@
                                                                 data-page-width="{{ $form -> page_width }}"
                                                                 data-page-height="{{ $form -> page_height }}"
                                                                 data-page-size="{{ $form -> page_size }}"
-                                                                data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $form -> file_location)))) }}"
+                                                                data-file-size="{{ get_mb(filesize(Storage::path(str_replace('/storage/', '', $form -> file_location)))) }}"
                                                                 >
 
                                                         </div>
@@ -790,7 +790,7 @@
                                                 data-page-width="{{ $checklist_form_required -> page_width }}"
                                                 data-page-height="{{ $checklist_form_required -> page_height }}"
                                                 data-page-size="{{ $checklist_form_required -> page_size }}"
-                                                data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
+                                                data-file-size="{{ get_mb(filesize(Storage::path(str_replace('/storage/', '', $checklist_form_required -> file_location)))) }}"
                                                 data-label="{{ $checklist_form_required -> file_name_display }}"
                                                 checked>
 
@@ -815,7 +815,7 @@
                                                     data-file-name-display="{{ $checklist_form_if_applicable -> file_name_display }}"
                                                     data-pages-total="{{ $checklist_form_if_applicable -> pages_total }}"
                                                     data-file-location="{{ $checklist_form_if_applicable -> file_location }}"
-                                                    data-file-size="{{ get_mb(filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $checklist_form_if_applicable -> file_location)))) }}"
+                                                    data-file-size="{{ get_mb(filesize(Storage::path(str_replace('/storage/', '', $checklist_form_if_applicable -> file_location)))) }}"
                                                     data-label="{{ $checklist_form_if_applicable -> file_name_display }}"
                                                 >
 

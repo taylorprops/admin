@@ -65,10 +65,10 @@ class UserController extends Controller
 
         $image_resize = Image::make($file -> getRealPath());
         $image_resize -> resize(300, 400);
-        $image_resize -> save(Storage::disk('public') -> path('/employee_photos/'.$filename));
+        $image_resize -> save(Storage::path('employee_photos/'.$filename));
 
 
-        $path = '/storage/employee_photos/'.$filename;
+        $path = Storage::url('employee_photos/'.$filename);
 
         $employee -> update(['photo_location' => $path]);
 
@@ -95,7 +95,7 @@ class UserController extends Controller
             $employee = TransactionCoordinators::where('email', $user -> email) -> first();
         }
 
-        Storage::disk('public') -> delete(str_replace('/storage/', '', $employee -> photo_location));
+        Storage::delete(str_replace('/storage/', '', $employee -> photo_location));
         $employee -> update([
             'photo_location' => ''
         ]);

@@ -24,6 +24,13 @@ class Tasks extends Model
         return $this -> hasMany(\App\Models\Tasks\TasksMembers::class, 'task_id', 'id');
     }
 
+    public function listing() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_ID');
+    }
+
+    public function contract() {
+        return $this -> hasOne(\App\Models\DocManagement\Transactions\Contracts\Contracts::class, 'Contract_ID', 'Contract_ID');
+    }
 
 
 }

@@ -60,7 +60,7 @@ class BugReportsController extends Controller
         $image_name = preg_replace('/\.'.$ext.'/i', '', $image_name);
         $image_name = time().'_'.sanitize($image_name).'.'.$ext;
 
-        $image -> storeAs('bug_reports/', $image_name, 'public');
+        $image -> storeAs('bug_reports/', $image_name);
         $image_location = '/storage/bug_reports/'.$image_name;
 
         $device = [

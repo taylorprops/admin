@@ -1420,7 +1420,7 @@ class TransactionsDetailsController extends Controller
 
             // add file size for loading
             foreach ($emailed_documents as $emailed_document) {
-                $emailed_document -> file_size = filesize(Storage::disk('public') -> path(str_replace('/storage/', '', $emailed_document -> file_location)));
+                $emailed_document -> file_size = filesize(Storage::path(str_replace('/storage/', '', $emailed_document -> file_location)));
             }
             $emailed_documents = $emailed_documents -> toJson();
         }
@@ -1446,7 +1446,7 @@ class TransactionsDetailsController extends Controller
             $request = new \Illuminate\Http\Request();
             $request -> setMethod('POST');
 
-            $file = Storage::disk('public') -> path(str_replace('/storage/', '', $emailed_document -> file_location));
+            $file = Storage::path(str_replace('/storage/', '', $emailed_document -> file_location));
             $file_name = File::basename($file);
             $file = new UploadedFile($file, $file_name);
             $request -> files -> set('file', $file);
@@ -1528,9 +1528,9 @@ class TransactionsDetailsController extends Controller
         $new_uploads_path = 'doc_management/transactions/'.$path.'/'.$new_upload_id.'_'.$file_type;
 
         // copy original file
-        File::copyDirectory(Storage::disk('public') -> path($orig_uploads_path), Storage::disk('public') -> path($new_uploads_path));
+        File::copyDirectory(Storage::path($orig_uploads_path), Storage::path($new_uploads_path));
 
-        exec('find '.Storage::disk('public') -> path($new_uploads_path).' -type f -exec chmod 664 {} \;');
+        exec('find '.Storage::path($new_uploads_path).' -type f -exec chmod 664 {} \;');
 
         // add file_location to upload
 
@@ -1698,7 +1698,7 @@ class TransactionsDetailsController extends Controller
         $docs_array = array_map([$this, 'get_path'], $documents);
         $docs = implode(' ', $docs_array);
 
-        $tmp = Storage::disk('public') -> path('tmp');
+        $tmp = Storage::path('tmp');
         exec('pdftk '.$docs.' cat output '.$tmp.'/'.$filename);
 
         $file_location = '/storage/tmp/'.$filename;
@@ -1838,12 +1838,12 @@ class TransactionsDetailsController extends Controller
 
                 $copy_from = $storage_path.'doc_management/uploads/'.$file_id.'/*';
                 $copy_to = $storage_path.$files_path.'_system';
-                Storage::disk('public') -> makeDirectory($files_path.'_system/converted');
-                Storage::disk('public') -> makeDirectory($files_path.'_system/converted_images');
-                Storage::disk('public') -> makeDirectory($files_path.'_system/layers');
-                Storage::disk('public') -> makeDirectory($files_path.'_system/combined');
+                Storage::makeDirectory($files_path.'_system/converted');
+                Storage::makeDirectory($files_path.'_system/converted_images');
+                Storage::makeDirectory($files_path.'_system/layers');
+                Storage::makeDirectory($files_path.'_system/combined');
 
-                exec('chmod 0775 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+                exec('chmod 0775 '.Storage::path('doc_management/transactions/'.$path));
 
                 $copy_to_file = $copy_to.'/converted/'.$file['file_name'];
                 $copy = exec('cp -r '.$copy_from.' '.$copy_to);
@@ -2390,8 +2390,8 @@ class TransactionsDetailsController extends Controller
 
         $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id.'_user';
 
-        Storage::disk('public') -> makeDirectory($files_path.'/images');
-        Storage::disk('public') -> makeDirectory($files_path.'/pages');
+        Storage::makeDirectory($files_path.'/images');
+        Storage::makeDirectory($files_path.'/pages');
 
         // copy images and pages and create merged file
         // copy images
@@ -2399,8 +2399,8 @@ class TransactionsDetailsController extends Controller
 
         foreach ($document_image_files as $image_file) {
             $image_file_name = basename($image_file['file_location']);
-            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images/'.$image_file_name);
-            $new_file_loc = Storage::disk('public') -> path($files_path.'/images/'.$image_file_name);
+            $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images/'.$image_file_name);
+            $new_file_loc = Storage::path($files_path.'/images/'.$image_file_name);
             exec('cp '.$old_file_loc.' '.$new_file_loc);
 
             $upload_images = new TransactionUploadImages();
@@ -2456,8 +2456,8 @@ class TransactionsDetailsController extends Controller
 
         foreach ($document_page_files as $page_file) {
             $page_file_name = basename($page_file['file_location']);
-            $old_file_loc = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
-            $new_file_loc = Storage::disk('public') -> path($files_path.'/pages/'.$page_file_name);
+            $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
+            $new_file_loc = Storage::path($files_path.'/pages/'.$page_file_name);
             exec('cp '.$old_file_loc.' '.$new_file_loc);
 
             $upload_pages = new TransactionUploadPages();
@@ -2483,14 +2483,14 @@ class TransactionsDetailsController extends Controller
         exec('mkdir '.$base_path.'/storage/app/public/'.$files_path.'/converted_images');
 
         // merge all pages and add to main directory and converted directory
-        $pages = Storage::disk('public') -> path($files_path.'/pages');
+        $pages = Storage::path($files_path.'/pages');
         exec('pdftk '.$pages.'/*.pdf cat output '.$base_path.'/storage/app/public/'.$main_file_location);
 
         //exec('cd '.$base_path.'/storage/app/public/ && cp '.$main_file_location.' '.$converted_file_location);
         // get split pages, merge and add to converted
-        $old_converted_location = Storage::disk('public') -> path('doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type.'/converted');
-        $new_converted_location = Storage::disk('public') -> path($files_path.'/converted');
-        $new_converted_images_location = Storage::disk('public') -> path($files_path.'/converted_images');
+        $old_converted_location = Storage::path('doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type.'/converted');
+        $new_converted_location = Storage::path($files_path.'/converted');
+        $new_converted_images_location = Storage::path($files_path.'/converted_images');
 
         exec('pdftk '.$old_converted_location.'/*.pdf cat '.implode(' ', $page_numbers).' output '.$new_converted_location.'/'.$file_name);
 
@@ -2627,7 +2627,7 @@ class TransactionsDetailsController extends Controller
             $storage_public_path = '/storage/'.$storage_dir;
             $file_location = $storage_public_path.'/'.$new_file_name;
 
-            if (! Storage::disk('public') -> put($storage_dir.'/'.$new_file_name, file_get_contents($file))) {
+            if (! Storage::put($storage_dir.'/'.$new_file_name, file_get_contents($file))) {
                 $fail = json_encode(['fail' => 'File Not Uploaded']);
 
                 return $fail;
@@ -2641,12 +2641,12 @@ class TransactionsDetailsController extends Controller
                 $this -> convert_pdf_to_standard_size($page_width, $page_height, $storage_full_path, $new_file_name, $upload);
             }
 
-            //exec('chmod 0777 '.Storage::disk('public') -> path('doc_management/transactions/'.$path));
+            //exec('chmod 0777 '.Storage::path('doc_management/transactions/'.$path));
 
-            Storage::disk('public') -> makeDirectory($storage_dir.'/converted');
+            Storage::makeDirectory($storage_dir.'/converted');
 
-            $file_in = Storage::disk('public') -> path($storage_dir.'/'.$new_file_name);
-            $file_out = Storage::disk('public') -> path($storage_dir.'/temp_'.$new_file_name);
+            $file_in = Storage::path($storage_dir.'/'.$new_file_name);
+            $file_out = Storage::path($storage_dir.'/temp_'.$new_file_name);
 
             // flatten
             exec('pdftk '.$file_in.' output '.$file_out.' flatten');
@@ -2656,10 +2656,10 @@ class TransactionsDetailsController extends Controller
             exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in); */
 
             // add to converted folder
-            exec('cp '.Storage::disk('public') -> path($storage_dir.'/'.$new_file_name).' '.Storage::disk('public') -> path($storage_dir.'/converted/'.$new_file_name));
+            exec('cp '.Storage::path($storage_dir.'/'.$new_file_name).' '.Storage::path($storage_dir.'/converted/'.$new_file_name));
 
-            if (! Storage::disk('public') -> exists($storage_dir.'/converted_images')) {
-                Storage::disk('public') -> makeDirectory($storage_dir.'/converted_images');
+            if (! Storage::exists($storage_dir.'/converted_images')) {
+                Storage::makeDirectory($storage_dir.'/converted_images');
             }
             $checklist_item_docs_model = new TransactionChecklistItemsDocs();
             $source = $storage_path.'/'.$storage_dir.'/converted/'.$new_file_name;
@@ -2674,9 +2674,9 @@ class TransactionsDetailsController extends Controller
 
             // create directories
             $storage_dir_pages = $storage_dir.'/pages';
-            Storage::disk('public') -> makeDirectory($storage_dir_pages);
+            Storage::makeDirectory($storage_dir_pages);
             $storage_dir_images = $storage_dir.'/images';
-            Storage::disk('public') -> makeDirectory($storage_dir_images);
+            Storage::makeDirectory($storage_dir_images);
 
             // split pdf into pages and images
             $input_file = $storage_full_path.'/'.$new_file_name;
@@ -2694,7 +2694,7 @@ class TransactionsDetailsController extends Controller
             $create_images = exec('convert -density 200 -quality 80 '.$input_file.' -background white -alpha remove -strip '.$output_images, $output, $return);
 
             // get all image files images_storage_path to use as file location
-            $saved_images_directory = Storage::files('public/'.$storage_dir.'/images');
+            $saved_images_directory = Storage::files($storage_dir.'/images');
             $images_public_path = $storage_public_path.'/images';
 
             foreach ($saved_images_directory as $saved_image) {
@@ -2723,7 +2723,7 @@ class TransactionsDetailsController extends Controller
                 $upload_images -> save();
             }
 
-            $saved_pages_directory = Storage::files('public/'.$storage_dir.'/pages');
+            $saved_pages_directory = Storage::files($storage_dir.'/pages');
             $pages_public_path = $storage_public_path.'/pages';
 
             $page_number = 1;
@@ -2782,8 +2782,8 @@ class TransactionsDetailsController extends Controller
         // a4
         // 595 +- 15 [580 610] | 842 +- 15 [827 857]
         } elseif ($page_height > 827 && $page_height < 857 && $page_width > 580 && $page_width < 610) {
-            $orig_file_loc = Storage::disk('public') -> path($storage_dir.'/'.$file_name);
-            $temp_file_loc = Storage::disk('public') -> path($storage_dir.'/temp_'.$file_name);
+            $orig_file_loc = Storage::path($storage_dir.'/'.$file_name);
+            $temp_file_loc = Storage::path($storage_dir.'/temp_'.$file_name);
 
             exec('gs \
             -o '.$temp_file_loc.' \
@@ -4101,9 +4101,9 @@ class TransactionsDetailsController extends Controller
 
         $new_file_name = str_replace('.pdf', '', $check -> getClientOriginalName());
         $new_file_name = date('YmdHis').'_'.sanitize($new_file_name).'.png';
-        exec('convert -density 200 -quality 80 '.$check.'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path('tmp/'.$new_file_name));
+        exec('convert -density 200 -quality 80 '.$check.'[0] -flatten -fuzz 1% -trim +repage '.Storage::path('tmp/'.$new_file_name));
 
-        $text = (new TesseractOCR(Storage::disk('public') -> path('tmp/'.$new_file_name)))
+        $text = (new TesseractOCR(Storage::path('tmp/'.$new_file_name)))
             -> run();
 
         $text = iconv('UTF-8', 'ASCII//IGNORE//TRANSLIT', $text);
@@ -4210,11 +4210,11 @@ class TransactionsDetailsController extends Controller
 
         // create upload folder storage/commission/checks_in/commission_id/ or queue
         $path = $page == 'details' ? 'checks_in/'.$Commission_ID : 'checks_in_queue/'.date('YmdHis');
-        if (! Storage::disk('public') -> exists('commission/'.$path)) {
-            Storage::disk('public') -> makeDirectory('commission/'.$path);
+        if (! Storage::exists('commission/'.$path)) {
+            Storage::makeDirectory('commission/'.$path);
         }
         // move file to folder
-        if (! Storage::disk('public') -> put('commission/'.$path.'/'.$new_file_name, file_get_contents($file))) {
+        if (! Storage::put('commission/'.$path.'/'.$new_file_name, file_get_contents($file))) {
             $fail = json_encode(['fail' => 'File Not Uploaded']);
 
             return $fail;
@@ -4225,7 +4225,7 @@ class TransactionsDetailsController extends Controller
         $image_location = '/storage/commission/'.$path.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/'.$path.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::path('commission/'.$path.'/'.$new_file_name).'[0] '.Storage::path('commission/'.$path.'/'.$new_image_name));
 
         if ($page == 'details') {
             $add_check = new CommissionChecksIn();
@@ -4335,11 +4335,11 @@ class TransactionsDetailsController extends Controller
         $new_file_name = $clean_file_name.'.'.$ext;
 
         // create upload folder storage/commission/checks_out/commission_id/
-        if (! Storage::disk('public') -> exists('commission/checks_out/'.$Commission_ID)) {
-            Storage::disk('public') -> makeDirectory('commission/checks_out/'.$Commission_ID);
+        if (! Storage::exists('commission/checks_out/'.$Commission_ID)) {
+            Storage::makeDirectory('commission/checks_out/'.$Commission_ID);
         }
         // move file to folder
-        if (! Storage::disk('public') -> put('commission/checks_out/'.$Commission_ID.'/'.$new_file_name, file_get_contents($file))) {
+        if (! Storage::put('commission/checks_out/'.$Commission_ID.'/'.$new_file_name, file_get_contents($file))) {
             $fail = json_encode(['fail' => 'File Not Uploaded']);
 
             return $fail;
@@ -4350,7 +4350,7 @@ class TransactionsDetailsController extends Controller
         $image_location = '/storage/commission/checks_out/'.$Commission_ID.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_file_name).'[0] '.Storage::disk('public') -> path('commission/checks_out/'.$Commission_ID.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::path('commission/checks_out/'.$Commission_ID.'/'.$new_file_name).'[0] '.Storage::path('commission/checks_out/'.$Commission_ID.'/'.$new_image_name));
 
         $add_check = new CommissionChecksOut();
         $add_check -> Commission_ID = $Commission_ID;
@@ -4423,7 +4423,7 @@ class TransactionsDetailsController extends Controller
         $check_in_queue = CommissionChecksInQueue::find($check_in -> queue_id) -> update(['exported' => 'no']);
 
         // delete files from checks in
-        Storage::disk('public') -> delete([str_replace('/storage/', '', $check_in -> file_location), str_replace('/storage/', '', $check_in -> image_location)]);
+        Storage::delete([str_replace('/storage/', '', $check_in -> file_location), str_replace('/storage/', '', $check_in -> image_location)]);
 
         // delete from checks in - actually delete, not make inactive
         $check_in -> delete();
@@ -4450,12 +4450,12 @@ class TransactionsDetailsController extends Controller
         $new_file_location = $path.'/'.basename($check_in_queue -> file_location);
         $new_image_location = $path.'/'.basename($check_in_queue -> image_location);
 
-        if (! Storage::disk('public') -> exists($path)) {
-            Storage::disk('public') -> makeDirectory($path);
+        if (! Storage::exists($path)) {
+            Storage::makeDirectory($path);
         }
 
-        Storage::disk('public') -> copy($old_file_location, $new_file_location);
-        Storage::disk('public') -> copy($old_image_location, $new_image_location);
+        Storage::copy($old_file_location, $new_file_location);
+        Storage::copy($old_image_location, $new_image_location);
 
         $add_check -> Commission_ID = $Commission_ID;
         $add_check -> file_location = '/storage/'.$new_file_location;
@@ -4705,11 +4705,11 @@ class TransactionsDetailsController extends Controller
 
         // create upload folder storage/earnest/checks_in/earnest_id/ or queue
         $path = 'earnest/checks_in/'.$Earnest_ID;
-        if (! Storage::disk('public') -> exists($path)) {
-            Storage::disk('public') -> makeDirectory($path);
+        if (! Storage::exists($path)) {
+            Storage::makeDirectory($path);
         }
         // move file to folder
-        if (! Storage::disk('public') -> put($path.'/'.$new_file_name, file_get_contents($file))) {
+        if (! Storage::put($path.'/'.$new_file_name, file_get_contents($file))) {
             $fail = json_encode(['fail' => 'File Not Uploaded']);
 
             return $fail;
@@ -4720,7 +4720,7 @@ class TransactionsDetailsController extends Controller
         $image_location = '/storage/'.$path.'/'.$new_image_name;
 
         // convert to image
-        exec('convert -density 200 -quality 80 '.Storage::disk('public') -> path($path.'/'.$new_file_name).'[0] -flatten -fuzz 1% -trim +repage '.Storage::disk('public') -> path($path.'/'.$new_image_name));
+        exec('convert -density 200 -quality 80 '.Storage::path($path.'/'.$new_file_name).'[0] -flatten -fuzz 1% -trim +repage '.Storage::path($path.'/'.$new_image_name));
 
         $add_earnest = new EarnestChecks();
         $add_earnest -> Earnest_ID = $Earnest_ID;
@@ -4950,13 +4950,13 @@ class TransactionsDetailsController extends Controller
             $new_check_file_location = str_replace('/'.$from_earnest -> id.'/', '/'.$new_earnest_id.'/', $check -> file_location);
             $new_check_image_location = str_replace('/'.$from_earnest -> id.'/', '/'.$new_earnest_id.'/', $check -> image_location);
 
-            Storage::disk('public') -> makeDirectory('/earnest/checks_in/'.$new_earnest_id);
+            Storage::makeDirectory('earnest/checks_in/'.$new_earnest_id);
 
-            $copy_file_from = Storage::disk('public') -> path(str_replace('/storage/', '', $check -> file_location));
-            $copy_image_from = Storage::disk('public') -> path(str_replace('/storage/', '', $check -> image_location));
+            $copy_file_from = Storage::path(str_replace('/storage/', '', $check -> file_location));
+            $copy_image_from = Storage::path(str_replace('/storage/', '', $check -> image_location));
 
-            $copy_file_to = Storage::disk('public') -> path(str_replace('/storage/', '', $new_check_file_location));
-            $copy_image_to = Storage::disk('public') -> path(str_replace('/storage/', '', $new_check_image_location));
+            $copy_file_to = Storage::path(str_replace('/storage/', '', $new_check_file_location));
+            $copy_image_to = Storage::path(str_replace('/storage/', '', $new_check_image_location));
 
             exec('cp '.$copy_file_from.' '.$copy_file_to);
             exec('cp '.$copy_image_from.' '.$copy_image_to);
@@ -5035,8 +5035,8 @@ class TransactionsDetailsController extends Controller
         // delete checks from from earnest
         foreach($checks as $check) {
 
-            Storage::disk('public') -> delete(str_replace('/storage/', '', $check -> file_location));
-            Storage::disk('public') -> delete(str_replace('/storage/', '', $check -> image_location));
+            Storage::delete(str_replace('/storage/', '', $check -> file_location));
+            Storage::delete(str_replace('/storage/', '', $check -> image_location));
 
             $check -> delete();
         }
@@ -5135,11 +5135,13 @@ class TransactionsDetailsController extends Controller
         foreach($request -> task_members as $key => $val) {
 
             $member = Members::find($val, ['email']);
+            $user = User::where('email', $member -> email) -> first();
 
             $new_task_member = new TasksMembers();
             $new_task_member -> task_id = $task -> id;
             $new_task_member -> member_id = $val;
             $new_task_member -> member_email = $member -> email;
+            $new_task_member -> user_id = $user -> id;
             $new_task_member -> save();
 
         }
@@ -5788,7 +5790,7 @@ class TransactionsDetailsController extends Controller
     }
 
     public function get_path($url) {
-        return Storage::disk('public') -> path(preg_replace('/^.*\/storage\//', '', $url));
+        return Storage::path(preg_replace('/^.*\/storage\//', '', $url));
     }
 
     // search bright mls agents

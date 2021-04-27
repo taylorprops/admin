@@ -46,9 +46,8 @@ use App\Http\Controllers\Agents\DocManagement\Transactions\EditFiles\Transaction
 |
 */
 
-/* Route::get('/', function () {
-    return view('/auth/login');
-}) -> name('login'); */
+// Test Controller
+Route::get('/tests/test', [TestController::class, 'test']);
 
 
 Route::view('/', '/auth/login');
@@ -334,8 +333,7 @@ Route::middleware(['admin']) -> group(function () {
         return view('/tests/form_elements');
     }); */
 
-    // Test Controller
-    Route::get('/tests/test', [TestController::class, 'test']);
+
 
 });
 

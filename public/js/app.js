@@ -7782,7 +7782,6 @@ if (document.URL.match(/transaction_details/)) {
     var days = parseInt($('#task_option_days').val());
     var position = $('#task_option_position').val();
     var event_date = null;
-    $('#task_date').val('');
     $('.no-date-info-div').addClass('hidden');
 
     if ($('#task_action option:selected').val() != '') {
@@ -18129,6 +18128,9 @@ $(function () {
     }, 10000);
   }
 
+  $(document).on('click', '#notifications_control', function () {
+    $('#notifications_collapse').scrollTop(0);
+  });
   $(document).on('click', '.bug-report-button', function () {
     $('.bug-report-button').html('Please Wait... <span class="spinner-border spinner-border-sm mr-2"></span>');
     setTimeout(function () {

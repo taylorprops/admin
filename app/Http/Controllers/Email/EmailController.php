@@ -104,7 +104,7 @@ class EmailController extends Controller {
                 $file['name'] = $attachment -> filename;
                 $file['location'] = $attachment -> file_location;
                 $email['attachments'][] = $file;
-                $attachment_size += filesize(Storage::disk('public') -> path($attachment -> file_location));
+                $attachment_size += filesize(Storage::path($attachment -> file_location));
             }
 
             $attachment_size = get_mb($attachment_size);

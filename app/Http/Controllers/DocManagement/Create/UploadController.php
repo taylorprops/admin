@@ -76,7 +76,7 @@ class UploadController extends Controller
             $file_id = $upload_copy -> file_id;
             $uploads_path = 'doc_management/uploads';
 
-            File::copyDirectory(Storage::disk('public') -> path($uploads_path.'/'.$upload_id), Storage::disk('public') -> path($uploads_path.'/'.$file_id));
+            File::copyDirectory(Storage::path($uploads_path.'/'.$upload_id), Storage::path($uploads_path.'/'.$file_id));
             //$uploads_path = base_path().'/storage/app/public/doc_management/uploads';
             //exec('cp -r '.$uploads_path.'/'.$upload_id.' '.$uploads_path.'/'.$file_id);
 
@@ -360,20 +360,20 @@ class UploadController extends Controller
         $new_file_name_image = date('YmdHis').'_'.sanitize($new_file_name).'.png';
 
         // put original file
-        Storage::disk('public') -> put('tmp/'.$new_file_name_pdf, file_get_contents($upload));
+        Storage::put('tmp/'.$new_file_name_pdf, file_get_contents($upload));
         // remove images from pdf so easier to scan text
-        exec('gs -o '.Storage::disk('public') -> path('tmp/tmp_'.$new_file_name_pdf).' -sDEVICE=pdfwrite -dFILTERIMAGE '.$upload);
+        exec('gs -o '.Storage::path('tmp/tmp_'.$new_file_name_pdf).' -sDEVICE=pdfwrite -dFILTERIMAGE '.$upload);
         // convert to image
-        exec('convert '.Storage::disk('public') -> path('tmp/tmp_'.$new_file_name_pdf).'[0] -density 200 -flatten -trim -quality 80% -background white '.Storage::disk('public') -> path('tmp/'.$new_file_name_image));
+        exec('convert '.Storage::path('tmp/tmp_'.$new_file_name_pdf).'[0] -density 200 -flatten -trim -quality 80% -background white '.Storage::path('tmp/'.$new_file_name_image));
         // scan text
-        $text = (new TesseractOCR(Storage::disk('public') -> path('tmp/'.$new_file_name_image)))
+        $text = (new TesseractOCR(Storage::path('tmp/'.$new_file_name_image)))
             -> allowlist(range('a', 'z'), range('A', 'Z'), '-_/\'/')
             -> run();
         // store results to text file so we can loop through the lines
-        $temp_text_file = '/tmp/'.date('YmdHis').'.txt';
-        Storage::disk('public') -> put($temp_text_file, $text);
+        $temp_text_file = 'tmp/'.date('YmdHis').'.txt';
+        Storage::put($temp_text_file, $text);
         // open saved text file with titles and get lines
-        $fn = fopen(Storage::disk('public') -> path($temp_text_file), 'r');
+        $fn = fopen(Storage::path($temp_text_file), 'r');
         $lines = [];
         while (! feof($fn)) {
             $lines[] = fgets($fn);
@@ -466,14 +466,14 @@ class UploadController extends Controller
             $storage_path = $base_path.'/storage/app/public';
             $storage_dir = 'doc_management/uploads/'.$file_id;
 
-            if (! Storage::disk('public') -> put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
+            if (! Storage::put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
                 $fail = json_encode(['fail' => 'File Not Uploaded']);
 
                 return $fail;
             }
 
-            $file_in = Storage::disk('public') -> path($storage_dir.'/'.$new_filename);
-            $file_out = Storage::disk('public') -> path($storage_dir.'/temp_'.$new_filename);
+            $file_in = Storage::path($storage_dir.'/'.$new_filename);
+            $file_out = Storage::path($storage_dir.'/temp_'.$new_filename);
             exec('pdftk '.$file_in.' output '.$file_out.' flatten compress');
             exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
 
@@ -487,9 +487,9 @@ class UploadController extends Controller
 
             // create directories
             $storage_dir_pages = $storage_dir.'/pages';
-            Storage::disk('public') -> makeDirectory($storage_dir_pages);
+            Storage::makeDirectory($storage_dir_pages);
             $storage_dir_images = $storage_dir.'/images';
-            Storage::disk('public') -> makeDirectory($storage_dir_images);
+            Storage::makeDirectory($storage_dir_images);
 
             // split pdf into pages and images
             $input_file = $storage_full_path.'/'.$new_filename;
@@ -508,7 +508,7 @@ class UploadController extends Controller
             $create_images = exec('convert -density 200 -quality 80% -resize 1200 '.$input_file.'  -compress JPEG -background white -alpha remove -strip '.$output_images, $output, $return);
 
             // get all image files images_storage_path to use as file location
-            $saved_images_directory = Storage::files('public/'.$storage_dir.'/images');
+            $saved_images_directory = Storage::files($storage_dir.'/images');
             $images_public_path = $storage_public_path.'/images';
 
             foreach ($saved_images_directory as $saved_image) {
@@ -532,7 +532,7 @@ class UploadController extends Controller
                 $upload -> save();
             }
 
-            $saved_pages_directory = Storage::files('public/'.$storage_dir.'/pages');
+            $saved_pages_directory = Storage::files($storage_dir.'/pages');
             $pages_public_path = $storage_public_path.'/pages';
 
             $page_number = 1;
