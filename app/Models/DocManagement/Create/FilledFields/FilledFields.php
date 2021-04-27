@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\DocManagement\FilledFields;
+namespace App\Models\DocManagement\Create\FilledFields;
 
 use Illuminate\Database\Eloquent\Model;
 
