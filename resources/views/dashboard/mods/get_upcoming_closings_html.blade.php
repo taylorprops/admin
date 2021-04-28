@@ -7,7 +7,7 @@
                 <th>Address</th>
                 <th>Settle Date</th>
                 <th>Checklist Status</th>
-                @if(auth() -> user() -> group == 'admin')
+                @if(auth() -> user() -> group != 'agent')
                 <th>Agent</th>
                 @endif
                 <th></th>
@@ -37,7 +37,7 @@
                     <td>
                         {!! $checklist_status !!}
                     </td>
-                    @if(auth() -> user() -> group == 'admin')
+                    @if(auth() -> user() -> group != 'agent')
                     <td>
                         {{ $contract -> agent -> full_name }}
                     </td>

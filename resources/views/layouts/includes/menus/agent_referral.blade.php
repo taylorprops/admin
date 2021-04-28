@@ -20,7 +20,7 @@
     <li>
         <a href="/esign">
             <i class="fa fa-tachometer-alt"></i>
-            <span>Esign</span>
+            <span>E-Sign</span>
         </a>
     </li>
 

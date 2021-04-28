@@ -230,7 +230,7 @@
                                                 </a>
                                                 <br>
                                                 <div class="d-flex justify-content-start align-items-center">
-                                                    @if(auth() -> user() -> group == 'admin')
+                                                    @if(auth() -> user() -> group != 'agent')
                                                         <div class="text-dark font-weight-bold mr-2">
                                                             {{ $agent }}
                                                         </div>

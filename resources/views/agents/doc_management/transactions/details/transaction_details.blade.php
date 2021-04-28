@@ -22,7 +22,7 @@
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="documents"  data-target="#documents_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-folder-open mr-2 d-none d-md-inline-block"></i> Documents</a></li>
 
                 @if(auth() -> user() -> group != 'admin')
-                <li class="nav-item"><a href="javascript: void(0)" data-tab="esign"  data-target="#esign_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-signature mr-2 d-none d-md-inline-block"></i> Esign</a></li>
+                <li class="nav-item"><a href="javascript: void(0)" data-tab="esign"  data-target="#esign_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-signature mr-2 d-none d-md-inline-block"></i> E-Sign</a></li>
                 @endif
                 <li class="nav-item"><a href="javascript: void(0)" data-tab="checklist"  data-target="#checklist_tab" data-toggle="tab" class="nav-link transaction-details-nav-link"><i class="fad fa-tasks mr-2 d-none d-md-inline-block"></i> Checklist</a></li>
 

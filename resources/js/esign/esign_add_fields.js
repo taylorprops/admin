@@ -198,7 +198,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 formData.append('template_name', template_name);
                 axios.post('/esign/save_as_template', formData, axios_options)
                 .then(function (response) {
-                    $('#modal_success').modal().find('.modal-body').html('Your template was successfully saved. You can find your saved Templates on your Esign Dashboard in the "templates" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To Esign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
+                    $('#modal_success').modal().find('.modal-body').html('Your template was successfully saved. You can find your saved Templates on your E-Sign Dashboard in the "templates" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To E-Sign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
                     $('#template_modal').modal('hide');
                 })
                 .catch(function (error) {
@@ -239,7 +239,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 formData.append('draft_name', draft_name);
                 axios.post('/esign/save_as_draft', formData, axios_options)
                 .then(function (response) {
-                    $('#modal_success').modal().find('.modal-body').html('Your draft was successfully saved. You can find your saved Drafts on your Esign Dashboard in the "Drafts" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To Esign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
+                    $('#modal_success').modal().find('.modal-body').html('Your draft was successfully saved. You can find your saved Drafts on your E-Sign Dashboard in the "Drafts" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To E-Sign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
                     $('#draft_modal').modal('hide');
                 })
                 .catch(function (error) {

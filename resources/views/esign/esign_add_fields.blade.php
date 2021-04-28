@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Esign - Add Fields')
+@section('title', 'E-Sign - Add Fields')
 
 @section('content')
 
