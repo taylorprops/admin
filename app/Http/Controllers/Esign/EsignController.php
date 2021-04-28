@@ -738,12 +738,17 @@ class EsignController extends Controller
         if ($transaction_type == 'listing') {
             $members = Members::where('Listing_ID', $Listing_ID) -> get();
         } elseif ($transaction_type == 'contract') {
-            $members = Members::where('Contract_ID', $Contract_ID)
-                -> orWhere(function ($query) use ($Listing_ID) {
-                    if ($Listing_ID > 0) {
-                        $query -> where('Listing_ID', $Listing_ID);
-                    }
-                }) -> get();
+            if ($Listing_ID > 0) {
+                $members = Members::where('Listing_ID', $Listing_ID) -> get();
+            } else {
+                $members = Members::where('Contract_ID', $Contract_ID) -> get();
+            }
+            // $members = Members::where('Contract_ID', $Contract_ID)
+            //     -> orWhere(function ($query) use ($Listing_ID) {
+            //         if ($Listing_ID > 0) {
+            //             $query -> where('Listing_ID', $Listing_ID);
+            //         }
+            //     }) -> get();
         } else {
             $members = null;
         }
