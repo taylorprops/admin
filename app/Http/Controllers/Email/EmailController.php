@@ -140,7 +140,7 @@ class EmailController extends Controller {
 
         $new_mail = new DefaultEmail($email);
 
-        //return ($new_mail) -> render();
+        return ($new_mail) -> render();
 
         Mail::to($email['tos'])
             -> cc($email['ccs'])

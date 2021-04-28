@@ -30,8 +30,14 @@
                                 <div class="font-10 text-primary p-2 @if(session('super_user') == true) notification-text-editor @endif w-35" data-field="title">
                                     {!! $notification -> title !!}
                                 </div>
-                                <div class="@if(session('super_user') == true) notification-text-editor @endif ml-3 p-2 w-65" data-field="description">
-                                    {!! $notification -> description !!}
+
+                                <div class="w-65 ml-3">
+                                    <div class="@if(session('super_user') == true) notification-text-editor @endif p-2" data-field="description">
+                                        {!! $notification -> description !!}
+                                    </div>
+                                    @if(session('super_user'))
+                                    <span class="small ml-2">{{ $notification -> config_key }}</span>
+                                    @endif
                                 </div>
 
                             </div>

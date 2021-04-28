@@ -20,73 +20,45 @@ class TestController extends Controller
 
         try {
 
-            $user_id = '';
 
-
-            $tasks = Tasks::where('status', 'active')
-            -> where('task_date', date('Y-m-d'))
-            -> where('reminder', 0)
-            -> with(['members', 'listing:Listing_ID,FullStreetAddress,City,StateOrProvince,PostalCode', 'contract:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode'])
+            $calendar_events = Calendar::where('start_date', date('Y-m-d'))
+            -> where('start_time', date('H:i:00'))
+            -> where('all_day', 0)
             -> get();
 
-            foreach ($tasks as $task) {
+            foreach ($calendar_events as $calendar_event) {
 
-                $listing = $task -> listing;
-                $contract = $task -> contract;
-
-                $notification = config('notifications.user_task_notification');
+                $notification = config('notifications.user_calendar_event_notification');
 
                 if($notification['on_off'] == 'on') {
 
-                    $task_members = $task -> members;
+                    $user = User::find($calendar_event -> user_id);
 
-                    foreach($task_members as $task_member) {
-
-                        $user = User::where('id', $task_member -> user_id) -> first();
-
-                        if($user) {
-
-                            $id = $task -> Listing_ID;
-                            $sub_type = 'listing';
-                            $property = $listing;
-                            if($task -> transaction_type == 'contract') {
-                                $id = $task -> Contract_ID;
-                                $sub_type = 'contract';
-                                $property = $contract;
-                            }
-
-                            $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
-                            $address_email = $property -> FullStreetAddress.'<br>'.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
-
-                            $subject = 'Task Due Notification - '.$address;
-                            $message = 'Task Due Notification<br>'.$address.'<br><strong>'.$task -> task_title.'</strong>';
-                            $message_email = '
-                            <div style="font-size: 15px;">
-                                Task Due for:
-                                    <br><br>
-                                '.$address_email.'
-                                <br><br>
-                                <strong>'.$task -> task_title.'</strong>
-                                <br><br>
-                                <a href="'.config('app.url').'/agents/doc_management/transactions/transaction_details/'.$id.'/'.$sub_type.'" target="_blank">View Transaction</a>
-                                <br><br>
-                                Thank You,<br>
-                                Taylor Properties
-                            </div>';
+                    $id = '';
+                    $sub_type = '';
+                    $subject = 'Reminder Notification';
+                    $message = 'Reminder<br>'.$calendar_event -> event_title.'</strong>';
+                    $message_email = '
+                    <div style="font-size: 15px;">
+                        Reminder
+                        <br><br>
+                        '.date_mdy(date('Y-m-d')).' - All Day Event
+                        <br><br>
+                        <strong>'.$calendar_event -> event_title.'</strong>
+                        <br><br>
+                        Thank You,<br>
+                        Taylor Properties
+                    </div>';
 
 
-                            $notification['type'] = 'task_due';
-                            $notification['sub_type'] = $sub_type;
-                            $notification['sub_type_id'] = $id;
-                            $notification['subject'] = $subject;
-                            $notification['message'] = $message;
-                            $notification['message_email'] = $message_email;
+                    $notification['type'] = 'calendar_event';
+                    $notification['sub_type'] = $sub_type;
+                    $notification['sub_type_id'] = $id;
+                    $notification['subject'] = $subject;
+                    $notification['message'] = $message;
+                    $notification['message_email'] = $message_email;
 
-                            Notification::send($user, new GlobalNotification($notification));
-
-                        }
-
-                    }
+                    Notification::send($user, new GlobalNotification($notification));
 
                 }
 

@@ -16,6 +16,10 @@ $(function() {
 
     global_loading_off();
 
+    /* let input = $('#refresh_page');
+    input.val() == 'yes' ? location.href = location.href : input.val('yes');
+    console.log(input.val()); */
+
 
     /* if(!document.URL.match(/admin\/$/)) {
         inactivityTime();

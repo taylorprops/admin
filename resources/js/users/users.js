@@ -40,7 +40,7 @@ if (document.URL.match(/users/)) {
         .then(function (response) {
             if(response.status == 200) {
                 toastr['success']('Registration Email Sent');
-                ele.html('Registration Email');
+                ele.html('Send Registration Email');
             } else {
                 alert('error');
             }

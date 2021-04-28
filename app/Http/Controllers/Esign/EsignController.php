@@ -1069,7 +1069,11 @@ class EsignController extends Controller
             $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
 
             $file_to_sign = new document();
-            $file_to_sign -> setSandbox(true);
+            if(config('app.env') == 'development') {
+                $file_to_sign -> setSandbox(true);
+            } else {
+                $file_to_sign -> setSandbox(false);
+            }
             $file_to_sign -> setTitle($subject);
             $file_to_sign -> setMessage($message);
             //$file_to_sign -> setEmbeddedSigningEnabled(true);
@@ -1080,7 +1084,7 @@ class EsignController extends Controller
             $file_to_sign -> setCustomRequesterName($user_name);
             $file_to_sign -> setCustomRequesterEmail($user_email);
 
-            $days = config('global.app_stage') == 'development' ? 'PT1200S' : 'P7D';
+            $days = config('app.env') == 'development' ? 'PT1200S' : 'P7D';
             $date = new \DateTime();
             $date -> add(new \DateInterval($days));
             $file_to_sign -> setExpires($date);
@@ -1239,7 +1243,7 @@ class EsignController extends Controller
         $file_to_sign -> setCustomRequesterName(auth() -> user() -> name);
         $file_to_sign -> setCustomRequesterEmail(auth() -> user() -> email);
 
-        $days = config('global.app_stage') == 'development' ? 'P1D' : 'P7D';
+        $days = config('app.env') == 'development' ? 'P1D' : 'P7D';
         $date = new \DateTime();
         $date -> add(new \DateInterval($days));
         $file_to_sign -> setExpires($date);

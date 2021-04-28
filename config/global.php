@@ -25,7 +25,6 @@ $select_columns_bright = 'Appliances,AssociationFee,AssociationFeeFrequency,Asso
 $select_columns_bright_agents = ['ListAgentFirstName,ListAgentLastName,ListAgentEmail,ListAgentPreferredPhone,BuyerOfficeName,BuyerOfficeMlsId,BuyerAgentMlsId,BuyerAgentFirstName,BuyerAgentLastName,BuyerAgentEmail,BuyerAgentPreferredPhone'];
 
 return [
-    'app_stage' => env('APP_STAGE'),
     'bad_characters' => $bad_characters,
     'street_suffixes' => $street_suffixes,
     'street_dir_suffixes' => $street_dir_suffixes,

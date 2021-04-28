@@ -71,13 +71,14 @@ class UpdateAgentsTablesJob implements ShouldQueue
             $agent_email = $agent -> email1;
             $social_security = Crypt::encrypt($agent -> soc_sec);
 
-            if(config('global.app_stage') == 'development') {
+            if(config('app.env') == 'development') {
 
                 $agent_email = 'test_'.$agent -> email1;
                 $social_security = Crypt::encrypt('1111-22-333');
                 if($agent -> email1 == 'mike@taylorprops.com') {
                     $agent_email = $agent -> email1;
                 }
+
             }
 
 

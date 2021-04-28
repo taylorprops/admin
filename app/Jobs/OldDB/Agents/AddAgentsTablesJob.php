@@ -50,7 +50,7 @@ class AddAgentsTablesJob implements ShouldQueue
             $agent_email = $agent -> email1;
             $social_security = Crypt::encrypt($agent -> soc_sec);
 
-            if(config('global.app_stage') == 'development') {
+            if(config('app.env') == 'development') {
 
                 $agent_email = 'test_'.$agent -> email1;
                 $social_security = Crypt::encrypt('1111-22-333');
@@ -116,7 +116,7 @@ class AddAgentsTablesJob implements ShouldQueue
             $add_user -> first_name = $agent -> first;
             $add_user -> last_name = $agent -> last;
             $add_user -> email = $agent_email;
-            //$add_user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
+            $add_user -> password = '$2y$10$P.O4F.rVfRRin81asdfasdfHksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
             $add_user -> save();
 
         }

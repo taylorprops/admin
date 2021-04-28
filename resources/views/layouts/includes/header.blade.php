@@ -98,17 +98,17 @@
         <!-- sidebar-content  -->
         <div class="sidebar-footer">
 
-            {{-- <a href="/logout">
-                <i class="fal fa-sign-out fa-lg text-orange"></i>
-            </a> --}}
+            <button class="btn btn-secondary btn-sm bug-report-button mx-0">Report Bug <i class="fal fa-bug"></i></button>
 
-            <button class="btn btn-secondary btn-sm bug-report-button">Report Bug <i class="fal fa-bug"></i></button>
+            <a href="/logout">
+                <i class="fal fa-sign-out fa-lg text-orange"></i>
+            </a>
 
             <a href="/calendar">
                 <i class="fad fa-calendar-alt fa-lg text-white"></i>
             </a>
 
-            <a id="notifications_control" data-toggle="collapse" href="#notifications_collapse" role="button" aria-expanded="false" aria-controls="notifications_collapse">
+            <a id="notifications_control" class="mr-2" data-toggle="collapse" href="#notifications_collapse" role="button" aria-expanded="false" aria-controls="notifications_collapse">
                 <i class="fa fa-bell fa-lg"></i>
                 <span class="badge badge-pill bg-orange text-white notification notifications-unread-count">0</span>
             </a>

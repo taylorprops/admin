@@ -16016,7 +16016,7 @@ body {
 }
 .sidebar-footer > a .notification {
   position: absolute;
-  top: 0;
+  top: 5px;
 }
 
 .badge-sonar {

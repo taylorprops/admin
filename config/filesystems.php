@@ -108,4 +108,6 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    //ln -s /mnt/vol2 /var/www/agentdocuments.com/public/storage
+
 ];

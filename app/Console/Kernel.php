@@ -44,8 +44,14 @@ class Kernel extends ConsoleKernel
         // set listings  status
         $schedule -> command('doc_management:set_listing_status') -> dailyAt('00:01');
 
+        // calendar and tasks
+        $schedule -> command('calendar:tasks_all_day') -> dailyAt('08:00:00');
+        $schedule -> command('calendar:tasks_reminders') -> everyMinute();
+        $schedule -> command('calendar:calendar:events_all_day') -> dailyAt('08:00:00');
+        $schedule -> command('calendar:events_timed') -> everyMinute();
+
         // update agents
-        if(config('app.env') != 'development') {
+        if(config('app.env') == 'production') {
             //$schedule -> command('old_db:update_agents') -> everyMinute() -> withoutOverlapping(1);
             //$schedule -> command('old_db:add_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
         }
@@ -55,7 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule -> exec('sudo find '.base_path().'/storage/app/public/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
 
-        if(config('global.app_stage') == 'development') {
+        if(config('app.env') == 'development') {
             // mysql backup locally
             //$schedule -> command('database:backup') -> dailyAt('08:25');
         }

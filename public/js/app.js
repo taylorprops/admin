@@ -17853,6 +17853,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 $(function () {
   global_loading_off();
+  /* let input = $('#refresh_page');
+  input.val() == 'yes' ? location.href = location.href : input.val('yes');
+  console.log(input.val()); */
+
   /* if(!document.URL.match(/admin\/$/)) {
       inactivityTime();
   } */
@@ -18958,7 +18962,7 @@ if (document.URL.match(/users/)) {
     }).then(function (response) {
       if (response.status == 200) {
         toastr['success']('Registration Email Sent');
-        ele.html('Registration Email');
+        ele.html('Send Registration Email');
       } else {
         alert('error');
       }

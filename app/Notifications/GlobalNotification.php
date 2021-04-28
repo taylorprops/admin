@@ -81,11 +81,17 @@ class GlobalNotification extends Notification implements ShouldQueue
             $this -> notification['link_text'] = 'View Contract';
 
         // %%%%%% Tasks, Reminders, Calendar Events %%%%%% //
+        // Tasks
         } else if($notification['type'] == 'task_due') {
 
             $this -> notification['link_url'] = '/agents/doc_management/transactions/transaction_details/'.$notification['sub_type_id'].'/'.$notification['sub_type'];
             $this -> notification['link_text'] = 'View Transaction';
 
+        // Calendar Events
+        } else if($notification['type'] == 'calendar_event') {
+
+            $this -> notification['link_url'] = '';
+            $this -> notification['link_text'] = '';
 
         // %%%%%% System Admin %%%%%% //
         } else if($notification['type'] == 'admin') {
