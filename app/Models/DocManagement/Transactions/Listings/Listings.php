@@ -71,7 +71,7 @@ class Listings extends Model
     public function ScopeGetPropertyDetails($request, $transaction_type, $id, $select = null) {
 
         if($select) {
-            array_push($select, 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'TransactionCoordinator_ID', 'Status');
+            array_push($select, 'Listing_ID', 'Contract_ID', 'Referral_ID', 'Agent_ID', 'TransactionCoordinator_ID', 'Status');
         }
 
         if ($transaction_type == 'listing') {
