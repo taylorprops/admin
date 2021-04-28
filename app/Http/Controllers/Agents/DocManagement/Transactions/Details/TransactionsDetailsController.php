@@ -5161,7 +5161,7 @@ class TransactionsDetailsController extends Controller
         $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0'], ['MLSListDate', 'ContractDate', 'CloseDate', 'ExpirationDate']);
 
         // if triggered by event
-        foreach($tasks -> whereNotIn('task_action', ['0', '222', '223']) as $task) {
+        foreach($tasks -> whereNotNull('task_action') -> whereNotIn('task_action', ['0', '222', '223']) as $task) {
 
             // will get only the date associated with the task_action
             $new_task_date = [
