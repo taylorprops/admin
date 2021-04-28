@@ -5563,7 +5563,7 @@ class TransactionsDetailsController extends Controller
         $this -> update_transaction_members($Contract_ID, 'contract');
 
         // update tasks - Contract Date and Close Date for listing
-        $this -> update_tasks_on_event_date_change($transaction_type, $Listing_ID, 0);
+        $this -> update_tasks_on_event_date_change('listing', $Listing_ID, 0);
 
         return response() -> json([
             'Contract_ID' => $Contract_ID,
