@@ -618,7 +618,7 @@ class TransactionsDetailsController extends Controller
             $field = 'Listing_ID';
         } elseif ($transaction_type == 'contract') {
             $property = Contracts::find($Contract_ID);
-            dd($contract);
+            dd($property);
             $id = $Contract_ID;
             $field = 'Contract_ID';
             if ($property -> Listing_ID > 0) {
