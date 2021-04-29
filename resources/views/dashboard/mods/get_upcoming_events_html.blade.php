@@ -29,17 +29,17 @@
 
             <div class="list-group-item">
 
-                <div class="d-flex justify-content-start align-items-center">
+                <div class="d-flex justify-content-start align-items-center font-8">
 
                     <div class="mr-4">
                         {!! $icon !!}
                     </div>
 
-                    <div class="font-9 mr-4">
+                    <div class="mr-4">
                         {{ date('D - M jS', strtotime($event -> start_date)) }}
                         @if($event_time)
                             <br>
-                            <span class="font-8">{{ date('g:ia', strtotime($event -> start_time)) }}</span>
+                            <span class="">{{ date('g:ia', strtotime($event -> start_time)) }}</span>
                         @endif
                     </div>
 
@@ -60,7 +60,7 @@
 
 @else
 
-    <div class="text-gray font-10 text-center bg-white rounded p-4">
+    <div class="text-gray font-10 text-center bg-white rounded p-3">
         <i class="fal fa-check mr-2"></i> No Upcoming Events
     </div>
 
