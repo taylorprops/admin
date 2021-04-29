@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel
         // calendar and tasks
         $schedule -> command('calendar:tasks_all_day') -> dailyAt('08:00:00');
         $schedule -> command('calendar:tasks_reminders') -> everyMinute();
-        $schedule -> command('calendar:calendar:events_all_day') -> dailyAt('08:00:00');
+        $schedule -> command('calendar:events_all_day') -> dailyAt('08:00:00');
         $schedule -> command('calendar:events_timed') -> everyMinute();
 
         // update agents
