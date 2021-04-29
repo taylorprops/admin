@@ -60,7 +60,7 @@
 
 @else
 
-    <div class="text-gray font-10 text-center bg-white rounded p-2">
+    <div class="text-gray font-10 text-center bg-white rounded p-4">
         <i class="fal fa-check mr-2"></i> No Upcoming Events
     </div>
 
