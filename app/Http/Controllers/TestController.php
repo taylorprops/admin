@@ -17,9 +17,9 @@ class TestController extends Controller
 {
     public function test(Request $request) {
 
+        return view('/tests/test');
 
-
-        $rets_config = new \PHRETS\Configuration;
+        /* $rets_config = new \PHRETS\Configuration;
         $rets_config -> setLoginUrl(config('rets.rets.url'))
             -> setUsername(config('rets.rets.username'))
             -> setPassword(config('rets.rets.password'))
@@ -244,7 +244,7 @@ class TestController extends Controller
 
             throw new \Exception('unable to log in to rets');
 
-        }
+        } */
 
     }
 }
