@@ -48,10 +48,9 @@ class AddListingsJob implements ShouldQueue
 
         $connect = $rets -> Login();
 
-        if(!$connect -> getBroker()) {
-            $rets -> Disconnect();
-            $connect = $rets -> Login();
-        }
+        // if(!$connect -> getBroker()) {
+        //     $connect = $rets -> Login();
+        // }
 
         if($connect -> getBroker()) {
 
