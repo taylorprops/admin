@@ -15,7 +15,7 @@ class AddListingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    //public $tries = 5;
 
     /**
      * Create a new job instance.
@@ -34,177 +34,186 @@ class AddListingsJob implements ShouldQueue
      */
     public function handle() {
 
-        try {
+        $rets_config = new \PHRETS\Configuration;
+        $rets_config -> setLoginUrl(config('rets.rets.url'))
+            -> setUsername(config('rets.rets.username'))
+            -> setPassword(config('rets.rets.password'))
+            -> setRetsVersion('RETS/1.8')
+            -> setUserAgent('Bright RETS Application/1.0')
+            -> setHttpAuthenticationMethod('digest')
+            -> setOption('disable_follow_location', false)
+            -> setOption('use_post_method', false);
 
-            $rets_config = new \PHRETS\Configuration;
-            $rets_config -> setLoginUrl(config('rets.rets.url'))
-                -> setUsername(config('rets.rets.username'))
-                -> setPassword(config('rets.rets.password'))
-                -> setRetsVersion('RETS/1.8')
-                -> setUserAgent('Bright RETS Application/1.0')
-                -> setHttpAuthenticationMethod('digest')
-                -> setOption('disable_follow_location', false); // or 'basic' if required
-                //-> setOption('use_post_method', true);
+        $rets = new \PHRETS\Session($rets_config);
 
-            $rets = new \PHRETS\Session($rets_config);
+        $connect = $rets -> Login();
+
+        if(!$connect -> getBroker()) {
+            $rets -> Disconnect();
             $connect = $rets -> Login();
+        }
 
-            $resource = 'Property';
-            $class = 'ALL';
+        if($connect -> getBroker()) {
 
-            $bright_office_codes = implode(',', config('bright_office_codes'));
+            try {
 
-            $query = '(MLSListDate='.date('Y-m-d').'),(ListOfficeMlsId=|'.$bright_office_codes.')';
+                $resource = 'Property';
+                $class = 'ALL';
 
-            $results = $rets -> Search(
-                $resource,
-                $class,
-                $query
-            );
+                $bright_office_codes = implode(',', config('bright_office_codes'));
 
-            $listings = $results -> toArray();
+                $query = '(MLSListDate='.date('Y-m-d').'),(ListOfficeMlsId=|'.$bright_office_codes.')';
 
-            foreach($listings as $listing) {
+                $results = $rets -> Search(
+                    $resource,
+                    $class,
+                    $query
+                );
 
-                $listing_key = $listing['ListingKey'];
+                $listings = $results -> toArray();
 
-                $add_listing = CompanyListings::firstOrCreate([
-                    'ListingKey' => $listing_key
-                ]);
+                foreach($listings as $listing) {
 
-                foreach($listing as $col => $val) {
-                    $add_listing -> $col = $val;
+                    $listing_key = $listing['ListingKey'];
+
+                    $add_listing = CompanyListings::firstOrCreate([
+                        'ListingKey' => $listing_key
+                    ]);
+
+                    foreach($listing as $col => $val) {
+                        $add_listing -> $col = $val;
+                    }
+
+                    $add_listing -> save();
+
                 }
 
-                $add_listing -> save();
+                $rets -> Disconnect();
 
-            }
+            } catch (Throwable $exception) {
 
-            return true;
+                if ($exception instanceof QueryException) {
 
-        } catch (Throwable $exception) {
+                    if(stristr($exception -> getMessage(), 'Column not found')) {
 
-            if ($exception instanceof UserSessionExpiredException) {
+                        $results = $rets -> Search(
+                            $resource,
+                            $class,
+                            $query,
+                            [
+                                'Limit' => 1
+                            ]
+                        );
 
-                $rets = new \PHRETS\Session($rets_config);
-                $connect = $rets -> Login();
+                        $results = $results -> toArray();
 
-            } else
+                        $system = $rets -> GetSystemMetadata();
+                        $table = 'admin.company_listings';
 
-            if ($exception instanceof QueryException) {
+                        $rets_metadata = $rets -> GetTableMetadata($resource, $class);
 
-                if(stristr($exception -> getMessage(), 'Column not found')) {
+                        DB::select("SET GLOBAL innodb_strict_mode=OFF");
 
-                    $results = $rets -> Search(
-                        $resource,
-                        $class,
-                        $query,
-                        [
-                            'Limit' => 1
-                        ]
-                    );
+                        foreach($results as $listing) {
 
-                    $results = $results -> toArray();
+                            foreach ($listing as $key => $val) {
+                                $colNames[] = $key;
+                            }
 
-                    $system = $rets -> GetSystemMetadata();
-                    $table = 'admin.company_listings';
+                            $columns_in_db = DB::select("SHOW COLUMNS FROM ".$table);
 
-                    $rets_metadata = $rets -> GetTableMetadata($resource, $class);
+                            $cols = array();
 
-                    DB::select("SET GLOBAL innodb_strict_mode=OFF");
+                            foreach($columns_in_db as $column_in_db) {
+                                $cols[] = $column_in_db -> Field;
+                            }
 
-                    foreach($results as $listing) {
+                            $columns_count = count($columns_in_db);
+                            $last_column = $cols[$columns_count -1];
 
-                        foreach ($listing as $key => $val) {
-                            $colNames[] = $key;
-                        }
+                            $missing = array_diff($colNames,$cols);
 
-                        $columns_in_db = DB::select("SHOW COLUMNS FROM ".$table);
+                            $s = 0;
 
-                        $cols = array();
+                            foreach($missing as $missing_column) {
 
-                        foreach($columns_in_db as $column_in_db) {
-                            $cols[] = $column_in_db -> Field;
-                        }
+                                // Get column type
+                                foreach ($rets_metadata as $field) {
 
-                        $columns_count = count($columns_in_db);
-                        $last_column = $cols[$columns_count -1];
+                                    if($field -> getSystemName() == $missing_column) {
 
-                        $missing = array_diff($colNames,$cols);
+                                        $cleaned_comment = addslashes($field -> getLongName());
 
-                        $s = 0;
-
-                        foreach($missing as $missing_column) {
-
-                            // Get column type
-                            foreach ($rets_metadata as $field) {
-
-                                if($field -> getSystemName() == $missing_column) {
-
-                                    $cleaned_comment = addslashes($field -> getLongName());
-
-                                    if ($field -> getInterpretation() == "LookupMulti") {
-                                        $column_type =  "TEXT";
-                                    } elseif ($field -> getInterpretation() == "Lookup") {
-                                        $column_type =  "VARCHAR(50)";
-                                    } elseif ($field -> getDataType() == "Int" || $field -> getDataType() == "Small" || $field -> getDataType() == "Tiny") {
-                                        $column_type =  "INT(".$field -> getMaximumLength().")";
-                                    } elseif ($field -> getDataType() == "Long") {
-                                        $column_type =  "BIGINT(".$field -> getMaximumLength().")";
-                                    } elseif ($field -> getDataType() == "DateTime") {
-                                        $column_type =  "DATETIME default '0000-00-00 00:00:00' NOT NULL";
-                                    } elseif ($field -> getDataType() == "Character" && $field -> getMaximumLength() <= 255) {
-                                        $column_type =  "VARCHAR(".$field -> getMaximumLength().")";
-                                    } elseif ($field -> getDataType() == "Character" && $field -> getMaximumLength() > 255) {
-                                        $column_type =  "TEXT";
-                                    } elseif ($field -> getDataType() == "Decimal") {
-                                        $pre_point = ($field -> getMaximumLength() - $field -> getPrecision());
-                                        $post_point = !empty($field -> getPrecision()) ? $field -> getPrecision() : 0;
-                                        $column_type =  "DECIMAL({$field -> getMaximumLength()},{$post_point})";
-                                    } elseif ($field -> getDataType() == "Boolean") {
-                                        $column_type =  "CHAR(1)";
-                                    } elseif ($field -> getDataType() == "Date") {
-                                        $column_type =  "DATE default '0000-00-00' NOT NULL";
-                                    } elseif ($field -> getDataType() == "Time") {
-                                        $column_type =  "TIME default '00:00:00' NOT NULL";
-                                    } else {
-                                        $column_type =  "VARCHAR(255)";
+                                        if ($field -> getInterpretation() == "LookupMulti") {
+                                            $column_type =  "TEXT";
+                                        } elseif ($field -> getInterpretation() == "Lookup") {
+                                            $column_type =  "VARCHAR(50)";
+                                        } elseif ($field -> getDataType() == "Int" || $field -> getDataType() == "Small" || $field -> getDataType() == "Tiny") {
+                                            $column_type =  "INT(".$field -> getMaximumLength().")";
+                                        } elseif ($field -> getDataType() == "Long") {
+                                            $column_type =  "BIGINT(".$field -> getMaximumLength().")";
+                                        } elseif ($field -> getDataType() == "DateTime") {
+                                            $column_type =  "DATETIME default '0000-00-00 00:00:00' NOT NULL";
+                                        } elseif ($field -> getDataType() == "Character" && $field -> getMaximumLength() <= 255) {
+                                            $column_type =  "VARCHAR(".$field -> getMaximumLength().")";
+                                        } elseif ($field -> getDataType() == "Character" && $field -> getMaximumLength() > 255) {
+                                            $column_type =  "TEXT";
+                                        } elseif ($field -> getDataType() == "Decimal") {
+                                            $pre_point = ($field -> getMaximumLength() - $field -> getPrecision());
+                                            $post_point = !empty($field -> getPrecision()) ? $field -> getPrecision() : 0;
+                                            $column_type =  "DECIMAL({$field -> getMaximumLength()},{$post_point})";
+                                        } elseif ($field -> getDataType() == "Boolean") {
+                                            $column_type =  "CHAR(1)";
+                                        } elseif ($field -> getDataType() == "Date") {
+                                            $column_type =  "DATE default '0000-00-00' NOT NULL";
+                                        } elseif ($field -> getDataType() == "Time") {
+                                            $column_type =  "TIME default '00:00:00' NOT NULL";
+                                        } else {
+                                            $column_type =  "VARCHAR(255)";
+                                        }
                                     }
                                 }
-                            }
-                            $s += 1;
-                            // already selected last column, now add new column after it
-                            if($s == 1) {
+                                $s += 1;
+                                // already selected last column, now add new column after it
+                                if($s == 1) {
 
-                                DB::select("ALTER TABLE ".$table." ADD COLUMN `".$missing_column."` ".$column_type." AFTER `".$last_column."`");
+                                    DB::select("ALTER TABLE ".$table." ADD COLUMN `".$missing_column."` ".$column_type." AFTER `".$last_column."`");
 
-                            // get new last column and add new column after it
-                            } else {
+                                // get new last column and add new column after it
+                                } else {
 
-                                $columns_in_db = DB::select("SHOW COLUMNS FROM ".$table);
-                                $cols = array();
+                                    $columns_in_db = DB::select("SHOW COLUMNS FROM ".$table);
+                                    $cols = array();
 
-                                foreach($columns_in_db as $column_in_db) {
-                                    $cols[] = $column_in_db -> Field;
+                                    foreach($columns_in_db as $column_in_db) {
+                                        $cols[] = $column_in_db -> Field;
+                                    }
+
+                                    $columns_count = count($columns_in_db);
+                                    $last_column = $cols[$columns_count -1];
+
+                                    DB::select("ALTER TABLE ".$table." ADD COLUMN `".$missing_column."` ".$column_type." AFTER `".$last_column."`");
+
+
                                 }
-
-                                $columns_count = count($columns_in_db);
-                                $last_column = $cols[$columns_count -1];
-
-                                DB::select("ALTER TABLE ".$table." ADD COLUMN `".$missing_column."` ".$column_type." AFTER `".$last_column."`");
-
 
                             }
 
                         }
+
+                        DB::select("SET GLOBAL innodb_strict_mode=ON");
 
                     }
 
-                    DB::select("SET GLOBAL innodb_strict_mode=ON");
+                    $rets -> Disconnect();
 
                 }
 
             }
+
+        } else {
+
+            throw new \Exception('unable to log in to rets');
 
         }
 

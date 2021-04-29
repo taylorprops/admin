@@ -707,7 +707,7 @@ class TransactionsAddController extends Controller {
                 $subject = 'Agent Using Heritage Title Notification';
                 $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                 $message_email = '
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                 An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
                 <br><br>
                 <table>
@@ -998,7 +998,7 @@ class TransactionsAddController extends Controller {
                 '.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
 
                 $message_email = '
-                    <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                     '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
                     <br><br>
                     <table>

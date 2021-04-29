@@ -73,7 +73,7 @@ class TasksRemindersJob implements ShouldQueue
                         $subject = 'Reminder Notification - '.$address;
                         $message = 'Reminder Notification<br>'.$address.'<br><strong>'.$task -> task_title.'</strong>';
                         $message_email = '
-                        <div style="font-size: 15px;">
+                        <div style="font-size: 15px; width:100%;" width="100%">
                             Reminder for:
                                 <br><br>
                             '.$address_email.'

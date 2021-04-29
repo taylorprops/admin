@@ -83,6 +83,7 @@ Route::middleware(['agent']) -> group(function () {
     Route::get('/dashboard/get_commissions', [DashboardController::class, 'get_commissions']);
     Route::get('/dashboard/get_upcoming_closings', [DashboardController::class, 'get_upcoming_closings']);
     Route::get('/dashboard/get_admin_todo', [DashboardController::class, 'get_admin_todo']);
+    Route::get('/dashboard/get_upcoming_events', [DashboardController::class, 'get_upcoming_events']);
 
 
     /********** Email Routes ********/

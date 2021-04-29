@@ -14746,6 +14746,66 @@ body.modal-open {
   color: #3596e6;
 }
 
+.border-primary {
+  border: 1px solid #3596e6;
+}
+
+.border-top-primary {
+  border-top: 1px solid #3596e6;
+}
+
+.border-bottom-primary {
+  border-bottom: 1px solid #3596e6;
+}
+
+.border-gray {
+  border: 1px solid #dee2e6;
+}
+
+.border-top-gray {
+  border-top: 1px solid #dee2e6;
+}
+
+.border-bottom-gray {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.rounded-top {
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
+}
+
+.rounded-bottom {
+  border-bottom-left-radius: 0.7rem;
+  border-bottom-right-radius: 0.7rem;
+}
+
+.rounded-left {
+  border-top-left-radius: 0.7rem;
+  border-bottom-left-radius: 0.7rem;
+}
+
+.rounded-right {
+  border-top-right-radius: 0.7rem;
+  border-bottom-right-radius: 0.7rem;
+}
+
+.rounded-top-left {
+  border-top-left-radius: 0.7rem;
+}
+
+.rounded-top-right {
+  border-top-right-radius: 0.7rem;
+}
+
+.rounded-bottom-left {
+  border-bottom-left-radius: 0.7rem;
+}
+
+.rounded-bottom-right {
+  border-bottom-right-radius: 0.7rem;
+}
+
 .list-group-item-action:not(.active):hover {
   background-color: rgba(241, 252, 255, 0.4);
 }
@@ -17046,7 +17106,7 @@ input.search-menu {
   max-height: 40px;
   max-width: 70px;
 }
-.page-dashboard #upcoming_closings_mod, .page-dashboard #commissions_mod {
+.page-dashboard #upcoming_closings_mod, .page-dashboard #commissions_mod, .page-dashboard #upcoming_events_mod {
   max-height: 300px;
   overflow: auto;
 }

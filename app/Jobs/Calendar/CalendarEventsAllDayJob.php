@@ -52,7 +52,7 @@ class CalendarEventsAllDayJob implements ShouldQueue
                 $subject = 'Calendar Event Notification';
                 $message = 'Calendar Event<br>'.$calendar_event -> event_title.'</strong>';
                 $message_email = '
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                 Calendar Event
                     <br><br>
                     '.date_mdy(date('Y-m-d')).' - All Day Event

@@ -71,7 +71,7 @@ class TasksAllDayJob implements ShouldQueue {
                         $subject = 'Task Due Notification - ' . $address;
                         $message = 'Task Due Notification<br>' . $address . '<br><strong>' . $task -> task_title . '</strong>';
                         $message_email = '
-                        <div style="font-size: 15px;">
+                        <div style="font-size: 15px; width:100%;" width="100%">
                             Task Due for:
                                 <br><br>
                             ' . $address_email . '

@@ -11221,6 +11221,10 @@ if (document.URL.match(/calendar/)) {
         end_minutes = ('0' + end_date.getMinutes()).slice(-2);
         end_seconds = '00';
         event_end_time = end_hours + ':' + end_minutes + ':' + end_seconds;
+
+        if (end_hours == '00') {
+          event_end_time = '10:00:00';
+        }
       } else {
         event_end_date = event_start_date;
         event_end_time = '10:00:00';
@@ -11303,6 +11307,14 @@ if (document.URL.match(/calendar/)) {
 /***/ (() => {
 
 if (document.URL.match(/dashboard/)) {
+  var get_upcoming_events = function get_upcoming_events() {
+    axios.get('/dashboard/get_upcoming_events').then(function (response) {
+      $('#upcoming_events_mod').html(response.data);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
   var get_admin_todo = function get_admin_todo() {
     axios.get('/dashboard/get_admin_todo').then(function (response) {
       $('#admin_todo_mod').html(response.data);
@@ -11352,6 +11364,7 @@ if (document.URL.match(/dashboard/)) {
     get_transactions();
     get_upcoming_closings();
     get_admin_todo();
+    get_upcoming_events();
 
     if (global_user.group == 'agent') {
       get_commissions();

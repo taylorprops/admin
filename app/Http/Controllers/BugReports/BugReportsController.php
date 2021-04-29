@@ -96,7 +96,7 @@ class BugReportsController extends Controller
         $subject = 'Bug Report Submitted by '.auth() -> user() -> name;
         $message = 'Bug Report Submitted by '.auth() -> user() -> name;
         $message_email = '
-        <div style="font-size: 15px;">
+        <div style="font-size: 15px; width:100%;" width="100%">
         Bug Report Submitted by '.auth() -> user() -> name.'
         <br><br>
         '.$user_message.'

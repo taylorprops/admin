@@ -102,6 +102,22 @@
 
                 </div>
 
+                <div class="col-12 col-sm-6 col-lg-12">
+
+                    <div class="bg-primary p-1 mb-3 rounded">
+
+                        <div class="d-flex justify-content-between bg-primary text-white px-3 py-2 font-12">
+                            <div>
+                                <i class="fad fa-calendar-alt mr-2"></i> Upcoming Tasks/Reminders/Events
+                            </div>
+                        </div>
+
+                        <div id="upcoming_events_mod"></div>
+
+                    </div>
+
+                </div>
+
             </div>
 
 

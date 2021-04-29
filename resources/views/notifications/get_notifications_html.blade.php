@@ -10,6 +10,12 @@
 
     @else
 
+        <div class="w-100 d-flex justify-content-end">
+            <a href="javascript:void(0)" class="notifications-mark-all font-8 float-right text-danger">
+                <i class="fal fa-check mr-2"></i> Mark all read
+            </a>
+        </div>
+
         @foreach($notifications as $notification)
 
             @php
@@ -23,33 +29,27 @@
             }
             @endphp
 
-            <div class="alert bg-blue-light p-1 border" role="alert" data-id="{{ $notification -> id }}">
+            <div class="my-2">
 
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="font-weight-bold font-italic">
+                <div class="text-primary border-top-primary pl-1 pt-1 d-flex justify-content-between align-items-center">
+                    <div class="font-italic font-weight-bold">
                         {{ $date }}
                     </div>
+
                     <div>
-                        <a href="javascript:void(0)" class="float-right notifications-mark-as-read" data-id="{{ $notification -> id }}">
+                        <a href="javascript:void(0)" class="notifications-mark-as-read mr-2" data-id="{{ $notification -> id }}">
                             <i class="fal fa-check mr-2"></i> Mark read
                         </a>
                     </div>
                 </div>
-                <hr class="my-2">
-                <div class="d-flex justify-content-between align-items-end bg-white px-1 py-2 rounded">
+
+
+                <div class="d-flex justify-content-between align-items-end px-1 py-2">
                     <div>{!! $notification -> data['message'] !!}</div>
                     <div> <a href="{{ $notification -> data['link_url'] }}" target="_blank">{{ $notification -> data['link_text'] }}</a></div>
                 </div>
 
             </div>
-
-            @if($loop -> last)
-                <div>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-danger notifications-mark-all float-right">
-                        <i class="fal fa-times mr-2"></i> Mark all as read
-                    </a>
-                </div>
-            @endif
 
         @endforeach
 
@@ -75,22 +75,25 @@
             // create link details to item
             $link = '<a href="/agents/doc_management/transactions/transaction_details/'.$read_notification -> data['transaction_id'].'/'.$read_notification -> data['transaction_type'].'?tab=commission" target="_blank">View Commission</a>';
             @endphp
-            <div class="alert alert-notification-read bg-blue-light p-1" role="alert">
 
-                <div class="d-flex justify-content-between align-items-end">
-                    <div class="font-weight-bold font-italic">
+            <div class="my-2">
+
+                <div class="text-gray border-top-gray pl-1 pt-1 d-flex justify-content-between align-items-center">
+                    <div class="font-italic font-weight-bold">
                         {{ $date }}
                     </div>
+
                     <div>
-                        <a href="javascript:void(0)" class="float-right notifications-mark-unread" data-id="{{ $read_notification -> id }}">
-                            <i class="fal fa-check mr-2"></i> Mark Unread
+                        <a href="javascript:void(0)" class="notifications-mark-unread mr-2" data-id="{{ $read_notification -> id }}">
+                            <i class="fal fa-undo mr-2"></i> Mark Unread
                         </a>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center">
+
+                <div class="d-flex justify-content-between align-items-end border-bottom-gray text-gray px-1 py-2">
                     <div>{!! $read_notification -> data['message'] !!}</div>
-                    <div>{!! $link !!}</div>
+                    <div> <a href="{{ $read_notification -> data['link_url'] }}" class="text-gray" target="_blank">{{ $read_notification -> data['link_text'] }}</a></div>
                 </div>
 
             </div>

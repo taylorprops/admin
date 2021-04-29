@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Tasks\Tasks;
 use Illuminate\Http\Request;
+use App\Models\Calendar\Calendar;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Commission\Commission;
@@ -324,6 +326,63 @@ class DashboardController extends Controller
         $docs_to_review_count = $listing_docs_to_review_count + $contract_docs_to_review_count + $referral_docs_to_review_count;
 
         return view('/dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'deposits_to_release_count', 'docs_to_review_count', 'releases_to_review_count'));
+
+    }
+
+
+    public function get_upcoming_events(Request $request) {
+
+        $tasks_select = [
+            'id',
+            'task_date as start_date',
+            'task_time as start_time',
+            'task_title as event_title',
+            'reminder',
+            'transaction_type',
+            'Listing_ID',
+            'Contract_ID'
+        ];
+
+        $tasks = Tasks::select($tasks_select)
+        -> where('task_date', '>=', date('Y-m-d'))
+        -> where('status', 'active')
+        -> whereHas('members', function($query){
+            $query -> where('user_id', auth() -> user() -> id);
+        })
+        -> get();
+
+        $events_select = [
+            'id',
+            'start_date',
+            'start_time',
+            'event_title',
+            'all_day',
+        ];
+
+        $events = Calendar::select($events_select)
+        -> where('start_date', '>=', date('Y-m-d'))
+        -> where('user_id', auth() -> user() -> id)
+        -> get();
+
+        foreach($tasks as $task) {
+            if($task -> reminder == 0) {
+                $task -> event_type = 'task';
+            } else {
+                $task -> event_type = 'reminder';
+            }
+        }
+
+        foreach($events as $event) {
+            if($event -> all_day == 1) {
+                $event -> event_type = 'event';
+            } else {
+                $event -> event_type = 'reminder';
+            }
+        }
+
+        $upcoming_events = $tasks -> merge($events) -> sortBy('start_date');
+
+        return view('/dashboard/mods/get_upcoming_events_html', compact('upcoming_events'));
 
     }
 

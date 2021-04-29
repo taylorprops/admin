@@ -98,7 +98,7 @@ class AppServiceProvider extends ServiceProvider
             $subject = 'Failed Job Notification';
             $message = 'Failed Job: '.$event -> job -> uuid();
             $message_email = '
-            <div style="font-size: 15px;">
+            <div style="font-size: 15px; width:100%;" width="100%">
             Failed Job: '.$event -> job -> uuid().'
             <br><br>
             '.$event -> connectionName.'

@@ -382,6 +382,10 @@ if (document.URL.match(/calendar/)) {
 
                 event_end_time = end_hours+':'+end_minutes+':'+end_seconds;
 
+                if(end_hours == '00') {
+                    event_end_time = '10:00:00';
+                }
+
             } else {
 
                 event_end_date = event_start_date;

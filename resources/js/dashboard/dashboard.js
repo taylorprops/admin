@@ -12,6 +12,8 @@ if(document.URL.match(/dashboard/)) {
 
         get_admin_todo();
 
+        get_upcoming_events();
+
         if(global_user.group == 'agent') {
             get_commissions();
         }
@@ -19,6 +21,18 @@ if(document.URL.match(/dashboard/)) {
     });
 
 
+
+    function get_upcoming_events() {
+
+        axios.get('/dashboard/get_upcoming_events')
+        .then(function (response) {
+            $('#upcoming_events_mod').html(response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
 
     function get_admin_todo() {
 

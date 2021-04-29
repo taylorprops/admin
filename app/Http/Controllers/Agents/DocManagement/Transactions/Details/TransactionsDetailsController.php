@@ -703,7 +703,7 @@ class TransactionsDetailsController extends Controller
                 $subject = 'Agent Using Heritage Title Notification';
                 $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
                 $message_email = '
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                 An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
                 <br><br>
                 <table>
@@ -2216,7 +2216,7 @@ class TransactionsDetailsController extends Controller
             $message = $agent -> full_name.' has submitted a release for review.<br>
             '.$property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
             $message_email = '
-            <div style="font-size: 15px;">
+            <div style="font-size: 15px; width:100%;" width="100%">
             '.$agent -> full_name.' has submitted a release for review.
             <br><br>
             <table>
@@ -3192,7 +3192,7 @@ class TransactionsDetailsController extends Controller
                 $message = $agent -> full_name.' has submitted a release for review.<br>
                 '.$contract -> FullStreetAddress.' '.$contract -> City.', '.$contract -> StateOrProvince.' '.$contract -> PostalCode;
                 $message_email = '
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                 '.$agent -> full_name.' has submitted a release for review.
                 <br><br>
                 <table>
@@ -3769,7 +3769,7 @@ class TransactionsDetailsController extends Controller
                         $subject = 'Commission Breakdown processed for '.$address;
                         $message = 'Commission Breakdown processed<br>'.$address;
                         $message_email = '
-                        <div style="font-size: 15px;">
+                        <div style="font-size: 15px; width:100%;" width="100%">
                             Hello '.$property -> agent -> first_name.',<br><br>
                             Your commission breakdown has been processed!<br><br>
                             <strong>Property</strong><br>
@@ -5458,7 +5458,7 @@ class TransactionsDetailsController extends Controller
             $subject = 'Agent Using Heritage Title Notification';
             $message = $agent -> full_name.' will be using Heritage Title for their contract.<br>'.$new_contract -> FullStreetAddress.' '.$new_contract -> City.', '.$new_contract -> StateOrProvince.' '.$new_contract -> PostalCode;
             $message_email = '
-            <div style="font-size: 15px;">
+            <div style="font-size: 15px; width:100%;" width="100%">
             An agent from '.$agent -> company.' has selected that they will be using Heritage Title for the contract on their listing.
             <br><br>
             <table>
@@ -5504,7 +5504,7 @@ class TransactionsDetailsController extends Controller
             '.$new_contract -> FullStreetAddress.' '.$new_contract -> City.', '.$new_contract -> StateOrProvince.' '.$new_contract -> PostalCode;
 
             $message_email = '
-                <div style="font-size: 15px;">
+                <div style="font-size: 15px; width:100%;" width="100%">
                 '.$agent -> full_name.' has indicated that '.$agent -> company.' will be holding the earnest deposit for the property below.
                 <br><br>
                 <table>
