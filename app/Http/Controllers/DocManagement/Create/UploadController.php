@@ -420,6 +420,7 @@ class UploadController extends Controller
             $page_height = get_width_height($file)['height'];
 
             // if not standard 612 by 792 get width and height and convert to mm
+            $page_size = '';
             if ($page_width == 612 && $page_height == 792) {
                 $page_size = 'letter';
             } elseif ($page_width == 595 && $page_height == 842) {
