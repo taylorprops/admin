@@ -864,6 +864,7 @@ if (document.URL.match(/create\/upload\/files/)) {
     }
 
     function upload_file() {
+
         let form_check = validate_form($('#upload_file_form'));
 
         if (form_check == 'yes') {
@@ -881,7 +882,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                 .then(function (response) {
                     $('#add_upload_modal').modal('hide');
                     $('#file_name_display, #file_upload, #form_categories, #form_tags, #checklist_group_id').val('');
-                    //select_refresh();
+
                     get_forms(form_group_id, state, order);
                     $('#upload_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
                     $('#upload_preview').html('');
@@ -891,6 +892,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                     //
                 });
         }
+
     }
 
 

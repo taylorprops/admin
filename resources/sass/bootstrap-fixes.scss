@@ -113,7 +113,7 @@ body.modal-open {
     //text-transform: uppercase;
 }
 
-.btn-group {
+.btn-group:not(.field-options-group) {
     .btn:not(.active) {
         background: #8cc7f8;
     }
@@ -534,6 +534,9 @@ a.text-gray:hover {
 } */
 
 /////////// pretty checkboxes and radios
+.pretty {
+    width: 100%;
+}
 .pretty .state label:before, .pretty .state label:after {
     background: $white !important;
 }

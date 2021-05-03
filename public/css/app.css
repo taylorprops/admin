@@ -14710,7 +14710,7 @@ body.modal-open {
   margin: 0.2rem 0.5rem;
 }
 
-.btn-group .btn:not(.active) {
+.btn-group:not(.field-options-group) .btn:not(.active) {
   background: #8cc7f8;
 }
 
@@ -15046,6 +15046,10 @@ a.text-gray:hover {
     //font-size: 1rem;
     color: #525050;
 } */
+.pretty {
+  width: 100%;
+}
+
 .pretty .state label:before, .pretty .state label:after {
   background: #fff !important;
 }

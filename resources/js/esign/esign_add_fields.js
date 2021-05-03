@@ -531,7 +531,7 @@ if(document.URL.match(/esign_add_fields/)) {
                 <div class="field-html '+text_class+' w-100"></div> \
                 <div class="field-options-holder"> \
                     <div class="d-flex justify-content-around"> \
-                        <div class="btn-group" role="group" aria-label="Field Options"> \
+                        <div class="btn-group field-options-group" role="group" aria-label="Field Options"> \
                             <a type="button" class="btn btn-primary field-handle ml-0 pt-2"><i class="fal fa-arrows fa-lg"></i></a> \
                             <a type="button" class="btn btn-danger remove-field pt-2"><i class="fad fa-times-circle fa-lg"></i></a> \
                         </div> \

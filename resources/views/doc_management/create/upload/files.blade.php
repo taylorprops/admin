@@ -19,7 +19,7 @@
                             role="tab"
                             data-id="{{ $form_group -> resource_id }}">
                             {{ $form_group -> resource_name }}
-                            <span class="float-right badge bg-blue-med text-white py-1 px-2">{{ $form_count['form_count'] }}</span>
+                            <span class="float-right badge bg-primary text-white py-1 px-2 border rounded">{{ $form_count['form_count'] }}</span>
                         </a>
                     @endforeach
                 </div>
@@ -391,7 +391,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="row">
                                         <div class="col-12">
-                                            <input type="file" class="custom-form-element form-input-file required" accept="application/pdf" name="file_upload" id="file_upload" data-label="Select File">
+                                            <input type="file" class="required" accept="application/pdf" name="file_upload" id="file_upload" data-label="Select File">
                                         </div>
                                     </div>
                                     <div class="row form-names hide mt-2">

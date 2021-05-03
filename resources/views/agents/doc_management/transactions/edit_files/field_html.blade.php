@@ -205,7 +205,7 @@ if($field_created_by == 'user') {
             @if($field_created_by == 'user')
                 <div class="field-options-holder w-100">
                     <div class="d-flex justify-content-around">
-                        <div class="btn-group" role="group" aria-label="Field Options">
+                        <div class="btn-group field-options-group" role="group" aria-label="Field Options">
                             <a type="button" class="btn btn-primary field-handle"><i class="fal fa-arrows fa-lg"></i></a>
                             <a type="button" class="btn btn-danger remove-field"><i class="fad fa-times-circle fa-lg"></i></a>
                         </div>

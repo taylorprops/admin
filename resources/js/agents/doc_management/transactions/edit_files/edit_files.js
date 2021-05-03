@@ -297,7 +297,7 @@ if (document.URL.match(/edit_files/)) {
                 <div class="field-div new '+field_class+' group_'+group_id+' '+inline+'" style="position: absolute; top: 0%; left: 0%; height: 100%; width: 100%;" id="field_'+field_id+'" data-field-id="'+field_id+'" data-group-id="'+group_id+'" data-type="'+field_type+'" data-category="'+field_type+'" data-page="'+page+'"></div> \
                 <div class="field-options-holder w-100"> \
                     <div class="d-flex justify-content-around"> \
-                        <div class="btn-group" role="group" aria-label="Field Options"> \
+                        <div class="btn-group field-options-group" role="group" aria-label="Field Options"> \
                             <a type="button" class="btn btn-primary field-handle"><i class="fal fa-arrows fa-lg"></i></a> \
                             <a type="button" class="btn btn-danger remove-field"><i class="fad fa-times-circle fa-lg"></i></a> \
                         </div> \
