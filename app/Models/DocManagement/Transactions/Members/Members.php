@@ -26,5 +26,9 @@ class Members extends Model
         return $this -> hasMany(\App\Models\DocManagement\Transactions\Listings\Listings::class, 'Listing_ID', 'Listing_IDz');
     }
 
+    public function member_type() {
+        return $this -> hasOne(\App\Models\DocManagement\Resources\ResourceItems::class, 'resource_id', 'member_type_id');
+    }
+
 
 }

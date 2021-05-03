@@ -713,7 +713,7 @@ Route::middleware(['agent']) -> group(function () {
     Route::post('/esign/esign_create_envelope', [EsignController::class, 'esign_create_envelope']);
 
     // add signers
-    Route::get('/esign/esign_add_signers/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_signers']);
+    Route::get('/esign/esign_add_signers/{envelope_id}', [EsignController::class, 'esign_add_signers']);
 
     // add add signers to envelope
     Route::post('/esign/esign_add_signers_to_envelope', [EsignController::class, 'esign_add_signers_to_envelope']);
@@ -724,6 +724,22 @@ Route::middleware(['agent']) -> group(function () {
 
     // send for signatures
     Route::post('/esign/esign_send_for_signatures', [EsignController::class, 'esign_send_for_signatures']);
+
+
+
+
+    ////// new template /////////
+    // add signers to template
+    Route::get('/esign/esign_template_add_documents_and_signers/{template_type}/{template_id?}', [EsignController::class, 'esign_template_add_documents_and_signers']);
+    Route::post('/esign/esign_template_save_add_signers', [EsignController::class, 'esign_template_save_add_signers']);
+    Route::get('/esign/esign_template_add_fields/{template_type}/{template_id}', [EsignController::class, 'esign_template_add_fields']);
+    Route::post('/esign/save_template', [EsignController::class, 'save_template']);
+
+
+    ////// end new template /////////
+
+
+
 
     // upload docs for envelope
     Route::post('/esign/upload', [EsignController::class, 'upload']);

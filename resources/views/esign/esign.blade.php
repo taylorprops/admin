@@ -35,13 +35,11 @@
                     <a class="nav-link" id="drafts_tab" data-tab="drafts" data-toggle="tab" href="#drafts_content" role="tab" aria-controls="drafts_content" aria-selected="false">Drafts</a>
                 </li>
 
-
-
-                @if(auth() -> user() -> group == 'admin')
-
                 <li class="nav-item">
                     <a class="nav-link" id="templates_tab" data-tab="templates" data-toggle="tab" href="#templates_content" role="tab" aria-controls="templates_content" aria-selected="false">Templates</a>
                 </li>
+
+                @if(auth() -> user() -> group == 'admin')
 
                 <li class="nav-item">
                     <a class="nav-link" id="system_templates_tab" data-tab="system_templates" data-toggle="tab" href="#system_templates_content" role="tab" aria-controls="system_templates_content" aria-selected="false">System Templates</a>

@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\DocManagement\Create;
 
-use App\Http\Controllers\Controller;
-use App\Models\DocManagement\Checklists\Checklists;
-use App\Models\DocManagement\Checklists\ChecklistsItems;
-use App\Models\DocManagement\Create\Fields\FieldInputs;
-use App\Models\DocManagement\Create\Fields\Fields;
-use App\Models\DocManagement\Create\FilledFields\FilledFields;
-use App\Models\DocManagement\Create\Upload\Upload;
-use App\Models\DocManagement\Create\Upload\UploadImages;
-use App\Models\DocManagement\Create\Upload\UploadPages;
-use App\Models\DocManagement\Resources\ResourceItems;
-use App\Models\Resources\LocationData;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Esign\EsignTemplates;
+use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Storage;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+use App\Models\DocManagement\Create\Fields\Fields;
+use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\Esign\EsignTemplatesDocumentImages;
+use App\Models\DocManagement\Checklists\Checklists;
+use App\Models\DocManagement\Resources\ResourceItems;
+use App\Models\DocManagement\Create\Fields\FieldInputs;
+use App\Models\DocManagement\Create\Upload\UploadPages;
+use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Create\Upload\UploadImages;
+use App\Models\DocManagement\Create\FilledFields\FilledFields;
 
 class UploadController extends Controller
 {
@@ -462,8 +464,7 @@ class UploadController extends Controller
             $upload -> save();
             $file_id = $upload -> file_id;
 
-            $base_path = base_path();
-            $storage_path = $base_path.'/storage/app/public';
+            $storage_path = Storage::path('');
             $storage_dir = 'doc_management/uploads/'.$file_id;
 
             if (! Storage::put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
@@ -490,6 +491,28 @@ class UploadController extends Controller
             Storage::makeDirectory($storage_dir_pages);
             $storage_dir_images = $storage_dir.'/images';
             Storage::makeDirectory($storage_dir_images);
+
+
+            // esign template directories
+            $template_dir = 'esign_templates/system/'.$file_id;
+            Storage::makeDirectory($template_dir);
+            Storage::makeDirectory($template_dir.'/images');
+
+            // copy file to esign templates
+            Storage::copy($storage_dir.'/'.$new_filename, $template_dir.'/'.$new_filename);
+            // add to esign_templates
+            $template = new EsignTemplates();
+            $template -> template_type = 'system';
+            $template -> system_upload_id = $file_id;
+            $template -> template_name = $file_name_display;
+            $template -> file_name = $new_filename;
+            $template -> file_location = '/storage/'.$template_dir.'/'.$new_filename;
+            $template -> save();
+            $template_id = $template -> id;
+
+            $upload -> template_id = $template_id;
+            $upload -> save();
+
 
             // split pdf into pages and images
             $input_file = $storage_full_path.'/'.$new_filename;
@@ -530,6 +553,23 @@ class UploadController extends Controller
                 $upload -> pages_total = $pages_total;
                 $upload -> page_number = $page_number;
                 $upload -> save();
+
+                $template_image_location = $template_dir.'/images/'.$images_file_name;
+                // copy image to templates directory
+                Storage::copy($storage_dir.'/images/'.$images_file_name, $template_image_location);
+
+                $page_width = get_width_height(Storage::path($template_image_location))['width'];
+                $page_height = get_width_height(Storage::path($template_image_location))['height'];
+
+                // add to template images
+                $template_image = new EsignTemplatesDocumentImages();
+                $template_image -> template_id = $template_id;
+                $template_image -> file_location = '/storage/'.$template_image_location;
+                $template_image -> page_number = $page_number;
+                $template_image -> width = $page_width;
+                $template_image -> height = $page_height;
+                $template_image -> save();
+
             }
 
             $saved_pages_directory = Storage::files($storage_dir.'/pages');

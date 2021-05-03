@@ -1,4 +1,4 @@
-if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_template_documents/)) {
+if(document.URL.match(/esign_add_documents/)) {
 
     $(function () {
 
@@ -78,18 +78,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
         function create_envelope() {
 
-            let is_template = $('#is_template').val();
             let from_upload = $('#from_upload').val();
-            let template_name = '';
-            if(is_template == 'yes') {
-                let form = $('.template-name-div');
-                let validate = validate_form(form);
-                if(validate == 'yes') {
-                    template_name = $('#template_name').val();
-                } else {
-                    return false;
-                }
-            }
 
             $('#create_envelope_button').prop('disabled', true).html('Adding Documents <span class="spinner-border spinner-border-sm ml-2"></span>');
             $('.notification').removeClass('hidden');
@@ -106,7 +95,6 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
             $('.upload-li').each(function () {
 
                 let data = {
-                    'template_id': $(this).data('template-id') ?? 0,
                     'upload_id': $(this).data('upload-id') ?? 0,
                     'document_id': $(this).data('document-id') ?? 0,
                     'template_applied_id': $(this).data('template-applied-id') ?? 0,
@@ -123,9 +111,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
 
             let formData = new FormData();
-            formData.append('is_template', is_template);
             formData.append('from_upload', from_upload);
-            formData.append('template_name', template_name);
             formData.append('Listing_ID', Listing_ID);
             formData.append('Contract_ID', Contract_ID);
             formData.append('Referral_ID', Referral_ID);
@@ -137,7 +123,7 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
 
             axios.post('/esign/esign_create_envelope', formData, axios_options)
             .then(function (response) {
-                window.location = '/esign/esign_add_signers/'+response.data.envelope_id+'/'+response.data.is_template+'/'+response.data.template_id;
+                window.location = '/esign/esign_add_signers/'+response.data.envelope_id;
             })
             .catch(function (error) {
                 console.log(error);
@@ -166,15 +152,6 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
                         let file_location = doc_to_display.file_location;
                         let image_location = doc_to_display.image_location;
 
-                        let add_template = '';
-                        if($('#is_template').val() == 'no') {
-                            add_template = ' \
-                            <div class="ml-sm-3 mr-4 template-status"> \
-                                <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a> \
-                            </div> \
-                            ';
-                        }
-
                         let upload_li = ' \
                         <li class="list-group-item upload-li" data-file-location="'+file_location+'" data-file-type="user" data-file-name="'+file_name+'" data-template-id="" data-template-applied-id=""> \
                             <div class="d-sm-flex justify-content-between align-items-center"> \
@@ -190,7 +167,9 @@ if(document.URL.match(/esign_add_documents/) || document.URL.match(/esign_add_te
                                     </div> \
                                 </div> \
                                 <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0"> \
-                                    '+add_template+' \
+                                    <div class="ml-sm-3 mr-4 template-status"> \
+                                        <a href="javascript: void(0)" class="btn btn-sm btn-primary show-apply-template-button"><i class="fal fa-plus mr-2 fa-lg"></i> Add Template</a> \
+                                    </div> \
                                     <div class="ml-2 pl-3 border-left"> \
                                         <a href="javascript: void(0)" class="remove-upload-button"><i class="fal fa-times text-danger fa-2x"></i></a> \
                                     </div> \

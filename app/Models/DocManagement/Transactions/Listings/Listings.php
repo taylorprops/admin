@@ -120,7 +120,9 @@ class Listings extends Model
             $property = $property -> with(['agent', 'transaction_coordinator', 'checklist', 'status']) -> first();
 
         }
-
+        if(!$property) {
+            return 'not found';
+        }
         return $property;
     }
 }

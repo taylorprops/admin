@@ -82,7 +82,6 @@ if(document.URL.match(/esign_add_fields/)) {
 
         $(document).on('click', '#save_as_draft_button', show_save_as_draft);
 
-        $(document).on('click', '#save_as_template_button', show_save_as_template);
 
         $(document).on('click', '#send_for_signatures_button', show_send_for_signatures);
 
@@ -99,17 +98,9 @@ if(document.URL.match(/esign_add_fields/)) {
             }
         });
 
-        $(document).on('click', '.edit-signers-button', function() {
-            save_as_template();
-            window.location = '/esign/esign_add_signers/0/yes/'+$('#template_id').val();
-        });
 
 
-        if($('#is_template').val() == 'yes') {
-            $('#active_signer').val($('.signer-select-option:first').data('template-role'));
-        } else if($('.signer-select-option:first').val() != '') {
-            $('#active_signer').val($('.signer-select-option:first').val());
-        }
+        $('#active_signer').val($('.signer-select-option:first').val());
 
 
         // update signer name or initials in field div
@@ -134,8 +125,6 @@ if(document.URL.match(/esign_add_fields/)) {
             });
         }, 500);
 
-        let template_name = $('#saved_template_name').val();
-        $('#template_name').val(template_name);
 
 
         ///////////////////// Functions //////////////////////
@@ -171,42 +160,7 @@ if(document.URL.match(/esign_add_fields/)) {
             field_html.text(text);
         }
 
-        function show_save_as_template() {
 
-            $('#template_modal').modal('show');
-
-            $('#save_template_button').off('click').on('click', save_as_template);
-
-        }
-
-        function save_as_template() {
-
-            let form = $('#template_form');
-
-            let validate = validate_form(form);
-
-            if(validate == 'yes') {
-
-                send_for_signatures('no', 'yes');
-
-                let template_id = $('#template_id').val();
-                let template_name = $('#template_name').val();
-                $('#saved_template_name').val(template_name);
-
-                let formData = new FormData();
-                formData.append('template_id', template_id);
-                formData.append('template_name', template_name);
-                axios.post('/esign/save_as_template', formData, axios_options)
-                .then(function (response) {
-                    $('#modal_success').modal().find('.modal-body').html('Your template was successfully saved. You can find your saved Templates on your E-Sign Dashboard in the "templates" tab. <div class="w-100 mt-4 text-center"><a href="/esign" class="btn btn-primary">Go To E-Sign Dashboard <i class="fal fa-arrow-right ml-2"></i></a></div>');
-                    $('#template_modal').modal('hide');
-                })
-                .catch(function (error) {
-
-                });
-
-            }
-        }
 
         function show_save_as_draft() {
 
@@ -293,10 +247,9 @@ if(document.URL.match(/esign_add_fields/)) {
 
         }
 
-        function send_for_signatures(is_draft = null, is_template = null) {
+        function send_for_signatures(is_draft = null) {
 
             let envelope_id = $('#envelope_id').val();
-            let template_id = $('#template_id').val();
             let subject = $('#envelope_subject').val();
             let message = $('#envelope_message').val();
             let data = [];
@@ -368,13 +321,11 @@ if(document.URL.match(/esign_add_fields/)) {
 
                 let formData = new FormData();
                 formData.append('envelope_id', envelope_id);
-                formData.append('template_id', template_id);
                 formData.append('subject', subject);
                 formData.append('message', message);
                 formData.append('document_ids', document_ids);
                 formData.append('fields', fields);
                 formData.append('is_draft', is_draft);
-                formData.append('is_template', is_template);
 
                 axios.post('/esign/esign_send_for_signatures', formData, axios_options)
                 .then(function (response) {
@@ -385,10 +336,14 @@ if(document.URL.match(/esign_add_fields/)) {
 
                     } else {
 
-                        if(!is_draft && !is_template) {
-                            setTimeout(function() {
-                                window.location = '/esign_show_sent';
-                            }, 1000);
+                        if(!is_draft) {
+                            if(response.data.link != '') {
+                                window.location = response.data.link+'?tab=esign';
+                            } else {
+                                setTimeout(function() {
+                                    window.location = '/esign_show_sent';
+                                }, 1000);
+                            }
                         }
 
                     }
@@ -406,7 +361,6 @@ if(document.URL.match(/esign_add_fields/)) {
 
             let field_type = $('.edit-form-action.active').data('field-type');
             let document_id = $('.file-view-page-container.active').data('document-id');
-            let is_template = $('#is_template').val();
 
             if(field_type) {
 
@@ -429,13 +383,13 @@ if(document.URL.match(/esign_add_fields/)) {
 
                 $('.field-div.show').removeClass('show');
 
-                let field = field_html(h_perc, w_perc, x_perc, y_perc, field_id, $('#active_page').val(), field_type, document_id, field_id, is_template);
+                let field = field_html(h_perc, w_perc, x_perc, y_perc, field_id, $('#active_page').val(), field_type, document_id, field_id);
                 // append new field
                 container.append(field);
 
                 let field_date = '';
                 if(field_type == 'signature') {
-                    field_date = field_html(parseFloat(h_perc) - 1, 12, parseFloat(x_perc) + 19, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id, is_template);
+                    field_date = field_html(parseFloat(h_perc) - 1, 12, parseFloat(x_perc) + 19, parseFloat(y_perc) + 1, field_id_date, $('#active_page').val(), 'date', document_id, field_id);
                     container.append(field_date);
                 }
 
@@ -448,44 +402,13 @@ if(document.URL.match(/esign_add_fields/)) {
 
                 let selected_option = ele.find('.signer-select-option[data-name="'+$('#active_signer').val()+'"]');
 
-                if(is_template == 'yes') {
-                    selected_option = ele.find('.signer-select-option[data-template-role="'+$('#active_signer').val()+'"]');
-                }
                 if(selected_option.length == 0) {
                     selected_option = ele.find('.signer-select-option:first');
                 }
 
-                /* let selected_option_name = selected_option.data('name');
-                console.log(selected_option_name);
-                let found = 'no';
-                if(selected_option_name == 'Buyer One') {
-                    selected_option_name = 'Buyer Two';
-                    found = 'yes';
-                } else if(selected_option_name == 'Buyer Two') {
-                    selected_option_name = 'Seller One';
-                    found = 'yes';
-                } else if(selected_option_name == 'Seller One') {
-                    selected_option_name = 'Seller Two';
-                    found = 'yes';
-                } else if(selected_option_name == 'Seller Two') {
-                    selected_option_name = 'Buyer One';
-                    found = 'yes';
-                }
-                if(found == 'yes') {
-                    if(ele.find('.signer-select-option[data-name="'+selected_option_name+'"]').length > 0) {
-                        selected_option = ele.find('.signer-select-option[data-name="'+selected_option_name+'"]');
-                        if(is_template == 'yes') {
-                            selected_option = ele.find('.signer-select-option[data-template-role="'+selected_option_name+'"]');
-                        }
-                    }
-                } */
 
                 selected_option.prop('selected', true);
                 let field_name = selected_option.data('name');
-                if(is_template == 'yes') {
-                    field_name = selected_option.data('template-role');
-                }
-
                 let field_div_html = '';
                 let field_name_date = '';
                 let field_div_html_date = '';
@@ -497,15 +420,6 @@ if(document.URL.match(/esign_add_fields/)) {
                     }
                     selected_option_date.prop('selected', true);
                     field_name_date = selected_option_date.data('name');
-
-                    if(is_template == 'yes') {
-                        let selected_option_date = ele_date.find('.signer-select-option[data-template-role="'+$('#active_signer').val()+'"]');
-                        if(selected_option_date.length == 0) {
-                            selected_option_date = ele.find('.signer-select-option:first');
-                        }
-                        selected_option_date.prop('selected', true);
-                        field_name_date = selected_option_date.data('template-role');
-                    }
 
                 }
 
@@ -589,12 +503,9 @@ if(document.URL.match(/esign_add_fields/)) {
 
         }
 
-        function field_html(h_perc, w_perc, x_perc, y_perc, field_id, page, field_type, document_id, connector_id, is_template) {
+        function field_html(h_perc, w_perc, x_perc, y_perc, field_id, page, field_type, document_id, connector_id) {
 
             let signer_options = $('#signer_options_html').html();
-            if(is_template == 'yes') {
-                signer_options = $('#signer_options_template_html').html();
-            }
 
             let text_html = '';
             let non_text_html = '';
@@ -602,13 +513,13 @@ if(document.URL.match(/esign_add_fields/)) {
 
             if(field_type == 'text') {
                 text_html = ' \
-                <input type="hidden" class="signature-required" value="no"> \
+                <input type="hidden" class="signature-required" value="0"> \
                 <input type="text" class="custom-form-element form-input text-input" data-label="Enter Text"> \
                 ';
                 text_class = 'text';
             } else {
                 non_text_html = ' \
-                <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="yes" checked data-label="Required"> \
+                <input type="checkbox" class="custom-form-element form-checkbox signature-required" value="1" checked data-label="Required"> \
                 <select class="custom-form-element form-select form-select-no-search form-select-no-cancel signer-select" data-connector-id="'+ connector_id + '"> \
                     '+signer_options+' \
                 </select> \
@@ -617,7 +528,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
             let field_html = ' \
             <div class="field-div required show" style="position: absolute; top: '+y_perc+'%; left: '+x_perc+'%; height: '+h_perc+'%; width: '+w_perc+'%;" id="field_'+field_id+'" data-field-id="'+field_id+'" data-field-type="'+field_type+'" data-page="'+page+'" data-document-id="'+ document_id + '"> \
-                <div class="field-html '+text_class+' w-100 text-primary"></div> \
+                <div class="field-html '+text_class+' w-100"></div> \
                 <div class="field-options-holder"> \
                     <div class="d-flex justify-content-around"> \
                         <div class="btn-group" role="group" aria-label="Field Options"> \
@@ -696,8 +607,8 @@ if(document.URL.match(/esign_add_fields/)) {
             }
 
             // set w and h for new field
-            h_perc = existing == 'no' ? ele_h_perc : ((ele.height() + 2) / ele.parent().height()) * 100;
-            w_perc = existing == 'no' ? ele_w_perc : ((ele.width() + 2) / ele.parent().width()) * 100;
+            h_perc = existing == 'no' ? ele_h_perc : (ele.height() / ele.parent().height()) * 100;
+            w_perc = existing == 'no' ? ele_w_perc : (ele.width() / ele.parent().width()) * 100;
             h_perc = parseFloat(h_perc).toFixed(2);
             w_perc = parseFloat(w_perc).toFixed(2);
 
@@ -744,9 +655,6 @@ if(document.URL.match(/esign_add_fields/)) {
             let connector_id = ele.data('connector-id');
 
             let orig_name = ele.find('option:selected').val();
-            if($('#is_template').val() == 'yes') {
-                orig_name = ele.find('option:selected').data('name');
-            }
             let name = orig_name;
 
             if(field_type == 'initials') {

@@ -21,4 +21,5 @@ mix.js('resources/js/app.js','public/js')
             },
         }
     })
-    .disableNotifications();
+    .disableNotifications()
+    .sourceMaps();

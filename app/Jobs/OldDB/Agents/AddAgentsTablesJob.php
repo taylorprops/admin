@@ -36,7 +36,7 @@ class AddAgentsTablesJob implements ShouldQueue
     {
 
         $delete_agents = Agents::truncate();
-        $delete_users = User::where('group', 'agent') -> orWhere('group', 'agent_referral') -> delete();
+        $delete_users = User::whereIn('group', ['agent', 'agent_referral']) -> delete();
 
         $agents = OldAgents::where('email1', '!=', '') -> get();
 
@@ -50,7 +50,7 @@ class AddAgentsTablesJob implements ShouldQueue
             $agent_email = $agent -> email1;
             $social_security = Crypt::encrypt($agent -> soc_sec);
 
-            if(config('app.env') == 'development') {
+            if(config('app.env') == 'local') {
 
                 $agent_email = 'test_'.$agent -> email1;
                 $social_security = Crypt::encrypt('1111-22-333');
@@ -116,7 +116,7 @@ class AddAgentsTablesJob implements ShouldQueue
             $add_user -> first_name = $agent -> first;
             $add_user -> last_name = $agent -> last;
             $add_user -> email = $agent_email;
-            $add_user -> password = '$2y$10$P.O4F.rVfRRin81asdfasdfHksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
+            //$add_user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
             $add_user -> save();
 
         }

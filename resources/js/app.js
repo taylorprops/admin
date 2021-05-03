@@ -83,6 +83,9 @@ require('./esign/esign_add_signers.js');
 require('./esign/esign_add_documents.js');
 require('./esign/esign_add_fields.js');
 
+require('./esign/esign_template_add_documents_and_signers.js');
+require('./esign/esign_template_add_fields.js');
+
 
 // review documents
 require('./doc_management/review/review.js');

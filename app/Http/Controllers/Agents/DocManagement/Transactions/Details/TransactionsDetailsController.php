@@ -807,7 +807,7 @@ class TransactionsDetailsController extends Controller
 
         $agent_changed = false;
 
-        if($Agent_ID != $Agent_ID_old) {
+        if($Agent_ID > 0 && $Agent_ID != $Agent_ID_old) {
 
             $agent_changed = true;
 

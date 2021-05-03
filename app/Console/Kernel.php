@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         // update agents
         if(config('app.env') == 'production') {
             //$schedule -> command('old_db:update_agents') -> everyMinute() -> withoutOverlapping(1);
-            //$schedule -> command('old_db:add_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
+            //$schedule -> command('old_db:update_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
         }
 
         // clear temp files
@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule -> exec('sudo find '.base_path().'/storage/app/public/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
 
-        if(config('app.env') == 'development') {
+        if(config('app.env') == 'local') {
             // mysql backup locally
             //$schedule -> command('database:backup') -> dailyAt('08:25');
         }

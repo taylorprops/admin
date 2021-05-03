@@ -28,7 +28,10 @@ use App\Models\Esign\EsignTemplates;
 // use App\Jobs\Esign\SendForSignatures;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Esign\EsignDocumentsImages;
+use App\Models\Esign\EsignTemplatesFields;
+use App\Models\Esign\EsignTemplatesSigners;
 use App\Models\DocManagement\Create\Upload\Upload;
+use App\Models\Esign\EsignTemplatesDocumentImages;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Listings\Listings;
@@ -80,7 +83,7 @@ class EsignController extends Controller
 
     public function get_templates(Request $request) {
 
-		$templates = EsignTemplates::where('upload_file_id', '0') -> orWhereNull('upload_file_id') -> orWhere('upload_file_id', '') -> with('signers') -> get();
+		$templates = EsignTemplates::where('template_type', 'user') -> with(['signers']) -> get();
 
         return view('/esign/get_templates_html', compact('templates'));
     }
@@ -241,11 +244,6 @@ class EsignController extends Controller
 
     public function esign_add_documents(Request $request) {
 
-		$is_template = 'no';
-        if ($request -> template || $request -> is_template == 'yes') {
-            $is_template = 'yes';
-        }
-
         // from agent documents
         $Listing_ID = $request -> Listing_ID ?? null;
         $Contract_ID = $request -> Contract_ID ?? null;
@@ -253,6 +251,14 @@ class EsignController extends Controller
         $User_ID = auth() -> user() -> id;
         $Agent_ID = $request -> Agent_ID ?? null;
         $transaction_type = $request -> transaction_type ?? null;
+
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+        $address = null;
+
+        if($property != 'not found') {
+            $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        }
+
         // from uploads
         $from_upload = 'no';
         $document_id = $request -> document_id ?? null;
@@ -336,16 +342,11 @@ class EsignController extends Controller
             }
         }
 
-        $templates = EsignTemplates::with('signers') -> get();
+        $templates = EsignTemplates::where('user_id', auth() -> user() -> id) -> with(['signers']) -> get();
 
-        return view('/esign/esign_add_documents', compact('is_template', 'from_upload', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
+        return view('/esign/esign_add_documents', compact('address', 'from_upload', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
     }
 
-    /* public function apply_template(Request $request) {
-
-		$envelope_id = $request -> envelope_id;
-
-    } */
 
     public function upload(Request $request) {
 
@@ -405,7 +406,6 @@ class EsignController extends Controller
 
 		$files = json_decode($request -> file_data, true);
 
-        $is_template = $request -> is_template;
         $from_upload = $request -> from_upload;
 
         $Listing_ID = $request -> Listing_ID ?? 0;
@@ -417,67 +417,23 @@ class EsignController extends Controller
         $document_id = $files[0]['upload_id'] ?? 0;
 
         $envelope_id = 0;
-        $template_id = 0;
         $docs_added = 'no';
 
-        if ($is_template == 'no') {
+        // Create envelope
+        $envelope = new EsignEnvelopes();
 
-            // Create envelope
-            $envelope = new EsignEnvelopes();
-
-            $envelope -> Listing_ID = $Listing_ID;
-            $envelope -> Contract_ID = $Contract_ID;
-            $envelope -> Referral_ID = $Referral_ID;
-            $envelope -> User_ID = $User_ID;
-            $envelope -> Agent_ID = $Agent_ID;
-            $envelope -> transaction_type = $transaction_type;
-            $envelope -> save();
-            $envelope_id = $envelope -> id;
-
-        } else {
-
-            $template = EsignTemplates::where('upload_file_id', $document_id) -> first();
-            $docs_added = 'yes';
-
-            if (! $template) {
-                // Create template
-                $template = new EsignTemplates();
-                $template -> is_system_template = $from_upload;
-                $docs_added = 'no';
-            }
-
-            $template -> User_ID = $request -> User_ID;
-            $template -> template_name = $request -> template_name;
-            $template -> upload_file_id = $document_id;
-            $template -> save();
-            $template_id = $template -> id;
-
-            if ($document_id > 0) {
-                // update uploads with template id
-                $update_upload = Upload::find($document_id) -> update(['template_id' => $template_id]);
-            }
-
-        }
+        $envelope -> Listing_ID = $Listing_ID;
+        $envelope -> Contract_ID = $Contract_ID;
+        $envelope -> Referral_ID = $Referral_ID;
+        $envelope -> User_ID = $User_ID;
+        $envelope -> Agent_ID = $Agent_ID;
+        $envelope -> transaction_type = $transaction_type;
+        $envelope -> save();
+        $envelope_id = $envelope -> id;
 
         // Add documents and images to envelope and add files to storage
         $added_signers = [];
         foreach ($files as $file) {
-
-            // Create envelope
-            if ($is_template == 'yes') {
-                $envelope = EsignEnvelopes::where('template_id', $template_id) -> first();
-
-                if (! $envelope) {
-                    $envelope = new EsignEnvelopes();
-                }
-
-                $envelope -> is_template = $is_template;
-                $envelope -> is_system_template = $from_upload;
-                $envelope -> User_ID = $request -> User_ID;
-                $envelope -> template_id = $template_id;
-                $envelope -> save();
-                $envelope_id = $envelope -> id;
-            }
 
             $applied_template_id = $file['template_applied_id'];
 
@@ -486,7 +442,6 @@ class EsignController extends Controller
                 // add doc
                 $add_esign_doc = new EsignDocuments();
                 $add_esign_doc -> envelope_id = $envelope_id;
-                $add_esign_doc -> template_id = $template_id;
                 $add_esign_doc -> transaction_document_id = $transaction_document_id;
                 $add_esign_doc -> template_applied_id = $applied_template_id;
                 $add_esign_doc -> file_name = preg_replace('/[_]*[0-9]{14}[_]*/', '', $file['file_name']); // remove YmdHis from file name
@@ -496,24 +451,29 @@ class EsignController extends Controller
 
             // if template applied add fields and signers
             if ($applied_template_id > 0) {
-                $template_envelopes = EsignTemplates::where('id', $applied_template_id) -> with('signers') -> with('fields') -> get();
 
-                $signers = $template_envelopes -> first() -> signers;
+                $template = EsignTemplates::with(['signers', 'fields', 'images']) -> find($applied_template_id);
 
-                $fields = $template_envelopes -> first() -> fields;
+                $signers = $template -> signers;
+                $fields = $template -> fields;
+                $images = $template -> images;
 
                 // get signer names from members
                 $members = null;
                 if ($transaction_type) {
+
                     if ($transaction_type == 'listing') {
-                        $members = Members::where('Listing_ID', $Listing_ID) -> get();
+
+                        $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type']) -> get();
+
                     } elseif ($transaction_type == 'contract') {
-                        $members = Members::where('Contract_ID', $Contract_ID)
-                            -> orWhere(function ($query) use ($Listing_ID) {
-                                if ($Listing_ID > 0) {
-                                    $query -> where('Listing_ID', $Listing_ID);
-                                }
-                            }) -> get();
+
+                        if ($Listing_ID > 0) {
+                            $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type']) -> get();
+                        } else {
+                            $members = Members::where('Contract_ID', $Contract_ID) -> with(['member_type']) -> get();
+                        }
+
                     }
                 }
 
@@ -522,7 +482,7 @@ class EsignController extends Controller
                     $buyer_order = 'One';
 
                     foreach ($members as $member) {
-                        $member_role = ResourceItems::getResourceName($member -> member_type_id);
+                        $member_role = $member -> member_type -> resource_name;
 
                         if ($member_role == 'Seller') {
                             $member -> member_role = 'Seller '.$seller_order;
@@ -541,48 +501,67 @@ class EsignController extends Controller
                 }
 
                 if ($signers) {
+
                     foreach ($signers as $signer) {
+
                         if (! in_array($signer -> template_role, $added_signers)) {
-                            $added_signers[] = $signer -> template_role;
-                            $role = $signer -> template_role;
-                            $new_signer = $signer -> replicate();
+
+                            $added_signers[] = $signer -> signer_role;
+                            $role = $signer -> signer_role;
+
+                            $new_signer = new EsignSigners();
                             $new_signer -> envelope_id = $envelope_id;
-                            $new_signer -> template_id = 0;
 
                             if ($members) {
                                 foreach ($members as $member) {
                                     if ($member -> member_role == $role) {
                                         $new_signer -> signer_name = $member -> first_name.' '.$member -> last_name;
                                         $new_signer -> signer_email = $member -> email;
+                                        $new_signer -> signer_role = preg_replace('/(One|Two)/', '', $role);
+                                        $new_signer -> template_role = $role;
                                         $new_signer -> save();
                                     }
                                 }
                             } else {
                                 $new_signer -> save();
                             }
+
                         }
+
                     }
+
                 }
 
                 if ($docs_added == 'no') {
+
                     foreach ($fields as $field) {
-                        $field_signer = $field -> signer;
+
+                        $field_signer = $field -> signer_role;
 
                         if ($field_signer) {
-                            $field_signer_role = $field_signer -> template_role;
-                            $new_signer = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> where('template_role', $field_signer_role) -> pluck('id');
+                            $new_signer = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> where('template_role', $field_signer) -> pluck('id');
                         }
 
                         if (count($new_signer) == 1) {
-                            $new_field = $field -> replicate();
+                            $new_field = new EsignFields();
                             $new_field -> envelope_id = $envelope_id;
-                            $new_field -> template_id = 0;
                             $new_field -> document_id = $add_esign_document_id;
                             $new_field -> signer_id = $new_signer[0] ?? 0;
+                            $new_field -> field_id = $field -> field_id;
+                            $new_field -> field_type = $field -> field_type;
+                            $new_field -> field_value = $field -> field_value;
+                            $new_field -> required = $field -> required;
+                            $new_field -> page = $field -> page;
+                            $new_field -> left_perc = $field -> left_perc;
+                            $new_field -> top_perc = $field -> top_perc;
+                            $new_field -> height_perc = $field -> height_perc;
+                            $new_field -> width_perc = $field -> width_perc;
                             $new_field -> save();
                         }
                     }
+
                 }
+
             }
 
             if ($docs_added == 'no') {
@@ -603,7 +582,7 @@ class EsignController extends Controller
                 if ($file['document_id'] > 0) {
 
                     // transfer files and images from transactions docs
-                    $doc = TransactionDocuments::where('id', $file['document_id']) -> with('images_converted') -> first();
+                    $doc = TransactionDocuments::where('id', $file['document_id']) -> with(['images_converted']) -> first();
                     // copy document
                     $doc_from_location = Storage::path(str_replace('/storage/', '', $doc -> file_location_converted));
                     exec('cp '.$doc_from_location.' '.$doc_to_location);
@@ -716,14 +695,12 @@ class EsignController extends Controller
             }
         }
 
-        return compact('envelope_id', 'is_template', 'template_id');
+        return compact('envelope_id');
     }
 
     public function esign_add_signers(Request $request) {
 
-		$is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
-        $template_id = $request -> template_id;
 
         $envelope = EsignEnvelopes::find($envelope_id);
         $transaction_type = '';
@@ -735,29 +712,30 @@ class EsignController extends Controller
             $Contract_ID = $envelope -> Contract_ID;
         }
 
+        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0']);
+        $address = null;
+
+        if($property != 'not found') {
+            $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        }
+
         if ($transaction_type == 'listing') {
-            $members = Members::where('Listing_ID', $Listing_ID) -> get();
+            $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type:resource_id,resource_name']) -> get();
         } elseif ($transaction_type == 'contract') {
             if ($Listing_ID > 0) {
-                $members = Members::where('Listing_ID', $Listing_ID) -> get();
+                $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type:resource_id,resource_name']) -> get();
             } else {
-                $members = Members::where('Contract_ID', $Contract_ID) -> get();
+                $members = Members::where('Contract_ID', $Contract_ID) -> with(['member_type:resource_id,resource_name']) -> get();
             }
-            // $members = Members::where('Contract_ID', $Contract_ID)
-            //     -> orWhere(function ($query) use ($Listing_ID) {
-            //         if ($Listing_ID > 0) {
-            //             $query -> where('Listing_ID', $Listing_ID);
-            //         }
-            //     }) -> get();
         } else {
             $members = null;
         }
 
-        $resource_items = new ResourceItems();
-
         if ($members) {
-            $members -> map(function ($member) use ($resource_items) {
-                $member_type = $resource_items -> getResourceName($member -> member_type_id);
+
+            $members -> map(function ($member) {
+
+                $member_type = $member -> member_type -> resource_name;
                 $member['member_type'] = $member_type;
 
                 $order = [
@@ -766,37 +744,31 @@ class EsignController extends Controller
                     'Listing Agent' => 3,
                     'Buyer Agent' => 4,
                 ][$member_type] ?? 15;
+
                 $member['order'] = $order;
 
                 return $member;
+
             });
 
             $members = $members -> sortBy('order');
+
         }
 
         $signers = [];
         $recipients = [];
-        if ($is_template == 'no' && $members) {
+        if ($members) {
             $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
             $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> orderBy('signer_order') -> get();
         }
 
-        $template_name = '';
-        if ($is_template == 'yes') {
-            $template = EsignTemplates::find($template_id);
-            $template_name = $template -> template_name;
-            $signers = EsignSigners::where('template_id', $template_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
-            $recipients = EsignSigners::where('template_id', $template_id) -> where('recipient_only', 'yes') -> orderBy('signer_order') -> get();
-        }
 
-        return view('/esign/esign_add_signers', compact('is_template', 'template_id', 'envelope_id', 'envelope', 'members', 'signers', 'recipients', 'resource_items', 'template_name'));
+        return view('/esign/esign_add_signers', compact('envelope_id', 'envelope', 'address', 'members', 'signers', 'recipients'));
     }
 
     public function esign_add_signers_to_envelope(Request $request) {
 
-		$is_template = $request -> is_template;
         $envelope_id = $request -> envelope_id;
-        $template_id = $request -> template_id;
         $signers = json_decode($request -> signers_data);
         $recipients = json_decode($request -> recipients_data);
 
@@ -810,19 +782,10 @@ class EsignController extends Controller
 
         // remove signers and fields from signers not in new list of signers. Keep existing signers
         // if they were all just removed than all fields would need to be recreated again
-        if ($is_template == 'yes') {
-            $envelope_id = 0;
-            // delete signers removed
-            $delete_signers = EsignSigners::where('template_id', $template_id) -> whereNotIn('id', $signer_ids) -> delete();
-            // delete fields from signers removed
-            $delete_fields = EsignFields::where('template_id', $template_id) -> whereNotIn('signer_id', $signer_ids) -> delete();
-        } else {
-            // delete signers removed
-            //dd($signer_ids);
-            $delete_signers = EsignSigners::where('envelope_id', $envelope_id) -> whereNotIn('id', $signer_ids) -> delete();
-            // delete fields from signers removed
-            $delete_fields = EsignFields::where('envelope_id', $envelope_id) -> whereNotIn('signer_id', $signer_ids) -> delete();
-        }
+        // delete signers removed
+        $delete_signers = EsignSigners::where('envelope_id', $envelope_id) -> whereNotIn('id', $signer_ids) -> delete();
+        // delete fields from signers removed
+        $delete_fields = EsignFields::where('envelope_id', $envelope_id) -> whereNotIn('signer_id', $signer_ids) -> delete();
 
         $seller_template_role = '';
         $buyer_template_role = '';
@@ -863,9 +826,7 @@ class EsignController extends Controller
 
             // check if signer added from template. if so will need to add signer id to fields
             $template_signer = null;
-            if (! $is_template) {
-                $template_signer = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> where('template_role', $template_role) -> first();
-            }
+            $template_signer = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> where('template_role', $template_role) -> first();
             if ($template_signer) {
                 $add_signer = EsignSigners::find($template_signer -> id);
             } else {
@@ -877,7 +838,6 @@ class EsignController extends Controller
             }
 
             $add_signer -> envelope_id = $envelope_id;
-            $add_signer -> template_id = $template_id;
             $add_signer -> signer_name = $signer -> name;
             $add_signer -> signer_email = $signer -> email;
             $add_signer -> signer_role = $signer -> role;
@@ -923,7 +883,6 @@ class EsignController extends Controller
                 }
             }
             $add_recipient -> envelope_id = $envelope_id;
-            $add_recipient -> template_id = $template_id;
             $add_recipient -> signer_name = $recipient -> name;
             $add_recipient -> signer_email = $recipient -> email;
             $add_recipient -> signer_role = $recipient -> role;
@@ -938,62 +897,35 @@ class EsignController extends Controller
 
     public function esign_add_fields(Request $request) {
 
-		$is_draft = $request -> is_draft;
-        $is_template = $request -> is_template;
-        $template_id = $request -> template_id;
         $envelope_id = $request -> envelope_id;
+        $is_draft = $request -> is_draft;
 
         $draft_name = '';
-        $property_address = '';
-        $template_name = '';
+        $property_address = null;
 
         $documents = [];
         $signers = [];
         $signers_options = [];
-        $signer_options_template = [];
 
         $error = null;
 
-        if ($envelope_id > 0) {
+        $envelope = EsignEnvelopes::find($envelope_id);
+        $draft_name = $envelope -> draft_name ?? null;
 
-            $envelope = EsignEnvelopes::find($envelope_id);
+        if ($envelope -> status != 'not_sent') {
+            $error = 'sent';
 
-            if ($envelope -> status != 'not_sent') {
-                $error = 'sent';
-
-                return view('/esign/esign_add_fields', compact('error', 'is_draft', 'is_template', 'template_id', 'envelope_id', 'template_name', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'signer_options_template'));
-            }
-
-            $draft_name = $envelope -> draft_name ?? null;
-            $property_address = null;
-            if ($envelope -> transaction_type != '') {
-                $property = Listings::GetPropertyDetails($envelope -> transaction_type, [$envelope -> Listing_ID, $envelope -> Contract_ID, $envelope -> Referral_ID]);
-                $property_address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
-            }
-
-            $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with('images') -> with('fields') -> get();
-
-            $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
-
-        } else {
-
-            // TODO: document and probably image ids are all wrong
-
-            //$envelopes = EsignEnvelopes::where('template_id', $template_id) -> get();
-            $template = EsignTemplates::with(['envelopes']) -> find($template_id);
-            $envelopes = $template -> envelopes;
-            $template_name = $template -> template_name;
-
-            $documents = collect();
-            foreach ($envelopes as $envelope) {
-                $doc = EsignDocuments::where('envelope_id', $envelope -> id) -> with(['images_template', 'fields']) -> get();
-                $documents = $documents -> merge($doc);
-            }
-
-            $signers = EsignSigners::where('template_id', $template_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
+            return view('/esign/esign_add_fields', compact('error', 'is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options'));
         }
 
-        //$recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
+        if ($envelope -> transaction_type != '') {
+            $property = Listings::GetPropertyDetails($envelope -> transaction_type, [$envelope -> Listing_ID, $envelope -> Contract_ID, $envelope -> Referral_ID]);
+            $property_address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        }
+
+        $documents = EsignDocuments::where('envelope_id', $envelope_id) -> with(['images', 'fields']) -> get();
+
+        $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
 
         $signers_options = [];
 
@@ -1001,10 +933,9 @@ class EsignController extends Controller
             $signer_name = $signer -> signer_name;
             $signers_options[] = '<option class="signer-select-option" value="'.$signer_name.'" data-role="'.$signer -> signer_role.'" data-name="'.$signer_name.'" data-signer-id="'.$signer -> id.'">'.$signer_name.' - '.$signer -> signer_role.'</option>';
 
-            $signer_options_template[] = '<option class="signer-select-option" value="'.$signer -> template_role.'" data-role="'.$signer -> signer_role.'" data-template-role="'.$signer -> template_role.'" data-name="'.$signer -> template_role.'" data-signer-id="'.$signer -> id.'">'.$signer -> template_role.'</option>';
         }
 
-        return view('/esign/esign_add_fields', compact('is_draft', 'is_template', 'template_id', 'envelope_id', 'template_name', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'signer_options_template', 'error'));
+        return view('/esign/esign_add_fields', compact('is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'error'));
     }
 
     public function esign_send_for_signatures(Request $request) {
@@ -1013,7 +944,6 @@ class EsignController extends Controller
         // try {
 
             $envelope_id = $request -> envelope_id ?? 0;
-            $template_id = $request -> template_id ?? 0;
             $document_ids = explode(',', $request -> document_ids);
 
             $subject = $request -> subject;
@@ -1026,17 +956,12 @@ class EsignController extends Controller
                 return (object) $fields;
             });
 
-            if ($template_id > 0) {
-                $delete_current_fields = EsignFields::where('template_id', $template_id) -> delete();
-            } else {
-                $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
-            }
+            $delete_current_fields = EsignFields::where('envelope_id', $envelope_id) -> delete();
 
             // add fields to db
             foreach ($fields as $field) {
                 $add_field = new EsignFields();
                 $add_field -> envelope_id = $envelope_id;
-                $add_field -> template_id = $template_id;
                 $add_field -> document_id = $field -> document_id;
                 $add_field -> signer_id = $field -> signer_id ?? 0;
                 $add_field -> field_id = $field -> field_id;
@@ -1054,42 +979,36 @@ class EsignController extends Controller
             if ($request -> is_draft == 'yes') {
                 return response() -> json(['status' => 'draft saved']);
             }
-            if ($request -> is_template == 'yes') {
-                return response() -> json(['status' => 'template saved']);
-            }
 
-            //SendForSignatures::dispatch($envelope_id, $template_id, $document_ids, $subject, $message, $fields, $user_name, $user_email);
+            //SendForSignatures::dispatch($envelope_id, $document_ids, $subject, $message, $fields, $user_name, $user_email);
 
 
 
 
             // update esign_envelope table with subject and message
-            $envelope = EsignEnvelopes::find($envelope_id) -> update([
-                'subject' => $subject,
-                'message' => $message,
-                'is_draft' => 'no',
-                'draft_name' => '',
-            ]);
+            $envelope = EsignEnvelopes::find($envelope_id);
+
+            $envelope -> subject = $subject;
+            $envelope -> message = $message;
+            $envelope -> is_draft = 'no';
+            $envelope -> draft_name = '';
 
             $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
 
             $file_to_sign = new document();
-            if(config('app.env') == 'development') {
+            if(config('app.env') == 'local') {
                 $file_to_sign -> setSandbox(true);
-            } else {
+            } else if(config('app.env') == 'production') {
                 $file_to_sign -> setSandbox(false);
             }
             $file_to_sign -> setTitle($subject);
             $file_to_sign -> setMessage($message);
-            //$file_to_sign -> setEmbeddedSigningEnabled(true);
-            //$file_to_sign -> setFlexibleSigning(false); // remove all fields to try this
-            //$file_to_sign -> setUseHiddenTags(true);
             $file_to_sign -> setRequireAllSigners(true);
             $file_to_sign -> setUseSignerOrder(true);
             $file_to_sign -> setCustomRequesterName($user_name);
             $file_to_sign -> setCustomRequesterEmail($user_email);
 
-            $days = config('app.env') == 'development' ? 'PT1200S' : 'P7D';
+            $days = config('app.env') == 'local' ? 'PT1200S' : 'P7D';
             $date = new \DateTime();
             $date -> add(new \DateInterval($days));
             $file_to_sign -> setExpires($date);
@@ -1149,18 +1068,16 @@ class EsignController extends Controller
                         $w = ($field -> width_perc / 100) * $width;
                         $h = ($field -> height_perc / 100) * $height;
 
-                        dump($x, $y, $w, $h);
-
                         if ($field -> field_type == 'signature') {
                             $document_field = new SignatureField();
                             $document_field -> setSigner($field -> signer_id);
                             $document_field -> setRequired($field -> required);
-                            $document_field -> setY($y + 3);
+                            $document_field -> setY($y + 8);
                         } elseif ($field -> field_type == 'initials') {
                             $document_field = new InitialsField();
                             $document_field -> setSigner($field -> signer_id);
                             $document_field -> setRequired($field -> required);
-                            $document_field -> setY($y);
+                            $document_field -> setY($y + 3);
                         } elseif ($field -> field_type == 'date') {
                             $document_field = new DateSignedField();
                             $document_field -> setSigner($field -> signer_id);
@@ -1205,13 +1122,28 @@ class EsignController extends Controller
             $hash = $newlyCreatedDocument -> getDocumentHash();
 
             // update esign_envelope table with new hash
-            $envelope = EsignEnvelopes::find($envelope_id) -> update([
-                'document_hash' => $hash,
+            $envelope -> document_hash = $hash;
+            $envelope -> save();
+
+            $link = null;
+            if($envelope -> transaction_type != '') {
+
+                $id = [
+                    'listing' => $envelope -> Listing_ID,
+                    'contract' => $envelope -> Contract_ID,
+                    'referral' => $envelope -> Referral_ID
+                ][$envelope -> transaction_type];
+
+                $link = '/agents/doc_management/transactions/transaction_details/'.$id.'/'.$envelope -> transaction_type;
+
+            }
+
+            //DB::commit();
+
+            return response() -> json([
+                'status' => 'sent',
+                'link' => $link
             ]);
-
-            DB::commit();
-
-            return response() -> json(['status' => 'sent']);
 
         // } catch (Throwable $e) {
 
@@ -1225,165 +1157,362 @@ class EsignController extends Controller
         // }
 
 
-
-        /* // update esign_envelope table with subject and message
-        $envelope = EsignEnvelopes::find($envelope_id) -> update([
-            'subject' => $subject,
-            'message' => $message,
-            'is_draft' => 'no',
-            'draft_name' => ''
-        ]);
-
-        $client = new Client(config('esign.eversign.key'), config('esign.eversign.business_id'));
-
-        $file_to_sign = new document();
-        $file_to_sign -> setSandbox(true);
-        $file_to_sign -> setTitle($subject);
-        $file_to_sign -> setMessage($message);
-        //$file_to_sign -> setEmbeddedSigningEnabled(true);
-        //$file_to_sign -> setFlexibleSigning(false); // remove all fields to try this
-        $file_to_sign -> setUseHiddenTags(true);
-        $file_to_sign -> setRequireAllSigners(true);
-        $file_to_sign -> setUseSignerOrder(true);
-        $file_to_sign -> setCustomRequesterName(auth() -> user() -> name);
-        $file_to_sign -> setCustomRequesterEmail(auth() -> user() -> email);
-
-        $days = config('app.env') == 'development' ? 'P1D' : 'P7D';
-        $date = new \DateTime();
-        $date -> add(new \DateInterval($days));
-        $file_to_sign -> setExpires($date);
-
-        // Add Signers
-        $signers = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'no') -> orderBy('signer_order') -> get();
-
-        foreach($signers as $signer) {
-
-            $add_signer = new Signer();
-            $add_signer -> setId($signer -> id);
-            $add_signer -> setName($signer -> signer_name);
-            $add_signer -> setEmail($signer -> signer_email);
-            $add_signer -> setRole($signer -> signer_role);
-            $add_signer -> setDeliverEmail(true);
-            //$signer -> setLanguage('en');
-            $file_to_sign -> appendSigner($add_signer);
-
-        }
-
-        // Add Recipients
-        $recipients = EsignSigners::where('envelope_id', $envelope_id) -> where('recipient_only', 'yes') -> get();
-
-        foreach($recipients as $recipient) {
-
-            $add_recipient = new Recipient();
-            $add_recipient -> setName($recipient -> signer_name);
-            $add_recipient -> setEmail($recipient -> signer_email);
-            //$add_recipient -> setLanguage('en');
-            $file_to_sign -> appendRecipient($add_recipient);
-
-        }
+    }
 
 
-        $file_index = 0;
+    // public function esign_template_add_documents(Request $request) {
 
-        foreach($document_ids as $document_id) {
+    //     return view('/esign/esign_template_add_documents');
 
-            $document = EsignDocuments::where('id', $document_id) -> first();
+    // }
 
-            if(count($fields -> where('document_id', $document_id)) > 0) {
+    public function esign_template_upload(Request $request) {
 
-                //Add a File to the Document
-                $file = new File();
-                $file -> setName($document -> file_name);
-                $file -> setFilePath(getcwd().$document -> file_location);
-                $file_to_sign -> appendFile($file);
+		$file = $request -> file('esign_file_upload');
 
-                $c = 0;
+        if ($file) {
 
-                $width = $document -> width;
-                $height = $document -> height;
+            $page_width = get_width_height($file)['width'];
+            $page_height = get_width_height($file)['height'];
 
-                foreach($fields -> where('document_id', $document_id) as $field) {
+            $file_name_orig = $file -> getClientOriginalName();
+            $filename = $file_name_orig;
 
-                    // increase move down and right
-                    $x = ($field -> left_perc/100) * $width;
-                    $y = ($field -> top_perc/100) * $height;
-                    $w = ($field -> width_perc/100) * $width;
-                    $h = ($field -> height_perc/100) * $height;
-
-                    if($field -> field_type == 'signature') {
-
-                        $document_field = new SignatureField();
-                        $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setRequired($field -> required);
-                        $document_field -> setY($y + 3);
-
-                    } else if($field -> field_type == 'initials') {
-
-                        $document_field = new InitialsField();
-                        $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setRequired($field -> required);
-                        $document_field -> setY($y);
-
-                    } else if($field -> field_type == 'date') {
-
-                        $document_field = new DateSignedField();
-                        $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setTextSize(10);
-                        //$dateSignedField -> setTextStyle('U');
-                        $document_field -> setY($y + 2);
-
-                    } else if($field -> field_type == 'name') {
-
-                        $document_field = new TextField();
-                        $document_field -> setSigner($field -> signer_id);
-                        $document_field -> setValue($field -> signer);
-                        $document_field -> setTextSize(9);
-                        $document_field -> setY($y + 3);
-                        $document_field -> setRequired(0);
-
-                    } else if($field -> field_type == 'text') {
-
-                        $document_field = new TextField();
-                        $document_field -> setSigner('OWNER');
-                        $document_field -> setReadonly(1);
-                        $document_field -> setValue($field -> field_value);
-                        $document_field -> setTextSize(9);
-                        $document_field -> setY($y + 3);
-                        $document_field -> setRequired(0);
-
-                    }
-
-                    $document_field -> setIdentifier($document_id.$c);
-                    $document_field -> setFileIndex($file_index);
-                    $document_field -> setPage($field -> page);
-                    $document_field -> setX($x);
-                    $document_field -> setWidth($w);
-                    $document_field -> setHeight($h);
+            $ext = $file -> getClientOriginalExtension();
+            $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $filename);
+            $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
+            $clean_filename = sanitize($file_name_no_ext);
+            $new_filename = $clean_filename.'.'.$ext;
 
 
+            $base_path = base_path();
+            $storage_path = $base_path.'/storage/app/public';
+            $storage_dir = 'doc_management/uploads/'.$file_id;
 
-                    $file_to_sign -> appendFormField($document_field, $c);
+            if (! Storage::put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
+                $fail = json_encode(['fail' => 'File Not Uploaded']);
+                return $fail;
+            }
 
-                    $c += 1;
+            $file_in = Storage::path($storage_dir.'/'.$new_filename);
+            $file_out = Storage::path($storage_dir.'/temp_'.$new_filename);
+            exec('pdftk '.$file_in.' output '.$file_out.' flatten compress');
+            exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
 
+            $storage_full_path = $storage_path.'/doc_management/uploads/'.$file_id;
+            chmod($storage_full_path.'/'.$new_filename, 0775);
+
+            // update directory path in database
+            $storage_public_path = '/storage/doc_management/uploads/'.$file_id;
+            $upload -> file_location = $storage_public_path.'/'.$new_filename;
+            $upload -> save();
+
+            // create directories
+            $storage_dir_pages = $storage_dir.'/pages';
+            Storage::makeDirectory($storage_dir_pages);
+            $storage_dir_images = $storage_dir.'/images';
+            Storage::makeDirectory($storage_dir_images);
+
+
+            // esign template directories
+            $template_dir = 'esign_templates/system/'.$file_id;
+            Storage::makeDirectory($template_dir);
+            Storage::makeDirectory($template_dir.'/images');
+
+            // copy file to esign templates
+            Storage::copy($storage_dir.'/'.$new_filename, $template_dir.'/'.$new_filename);
+            // add to esign_templates
+            $template = new EsignTemplates();
+            $template -> template_type = 'system';
+            $template -> system_upload_id = $file_id;
+            $template -> template_name = $file_name_display;
+            $template -> file_name = $new_filename;
+            $template -> file_location = '/storage/'.$template_dir.'/'.$new_filename;
+            $template -> save();
+            $template_id = $template -> id;
+
+            $upload -> template_id = $template_id;
+            $upload -> save();
+
+
+            // split pdf into pages and images
+            $input_file = $storage_full_path.'/'.$new_filename;
+            $output_files = $storage_path.'/'.$storage_dir_pages.'/page_%02d.pdf';
+            $new_image_name = str_replace($ext, 'jpg', $new_filename);
+            //$output_images = $storage_path.'/'.$storage_dir_images.'/'.$new_image_name;
+            $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
+
+            // add individual pages to pages directory
+            $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten compress', $output, $return);
+
+            // remove data file
+            exec('rm '.$storage_path.'/'.$storage_dir_pages.'/doc_data.txt');
+
+            // add individual images to images directory
+            $create_images = exec('convert -density 200 -quality 80% -resize 1200 '.$input_file.'  -compress JPEG -background white -alpha remove -strip '.$output_images, $output, $return);
+
+            // get all image files images_storage_path to use as file location
+            $saved_images_directory = Storage::files($storage_dir.'/images');
+            $images_public_path = $storage_public_path.'/images';
+
+            foreach ($saved_images_directory as $saved_image) {
+                // get just filename
+                $images_file_name = basename($saved_image);
+                /* $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
+                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1; */
+                $page_number = preg_match('/page_([0-9]+)\.jpg/', $images_file_name, $matches);
+                $match = $matches[1];
+                if (substr($match, 0, 1 == 0)) {
+                    $match = substr($match, 1);
                 }
+                $page_number = count($matches) > 1 ? $match + 1 : 1;
+                // add images to database
+                $upload = new UploadImages();
+                $upload -> file_id = $file_id;
+                $upload -> file_name = $images_file_name;
+                $upload -> file_location = $images_public_path.'/'.$images_file_name;
+                $upload -> pages_total = $pages_total;
+                $upload -> page_number = $page_number;
+                $upload -> save();
 
-                $file_index += 1;
+                $template_image_location = $template_dir.'/images/'.$images_file_name;
+                // copy image to templates directory
+                Storage::copy($storage_dir.'/images/'.$images_file_name, $template_image_location);
+
+                $page_width = get_width_height(Storage::path($template_image_location))['width'];
+                $page_height = get_width_height(Storage::path($template_image_location))['height'];
+
+                // add to template images
+                $template_image = new EsignTemplatesDocumentImages();
+                $template_image -> template_id = $template_id;
+                $template_image -> file_location = '/storage/'.$template_image_location;
+                $template_image -> page_number = $page_number;
+                $template_image -> width = $page_width;
+                $template_image -> height = $page_height;
+                $template_image -> save();
+
+            }
+
+            $saved_pages_directory = Storage::files($storage_dir.'/pages');
+            $pages_public_path = $storage_public_path.'/pages';
+
+            $page_number = 1;
+            foreach ($saved_pages_directory as $saved_page) {
+                $pages_file_name = basename($saved_page);
+                $upload = new UploadPages();
+                $upload -> file_id = $file_id;
+                $upload -> file_name = $pages_file_name;
+                $upload -> file_location = $pages_public_path.'/'.$pages_file_name;
+                $upload -> pages_total = $pages_total;
+                $upload -> page_number = $page_number;
+                $upload -> save();
+
+                $page_number += 1;
+            }
+            $success = json_encode(['success' => true]);
+
+            return $success;
+        }
+
+
+
+        /* $User_ID = $request -> User_ID;
+        $Agent_ID = $request -> Agent_ID;
+        $Listing_ID = $request -> Listing_ID ?? 0;
+        $Contract_ID = $request -> Contract_ID ?? 0;
+        $Referral_ID = $request -> Referral_ID ?? 0;
+        $transaction_type = $request -> transaction_type;
+
+        $ext = $file -> getClientOriginalExtension();
+        $file_name = $file -> getClientOriginalName();
+
+        $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $file_name);
+        $file_name_remove_numbers = preg_replace('/^[0-9-_\s\.]+/', '', $file_name_remove_numbers);
+        $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
+        $clean_file_name = sanitize($file_name_no_ext);
+        $file_name_display = $clean_file_name.'.'.$ext;
+        $new_file_name = date('YmdHis').'_'.$file_name_display;
+
+        $tmp_dir = Storage::path('tmp');
+
+        // convert to pdf if image
+        if ($ext != 'pdf') {
+            $file_name_display = $clean_file_name.'.pdf';
+            $new_file_name = date('YmdHis').'_'.$file_name_display;
+            $convert_to_pdf = exec('convert -quality 100 -density 300 -page a4 '.$file.' '.$tmp_dir.'/'.$new_file_name, $output, $return);
+        } else {
+            move_uploaded_file($file, $tmp_dir.'/'.$new_file_name);
+        }
+
+        $new_image_name = str_replace('.pdf', '.jpg', $new_file_name);
+
+        exec('convert -flatten -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
+
+        $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_file_name;
+        $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_image_name;
+
+        $details = [
+            'file_name' => $file_name_display,
+            'file_location' => $file_location,
+            'image_location' => $image_location,
+        ];
+
+
+        return compact('details'); */
+    }
+
+    public function esign_template_add_documents_and_signers(Request $request) {
+
+        $template_type = $request -> template_type;
+        $template_id = $request -> template_id ? $request -> template_id : null;
+
+        $template = null;
+        $signers = null;
+        if($template_id) {
+            $template = EsignTemplates::with(['signers']) -> find($template_id);
+            $signers = $template -> signers -> pluck('signer_role') -> toArray();
+        }
+
+        $signer_options = ResourceItems::where('resource_type', 'signer_option') -> orderBy('resource_order') -> get();
+
+        return view('/esign/esign_template_add_documents_and_signers', compact('template_type', 'template', 'template_id', 'signers', 'signer_options'));
+
+    }
+
+    public function esign_template_save_add_signers(Request $request) {
+
+        $template_type = $request -> template_type;
+        $template_id =  $request -> template_id ? $request -> template_id : null;
+        $file = $request -> file('template_upload');
+        $signers = json_decode($request -> signers, true);
+
+        if(!$template_id) {
+
+            $template = new EsignTemplates();
+            $template -> template_type = $template_type;
+            $template -> save();
+            $template_id = $template -> id;
+
+        }
+
+        if($file) {
+
+            $ext = $file -> getClientOriginalExtension();
+            $file_name = $file -> getClientOriginalName();
+
+            $file_name_no_ext = str_replace('.'.$ext, '', $file_name);
+            $clean_file_name = sanitize($file_name_no_ext);
+            $new_file_name = $clean_file_name.'_'.time().'.'.$ext;
+
+            Storage::makeDirectory('esign_templates/'.$template_type.'/'.$template_id);
+            Storage::makeDirectory('esign_templates/'.$template_type.'/'.$template_id.'/images');
+            $template_dir = 'esign_templates/'.$template_type.'/'.$template_id;
+            $template_path = Storage::path($template_dir);
+
+            // convert to pdf if image
+            if ($ext != 'pdf') {
+                $convert_to_pdf = exec('convert -quality 100 -density 300 -page a4 '.$file.' '.$template_path.'/'.$new_file_name, $output, $return);
+            } else {
+                move_uploaded_file($file, $template_path.'/'.$new_file_name);
+            }
+
+            $output_images = $template_path.'/images/page_%02d.jpg';
+
+            $create_images = exec('convert -density 200 -quality 80% -resize 1200 '.$template_path.'/'.$new_file_name.' -compress JPEG -background white -alpha remove -strip '.$output_images, $output, $return);
+
+            $images = Storage::files($template_dir.'/images');
+
+            foreach($images as $image) {
+
+                $image_location = Storage::path($image);
+
+                $image_name = basename($image);
+                $page_number = preg_match('/page_([0-9]+)\.jpg/', $image_name, $matches);
+                $match = $matches[1];
+                if (substr($match, 0, 1 == 0)) {
+                    $match = substr($match, 1);
+                }
+                $page_number = count($matches) > 1 ? $match + 1 : 1;
+
+                $page_width = get_width_height($image_location)['width'];
+                $page_height = get_width_height($image_location)['height'];
+
+                // add to template images
+                $template_image = new EsignTemplatesDocumentImages();
+                $template_image -> template_id = $template_id;
+                $template_image -> file_location = '/storage/'.$image;
+                $template_image -> page_number = $page_number;
+                $template_image -> width = $page_width;
+                $template_image -> height = $page_height;
+                $template_image -> save();
 
             }
 
         }
 
-        //Saving the created file_to_sign to the API.
-        $newlyCreatedDocument = $client -> createDocument($file_to_sign);
-        $hash = $newlyCreatedDocument -> getDocumentHash();
+        $delete_current_signers = EsignTemplatesSigners::where('template_id', $template_id) -> delete();
 
-        // update esign_envelope table with new hash
-        $envelope = EsignEnvelopes::find($envelope_id) -> update([
-            'document_hash' => $hash
-        ]);
+        foreach($signers as $signer) {
+            $new_signer = new EsignTemplatesSigners();
+            $new_signer -> template_id = $template_id;
+            $new_signer -> signer_order = $signer['order'];
+            $new_signer -> signer_role = $signer['role'];
+            $new_signer -> save();
+        }
 
-        return response() -> json(['status' => 'sent']); */
+        return response() -> json(['template_id' => $template_id]);
+
+    }
+
+    public function esign_template_add_fields(Request $request) {
+
+        $template_type = $request -> template_type;
+        $template_id = $request -> template_id;
+        $signer_options_template = [];
+
+        //$envelopes = EsignEnvelopes::where('template_id', $template_id) -> get();
+        $template = EsignTemplates::with(['images', 'signers', 'fields']) -> find($template_id);
+        $images = $template -> images;
+        $signers = $template -> signers;
+        $fields = $template -> fields;
+
+        $template_name = $template -> template_name;
+
+        foreach ($signers as $signer) {
+            $signer_options_template[] = '<option class="signer-select-option" value="'.$signer -> signer_role.'" data-signer-role="'.$signer -> signer_role.'">'.$signer -> signer_role.'</option>';
+        }
+
+        return view('/esign/esign_template_add_fields', compact('template_id','template_name', 'images', 'signers', 'fields', 'signer_options_template'));
+    }
+
+    public function save_template(Request $request) {
+
+        $template_id = $request -> template_id ?? 0;
+
+        $fields = json_decode($request -> fields, true);
+        $fields = collect($fields) -> map(function ($fields) {
+            return (object) $fields;
+        });
+
+        $delete_current_fields = EsignTemplatesFields::where('template_id', $template_id) -> delete();
+
+        // add fields to db
+        foreach ($fields as $field) {
+            $add_field = new EsignTemplatesFields();
+            $add_field -> template_id = $template_id;
+            $add_field -> signer_role = $field -> signer_role;
+            $add_field -> field_id = $field -> field_id;
+            $add_field -> field_type = $field -> field_type;
+            $add_field -> field_value = $field -> field_value ?? null;
+            $add_field -> required = $field -> required;
+            $add_field -> page = $field -> page;
+            $add_field -> left_perc = $field -> left_perc;
+            $add_field -> top_perc = $field -> top_perc;
+            $add_field -> height_perc = $field -> height_perc;
+            $add_field -> width_perc = $field -> width_perc;
+            $add_field -> save();
+        }
+
     }
 
 

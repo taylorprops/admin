@@ -6,6 +6,14 @@
     }
 }
 
+.page-esign-add-signers {
+    .add-signer-fields {
+        .form-ele {
+            margin-bottom: 2px;
+        }
+    }
+}
+
 #add_template_modal .modal-body {
     height: 80VH;
     overflow: auto;
@@ -22,7 +30,6 @@
         height: calc(100vh - 75px);
         overflow-y: scroll;
         overflow-x: hidden;
-        padding-bottom: 200px;
         -vendor-animation-duration: 2s;
         animation-duration: 2s;
     }
@@ -38,6 +45,10 @@
 
         &.active {
             opacity: 1;
+        }
+
+        &:last-child {
+            margin-bottom: 200px;
         }
     }
 
@@ -127,7 +138,7 @@
         box-shadow: none;
         display: block;
         z-index: 3;
-        background: rgba($orange, .3);
+        background: rgba($primary, .3);
         cursor: pointer;
         overflow: visible;
         white-space: nowrap;
@@ -137,6 +148,7 @@
         .field-html {
             position: absolute;
             left: 0px;
+            color: $primary;
 
             &:not(.text) {
                 top: 0px;
@@ -282,17 +294,79 @@
 
         &.show {
 
-            border: 1px solid $primary;
+            background: $primary;
             z-index: 5;
+
+            .field-html {
+                color: $white;
+            }
 
             .field-options-holder, .select-signer-div, .field-handle {
                 display: block !important;
             }
         }
 
-        &.required {
-            border: 1px solid $danger;
+        &.required:not(.show) {
+            background: rgba($danger, .3);
         }
 
     }
+}
+
+.page-esign-templates {
+
+    .available-signers {
+
+        .available-signers-list {
+            max-height: 400px;
+            overflow: auto;
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+
+            .list-group-item {
+                padding: 0px 10px 0px 10px;
+
+                &.active {
+                    background: $success;
+                    border: 1px solid $white;
+
+                    label {
+                        color: $white !important;
+                    }
+                }
+
+                .form-ele {
+                    margin-top: 0rem;
+                    margin-bottom: 0rem;
+
+                    .pretty {
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                }
+
+                label.custom {
+                    display: block;
+                    color: $text-gray;
+                    //margin-left: 10px;
+                    width: 100%;
+                    height: 100%;
+                    padding: 10px;
+                    cursor: pointer;
+                }
+
+            }
+
+        }
+
+    }
+
+    .selected-signers-list {
+        max-height: 400px;
+        overflow: auto;
+        border-top: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+    }
+
 }

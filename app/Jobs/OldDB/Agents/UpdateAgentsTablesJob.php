@@ -71,7 +71,7 @@ class UpdateAgentsTablesJob implements ShouldQueue
             $agent_email = $agent -> email1;
             $social_security = Crypt::encrypt($agent -> soc_sec);
 
-            if(config('app.env') == 'development') {
+            if(config('app.env') == 'local') {
 
                 $agent_email = 'test_'.$agent -> email1;
                 $social_security = Crypt::encrypt('1111-22-333');
@@ -84,7 +84,10 @@ class UpdateAgentsTablesJob implements ShouldQueue
 
             // add to emp_agents
             $update_agent = Agents::with(['user_account']) -> find($agent -> id);
-
+            if(!$update_agent) {
+                $update_agent = new Agents();
+                $update_agent -> id = $agent -> id;
+            }
             $update_agent -> first_name = $agent -> first;
             $update_agent -> middle_name = $agent -> middle_name;
             $update_agent -> last_name = $agent -> last;
@@ -133,9 +136,11 @@ class UpdateAgentsTablesJob implements ShouldQueue
             if(!$user) {
                 $user = new User();
                 $new_user = 'yes';
+                $user -> user_id = $agent -> id;
+                $user -> password = '$2y$10$P.O4F.rVfRRin81HksyCie0Wf0TEJQ9KlPYFoI2dMEzdtPFYD11FC';
             }
 
-            $user -> user_id = $agent -> id;
+
             $user -> group = 'agent';
             if (stristr($agent -> company, 'referral')) {
                 $user -> group = 'agent_referral';
@@ -147,9 +152,11 @@ class UpdateAgentsTablesJob implements ShouldQueue
             $user -> email = $agent_email;
             $user -> save();
 
-            if($new_user) {
-                $url = $this -> create_password_reset_url($user, 'register');
-                Notification::send($user, new RegisterEmployee($url));
+            if(config('app.env') == 'production') {
+                if($new_user) {
+                    $url = $this -> create_password_reset_url($user, 'register');
+                    Notification::send($user, new RegisterEmployee($url));
+                }
             }
 
         }

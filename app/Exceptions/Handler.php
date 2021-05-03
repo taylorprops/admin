@@ -37,24 +37,19 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this -> reportable(function (Throwable $e) {
-            if ($this -> shouldReport($e)) {
-                $airbrakeNotifier = \App::make('Airbrake\Notifier');
-                $airbrakeNotifier -> notify($e);
-            }
-
-            parent::report($e);
+            //
         });
     }
 
-    // public function report(Throwable $exception)
-    // {
-    //     if ($this -> shouldReport($exception)) {
-    //         $airbrakeNotifier = \App::make('Airbrake\Notifier');
-    //         $airbrakeNotifier -> notify($exception);
-    //     }
+    public function report(Throwable $exception)
+    {
+        if ($this -> shouldReport($exception)) {
+            $airbrakeNotifier = \App::make('Airbrake\Notifier');
+            $airbrakeNotifier -> notify($exception);
+        }
 
-    //     parent::report($exception);
-    // }
+        parent::report($exception);
+    }
 
     /* public function render($request, Throwable $exception) {
         if($this -> pageExpired($exception)) {

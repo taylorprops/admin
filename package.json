@@ -17,7 +17,6 @@
     "clean-css": "^5.1.2",
     "cross-env": "^6.0.3",
     "is-svg": ">=4.2.2",
-    "yargs-parser": ">=5.0.0-security.0",
     "jquery": "^3.6.0",
     "jquery-sortablejs": "^1.0.1",
     "jquery-ui": "^1.12.1",
@@ -32,7 +31,8 @@
     "vue-template-compiler": "^2.6.12",
     "webpack": "^5.28.0",
     "webpack-cli": "^4.6.0",
-    "websocket-extensions": ">=0.1.4"
+    "websocket-extensions": ">=0.1.4",
+    "yargs-parser": ">=5.0.0-security.0"
   },
   "dependencies": {
     "@popperjs/core": "^2.9.1",

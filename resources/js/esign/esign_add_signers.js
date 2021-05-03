@@ -2,22 +2,8 @@ if(document.URL.match(/esign_add_signers/)) {
 
     $(function () {
 
-        $('.add-signer-fields').find('.add-signer-field').on('change', function() {
-            if($(this).val() !== '') {
-                $('.signer-select').val('').trigger('change');
-            }
-        });
-
-        $('.add-recipient-fields').find('.add-recipient-field').on('change', function() {
-            if($(this).val() !== '') {
-                $('.recipient-select').val('').trigger('change');
-            }
-        });
-
-        $(document).on('click', '.quick-add', quick_add);
-
-        $(document).on('click', '.save-add-user', function() {
-            add_user($(this).data('type'));
+        $(document).on('click', '#save_add_signer', function() {
+            save_add_signer($(this).data('type'));
         });
 
         $(document).on('click', '.remove-user', function() {
@@ -29,34 +15,25 @@ if(document.URL.match(/esign_add_signers/)) {
             $(this).closest('.'+type+'-item').data('email', $(this).val());
         });
 
-        $('#add_signer_div').on('shown.bs.collapse', function () {
-            $('.add-signer-role').addClass('required');
-        });
-        $('#add_signer_div').on('hidden.bs.collapse', function () {
-            $('.add-signer-role').removeClass('required');
-        });
 
+        $(document).on('click', '#save_signers_button', save_signers);
 
-        $(document).on('click', '#add_fields_button', save_signers);
-
-        $('.signer-recipient-select').off('change').on('change', function() {
+        $('#add_signer_member_id').off('change').on('change', function() {
 
             let type = $(this).data('type');
 
             if($(this).val() != '') {
 
-                $('.add-'+type+'-fields').find('.add-'+type+'-field').val('').trigger('change');
-
                 let option = $(this).find('option:selected');
 
-                $('.'+type+'-select-fields').removeClass('hidden');
-                $('.'+type+'-select-fields').find('.add-'+type+'-name').val(option.data('name'));
-                $('.'+type+'-select-fields').find('.add-'+type+'-email').val(option.data('email'));
-                $('.'+type+'-select-fields').find('.add-'+type+'-role').val(option.data('member-type'));
+                $('#add_signer_name').val(option.data('name'));
+                $('#add_signer_email').val(option.data('email'));
+                $('#add_signer_role').val(option.data('member-type'));
+
+                save_add_signer(type);
 
             } else {
-                $('.'+type+'-select-fields').addClass('hidden');
-                $('.'+type+'-select-fields').find('.add-'+type+'-field').val('').trigger('change');
+                $('.add-signer-fields').find('.add-signer-field').val('').trigger('change');
             }
 
 
@@ -78,47 +55,41 @@ if(document.URL.match(/esign_add_signers/)) {
         });
         reorder('recipient');
 
-        $('.collapse').on('shown.bs.collapse', function () {
-            $('#add_fields_button').prop('disabled', true);
+        $('.envelope-role[data-role="Signer"]').focus().trigger('click');
+
+        $('.envelope-role').on('click', function() {
+
+            let role = $(this).data('role');
+
+            $('.envelope-role').removeClass('active');
+            $(this).addClass('active');
+
+            $('#save_type, #header_text').text(role);
+            $('#envelope_role').val(role);
+
+            $('#save_add_signer, #add_signer_member_id').data('type', role.toLowerCase());
+
         });
-        $('.collapse').on('hidden.bs.collapse', function () {
-            $('#add_fields_button').prop('disabled', false);
-        });
 
-        function quick_add() {
+        show_no_results();
 
-            let template_roles = ['Seller One', 'Seller Two', 'Buyer One', 'Buyer Two'];
+        disable_selected_signers();
 
-            template_roles.forEach(function(template_role) {
+        ////////////////////////////////////////////////////////////////
 
-                let role = template_role.match(/Seller/) ? 'Seller' : 'Buyer';
+        function disable_selected_signers() {
 
-                let user = ' \
-                <div class="list-group-item signer-item d-flex justify-content-between align-items-center text-gray w-100" data-name="" data-email="" data-role="'+role+'" data-template-role="'+template_role+'"> \
-                    <div class="row d-flex align-items-center w-100"> \
-                        <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
-                        <div class="col-1"><span class="signer-count font-11 text-orange"></span></div> \
-                        <div class="col-3 font-weight-bold hidden"></div> \
-                        <div class="col-2">'+template_role+'</div> \
-                        <div class="col-4 hidden"></div> \
-                    </div> \
-                    <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="signer"><i class="fal fa-times fa-lg"></i></button></div> \
-                </div>';
+            $('.form-select-li').show();
 
-                $('.signers-container').append(user).sortable({
-                    handle: '.user-handle',
-                    stop: function() {
-                        reorder('signer');
-                    }
-                });
+            $('.signer-item, .recipient-item').each(function() {
+
+                let email = $(this).data('email');
+                let value = $('#add_signer_member_id').find('option[data-email="'+email+'"]').val();
+                $('.form-select-li[data-value="'+value+'"]').hide();
 
             });
 
-            $('.next-div').removeClass('hidden');
-            reorder('signer');
-
         }
-
 
         function save_signers() {
 
@@ -127,11 +98,9 @@ if(document.URL.match(/esign_add_signers/)) {
 
             if(validate == 'yes') {
 
-                $('#add_fields_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
+                $('#save_signers_button').prop('disabled', true).html('Adding Signers <span class="spinner-border spinner-border-sm ml-2"></span>');
 
                 let envelope_id = $('#envelope_id').val();
-                let template_id = $('#template_id').val();
-                let is_template = $('#is_template').val();
 
                 let signers_data = [];
 
@@ -142,8 +111,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         'id': $(this).data('id') ?? null,
                         'name': $(this).data('name'),
                         'email': $(this).data('email'),
-                        'role': $(this).data('role'),
-                        'template_role': $(this).data('template-role')
+                        'role': $(this).data('role')
                     }
                     signers_data.push(data);
                     c += 1;
@@ -160,8 +128,7 @@ if(document.URL.match(/esign_add_signers/)) {
                         'id': $(this).data('id') ?? null,
                         'name': $(this).data('name'),
                         'email': $(this).data('email'),
-                        'role': $(this).data('role'),
-                        'template_role': $(this).data('template-role')
+                        'role': $(this).data('role')
                     }
                     recipients_data.push(data);
                     c += 1;
@@ -171,15 +138,13 @@ if(document.URL.match(/esign_add_signers/)) {
 
 
                 let formData = new FormData();
-                formData.append('is_template', is_template);
                 formData.append('envelope_id', envelope_id);
-                formData.append('template_id', template_id);
                 formData.append('signers_data', signers_data);
                 formData.append('recipients_data', recipients_data);
 
                 axios.post('/esign/esign_add_signers_to_envelope', formData, axios_options)
                 .then(function (response) {
-                    window.location = '/esign/esign_add_fields/'+response.data.envelope_id+'/'+is_template+'/'+template_id;
+                    window.location = '/esign/esign_add_fields/'+response.data.envelope_id;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -190,63 +155,44 @@ if(document.URL.match(/esign_add_signers/)) {
         }
 
 
-        function add_user(type) {
+        function save_add_signer(type) {
 
-            let form, role, template_role, display_role;
-            let name = '';
-            let email = '';
-            let hidden = '';
-            let required = 'required';
-            let other_selected = 'no';
+            let form = $('.add-signer-fields');
+            $('.add-signer-field').addClass('required');
 
-            if($('#is_template').val() == 'yes') {
-
-                form = $('.add-template-'+type+'-fields');
-                template_role = form.find('.add-'+type+'-role').val();
-                role = form.find('.add-'+type+'-role').val().replace(/\s(One|Two)/, '');
-                hidden = 'hidden';
-                required = '';
-                display_role = template_role;
-
-            } else {
-
-                if($('.'+type+'-select').length > 0 && $('.'+type+'-select').val() != '') {
-                    form = $('.'+type+'-select-fields');
-                } else {
-                    form = $('.add-'+type+'-fields');
-                    other_selected = 'yes';
-                }
-
-                $('.add-'+type+'-field').removeClass('required');
-
-                form.find('.add-'+type+'-field').addClass('required');
-                name = form.find('.add-'+type+'-name').val();
-                email = form.find('.add-'+type+'-email').val();
-                if(email.length > 25) {
-                    email = email.substring(0, 25)+'...';
-                }
-                role = form.find('.add-'+type+'-role').val();
-                display_role = role;
-
-            }
+            let name = $('#add_signer_name').val();
+            let email = $('#add_signer_email').val();
+            let role = $('#add_signer_role').val();
 
             let validate = validate_form(form);
 
             if(validate == 'yes') {
 
-                $('#add_'+type+'_div').collapse('hide');
-
                 let new_user = ' \
-                <div class="list-group-item '+type+'-item d-flex justify-content-between align-items-center text-gray w-100" data-name="'+name+'" data-email="'+email +'" data-role="'+role+'" data-template-role="'+template_role+'"> \
-                    <div class="row d-flex align-items-center w-100"> \
-                        <div class="col-1 user-handle"><i class="fal fa-bars text-primary fa-lg"></i></div> \
-                        <div class="col-1"><span class="'+type+'-count font-11 text-orange"></span></div> \
-                        <div class="col-3 '+hidden+' font-weight-bold">'+name+'</div> \
-                        <div class="col-3">'+display_role+'</div> \
-                        <div class="col-4 '+hidden+'"><input type="text" class="custom-form-element form-input signer-email '+required+'" data-type="'+type+'" value="'+email+'" data-label="Email"></div> \
+                <div class="list-group-item '+type+'-item d-flex justify-content-between align-items-center text-gray w-100 py-0 px-0" \
+                    data-name="'+name+'" \
+                    data-email="'+email+'" \
+                    data-role="'+role+'"> \
+                    <div class="ml-2 w-8 text-center"> \
+                        <a href="javascript: void(0)" class="user-handle"><i class="fal fa-bars text-primary fa-lg"></i></a> \
                     </div> \
-                    <div class="pl-3"><button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button></div> \
-                </div>';
+                    <div class="w-6"> \
+                        <span class="'+type+'-count font-11 text-orange"></span> \
+                    </div> \
+                    <div class="w-34"> \
+                        <span class="font-10">'+name+'</span> \
+                        <br> \
+                        <span class="font-9 font-italic">'+role+'</span> \
+                    </div> \
+                    <div class="w-34"> \
+                        <input type="text" class="custom-form-element form-input '+type+'-email required" data-type="'+type+'" value="'+email+'" data-label="Email"> \
+                    </div> \
+                    <div class="w-8 text-center"> \
+                        <button type="button" class="btn btn-danger remove-user" data-type="'+type+'"><i class="fal fa-times fa-lg"></i></button> \
+                    </div> \
+                </div> \
+                ';
+
 
                 $('.'+type+'s-container').append(new_user).sortable({
                     handle: '.user-handle',
@@ -255,45 +201,63 @@ if(document.URL.match(/esign_add_signers/)) {
                     }
                 });
 
-                $('.add-'+type+'-field').removeClass('required').val('');
-
-                if(other_selected == 'yes') {
-                    $('.add-'+type+'-role').val('Other');
-                }
+                $('.add-signer-field').removeClass('required').val('');
 
                 reorder(type);
 
-                $('.next-div').removeClass('hidden');
+                disable_selected_signers();
+
+                $('.no-'+type).addClass('hidden');
+
+                show_no_results();
 
             }
 
         }
 
+
         function remove_user(ele) {
 
             let type = ele.data('type');
-            ele.closest('.'+type+'-item').fadeOut('slow');
+            ele.closest('.'+type+'-item').remove();
+
+            ele.closest('.'+type+'-item').remove();
+            reorder(type);
+
             setTimeout(function() {
-
-                ele.closest('.'+type+'-item').remove();
-
-                reorder(type);
-
-                if($('.'+type+'-item').length > 0) {
-                    $('.next-div').removeClass('hidden');
-                } else {
-                    $('.next-div').addClass('hidden');
-                }
-
+                disable_selected_signers();
             }, 400);
+
+            if($('.'+type+'-item').length > 0) {
+                $('.no-'+type).addClass('hidden');
+            } else {
+                $('.no-'+type).removeClass('hidden');
+            }
+
+            show_no_results();
 
         }
 
         function reorder(type) {
+
             $('.'+type+'-item').each(function() {
-                let position = $(this).index();
-                $(this).find('.'+type+'-count').text(position);
+
+                let previous = $(this).prevAll('.'+type+'-item'),
+                index = previous.length;
+                $(this).find('.'+type+'-count').text(index + 1);
             });
+        }
+
+        function show_no_results() {
+
+            $('.no-signers, .no-recipients').addClass('hidden');
+            if($('.signer-item').length == 0) {
+                $('.no-signers').removeClass('hidden');
+            }
+            if($('.recipient-item').length == 0) {
+                $('.no-recipients').removeClass('hidden');
+            }
+
         }
 
     });

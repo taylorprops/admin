@@ -4,7 +4,7 @@
         <a href="javascript: void(0)" role="button" data-toggle="popover" data-html="true" data-trigger="focus" title="Templates" data-content="Templates are used to automatically add fields and signers to any documents. <br><br>You can create a template by clicking the Add Template button and you will also be given the option prior to sending documents for signatures."><i class="fad fa-question-circle ml-2"></i></a>
     </div>
     <div>
-        <a href="/esign/esign_add_template_documents/template" class="btn btn-success add-template-button"><i class="fa fa-plus mr-2"></i> Create Template</a>
+        <a href="/esign/esign_template_add_documents_and_signers/user" class="btn btn-success add-template-button"><i class="fa fa-plus mr-2"></i> Create Template</a>
     </div>
 </div>
 

@@ -274,7 +274,7 @@ if (document.URL.match(/transaction_details/)) {
                 }
                 $('#in_process_div').show();
 
-                //doc_div.find('button').prop('disabled', true);
+                doc_div.find('button').prop('disabled', true);
             });
         }
     }
@@ -291,7 +291,7 @@ if (document.URL.match(/transaction_details/)) {
                         doc_div.find('button').removeClass('hidden');
                     }
 
-                    //doc_div.find('button').prop('disabled', false);
+                    doc_div.find('button').prop('disabled', false);
                 });
             }
         } else {

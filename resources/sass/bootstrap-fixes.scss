@@ -112,6 +112,13 @@ body.modal-open {
     margin: .2rem .5rem;
     //text-transform: uppercase;
 }
+
+.btn-group {
+    .btn:not(.active) {
+        background: #8cc7f8;
+    }
+}
+
 /* .btn-primary-500 {
 
     background: rgba($primary, 0.5);
@@ -126,6 +133,10 @@ body.modal-open {
         box-shadow: none;
     }
 } */
+
+a.text-gray:hover {
+    color: rgb(139, 139, 139);
+}
 
 .dropdown-menu {
     padding: .6rem !important;
@@ -498,6 +509,11 @@ body.modal-open {
         }
 
     }
+
+    .dt-buttons.btn-group {
+        display: none;
+    }
+
 }
 
 // popovers

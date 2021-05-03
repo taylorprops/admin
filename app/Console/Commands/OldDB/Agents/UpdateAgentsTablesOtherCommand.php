@@ -12,7 +12,7 @@ class UpdateAgentsTablesOtherCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'old_db:add_agents_other_tables';
+    protected $signature = 'old_db:update_agents_other_tables';
 
     /**
      * The console command description.

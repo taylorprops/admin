@@ -10,11 +10,14 @@
     <div class="row">
         <div class="col-12">
 
-            <div class="d-flex justify-content-end next-div @if(!$docs_to_display) hidden @endif">
-                <div>
-                    <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="font-12 text-primary">{{ $address }}</div>
+                <div class="d-flex justify-content-end next-div @if(!$docs_to_display) hidden @endif">
+                    <div>
+                        <a href="javascript: void(0)" class="btn btn-primary btn-lg p-3" id="create_envelope_button">Next <i class="fal fa-arrow-right ml-2"></i></a>
 
-                    <div class="notification text-orange font-8 hidden">Please be patient, this may take a moment...</div>
+                        <div class="notification text-orange font-8 hidden">Please be patient, this may take a moment...</div>
+                    </div>
                 </div>
             </div>
 
@@ -26,24 +29,6 @@
         <div class="col-12">
 
             <div class="mt-5">
-
-                @if($is_template == 'yes')
-
-                    <div class="row">
-
-                        <div class="col-12 col-sm-6">
-
-                            <div class="h5 text-orange">Enter A Name For Your Template</div>
-
-                            <div class="template-name-div">
-                                <input type="text" class="custom-form-element form-input required" id="template_name" data-label="Template Name" @if($from_upload == 'yes') value="{{ $docs_to_display[0]['file_name_display'] }}" @endif>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                @endif
 
                 <div class="row mt-5">
 
@@ -83,7 +68,7 @@
 
                             @foreach($docs_to_display as $doc)
 
-                                <li class="list-group-item upload-li" data-file-location="{{ $doc['file_location'] }}" data-document-id="{{ $doc['document_id'] }}" data-file-type="{{ $doc['file_type'] }}" data-file-name="{{ $doc['file_name'] }}" data-template-id="" data-template-applied-id="@if($is_template == 'no') {{ $doc['template_id'] }} @endif" data-upload-id="{{ $doc['data_upload_id'] }}">
+                                <li class="list-group-item upload-li" data-file-location="{{ $doc['file_location'] }}" data-document-id="{{ $doc['document_id'] }}" data-file-type="{{ $doc['file_type'] }}" data-file-name="{{ $doc['file_name'] }}" data-template-id="" data-template-applied-id="{{ $doc['template_id'] }}" data-upload-id="{{ $doc['data_upload_id'] }}">
 
                                     <div class="d-sm-flex justify-content-between align-items-center">
 
@@ -140,7 +125,6 @@
 
 </div>
 
-<input type="hidden" id="is_template" value="{{ $is_template }}">
 <input type="hidden" id="from_upload" value="{{ $from_upload }}">
 <input type="hidden" id="Listing_ID" value="{{ $Listing_ID }}">
 <input type="hidden" id="Contract_ID" value="{{ $Contract_ID }}">
@@ -174,7 +158,6 @@
                                         <th></th>
                                         <th>Template Name</th>
                                         <th>Signers</th>
-                                        <th>Type</th>
                                     </tr>
                                 </thead>
 
@@ -186,14 +169,13 @@
                                         $signers = $template -> signers;
                                         $recipients = [];
                                         foreach($signers as $signer) {
-                                            $recipients[] = $signer -> template_role;
+                                            $recipients[] = $signer -> signer_role;
                                         }
                                         @endphp
                                         <tr>
                                             <td><button type="button" class="btn btn-sm btn-primary apply-template-button" data-template-id="{{ $template -> id }}"><i class="fa fa-plus mr-sm-2"></i> <span class="d-none d-sm-inline-block">Apply</span></button></td>
                                             <td>{{ $template -> template_name }}</td>
                                             <td>{!! implode(', ', $recipients) !!}</td>
-                                            <td>{{ $template -> is_system_template == 'yes' ? 'System' : 'User' }}</td>
                                         </tr>
                                     @endforeach
 

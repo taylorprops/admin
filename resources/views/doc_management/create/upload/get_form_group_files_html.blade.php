@@ -62,7 +62,7 @@ foreach($category_color_ids as $color_id) {
                                 </div>
                             @endif
 
-                            <a href="/esign/esign_add_documents_from_uploads/{{ $file -> file_id }}/yes" class="btn btn-sm btn-primary ml-0 add-edit-button" title="Add signature fields to the form" target="_blank"><i class="fal fa-signature mr-2"></i> Signature Fields</a>
+                            <a href="/esign/esign_template_add_documents_and_signers/system/{{ $file -> template_id }}" class="btn btn-sm btn-primary ml-0 add-edit-button" title="Add signature fields to the form" target="_blank"><i class="fal fa-signature mr-2"></i> Signature Fields</a>
 
                         @endif
 
