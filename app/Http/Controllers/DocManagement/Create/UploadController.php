@@ -470,7 +470,6 @@ class UploadController extends Controller
 
             if (! Storage::put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
                 $fail = json_encode(['fail' => 'File Not Uploaded']);
-
                 return $fail;
             }
 
