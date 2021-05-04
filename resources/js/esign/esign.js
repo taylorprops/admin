@@ -1,4 +1,4 @@
-if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
+if(document.URL.match(/(esign$|esign\?)/) || document.URL.match(/esign_show_sent/)) {
 
     $(function () {
 
@@ -33,7 +33,11 @@ if(document.URL.match(/esign$/) || document.URL.match(/esign_show_sent/)) {
             }
         });
 
-
+        let tab = global_get_url_parameters('tab');
+        if(tab) {
+            $('.nav-link[data-tab='+tab+']').trigger('click');
+            history.pushState(null, null, '/esign');
+        }
 
         // functions
 

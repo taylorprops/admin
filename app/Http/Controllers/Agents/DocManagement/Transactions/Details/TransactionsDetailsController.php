@@ -1823,8 +1823,9 @@ class TransactionsDetailsController extends Controller
                 $add_documents -> file_id = $new_file_id;
                 $add_documents -> save();
 
-                $base_path = base_path();
-                $storage_path = $base_path.'/storage/app/public/';
+                //$base_path = base_path();
+                //$storage_path = $base_path.'/storage/app/public/';
+                $storage_path = Storage::path('');
 
                 if ($transaction_type == 'listing') {
                     $path = 'listings/'.$Listing_ID;
@@ -1836,8 +1837,8 @@ class TransactionsDetailsController extends Controller
 
                 $files_path = 'doc_management/transactions/'.$path.'/'.$new_file_id;
 
-                $copy_from = $storage_path.'doc_management/uploads/'.$file_id.'/*';
-                $copy_to = $storage_path.$files_path.'_system';
+                $copy_from = $storage_path.'/doc_management/uploads/'.$file_id.'/*';
+                $copy_to = $storage_path.'/'.$files_path.'_system';
                 Storage::makeDirectory($files_path.'_system/converted');
                 Storage::makeDirectory($files_path.'_system/converted_images');
                 Storage::makeDirectory($files_path.'_system/layers');
@@ -2478,13 +2479,13 @@ class TransactionsDetailsController extends Controller
         $main_file_location = $files_path.'/'.$file_name;
         $converted_file_location = $files_path.'/converted/'.$file_name;
 
-        $base_path = base_path();
-        exec('mkdir '.$base_path.'/storage/app/public/'.$files_path.'/converted');
-        exec('mkdir '.$base_path.'/storage/app/public/'.$files_path.'/converted_images');
+        Storage::makeDirectory($files_path.'/converted');
+        Storage::makeDirectory($files_path.'/converted_images');
 
         // merge all pages and add to main directory and converted directory
         $pages = Storage::path($files_path.'/pages');
-        exec('pdftk '.$pages.'/*.pdf cat output '.$base_path.'/storage/app/public/'.$main_file_location);
+        //exec('pdftk '.$pages.'/*.pdf cat output '.$base_path.'/storage/app/public/'.$main_file_location);
+        exec('pdftk '.$pages.'/*.pdf cat output '.Storage::path($main_file_location));
 
         //exec('cd '.$base_path.'/storage/app/public/ && cp '.$main_file_location.' '.$converted_file_location);
         // get split pages, merge and add to converted
@@ -2612,8 +2613,9 @@ class TransactionsDetailsController extends Controller
             $add_documents -> file_id = $file_id;
             $add_documents -> save();
 
-            $base_path = base_path();
-            $storage_path = $base_path.'/storage/app/public';
+            //$base_path = base_path();
+            //$storage_path = $base_path.'/storage/app/public';
+            $storage_path = Storage::path('/');
 
             $path = 'contracts/'.$Contract_ID;
 

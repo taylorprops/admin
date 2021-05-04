@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -57,8 +58,8 @@ class Kernel extends ConsoleKernel
         }
 
         // clear temp files
-        $schedule -> exec('sudo find '.base_path().'/storage/app/public/doc_management/transactions/contracts/*/emailed_docs/* -mtime +2 -exec rm -rf {} \\') -> daily();
-        $schedule -> exec('sudo find '.base_path().'/storage/app/public/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
+        $schedule -> exec('sudo find '.Storage::path('').'/doc_management/transactions/contracts/*/emailed_docs/* -mtime +2 -exec rm -rf {} \\') -> daily();
+        $schedule -> exec('sudo find '.Storage::path('').'/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find /var/www/tmp* -mtime +1 -exec rm -rf {} \\') -> daily();
 
         if(config('app.env') == 'local') {

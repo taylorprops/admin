@@ -187,7 +187,7 @@ class FieldsController extends Controller
     }
 
 
-    public function save_pdf_client_side(Request $request) {
+    /* public function save_pdf_client_side(Request $request) {
 
 		if ($request) {
 
@@ -243,5 +243,5 @@ class FieldsController extends Controller
                 exec('pdftk '.$layer2.' background '.$layer1.' output '.$pdf_output_dir.'/'.date('YmdHis').'_combined_'.$c.'.pdf');
             }
         }
-    }
+    } */
 }

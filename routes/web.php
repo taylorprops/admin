@@ -142,7 +142,7 @@ Route::middleware(['admin']) -> group(function () {
     /**********  DATA - ADD/EDIT/DELETE /**********/
 
     // Upload //
-    Route::post('/doc_management/upload_file', [UploadController::class, 'upload_file']) -> name('doc_management.upload_file');
+    Route::post('/doc_management/save_upload', [UploadController::class, 'save_upload']) -> name('doc_management.save_upload');
     // Edit uploaded File
     Route::post('/doc_management/save_file_edit', [UploadController::class, 'save_file_edit']);
     // Add non form checklist item

@@ -61,7 +61,7 @@ class UploadController extends Controller
         $upload = Fields::where('file_id', $upload_id) -> delete();
         $upload = FieldInputs::where('file_id', $upload_id) -> delete();
         $upload = FilledFields::where('file_id', $upload_id) -> delete();
-        $upload_dir = base_path().'/storage/app/public/doc_management/uploads/'.$upload_id;
+        $upload_dir = Storage::path('doc_management/uploads/'.$upload_id);
         exec('rm -r '.$upload_dir);
     }
 
@@ -79,8 +79,6 @@ class UploadController extends Controller
             $uploads_path = 'doc_management/uploads';
 
             File::copyDirectory(Storage::path($uploads_path.'/'.$upload_id), Storage::path($uploads_path.'/'.$file_id));
-            //$uploads_path = base_path().'/storage/app/public/doc_management/uploads';
-            //exec('cp -r '.$uploads_path.'/'.$upload_id.' '.$uploads_path.'/'.$file_id);
 
             $copy_path = str_replace('/'.$upload_id.'/', '/'.$file_id.'/', $upload -> file_location);
             // update file location
@@ -329,30 +327,6 @@ class UploadController extends Controller
         $update_count -> save();
     }
 
-    public function save_file_edit(Request $request) {
-
-		$file_id = $request -> edit_file_id;
-        $form_group_id = $request -> edit_form_group_id;
-        $checklist_group_id = $request -> edit_checklist_group_id;
-        $file_name_display = $request -> edit_file_name_display;
-        $helper_text = $request -> edit_helper_text;
-        $form_categories = implode(',', $request -> edit_form_categories);
-        $form_tags = $request -> edit_form_tags;
-
-        $upload = Upload::where('file_id', $file_id) -> first();
-
-        if ($upload -> published == 'no') {
-            $upload -> form_group_id = $form_group_id;
-            $upload -> checklist_group_id = $checklist_group_id;
-        }
-
-        $upload -> file_name_display = $file_name_display;
-        $upload -> helper_text = $helper_text;
-        $upload -> form_categories = $form_categories;
-        $upload -> form_tags = $form_tags;
-        $upload -> save();
-    }
-
     public function get_upload_text(Request $request) {
 
 		$upload = $request -> file('file_upload');
@@ -411,11 +385,27 @@ class UploadController extends Controller
         ]);
     }
 
-    public function upload_file(Request $request) {
+    public function save_upload(Request $request) {
 
 		$file = $request -> file('file_upload');
+        $file_id = $request -> upload_id;
 
         if ($file) {
+
+            // if existing delete all files and images
+            if($file_id) {
+
+                $upload_files = Storage::allFiles('doc_management/uploads/'.$file_id);
+                Storage::delete($upload_files);
+                $template_files = Storage::allFiles('esign_templates/system/'.$file_id);
+                Storage::delete($template_files);
+
+                $delete_upload_images = UploadImages::where('file_id', $file_id) -> delete();
+                $template = EsignTemplates::where('system_upload_id', $file_id) -> first();
+                $delete_template_images = EsignTemplatesDocumentImages::where('template_id', $template -> id) -> delete();
+
+            }
+
             $page_width = get_width_height($file)['width'];
             $page_height = get_width_height($file)['height'];
 
@@ -446,8 +436,18 @@ class UploadController extends Controller
 
             $pages_total = exec('pdftk '.$file.' dump_data | sed -n \'s/^NumberOfPages:\s//p\'');
 
-            // add original file to database
-            $upload = new Upload();
+            // add file to database
+            if($file_id) {
+                $upload = Upload::find($file_id);
+                if ($upload -> published == 'no') {
+                    $upload -> form_group_id = $form_group_id;
+                    $upload -> checklist_group_id = $checklist_group_id;
+                }
+            } else {
+                $upload = new Upload();
+                $upload -> checklist_group_id = $checklist_group_id;
+                $upload -> form_group_id = $form_group_id;
+            }
             $upload -> file_name = $new_filename;
             $upload -> file_name_orig = $file_name_orig;
             $upload -> file_name_display = $file_name_display;
@@ -456,8 +456,6 @@ class UploadController extends Controller
             $upload -> helper_text = $helper_text;
             $upload -> form_categories = $form_categories;
             $upload -> form_tags = $form_tags;
-            $upload -> checklist_group_id = $checklist_group_id;
-            $upload -> form_group_id = $form_group_id;
             $upload -> pages_total = $pages_total;
             $upload -> page_width = $page_width;
             $upload -> page_height = $page_height;
@@ -501,7 +499,11 @@ class UploadController extends Controller
             // copy file to esign templates
             Storage::copy($storage_dir.'/'.$new_filename, $template_dir.'/'.$new_filename);
             // add to esign_templates
-            $template = new EsignTemplates();
+            if($request -> upload_id) {
+                $template = EsignTemplates::where('system_upload_id', $file_id) -> first();
+            } else {
+                $template = new EsignTemplates();
+            }
             $template -> template_type = 'system';
             $template -> system_upload_id = $file_id;
             $template -> template_name = $file_name_display;
@@ -588,9 +590,35 @@ class UploadController extends Controller
 
                 $page_number += 1;
             }
-            $success = json_encode(['success' => true]);
 
-            return $success;
+            return response() -> json(['success' => true]);
+
+
+        } else {
+
+            $file_id = $request -> upload_id;
+            $form_group_id = $request -> form_group_id;
+            $checklist_group_id = $request -> checklist_group_id;
+            $file_name_display = $request -> file_name_display;
+            $helper_text = $request -> helper_text;
+            $form_categories = implode(',', $request -> form_categories);
+            $form_tags = $request -> form_tags;
+
+            $upload = Upload::where('file_id', $file_id) -> first();
+
+            if ($upload -> published == 'no') {
+                $upload -> form_group_id = $form_group_id;
+                $upload -> checklist_group_id = $checklist_group_id;
+            }
+
+            $upload -> file_name_display = $file_name_display;
+            $upload -> helper_text = $helper_text;
+            $upload -> form_categories = $form_categories;
+            $upload -> form_tags = $form_tags;
+            $upload -> save();
+
+            return response() -> json(['success' => true]);
+
         }
     }
 }

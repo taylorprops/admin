@@ -323,8 +323,8 @@ class EsignController extends Controller
 
                 exec('convert -density 200 -quality 100 '.$tmp_dir.'/'.$file_name.'[0] -flatten -fuzz 1%  '.$tmp_dir.'/'.$image_name);
 
-                $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$file_name;
-                $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$image_name;
+                $file_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$file_name;
+                $image_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$image_name;
 
                 $details = [
                     'document_id' => $file_id,
@@ -387,8 +387,8 @@ class EsignController extends Controller
 
             exec('convert -flatten -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
 
-            $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_file_name;
-            $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_image_name;
+            $file_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$new_file_name;
+            $image_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$new_image_name;
 
             $details = [
                 'file_name' => $file_name_display,
@@ -1185,8 +1185,7 @@ class EsignController extends Controller
             $new_filename = $clean_filename.'.'.$ext;
 
 
-            $base_path = base_path();
-            $storage_path = $base_path.'/storage/app/public';
+            $storage_path = Storage::path('');
             $storage_dir = 'doc_management/uploads/'.$file_id;
 
             if (! Storage::put($storage_dir.'/'.$new_filename, file_get_contents($file))) {
@@ -1314,51 +1313,6 @@ class EsignController extends Controller
             return $success;
         }
 
-
-
-        /* $User_ID = $request -> User_ID;
-        $Agent_ID = $request -> Agent_ID;
-        $Listing_ID = $request -> Listing_ID ?? 0;
-        $Contract_ID = $request -> Contract_ID ?? 0;
-        $Referral_ID = $request -> Referral_ID ?? 0;
-        $transaction_type = $request -> transaction_type;
-
-        $ext = $file -> getClientOriginalExtension();
-        $file_name = $file -> getClientOriginalName();
-
-        $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $file_name);
-        $file_name_remove_numbers = preg_replace('/^[0-9-_\s\.]+/', '', $file_name_remove_numbers);
-        $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
-        $clean_file_name = sanitize($file_name_no_ext);
-        $file_name_display = $clean_file_name.'.'.$ext;
-        $new_file_name = date('YmdHis').'_'.$file_name_display;
-
-        $tmp_dir = Storage::path('tmp');
-
-        // convert to pdf if image
-        if ($ext != 'pdf') {
-            $file_name_display = $clean_file_name.'.pdf';
-            $new_file_name = date('YmdHis').'_'.$file_name_display;
-            $convert_to_pdf = exec('convert -quality 100 -density 300 -page a4 '.$file.' '.$tmp_dir.'/'.$new_file_name, $output, $return);
-        } else {
-            move_uploaded_file($file, $tmp_dir.'/'.$new_file_name);
-        }
-
-        $new_image_name = str_replace('.pdf', '.jpg', $new_file_name);
-
-        exec('convert -flatten -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
-
-        $file_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_file_name;
-        $image_location = str_replace(base_path().'/storage/app/public', '/storage', $tmp_dir).'/'.$new_image_name;
-
-        $details = [
-            'file_name' => $file_name_display,
-            'file_location' => $file_location,
-            'image_location' => $image_location,
-        ];
-
-
-        return compact('details'); */
     }
 
     public function esign_template_add_documents_and_signers(Request $request) {
@@ -1512,6 +1466,8 @@ class EsignController extends Controller
             $add_field -> width_perc = $field -> width_perc;
             $add_field -> save();
         }
+
+        return response() -> json(['status' => 'success']);
 
     }
 

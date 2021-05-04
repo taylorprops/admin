@@ -82,7 +82,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                 // init functions
                 upload_options();
 
-                $('#upload_file_button').off('click').on('click', upload_file);
+                $('#save_upload_button').off('click').on('click', save_upload);
 
                 //$('.add-non-form-item-button').hide();
 
@@ -108,7 +108,7 @@ if (document.URL.match(/create\/upload\/files/)) {
     function upload_options() {
 
         $('.edit-upload').off('click').on('click', function () {
-            edit_upload($(this));
+            show_upload($(this));
         });
 
         $('.duplicate-upload').off('click').on('click', function () {
@@ -633,9 +633,10 @@ if (document.URL.match(/create\/upload\/files/)) {
             });
     }
 
-    function edit_upload(ele) {
+    /* function edit_upload(ele) {
 
         let upload_id = ele.data('id');
+        $('.edit-ele').removeClass('hidden');
 
         axios.get('/doc_management/get_upload_details', {
             params: {
@@ -659,34 +660,34 @@ if (document.URL.match(/create\/upload\/files/)) {
                 let checklist_group_id = response.data.checklist_group_id;
                 //let form = $('#edit_file_form');
                 //form.find('select').val('');
-                $('#edit_form_name').text(file_name_orig);
-                $('#edit_file_name_display').val(file_name);
-                $('#edit_form_group_id').val(form_group_id).prop('disabled', disabled).data('form-group-id', form_group_id);
-                $('#edit_state').val(state).prop('disabled', disabled);
-                $('#edit_helper_text').val(helper_text);
-                $('#edit_form_tags').val(form_tags);
-                $('#edit_checklist_group_id').val(checklist_group_id).prop('disabled', disabled);
+                $('#existing_file_name').text(file_name_orig);
+                $('#file_name_display').val(file_name);
+                $('#form_group_id').val(form_group_id).prop('disabled', disabled).data('form-group-id', form_group_id);
+                $('#state').val(state).prop('disabled', disabled);
+                $('#helper_text').val(helper_text);
+                $('#form_tags').val(form_tags);
+                $('#checklist_group_id').val(checklist_group_id).prop('disabled', disabled);
                 form_categories = form_categories.split(',');
 
-                $('#edit_form_categories').find('option').prop('selected', false);
+                $('#form_categories').find('option').prop('selected', false);
                 $.each(form_categories, function (i, e) {
-                    $('#edit_form_categories').find('option[value="' + e + '"]').prop('selected', true);
+                    $('#form_categories').find('option[value="' + e + '"]').prop('selected', true);
                 });
                 setTimeout(function() {
-                    $('#edit_form_categories').trigger('change');
+                    $('#form_categories').trigger('change');
                 }, 200);
 
-                $('#edit_file_id').val(upload_id);
+                $('#upload_id').val(upload_id);
 
-                $('#edit_file_modal').modal();
+                $('#upload_modal').modal('show');
 
-                $('#save_edit_file_button').off('click').on('click', save_edit_file);
+                $('#save_upload_button').off('click').on('click', save_upload);
 
             })
             .catch(function (error) {
 
             });
-    }
+    } */
 
     function show_add_non_form_item(ele) {
         // show modal
@@ -742,7 +743,7 @@ if (document.URL.match(/create\/upload\/files/)) {
 
     }
 
-    function save_edit_file() {
+    /* function save_edit_file() {
 
         let form = $('#edit_file_form');
         let form_check = validate_form(form);
@@ -754,7 +755,7 @@ if (document.URL.match(/create\/upload\/files/)) {
             let order = $('#list_div_' + form_group_id).find('.uploads-filter-sort').val();
             let state = $('#edit_state').val();
 
-            $('#save_edit_file_button').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Saving');
+            $('#save_upload_button').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Saving');
 
             let formData = new FormData(form[0]);
 
@@ -765,7 +766,7 @@ if (document.URL.match(/create\/upload\/files/)) {
                     if(prev_form_group_id != '') {
                         get_forms(prev_form_group_id, state, order);
                     }
-                    $('#save_edit_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Save Details');
+                    $('#save_upload_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Save Details');
                     toastr['success']('Upload Edited Successfully');
                 })
                 .catch(function (error) {
@@ -774,96 +775,155 @@ if (document.URL.match(/create\/upload\/files/)) {
 
         }
 
-    }
+    } */
 
     function show_upload(ele) {
 
-        $('#add_upload_modal').modal();
+        $('#upload_modal').modal('show');
+        $('.edit-ele').addClass('hidden');
+        $('#file_upload').addClass('required');
 
-        $('#form_name').html('');
+        $('#form_names').html('');
 
-        let state = ele.data('state');
-        let form_group_id = ele.data('form-group-id');
-        $('#form_group_id').val(form_group_id);
-        $('#state').val(state);
-        //console.log($('#form_categories').val());
-        $('#form_categories').val('');
-        $('#form_tags').val('');
-        $('#checklist_group_id').val('');
+        let upload_id = ele.data('id') || null;
+
+        if(upload_id) {
+
+            $('.edit-ele').removeClass('hidden');
+            $('#file_upload').removeClass('required');
+            clear_invalid();
+
+            axios.get('/doc_management/get_upload_details', {
+                params: {
+                    upload_id: upload_id
+                },
+            })
+            .then(function (response) {
+
+                let disabled = false;
+                if(response.data.published == 'yes') {
+                    disabled = true;
+                }
+
+                let file_name_orig = response.data.file_name_orig;
+                let file_name = response.data.file_name_display;
+                let form_group_id = response.data.form_group_id;
+                let state = response.data.state;
+                let helper_text = response.data.helper_text;
+                let form_categories = response.data.form_categories;
+                let form_tags = response.data.form_tags;
+                let checklist_group_id = response.data.checklist_group_id;
+
+                $('#existing_file_name').text(file_name_orig);
+                $('#file_name_display').val(file_name);
+                $('#form_group_id').val(form_group_id).prop('disabled', disabled).data('form-group-id', form_group_id);
+                $('#state').val(state).prop('disabled', disabled);
+                $('#helper_text').val(helper_text);
+                $('#form_tags').val(form_tags);
+                $('#checklist_group_id').val(checklist_group_id).prop('disabled', disabled);
+                form_categories = form_categories.split(',');
+
+                $('#form_categories').find('option').prop('selected', false);
+                $.each(form_categories, function (i, e) {
+                    $('#form_categories').find('option[value="' + e + '"]').prop('selected', true);
+                });
+                setTimeout(function() {
+                    $('#form_categories').trigger('change');
+                }, 200);
+
+                $('#upload_id').val(upload_id);
+
+                $('#upload_modal').modal('show');
+
+                $('#save_upload_button').off('click').on('click', save_upload);
+
+            })
+            .catch(function (error) {
+
+            });
+
+        } else {
+
+            let state = ele.data('state');
+            let form_group_id = ele.data('form-group-id');
+            $('#form_group_id').val(form_group_id);
+            $('#state').val(state);
+
+            $('#upload_id').val('');
+            $('#form_categories').val('');
+            $('#form_tags').val('');
+            $('#checklist_group_id').val('');
+
+        }
 
         $('.show-forms-button').hide();
 
-        //select_refresh();
+        if(!upload_id) {
 
-        setTimeout(function () {
+            setTimeout(function () {
 
-            $('#file_upload').off('change').on('change', function () {
+                $('#file_upload').off('change').on('change', function () {
 
-                if($(this).val() != '') {
+                    if($(this).val() != '') {
 
-                    global_loading_on('', '<div class="h5 text-white">Scanning Upload</div>');
+                        global_loading_on('', '<div class="h5 text-white">Scanning Upload</div>');
 
-                    let form = $('#upload_file_form');
-                    let formData = new FormData(form[0]);
+                        let form = $('#upload_file_form');
+                        let formData = new FormData(form[0]);
 
-                    axios.post('/doc_management/get_upload_text', formData, axios_options)
-                    .then(function (response) {
+                        axios.post('/doc_management/get_upload_text', formData, axios_options)
+                        .then(function (response) {
 
-                        /* $('#upload_preview').html('<img src="'+response.data.upload_location+'" width="100%">'); */
-                        $('#upload_preview').html('<embed src="'+response.data.upload_location+'#view=FitW" width="100%" height="100%">');
+                            /* $('#upload_preview').html('<img src="'+response.data.upload_location+'" width="100%">'); */
+                            $('#upload_preview').html('<embed src="'+response.data.upload_location+'#view=FitW" width="100%" height="100%">');
 
-                        $('.form-names').fadeIn('slow');
-                        $('#form_names').html('');
-                        $('#form_names_div').collapse('show');
-                        $('#form_name').html('<h5 class="text-orange">Select and/or Edit Form Name</h5>');
+                            $('.form-names').removeClass('hidden');
+                            $('#form_names').html('');
+                            $('#form_names_div').collapse('show');
+                            $('#form_name').html('<h5 class="text-orange">Select and/or Edit Form Name</h5>');
 
-                        response.data.titles.forEach(function(title) {
-                            let row = ' \
-                            <div class="d-flex justify-content-start align-items-center title-option w-100"> \
-                                <div><a href="javascript: void(0)" class="btn btn-primary add-title">Select</a></div> \
-                                <div class="w-100"><input type="text" class="custom-form-element form-input" value="' + title + '" data-label=""></div> \
-                            </div> \
-                            ';
-                            $('#form_names').append(row);
-                        });
-
-                        $('.add-title').on('click', function() {
-                            $('.show-forms-button').show();
-                            let title = $(this).closest('.title-option').find('input').val();
-                            $('#file_name_display, #helper_text').val(title);
-                            $('#file_name_display').on('change', function() {
-                                if($('#helper_text').val() == title) {
-                                    $('#helper_text').val($('#file_name_display').val());
-                                }
+                            response.data.titles.forEach(function(title) {
+                                let row = ' \
+                                <div class="d-flex justify-content-start align-items-center title-option w-100"> \
+                                    <div><a href="javascript: void(0)" class="btn btn-primary add-title">Select</a></div> \
+                                    <div class="w-100"><input type="text" class="custom-form-element form-input" value="' + title + '" data-label=""></div> \
+                                </div> \
+                                ';
+                                $('#form_names').append(row);
                             });
-                            $('#form_names_div').collapse('hide');
+
+                            $('.add-title').on('click', function() {
+                                $('.show-forms-button').show();
+                                let title = $(this).closest('.title-option').find('input').val();
+                                $('#file_name_display, #helper_text').val(title);
+                                $('#file_name_display').on('change', function() {
+                                    if($('#helper_text').val() == title) {
+                                        $('#helper_text').val($('#file_name_display').val());
+                                    }
+                                });
+                                $('#form_names_div').collapse('hide');
+                            });
+
+                            global_loading_off();
+
+                        })
+                        .catch(function (error) {
+
                         });
+                    }
 
-                        global_loading_off();
+                });
+                $('#form_group_id').on('change', function () {
+                    $('#state').val(ele.find('option:selected').data('state'));
+                });
 
-                    })
-                    .catch(function (error) {
+            }, 200);
 
-                    });
-                }
-
-
-                /* let form_name = $('.file-path').val().replace(/\.pdf/, '');
-                form_name = form_name.replace(/^[0-9\.\s-]+/, '');
-                form_name = form_name.replace(/^\([a-zA-Z\s]+\)/, '');
-                form_name = form_name.replace(/^[-\s]{1}/, '');
-                form_name = form_name.replace(/[0-9\.\s_-]+$/, '');
-                $('#file_name_display, #helper_text').val(form_name).trigger('change'); */
-            });
-            $('#form_group_id').on('change', function () {
-                $('#state').val(ele.find('option:selected').data('state'));
-                //select_refresh();
-            });
-        }, 500);
+        }
 
     }
 
-    function upload_file() {
+    /* function upload_file() {
 
         let form_check = validate_form($('#upload_file_form'));
 
@@ -887,6 +947,41 @@ if (document.URL.match(/create\/upload\/files/)) {
                     $('#upload_file_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
                     $('#upload_preview').html('');
                     $('#helper_text').val('');
+                })
+                .catch(function (error) {
+                    //
+                });
+        }
+
+    } */
+
+
+    function save_upload() {
+
+        let form_check = validate_form($('#upload_file_form'));
+
+        if (form_check == 'yes') {
+
+            let form_group_id = $('#form_group_id').val();
+            let state = $('#state').val();
+            let order = $('#list_div_' + form_group_id).find('.uploads-filter-sort').val();
+
+            $('#save_upload_button').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Uploading');
+
+            let formData = new FormData($('#upload_file_form')[0]);
+
+            axios_options['header'] = { 'content-type': 'multipart/form-data' };
+            axios.post('/doc_management/save_upload', formData, axios_options)
+                .then(function (response) {
+
+                    $('#upload_modal').modal('hide');
+                    $('#file_name_display, #file_upload, #form_categories, #form_tags, #checklist_group_id').val('');
+
+                    get_forms(form_group_id, state, order);
+                    $('#save_upload_button').prop('disabled', false).html('<i class="fad fa-upload mr-2"></i> Upload Form');
+                    $('#upload_preview').html('');
+                    $('#helper_text').val('');
+
                 })
                 .catch(function (error) {
                     //

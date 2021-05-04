@@ -734,13 +734,17 @@ function reset_labels() {
     });
 }, 500); */
 
+window.clear_invalid = function() {
+    $('.invalid-label').removeClass('invalid-label');
+    $('.invalid-input').removeClass('invalid-input');
+}
+
 window.validate_form = function (form, debug = false) {
 
     // TODO: add checkbox and radio validation
     let pass = 'yes';
     // remove all current invalid
-    $('.invalid-label').removeClass('invalid-label');
-    $('.invalid-input').removeClass('invalid-input');
+    clear_invalid();
 
     let invalid_email = 'no';
 
