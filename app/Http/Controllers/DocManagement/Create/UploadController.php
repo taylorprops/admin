@@ -361,6 +361,7 @@ class UploadController extends Controller
             // clean lines
             $line = trim(urldecode($line));
             $line = iconv('UTF-8', 'ASCII//IGNORE//TRANSLIT', $line);
+            $line = preg_replace('/\.pdf/', '', $line);
 
             // get words
             if (preg_match('/^[a-zA-Z-_\/\s]+/', $line, $matches)) {
