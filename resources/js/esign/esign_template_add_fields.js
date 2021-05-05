@@ -163,8 +163,9 @@ if(document.URL.match(/esign_template_add_fields/)) {
 
             axios.post('/esign/save_template', formData, axios_options)
             .then(function (response) {
-
-                $('#modal_success').modal().find('.modal-body').html('Template Successfully Saved<br><br><a href="/esign?tab=templates" class="btn btn-primary">Return to Templates</a>');
+                if(response.data.template_type == 'user') {
+                    $('#modal_success').modal().find('.modal-body').html('Template Successfully Saved<br><br><a href="/esign?tab=templates" class="btn btn-primary">Return to Templates</a>');
+                }
 
             })
             .catch(function (error) {

@@ -17,9 +17,10 @@ class TestController extends Controller
 {
     public function test(Request $request) {
 
-        return view('/tests/test');
+        //return view('/tests/test');
 
-        /* $rets_config = new \PHRETS\Configuration;
+
+        $rets_config = new \PHRETS\Configuration;
         $rets_config -> setLoginUrl(config('rets.rets.url'))
             -> setUsername(config('rets.rets.username'))
             -> setPassword(config('rets.rets.password'))
@@ -27,13 +28,14 @@ class TestController extends Controller
             -> setUserAgent('Bright RETS Application/1.0')
             -> setHttpAuthenticationMethod('digest')
             -> setOption('disable_follow_location', false)
-            -> setOption('use_post_method', false);
+            -> setOption('use_post_method', true);
 
         $rets = new \PHRETS\Session($rets_config);
 
         $connect = $rets -> Login();
 
         if(!$connect -> getBroker()) {
+            sleep(5);
             $connect = $rets -> Login();
         }
 
@@ -45,13 +47,23 @@ class TestController extends Controller
                 $class = 'ALL';
 
                 // get company listings count
-                $company_listings_keys = CompanyListings::get() -> pluck('ListingKey') -> toArray();
+                // all
+                //$company_listings_keys = CompanyListings::/* where('MLSListDate', '>', '2020-01-01') ->  */get() -> pluck('ListingKey') -> toArray();
+                // not closed
+                $company_listings_keys = CompanyListings::whereNotIn('MlsStatus', ['Withdrawn', 'CLOSED']) -> where('MlsListDate', '>=', '2020-01-01') -> get() -> pluck('ListingKey') -> toArray();
+                // closed
+                //$company_listings_keys = CompanyListings::where('MlsStatus', 'CLOSED') -> get() -> pluck('ListingKey') -> toArray();
                 $company_listings_count = count($company_listings_keys);
+
 
                 // get bright listings count
                 $bright_office_codes = implode(',', config('bright_office_codes'));
-
-                $query = '(ListOfficeMlsId=|'.$bright_office_codes.')';
+                // all
+                //$query = '((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+                // not closed
+                $query = '(MlsStatus=~200004325492),(MLSListDate=2020-01-01+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+                // closed
+                //$query = '(MlsStatus=200004325492),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
 
                 $results = $rets -> Search(
                     $resource,
@@ -71,15 +83,23 @@ class TestController extends Controller
                     $bright_listing_keys[] = $bright_listing['ListingKey'];
                 }
 
+                dd($company_listings_count, $bright_listings_count);
                 if($company_listings_count != $bright_listings_count) {
 
                     // get missing listing keys
                     $missing_company = array_diff($bright_listing_keys, $company_listings_keys);
+                    arsort($missing_company);
                     $withdrawn = array_diff($company_listings_keys, $bright_listing_keys);
+
+                    //dd($missing_company, $withdrawn);
 
                     if(count($missing_company) > 0) {
 
-                        $query = '(ListingKey='.implode(',', $missing_company).')';
+                        $missing = array_slice($missing_company, 0, 1000);
+                        $query = '(ListingKey='.implode(',', $missing).')';
+
+                        $resource = 'Property';
+                        $class = 'ALL';
 
                         $results = $rets -> Search(
                             $resource,
@@ -102,10 +122,13 @@ class TestController extends Controller
                             }
 
                             $add_listing -> save();
+                            echo 'added '.$listing_key.'<br>';
 
                         }
 
-                    } else if(count($withdrawn) > 0) {
+                    }
+
+                    if(count($withdrawn) > 0) {
 
                         $update_listings = CompanyListings::whereIn('ListingKey', $withdrawn)
                             -> update([
@@ -115,11 +138,12 @@ class TestController extends Controller
 
                     }
 
+                    $rets -> Disconnect();
+
                 }
 
-                $rets -> Disconnect();
 
-                return true;
+
 
             } catch (Throwable $exception) {
 
@@ -236,6 +260,8 @@ class TestController extends Controller
 
                     }
 
+                    $rets -> Disconnect();
+
                 }
 
             }
@@ -243,8 +269,9 @@ class TestController extends Controller
         } else {
 
             throw new \Exception('unable to log in to rets');
+            return false;
 
-        } */
+        }
 
     }
 }

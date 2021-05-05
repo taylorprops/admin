@@ -15,7 +15,7 @@ class UpdateListingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    //public $tries = 5;
+    public $tries = 5;
 
     /**
      * Create a new job instance.
@@ -50,9 +50,10 @@ class UpdateListingsJob implements ShouldQueue
 
         $connect = $rets -> Login();
 
-        // if(!$connect -> getBroker()) {
-        //     $connect = $rets -> Login();
-        // }
+        if(!$connect -> getBroker()) {
+            sleep(5);
+            $connect = $rets -> Login();
+        }
 
         if($connect -> getBroker()) {
 
@@ -69,7 +70,7 @@ class UpdateListingsJob implements ShouldQueue
 
                 $bright_office_codes = implode(',', config('bright_office_codes'));
 
-                $query = '(ModificationTimestamp='.$start.'+),(ListOfficeMlsId=|'.$bright_office_codes.')';
+                $query = '(ModificationTimestamp='.$start.'+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
 
                 $results = $rets -> Search(
                     $resource,
@@ -78,6 +79,8 @@ class UpdateListingsJob implements ShouldQueue
                 );
 
                 $listings = $results -> toArray();
+
+                $rets -> Disconnect();
 
                 foreach($listings as $listing) {
 
@@ -95,7 +98,7 @@ class UpdateListingsJob implements ShouldQueue
 
                 }
 
-                $rets -> Disconnect();
+
 
             } catch (Throwable $exception) {
 

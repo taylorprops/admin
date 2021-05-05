@@ -4,7 +4,7 @@ return [
 
     'projectId'     => '329945',
     'projectKey'    => 'e36a9585d1fa50c0fe85a57c99bed44d',
-    'environment'   => env('APP_ENV', 'production'),
+    'environment'   => env('APP_ENV', 'development'),
 
     //leave the following options empty to use defaults
 

@@ -15,7 +15,7 @@ class AddListingsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    //public $tries = 5;
+    public $tries = 5;
 
     /**
      * Create a new job instance.
@@ -48,9 +48,10 @@ class AddListingsJob implements ShouldQueue
 
         $connect = $rets -> Login();
 
-        // if(!$connect -> getBroker()) {
-        //     $connect = $rets -> Login();
-        // }
+        if(!$connect -> getBroker()) {
+            sleep(5);
+            $connect = $rets -> Login();
+        }
 
         if($connect -> getBroker()) {
 
@@ -60,8 +61,9 @@ class AddListingsJob implements ShouldQueue
                 $class = 'ALL';
 
                 $bright_office_codes = implode(',', config('bright_office_codes'));
-
-                $query = '(MLSListDate='.date('Y-m-d').'),(ListOfficeMlsId=|'.$bright_office_codes.')';
+                $start = date("Y-m-d", strtotime("-5 days"));
+                $end = date('Y-m-d');
+                $query = '(MLSListDate='.$start.'-'.$end.'),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
 
                 $results = $rets -> Search(
                     $resource,
@@ -71,23 +73,23 @@ class AddListingsJob implements ShouldQueue
 
                 $listings = $results -> toArray();
 
+                $rets -> Disconnect();
+
                 foreach($listings as $listing) {
 
                     $listing_key = $listing['ListingKey'];
 
-                    $add_listing = CompanyListings::firstOrCreate([
-                        'ListingKey' => $listing_key
-                    ]);
+                    $find_listing = CompanyListings::find($listing_key);
 
-                    foreach($listing as $col => $val) {
-                        $add_listing -> $col = $val;
+                    if(is_null($find_listing)) {
+                        $add_listing = new CompanyListings();
+                        foreach($listing as $col => $val) {
+                            $add_listing -> $col = $val;
+                        }
+                        $add_listing -> save();
                     }
 
-                    $add_listing -> save();
-
                 }
-
-                $rets -> Disconnect();
 
             } catch (Throwable $exception) {
 

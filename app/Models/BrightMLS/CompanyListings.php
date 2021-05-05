@@ -11,7 +11,7 @@ class CompanyListings extends Model
 
     protected $connection = 'mysql';
     protected $table = 'company_listings';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'ListingKey';
     protected $guarded = [];
 
 }

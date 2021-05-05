@@ -83,7 +83,7 @@ class EsignController extends Controller
 
     public function get_templates(Request $request) {
 
-		$templates = EsignTemplates::where('template_type', 'user') -> with(['signers']) -> get();
+		$templates = EsignTemplates::where('template_type', 'user') -> where('user_id', auth() -> user() -> id) -> with(['signers']) -> get();
 
         return view('/esign/get_templates_html', compact('templates'));
     }
@@ -91,12 +91,13 @@ class EsignController extends Controller
     public function get_deleted_templates(Request $request) {
 
 		$deleted_templates = EsignTemplates::onlyTrashed()
-            -> where(function ($query) {
-                $query -> where('upload_file_id', '0')
-                    -> orWhere('upload_file_id', '')
-                    -> orWhereNull('upload_file_id');
-            })
-            -> with(['envelopes', 'signers']) -> get();
+        -> where('user_id', auth() -> user() -> id)
+        -> where(function ($query) {
+            $query -> where('upload_file_id', '0')
+                -> orWhere('upload_file_id', '')
+                -> orWhereNull('upload_file_id');
+        })
+        -> with(['envelopes', 'signers']) -> get();
 
         return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
     }
@@ -1441,7 +1442,9 @@ class EsignController extends Controller
 
     public function save_template(Request $request) {
 
-        $template_id = $request -> template_id ?? 0;
+        $template_id = $request -> template_id;
+        $template = EsignTemplates::find($template_id);
+        $template_type = $template -> template_type;
 
         $fields = json_decode($request -> fields, true);
         $fields = collect($fields) -> map(function ($fields) {
@@ -1467,7 +1470,10 @@ class EsignController extends Controller
             $add_field -> save();
         }
 
-        return response() -> json(['status' => 'success']);
+        return response() -> json([
+            'status' => 'success',
+            'template_type' => $template_type
+        ]);
 
     }
 
