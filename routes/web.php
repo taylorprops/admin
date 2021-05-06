@@ -677,12 +677,6 @@ Route::middleware(['agent']) -> group(function () {
     // restore template
     Route::post('/esign/restore_template', [EsignController::class, 'restore_template']);
 
-    // delete system template
-    Route::post('/esign/delete_system_template', [EsignController::class, 'delete_system_template']);
-
-    // restore system template
-    Route::post('/esign/restore_system_template', [EsignController::class, 'restore_system_template']);
-
     // cancel envelope
     Route::post('/esign/cancel_envelope', [EsignController::class, 'cancel_envelope']);
 
@@ -700,7 +694,6 @@ Route::middleware(['agent']) -> group(function () {
     Route::get('/esign/get_templates', [EsignController::class, 'get_templates']);
     Route::get('/esign/get_deleted_templates', [EsignController::class, 'get_deleted_templates']);
     Route::get('/esign/get_system_templates', [EsignController::class, 'get_system_templates']);
-    Route::get('/esign/get_deleted_system_templates', [EsignController::class, 'get_deleted_system_templates']);
     Route::get('/esign/get_canceled', [EsignController::class, 'get_canceled']);
 
     // add documents

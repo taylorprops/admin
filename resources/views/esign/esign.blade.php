@@ -85,7 +85,6 @@
                 <div class="tab-pane fade" id="system_templates_content" role="tabpanel" aria-labelledby="system_templates_tab">
 
                     <div id="system_templates_div"></div>
-                    <div class="collapse" id="deleted_system_templates_div"></div>
 
                 </div>
                 @endif

@@ -92,29 +92,22 @@ class EsignController extends Controller
 
 		$deleted_templates = EsignTemplates::onlyTrashed()
         -> where('user_id', auth() -> user() -> id)
-        -> where(function ($query) {
-            $query -> where('upload_file_id', '0')
-                -> orWhere('upload_file_id', '')
-                -> orWhereNull('upload_file_id');
-        })
-        -> with(['envelopes', 'signers']) -> get();
+        -> with(['signers']) -> get();
 
         return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
     }
 
     public function get_system_templates(Request $request) {
 
-		$templates = EsignTemplates::where('upload_file_id', '>', '0') -> with(['envelopes', 'signers']) -> get();
+		$templates = EsignTemplates::where('template_type', 'system') -> with(['signers'])
+        -> whereHas('upload', function($query) {
+            $query -> where('active', 'yes');
+        })
+        -> get();
 
         return view('/esign/get_system_templates_html', compact('templates'));
     }
 
-    public function get_deleted_system_templates(Request $request) {
-
-		$deleted_templates = EsignTemplates::onlyTrashed() -> where('upload_file_id', '>', '0') -> with(['envelopes', 'signers']) -> get();
-
-        return view('/esign/get_deleted_system_templates_html', compact('deleted_templates'));
-    }
 
     public function get_canceled(Request $request) {
 
@@ -218,22 +211,6 @@ class EsignController extends Controller
     }
 
     public function restore_template(Request $request) {
-
-		$template_id = $request -> template_id;
-        $restore_template = EsignTemplates::withTrashed() -> where('id', $template_id) -> restore();
-
-        return response() -> json(['status' => 'success']);
-    }
-
-    public function delete_system_template(Request $request) {
-
-		$template_id = $request -> template_id;
-        $delete_template = EsignTemplates::find($template_id) -> delete();
-
-        return response() -> json(['status' => 'success']);
-    }
-
-    public function restore_system_template(Request $request) {
 
 		$template_id = $request -> template_id;
         $restore_template = EsignTemplates::withTrashed() -> where('id', $template_id) -> restore();

@@ -165,6 +165,8 @@ if(document.URL.match(/esign_template_add_fields/)) {
             .then(function (response) {
                 if(response.data.template_type == 'user') {
                     $('#modal_success').modal().find('.modal-body').html('Template Successfully Saved<br><br><a href="/esign?tab=templates" class="btn btn-primary">Return to Templates</a>');
+                } else if(response.data.template_type == 'system') {
+                    toastr['success']('Template Successfully Saved');
                 }
 
             })

@@ -28,8 +28,6 @@ if(document.URL.match(/(esign$|esign\?)/) || document.URL.match(/esign_show_sent
                 load_tab('deleted_drafts');
             } else if($(this).data('tab') == 'templates') {
                 load_tab('deleted_templates');
-            } else if($(this).data('tab') == 'system_templates') {
-                load_tab('deleted_system_templates');
             }
         });
 
@@ -128,26 +126,7 @@ if(document.URL.match(/(esign$|esign\?)/) || document.URL.match(/esign_show_sent
 
                     data_table('10', $('#system_templates_table'), [3, 'desc'], [0,4], [], false, true, true, true, true);
 
-                    $('.delete-system-template-button').off('click').on('click', function() {
-                        delete_system_template($(this));
-                    });
 
-                } else if(tab == 'deleted_system_templates') {
-
-                    data_table('10', $('#deleted_system_templates_table'), [3, 'desc'], [0], [], false, true, true, true, true);
-
-                    $('.restore-system-template-button').off('click').on('click', function() {
-                        restore_system_template($(this));
-                    });
-
-                    setTimeout(function() {
-                        $('.show-deleted-system-templates').addClass('hidden');
-                        if($('#deleted_system_templates_count').val() > 0) {
-                            $('.show-deleted-system-templates').removeClass('hidden');
-                        } else {
-                            $('#deleted_system_templates_div').collapse('hide');
-                        }
-                    }, 200);
 
                 } else if(tab == 'canceled') {
 
@@ -231,40 +210,7 @@ if(document.URL.match(/(esign$|esign\?)/) || document.URL.match(/esign_show_sent
             });
         }
 
-        function delete_system_template(ele) {
 
-            let template_id = ele.data('template-id');
-
-            let formData = new FormData();
-            formData.append('template_id', template_id);
-            axios.post('/esign/delete_system_template', formData, axios_options)
-            .then(function (response) {
-                ele.closest('tr').fadeOut();
-                load_tab('deleted_system_templates');
-                setTimeout(function() {
-                    ele.closest('tr').remove();
-                }, 800);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
-
-        function restore_system_template(ele) {
-
-            let template_id = ele.data('template-id');
-
-            let formData = new FormData();
-            formData.append('template_id', template_id);
-            axios.post('/esign/restore_system_template', formData, axios_options)
-            .then(function (response) {
-                load_tab('deleted_system_templates');
-                load_tab('system_templates');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
 
         function cancel_envelope(ele) {
 
