@@ -81,11 +81,9 @@
 
                 </div>
 
-                @if(auth() -> user() -> group == 'admin')
+                @if(stristr(config('notifications.permission_edit_association_files'), auth() -> user() -> email))
                 <div class="tab-pane fade" id="system_templates_content" role="tabpanel" aria-labelledby="system_templates_tab">
-
                     <div id="system_templates_div"></div>
-
                 </div>
                 @endif
 

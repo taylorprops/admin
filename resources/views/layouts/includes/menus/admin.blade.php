@@ -43,12 +43,14 @@
         </a>
         <div class="sidebar-submenu">
             <ul>
+                @if(stristr(config('notifications.permission_edit_association_files'), auth() -> user() -> email))
                 <li>
                     <a href="/doc_management/create/upload/files"> Files</a>
                 </li>
                 <li>
                     <a href="/doc_management/checklists"> Checklists</a>
                 </li>
+                @endif
                 <li>
                     <a href="javascript:void(0)">Resources</a>
                     <ul>
