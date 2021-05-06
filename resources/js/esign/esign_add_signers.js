@@ -93,6 +93,11 @@ if(document.URL.match(/esign_add_signers/)) {
 
         function save_signers() {
 
+            if($('.signer-item').length == 0) {
+                toastr['error']('You must add at least one signer');
+                return false;
+            }
+
             let form = $('.page-esign-add-signers');
             let validate = validate_form(form);
 

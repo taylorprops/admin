@@ -253,11 +253,15 @@ class EsignController extends Controller
         $Agent_ID = $request -> Agent_ID ?? null;
         $transaction_type = $request -> transaction_type ?? null;
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
         $address = null;
 
-        if($property != 'not found') {
-            $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+        if($transaction_type) {
+            $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, $Referral_ID]);
+
+            if($property != 'not found') {
+                $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+            }
+
         }
 
         // from uploads
@@ -324,8 +328,8 @@ class EsignController extends Controller
 
                 exec('convert -density 200 -quality 100 '.$tmp_dir.'/'.$file_name.'[0] -flatten -fuzz 1%  '.$tmp_dir.'/'.$image_name);
 
-                $file_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$file_name;
-                $image_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$image_name;
+                $file_location = str_replace(Storage::path(''), '/storage/', $tmp_dir).'/'.$file_name;
+                $image_location = str_replace(Storage::path(''), '/storage/', $tmp_dir).'/'.$image_name;
 
                 $details = [
                     'document_id' => $file_id,
@@ -388,8 +392,8 @@ class EsignController extends Controller
 
             exec('convert -flatten -density 200 -quality 80 '.$tmp_dir.'/'.$new_file_name.'[0]  '.$tmp_dir.'/'.$new_image_name);
 
-            $file_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$new_file_name;
-            $image_location = str_replace(Storage::path(''), '/storage', $tmp_dir).'/'.$new_image_name;
+            $file_location = str_replace(Storage::path(''), '/storage/', $tmp_dir).'/'.$new_file_name;
+            $image_location = str_replace(Storage::path(''), '/storage/', $tmp_dir).'/'.$new_image_name;
 
             $details = [
                 'file_name' => $file_name_display,
@@ -707,30 +711,33 @@ class EsignController extends Controller
         $transaction_type = '';
         $Listing_ID = '';
         $Contract_ID = '';
-        if ($envelope) {
+        $address = null;
+        $members = null;
+
+        if ($envelope -> transaction_type) {
+
             $transaction_type = $envelope -> transaction_type;
             $Listing_ID = $envelope -> Listing_ID;
             $Contract_ID = $envelope -> Contract_ID;
-        }
 
-        $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0']);
-        $address = null;
+            $property = Listings::GetPropertyDetails($transaction_type, [$Listing_ID, $Contract_ID, '0']);
 
-        if($property != 'not found') {
-            $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
-        }
-
-        if ($transaction_type == 'listing') {
-            $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type:resource_id,resource_name']) -> get();
-        } elseif ($transaction_type == 'contract') {
-            if ($Listing_ID > 0) {
+            if ($transaction_type == 'listing') {
                 $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type:resource_id,resource_name']) -> get();
-            } else {
-                $members = Members::where('Contract_ID', $Contract_ID) -> with(['member_type:resource_id,resource_name']) -> get();
+            } elseif ($transaction_type == 'contract') {
+                if ($Listing_ID > 0) {
+                    $members = Members::where('Listing_ID', $Listing_ID) -> with(['member_type:resource_id,resource_name']) -> get();
+                } else {
+                    $members = Members::where('Contract_ID', $Contract_ID) -> with(['member_type:resource_id,resource_name']) -> get();
+                }
             }
-        } else {
-            $members = null;
+
+            if($property != 'not found') {
+                $address = $property -> FullStreetAddress.' '.$property -> City.', '.$property -> StateOrProvince.' '.$property -> PostalCode;
+            }
+
         }
+
 
         if ($members) {
 
@@ -1126,7 +1133,7 @@ class EsignController extends Controller
             $envelope -> document_hash = $hash;
             $envelope -> save();
 
-            $link = null;
+            $link = '';
             if($envelope -> transaction_type != '') {
 
                 $id = [
@@ -1323,28 +1330,36 @@ class EsignController extends Controller
 
         $template = null;
         $signers = null;
+        $template_name = null;
         if($template_id) {
             $template = EsignTemplates::with(['signers']) -> find($template_id);
             $signers = $template -> signers -> pluck('signer_role') -> toArray();
+            $template_name = $template -> template_name;
         }
 
         $signer_options = ResourceItems::where('resource_type', 'signer_option') -> orderBy('resource_order') -> get();
 
-        return view('/esign/esign_template_add_documents_and_signers', compact('template_type', 'template', 'template_id', 'signers', 'signer_options'));
+        return view('/esign/esign_template_add_documents_and_signers', compact('template_type', 'template', 'template_id', 'template_name', 'signers', 'signer_options'));
 
     }
 
     public function esign_template_save_add_signers(Request $request) {
 
         $template_type = $request -> template_type;
+        $template_name = $request -> template_name;
         $template_id =  $request -> template_id ? $request -> template_id : null;
         $file = $request -> file('template_upload');
         $signers = json_decode($request -> signers, true);
 
-        if(!$template_id) {
+        if($template_id) {
+
+            $template = EsignTemplates::find($template_id);
+
+        } else {
 
             $template = new EsignTemplates();
             $template -> template_type = $template_type;
+            $template -> user_id = auth() -> user() -> id;
             $template -> save();
             $template_id = $template -> id;
 
@@ -1358,10 +1373,11 @@ class EsignController extends Controller
             $file_name_no_ext = str_replace('.'.$ext, '', $file_name);
             $clean_file_name = sanitize($file_name_no_ext);
             $new_file_name = $clean_file_name.'_'.time().'.'.$ext;
-
-            Storage::makeDirectory('esign_templates/'.$template_type.'/'.$template_id);
-            Storage::makeDirectory('esign_templates/'.$template_type.'/'.$template_id.'/images');
             $template_dir = 'esign_templates/'.$template_type.'/'.$template_id;
+
+            Storage::makeDirectory($template_dir);
+            Storage::makeDirectory($template_dir.'/images');
+            $template_dir = $template_dir;
             $template_path = Storage::path($template_dir);
 
             // convert to pdf if image
@@ -1370,6 +1386,10 @@ class EsignController extends Controller
             } else {
                 move_uploaded_file($file, $template_path.'/'.$new_file_name);
             }
+
+            $template -> file_location = '/storage/'.$template_dir.'/'.$new_file_name;
+            $template -> file_name = $new_file_name;
+            $template -> save();
 
             $output_images = $template_path.'/images/page_%02d.jpg';
 
@@ -1404,6 +1424,9 @@ class EsignController extends Controller
             }
 
         }
+
+        $template -> template_name = $template_name;
+        $template -> save();
 
         $delete_current_signers = EsignTemplatesSigners::where('template_id', $template_id) -> delete();
 

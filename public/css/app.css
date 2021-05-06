@@ -19472,7 +19472,7 @@ input.search-menu {
 }
 
 .page-esign-templates .available-signers .available-signers-list {
-  max-height: 400px;
+  max-height: 350px;
   overflow: auto;
   border-top: 1px solid #dee2e6;
   border-bottom: 1px solid #dee2e6;
@@ -19504,7 +19504,7 @@ input.search-menu {
   cursor: pointer;
 }
 .page-esign-templates .selected-signers-list {
-  max-height: 400px;
+  max-height: 350px;
   overflow: auto;
   border-top: 1px solid #dee2e6;
   border-bottom: 1px solid #dee2e6;

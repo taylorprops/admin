@@ -21,7 +21,7 @@
                     <div class="h5 text-gray">Select Signers and Order To Sign</div>
                 </div>
 
-                <div class="next-div @if(!count($signers) > 0) hidden @endif">
+                <div class="next-div">
                     <button class="btn btn-primary btn-lg p-3" id="save_signers_button">Next <i class="fal fa-arrow-right ml-2"></i></button>
                 </div>
 

@@ -31,12 +31,12 @@
                 $signers = $template -> signers;
                 $recipients = [];
                 foreach($signers as $signer) {
-                    $recipients[] = $signer -> template_role;
+                    $recipients[] = $signer -> signer_role;
                 }
 
                 @endphp
                 <tr>
-                    <td><a href="/esign/esign_add_fields/0/yes/{{ $template -> id }}" class="btn btn-primary" target="_blank">View/Edit <i class="fal fa-arrow-right ml-2"></i></a></td>
+                    <td><a href="/esign/esign_template_add_fields/{{ $template -> template_type }}/{{ $template -> id }}" class="btn btn-primary" target="_blank">View/Edit <i class="fal fa-arrow-right ml-2"></i></a></td>
                     <td>{{ $template -> template_name }}</td>
                     <td>{!! implode(', ', $recipients) !!}</td>
                     <td>

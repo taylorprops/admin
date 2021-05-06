@@ -719,7 +719,7 @@ Route::middleware(['agent']) -> group(function () {
     Route::post('/esign/esign_add_signers_to_envelope', [EsignController::class, 'esign_add_signers_to_envelope']);
 
     // esign add fields
-    Route::get('/esign/esign_add_fields/{envelope_id}/{is_template?}/{template_id?}', [EsignController::class, 'esign_add_fields']);
+    Route::get('/esign/esign_add_fields/{envelope_id}', [EsignController::class, 'esign_add_fields']);
     Route::get('/esign/esign_add_fields_from_draft/{envelope_id}/{is_draft?}', [EsignController::class, 'esign_add_fields']);
 
     // send for signatures

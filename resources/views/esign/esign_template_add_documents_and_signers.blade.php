@@ -16,11 +16,15 @@
 
             <div class="col-12 col-sm-6">
 
-                <div class="h5 text-orange">Upload Document For Template</div>
-
                 <form id="upload_form" enctype="multipart/form-data">
 
-                    <input type="file" class="custom-form-element form-input-file" id="template_upload" name="template_upload" accept=".pdf" data-label="Select Document">
+                    <div class="font-10 text-orange">Template Name</div>
+                    <input type="text" class="custom-form-element form-input" id="template_name" name="template_name" value="{{ $template_name }}" data-label="Enter Template Name">
+
+                    @if(!$template)
+                        <div class="font-10 text-orange mt-4">Upload Document For Template</div>
+                        <input type="file" class="custom-form-element form-input-file" id="template_upload" name="template_upload" accept=".pdf" data-label="Select Document">
+                    @endif
 
                 </form>
 
@@ -29,13 +33,14 @@
         </div>
     @endif
 
+    <div class="font-10 text-orange">Add Signers</div>
     <div class="row">
 
         <div class="col-12 col-sm-5">
 
-            <div class="available-signers font-10">
+            <div class="available-signers font-9">
 
-                <div class="text-gray font-10">Available Signers</div>
+                <div class="text-gray">Available Signers</div>
 
                 <div class="list-group available-signers-list">
 
@@ -70,9 +75,9 @@
 
         <div class="col-12 col-sm-5">
 
-            <div class="selected-signers font-10">
+            <div class="selected-signers font-9">
 
-                <div class="text-gray font-10">Selected Signers</div>
+                <div class="text-gray">Selected Signers</div>
 
                 <div class="list-group selected-signers-list">
 

@@ -182,7 +182,7 @@ if(document.URL.match(/esign_add_fields/)) {
 
             if(validate == 'yes') {
 
-                send_for_signatures('yes', 'no');
+                send_for_signatures('yes');
 
                 let envelope_id = $('#envelope_id').val();
                 let draft_name = $('#draft_name').val();
@@ -335,14 +335,11 @@ if(document.URL.match(/esign_add_fields/)) {
                         $('#modal_danger').modal().find('.modal-body').html('There was an error sending the documents for signatures. Please try again.');
 
                     } else {
-
                         if(!is_draft) {
                             if(response.data.link != '') {
                                 window.location = response.data.link+'?tab=esign';
                             } else {
-                                setTimeout(function() {
-                                    window.location = '/esign_show_sent';
-                                }, 1000);
+                                window.location = '/esign_show_sent';
                             }
                         }
 
