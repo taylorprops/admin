@@ -22,7 +22,7 @@ class CommissionController extends Controller
         $states = LocationData::AllStates();
         $type = 'sale';
 
-        return view('/doc_management/commission/commission', compact('agents', 'states', 'type'));
+        return view('doc_management/commission/commission', compact('agents', 'states', 'type'));
     }
 
     public function get_commissions_pending(Request $request) {
@@ -64,7 +64,7 @@ class CommissionController extends Controller
 
         $commissions = $commission_contracts -> merge($commission_referrals);
 
-        return view('/doc_management/commission/get_commissions_pending_html', compact('commissions'));
+        return view('doc_management/commission/get_commissions_pending_html', compact('commissions'));
     }
 
     public function get_checks_queue(Request $request) {
@@ -85,7 +85,7 @@ class CommissionController extends Controller
             -> orderBy('created_at', 'DESC')
             -> get();
 
-        return view('/doc_management/commission/get_checks_html', compact('checks', 'checks_other'));
+        return view('doc_management/commission/get_checks_html', compact('checks', 'checks_other'));
     }
 
     public function search_deleted_checks(Request $request) {
@@ -123,7 +123,7 @@ class CommissionController extends Controller
         $states = LocationData::AllStates();
         $type = 'other';
 
-        return view('/doc_management/commission/commission_other', compact('Commission_ID', 'Agent_ID', 'agents', 'states', 'type'));
+        return view('doc_management/commission/commission_other', compact('Commission_ID', 'Agent_ID', 'agents', 'states', 'type'));
     }
 
     public function commission_other_details(Request $request) {
@@ -142,7 +142,7 @@ class CommissionController extends Controller
 
         $property = [];
 
-        return view('/agents/doc_management/transactions/details/data/get_commission', compact('Commission_ID', 'commission', 'commission_percentages', 'teams', 'agent_notes', 'agents', 'states', 'agent_details', 'type', 'property'));
+        return view('agents/doc_management/transactions/details/data/get_commission', compact('Commission_ID', 'commission', 'commission_percentages', 'teams', 'agent_notes', 'agents', 'states', 'agent_details', 'type', 'property'));
     }
 
     public function save_edit_queue_check(Request $request) {

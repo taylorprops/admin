@@ -17,7 +17,7 @@ class TestController extends Controller
 {
     public function test(Request $request) {
 
-        //return view('/tests/test');
+        //return view('tests/test');
 
 
         $rets_config = new \PHRETS\Configuration;

@@ -46,31 +46,41 @@ class EsignController extends Controller
 
     public function esign(Request $request) {
 
-		return view('/esign/esign');
+		return view('esign/esign');
     }
 
     public function get_drafts(Request $request) {
 
-		$drafts = EsignEnvelopes::where('is_draft', 'yes') -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
+		$drafts = EsignEnvelopes::where('user_id', auth() -> user() -> id)
+        -> where('is_draft', 'yes')
+        -> with(['signers', 'documents'])
+        -> orderBy('created_at', 'desc')
+        -> get();
 
-        return view('/esign/get_drafts_html', compact('drafts'));
+        return view('esign/get_drafts_html', compact('drafts'));
     }
 
     public function get_deleted_drafts(Request $request) {
 
-		$deleted_drafts = EsignEnvelopes::onlyTrashed() -> where('is_draft', 'yes') -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
+		$deleted_drafts = EsignEnvelopes::onlyTrashed()
+        -> where('user_id', auth() -> user() -> id)
+        -> where('is_draft', 'yes')
+        -> with(['signers', 'documents'])
+        -> orderBy('created_at', 'desc')
+        -> get();
 
-        return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
+        return view('esign/get_deleted_drafts_html', compact('deleted_drafts'));
 
     }
 
     public function get_in_process(Request $request) {
 
 		$envelopes = EsignEnvelopes::whereIn('status', ['Created', 'Viewed', 'Sent', 'Signed'])
-            -> with(['signers', 'callbacks', 'listing', 'contract', 'referral', 'documents'])
-            -> orderBy('created_at', 'desc') -> get();
+        -> where('user_id', auth() -> user() -> id)
+        -> with(['signers', 'callbacks', 'listing', 'contract', 'referral', 'documents'])
+        -> orderBy('created_at', 'desc') -> get();
 
-        return view('/esign/get_in_process_html', compact('envelopes'));
+        return view('esign/get_in_process_html', compact('envelopes'));
 
     }
 
@@ -78,14 +88,14 @@ class EsignController extends Controller
 
 		$envelopes = EsignEnvelopes::where('status', 'completed') -> with(['signers', 'documents']) -> get();
 
-        return view('/esign/get_completed_html', compact('envelopes'));
+        return view('esign/get_completed_html', compact('envelopes'));
     }
 
     public function get_templates(Request $request) {
 
 		$templates = EsignTemplates::where('template_type', 'user') -> where('user_id', auth() -> user() -> id) -> with(['signers']) -> get();
 
-        return view('/esign/get_templates_html', compact('templates'));
+        return view('esign/get_templates_html', compact('templates'));
     }
 
     public function get_deleted_templates(Request $request) {
@@ -94,7 +104,7 @@ class EsignController extends Controller
         -> where('user_id', auth() -> user() -> id)
         -> with(['signers']) -> get();
 
-        return view('/esign/get_deleted_templates_html', compact('deleted_templates'));
+        return view('esign/get_deleted_templates_html', compact('deleted_templates'));
     }
 
     public function get_system_templates(Request $request) {
@@ -105,7 +115,7 @@ class EsignController extends Controller
         })
         -> get();
 
-        return view('/esign/get_system_templates_html', compact('templates'));
+        return view('esign/get_system_templates_html', compact('templates'));
     }
 
 
@@ -113,7 +123,7 @@ class EsignController extends Controller
 
 		$envelopes = EsignEnvelopes::whereIn('status', ['Declined', 'Signer Removed', 'Signer Bounced', 'Canceled', 'Expired']) -> with(['signers', 'documents']) -> orderBy('created_at', 'desc') -> get();
 
-        return view('/esign/get_canceled_html', compact('envelopes'));
+        return view('esign/get_canceled_html', compact('envelopes'));
     }
 
     public function cancel_envelope(Request $request) {
@@ -326,7 +336,7 @@ class EsignController extends Controller
 
         $templates = EsignTemplates::where('user_id', auth() -> user() -> id) -> with(['signers']) -> get();
 
-        return view('/esign/esign_add_documents', compact('address', 'from_upload', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
+        return view('esign/esign_add_documents', compact('address', 'from_upload', 'Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'User_ID', 'Agent_ID', 'document_ids', 'documents', 'docs_to_display', 'templates'));
     }
 
 
@@ -748,7 +758,7 @@ class EsignController extends Controller
         }
 
 
-        return view('/esign/esign_add_signers', compact('envelope_id', 'envelope', 'address', 'members', 'signers', 'recipients'));
+        return view('esign/esign_add_signers', compact('envelope_id', 'envelope', 'address', 'members', 'signers', 'recipients'));
     }
 
     public function esign_add_signers_to_envelope(Request $request) {
@@ -900,7 +910,7 @@ class EsignController extends Controller
         if ($envelope -> status != 'not_sent') {
             $error = 'sent';
 
-            return view('/esign/esign_add_fields', compact('error', 'is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options'));
+            return view('esign/esign_add_fields', compact('error', 'is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options'));
         }
 
         if ($envelope -> transaction_type != '') {
@@ -920,7 +930,7 @@ class EsignController extends Controller
 
         }
 
-        return view('/esign/esign_add_fields', compact('is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'error'));
+        return view('esign/esign_add_fields', compact('is_draft', 'envelope_id', 'draft_name', 'property_address', 'documents', 'signers', 'signers_options', 'error'));
     }
 
     public function esign_send_for_signatures(Request $request) {
@@ -1147,7 +1157,7 @@ class EsignController extends Controller
 
     // public function esign_template_add_documents(Request $request) {
 
-    //     return view('/esign/esign_template_add_documents');
+    //     return view('esign/esign_template_add_documents');
 
     // }
 
@@ -1316,7 +1326,7 @@ class EsignController extends Controller
 
         $signer_options = ResourceItems::where('resource_type', 'signer_option') -> orderBy('resource_order') -> get();
 
-        return view('/esign/esign_template_add_documents_and_signers', compact('template_type', 'template', 'template_id', 'template_name', 'signers', 'signer_options'));
+        return view('esign/esign_template_add_documents_and_signers', compact('template_type', 'template', 'template_id', 'template_name', 'signers', 'signer_options'));
 
     }
 
@@ -1437,7 +1447,7 @@ class EsignController extends Controller
             $signer_options_template[] = '<option class="signer-select-option" value="'.$signer -> signer_role.'" data-signer-role="'.$signer -> signer_role.'">'.$signer -> signer_role.'</option>';
         }
 
-        return view('/esign/esign_template_add_fields', compact('template_id','template_name', 'images', 'signers', 'fields', 'signer_options_template'));
+        return view('esign/esign_template_add_fields', compact('template_id','template_name', 'images', 'signers', 'fields', 'signer_options_template'));
     }
 
     public function save_template(Request $request) {

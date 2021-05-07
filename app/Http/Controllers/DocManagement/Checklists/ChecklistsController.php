@@ -83,7 +83,7 @@ class ChecklistsController extends Controller
 
         $checklists_functions = new Checklists();
 
-        return view('/doc_management/checklists/get_copy_checklists_html', compact('location_id', 'checklist_type', 'form_groups', 'property_types', 'resource_items', 'checklists_functions'));
+        return view('doc_management/checklists/get_copy_checklists_html', compact('location_id', 'checklist_type', 'form_groups', 'property_types', 'resource_items', 'checklists_functions'));
     }
 
     public function get_checklist_item_details(Request $request) {
@@ -113,7 +113,7 @@ class ChecklistsController extends Controller
         $form_groups = $resource_items -> where('resource_type', 'form_groups') -> orderBy('resource_order') -> get();
         $checklist_groups = $resource_items -> where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/checklists/get_add_checklist_items_html', compact('checklist', 'form_groups', 'files', 'resource_items', 'checklist_groups', 'checklist_items_model', 'checklist_id'));
+        return view('doc_management/checklists/get_add_checklist_items_html', compact('checklist', 'form_groups', 'files', 'resource_items', 'checklist_groups', 'checklist_items_model', 'checklist_id'));
     }
 
     public function checklists() {
@@ -122,7 +122,7 @@ class ChecklistsController extends Controller
         $property_sub_types = ResourceItems::where('resource_type', 'checklist_property_sub_types') -> orderBy('resource_order') -> get();
         $locations = ResourceItems::where('resource_type', 'checklist_locations') -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/checklists/checklists', compact('resource_items', 'property_types', 'property_sub_types', 'locations'));
+        return view('doc_management/checklists/checklists', compact('resource_items', 'property_types', 'property_sub_types', 'locations'));
     }
 
     public function get_checklists(Request $request) {
@@ -141,7 +141,7 @@ class ChecklistsController extends Controller
         $checklist_location = $resource_items -> where('resource_id', $checklist_location_id) -> first();
         $checklist_state = $checklist_location -> resource_state ?? null;
 
-        return view('/doc_management/checklists/get_checklists_html', compact('checklists_model', 'property_types', 'checklists_count', 'resource_items', 'checklist_type', 'checklist_location_id', 'checklist_state', 'checklist_property_type_id'));
+        return view('doc_management/checklists/get_checklists_html', compact('checklists_model', 'property_types', 'checklists_count', 'resource_items', 'checklist_type', 'checklist_location_id', 'checklist_state', 'checklist_property_type_id'));
     }
 
     public function add_checklist_items(Request $request) {

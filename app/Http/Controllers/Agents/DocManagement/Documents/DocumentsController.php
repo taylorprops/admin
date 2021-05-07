@@ -18,7 +18,7 @@ class DocumentsController extends Controller
             -> orderBy('resource_order')
             -> get();
 
-        return view('/agents/doc_management/documents/documents_html', compact('form_groups'));
+        return view('agents/doc_management/documents/documents_html', compact('form_groups'));
     }
 
     public function get_form_group_files(Request $request) {
@@ -39,6 +39,6 @@ class DocumentsController extends Controller
             -> orderBy('resource_order')
             -> get();
 
-        return view('/agents/doc_management/documents/get_form_group_files_html', compact('form_groups'));
+        return view('agents/doc_management/documents/get_form_group_files_html', compact('form_groups'));
     }
 }

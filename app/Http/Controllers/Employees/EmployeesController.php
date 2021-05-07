@@ -31,7 +31,7 @@ class EmployeesController extends Controller {
 
         $states = LocationData::AllStates();
 
-        return view('/employees/employees', compact('states'));
+        return view('employees/employees', compact('states'));
 
     }
 
@@ -78,7 +78,7 @@ class EmployeesController extends Controller {
             $employees = TransactionCoordinators::select($select) -> where('active', $active) -> orderBy('last_name', 'asc') -> get();
         }
 
-        return view('/employees/get_employees_html', compact('employees', 'emp_type', 'active'));
+        return view('employees/get_employees_html', compact('employees', 'emp_type', 'active'));
 
     }
 
@@ -248,7 +248,7 @@ class EmployeesController extends Controller {
             $docs = TransactionCoordinatorsDocs::where('emp_transaction_coordinators_id', $emp_id) -> orderBy('created_at', 'desc') -> get();
         }
 
-        return view('/employees/get_employee_docs_html', compact('docs'));
+        return view('employees/get_employee_docs_html', compact('docs'));
 
     }
 

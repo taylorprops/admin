@@ -221,7 +221,7 @@ class TransactionsEditFilesController extends Controller
         $file = TransactionUpload::where('file_id', $file_id) -> first();
         $file_name = $file -> file_name_display;
 
-        return view('/agents/doc_management/transactions/edit_files/file', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'file_id', 'document_id', 'file_type', 'page_width', 'page_height', 'page_size'));
+        return view('agents/doc_management/transactions/edit_files/file', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'file_id', 'document_id', 'file_type', 'page_width', 'page_height', 'page_size'));
     }
 
     public function get_edit_file_docs(Request $request) {
@@ -244,7 +244,7 @@ class TransactionsEditFilesController extends Controller
 
         //$user_fields = UserFields::where('file_id', $file_id) -> with('user_field_inputs') -> with('common_field') -> orderBy('id') -> get();
 
-        return view('/agents/doc_management/transactions/edit_files/get_edit_file_docs_html', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'images', 'user_fields', 'file_id', 'document_id', 'file_type'));
+        return view('agents/doc_management/transactions/edit_files/get_edit_file_docs_html', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'transaction_type', 'Agent_ID', 'file', 'file_name', 'images', 'user_fields', 'file_id', 'document_id', 'file_type'));
     }
 
     public function rotate_document(Request $request) {

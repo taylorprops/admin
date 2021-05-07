@@ -23,7 +23,7 @@ class EarnestController extends Controller
             -> orderBy('resource_order')
             -> get();
 
-        return view('/doc_management/earnest/active_earnest', compact('earnest_accounts'));
+        return view('doc_management/earnest/active_earnest', compact('earnest_accounts'));
     }
 
     public function get_earnest_deposits(Request $request) {
@@ -96,12 +96,12 @@ class EarnestController extends Controller
 
             $contracts = $contracts -> get();
 
-        return view('/doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));
+        return view('doc_management/earnest/get_earnest_html', compact('contracts', 'tab'));
     }
 
     public function balance_earnest(Request $request) {
 
-		return view('/doc_management/earnest/balance_earnest');
+		return view('doc_management/earnest/balance_earnest');
     }
 
     public function get_earnest_totals(Request $request) {
@@ -129,14 +129,14 @@ class EarnestController extends Controller
 
         }
 
-        return view('/doc_management/earnest/get_earnest_totals_html', compact('earnest_account_totals'));
+        return view('doc_management/earnest/get_earnest_totals_html', compact('earnest_account_totals'));
     }
 
     public function get_earnest_checks(Request $request) {
 
 		$accounts = ResourceItems::where('resource_type', 'earnest_accounts') -> with('earnest.checks','earnest.agent:id,full_name','earnest.property:Contract_ID,FullStreetAddress,City,StateOrProvince,PostalCode') -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/earnest/get_earnest_checks_html', compact('accounts'));
+        return view('doc_management/earnest/get_earnest_checks_html', compact('accounts'));
     }
 
     public function search_earnest_checks(Request $request) {
@@ -166,7 +166,7 @@ class EarnestController extends Controller
         $checks_in = $checks -> where('check_type', 'in');
         $checks_out = $checks -> where('check_type', 'out');
 
-        return view('/doc_management/earnest/get_search_results_html', compact('checks_in', 'checks_out'));
+        return view('doc_management/earnest/get_search_results_html', compact('checks_in', 'checks_out'));
     }
 
     public function email_agents_missing_earnest(Request $request) {

@@ -240,7 +240,7 @@ class TransactionsDetailsController extends Controller
         $contracts = Contracts::select($contracts_select) -> where('Agent_ID', $Agent_ID) -> where('Status', $active_status_id) -> with(['status', 'earnest']) -> orderBy('CloseDate', 'desc') -> get();
 
 
-        return view('/agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'breakdown', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
+        return view('agents/doc_management/transactions/details/transaction_details', compact('Listing_ID', 'Contract_ID', 'Referral_ID', 'property', 'breakdown', 'transaction_type', 'questions_confirmed', 'agents', 'agent_details', 'for_sale', 'checklist', 'checklist_id', 'folders', 'default_folder_id', 'checklist_items_required', 'checklist_items_if_applicable', 'available_files', 'form_groups', 'form_categories', 'files', 'members', 'contacts', 'rejected_reasons', 'property_types', 'property_sub_types', 'transaction_checklist_hoa_condo', 'transaction_checklist_year_built', 'states', 'contracts'));
     }
 
     // Transaction Details Header
@@ -349,7 +349,7 @@ class TransactionsDetailsController extends Controller
 
         //$statuses = $resource_items -> where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'status', 'status_html', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
+        return view('agents/doc_management/transactions/details/transaction_details_header', compact('transaction_type', 'property', 'status', 'status_html', 'listings_count', 'buyers', 'sellers', 'resource_items', 'listing_expiration_date', 'upload', 'Contract_ID', 'listing_accepted', 'required_count', 'accepted_count', 'rejected_count', 'earnest_html'));
     }
 
 
@@ -425,7 +425,7 @@ class TransactionsDetailsController extends Controller
             $details_type = 'Lease';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_details', compact('transaction_type', 'property', 'contract_closed', 'listing_closed', 'for_sale', 'list_agent', 'agents', 'teams', 'street_suffixes', 'street_dir_suffixes', 'states_active', 'states', 'counties', 'trans_coords', 'has_listing', 'details_type'));
+        return view('agents/doc_management/transactions/details/data/get_details', compact('transaction_type', 'property', 'contract_closed', 'listing_closed', 'for_sale', 'list_agent', 'agents', 'teams', 'street_suffixes', 'street_dir_suffixes', 'states_active', 'states', 'counties', 'trans_coords', 'has_listing', 'details_type'));
     }
 
     public function mls_search(Request $request) {
@@ -965,7 +965,7 @@ class TransactionsDetailsController extends Controller
 
         $states = LocationData::AllStates();
 
-        return view('/agents/doc_management/transactions/details/data/get_members', compact('members', 'contact_types', 'resource_items', 'states', 'for_sale'));
+        return view('agents/doc_management/transactions/details/data/get_members', compact('members', 'contact_types', 'resource_items', 'states', 'for_sale'));
     }
 
     public function add_member_html(Request $request) {
@@ -990,7 +990,7 @@ class TransactionsDetailsController extends Controller
 
         $states = LocationData::AllStates();
 
-        return view('/agents/doc_management/transactions/details/data/add_member_html', compact('for_sale', 'contact_types', 'states'));
+        return view('agents/doc_management/transactions/details/data/add_member_html', compact('for_sale', 'contact_types', 'states'));
     }
 
     public function delete_member(Request $request) {
@@ -1270,7 +1270,7 @@ class TransactionsDetailsController extends Controller
         $property_email = $property -> PropertyEmail;
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
-        return view('/agents/doc_management/transactions/details/data/get_documents', compact('transaction_type', 'property', 'Agent_ID', 'Listing_ID', 'Contract_ID', 'checklist_id', 'documents', 'folders', 'available_files', 'property_email', 'for_sale'));
+        return view('agents/doc_management/transactions/details/data/get_documents', compact('transaction_type', 'property', 'Agent_ID', 'Listing_ID', 'Contract_ID', 'checklist_id', 'documents', 'folders', 'available_files', 'property_email', 'for_sale'));
     }
 
     public function in_process_esign(Request $request) {
@@ -1665,7 +1665,7 @@ class TransactionsDetailsController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_split_document_html', compact('document_id', 'file_id', 'file_type', 'file_name', 'document', 'document_images', 'checklist_items', 'checklist_groups', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal'));
+        return view('agents/doc_management/transactions/details/data/get_split_document_html', compact('document_id', 'file_id', 'file_type', 'file_name', 'document', 'document_images', 'checklist_items', 'checklist_groups', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal'));
     }
 
     public function merge_documents(Request $request) {
@@ -2814,7 +2814,7 @@ class TransactionsDetailsController extends Controller
 
     public function get_esign(Request $request) {
 
-		return view('/agents/doc_management/transactions/details/data/get_esign');
+		return view('agents/doc_management/transactions/details/data/get_esign');
     }
 
     public function get_in_process(Request $request) {
@@ -2832,7 +2832,7 @@ class TransactionsDetailsController extends Controller
             -> with(['signers', 'callbacks', 'documents'])
             -> orderBy('created_at', 'desc') -> get();
 
-        return view('/esign/get_in_process_html', compact('envelopes'));
+        return view('esign/get_in_process_html', compact('envelopes'));
 
     }
 
@@ -2851,7 +2851,7 @@ class TransactionsDetailsController extends Controller
             -> with(['signers', 'documents'])
             -> get();
 
-        return view('/esign/get_completed_html', compact('envelopes'));
+        return view('esign/get_completed_html', compact('envelopes'));
     }
 
     public function get_drafts(Request $request) {
@@ -2869,7 +2869,7 @@ class TransactionsDetailsController extends Controller
             -> with(['signers', 'documents'])
             -> get();
 
-        return view('/esign/get_drafts_html', compact('drafts'));
+        return view('esign/get_drafts_html', compact('drafts'));
     }
 
     public function get_deleted_drafts(Request $request) {
@@ -2888,7 +2888,7 @@ class TransactionsDetailsController extends Controller
             -> with(['signers', 'documents'])
             -> get();
 
-        return view('/esign/get_deleted_drafts_html', compact('deleted_drafts'));
+        return view('esign/get_deleted_drafts_html', compact('deleted_drafts'));
     }
 
     public function get_canceled(Request $request) {
@@ -2907,7 +2907,7 @@ class TransactionsDetailsController extends Controller
             -> orderBy('created_at', 'desc')
             -> get();
 
-        return view('/esign/get_canceled_html', compact('envelopes'));
+        return view('esign/get_canceled_html', compact('envelopes'));
     }
 
     /* public function cancel_envelope(Request $request) {
@@ -3026,7 +3026,7 @@ class TransactionsDetailsController extends Controller
             $checklist_type = 'Lease';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
+        return view('agents/doc_management/transactions/details/data/get_checklist', compact('property', 'Listing_ID', 'Contract_ID', 'transaction_type', 'transaction_checklist', 'transaction_checklist_id', 'transaction_checklist_items', 'transaction_checklist_items_model', 'checklist_groups', 'documents_model', 'documents_checklist', 'resource_items', 'for_sale', 'checklist_type'));
     }
 
     public function get_add_document_to_checklist_documents_html(Request $request) {
@@ -3062,7 +3062,7 @@ class TransactionsDetailsController extends Controller
         $documents_model = new TransactionDocuments();
         $documents_available = $documents_model -> where($field, $id) -> where('folder', '!=', $trash_folder -> id) -> where('assigned', 'no') -> orderBy('doc_order', 'ASC') -> orderBy('created_at', 'DESC') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_add_document_to_checklist_documents_html', compact('documents_available', 'folders'));
+        return view('agents/doc_management/transactions/details/data/get_add_document_to_checklist_documents_html', compact('documents_available', 'folders'));
     }
 
     public function release_address_submitted(Request $request) {
@@ -3261,7 +3261,7 @@ class TransactionsDetailsController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/add_document_to_checklist_item_html', compact('checklist_id', 'documents', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal', 'upload', 'transaction_documents_model', 'checklist_items', 'checklist_groups'));
+        return view('agents/doc_management/transactions/details/data/add_document_to_checklist_item_html', compact('checklist_id', 'documents', 'transaction_checklist_item_documents', 'checklist_items_model', 'transaction_checklist_items_modal', 'upload', 'transaction_documents_model', 'checklist_items', 'checklist_groups'));
     }
 
     public function add_notes_to_checklist_item(Request $request) {
@@ -3353,7 +3353,7 @@ class TransactionsDetailsController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_email_checklist_html', compact('url', 'transaction_checklist_items', 'checklist_groups', 'checklist_items_model', 'transaction_checklist_items_model', 'transaction_checklist_item_notes'));
+        return view('agents/doc_management/transactions/details/data/get_email_checklist_html', compact('url', 'transaction_checklist_items', 'checklist_groups', 'checklist_items_model', 'transaction_checklist_items_model', 'transaction_checklist_item_notes'));
     }
 
     public function mark_note_read(Request $request) {
@@ -3655,7 +3655,7 @@ class TransactionsDetailsController extends Controller
         $property = Listings::find($Listing_ID);
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
-        return view('/agents/doc_management/transactions/details/data/get_contracts', compact('contracts', 'resource_items', 'for_sale'));
+        return view('agents/doc_management/transactions/details/data/get_contracts', compact('contracts', 'resource_items', 'for_sale'));
     }
 
     // End Contracts Tab
@@ -3691,7 +3691,7 @@ class TransactionsDetailsController extends Controller
         $agents = Agents::select('id', 'first_name', 'last_name', 'llc_name') -> where('active', 'yes') -> orderBy('last_name') -> get();
 
 
-        return view('/agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));
+        return view('agents/doc_management/transactions/details/data/get_commission', compact('commission', 'agent_details', 'property', 'rep_both_sides', 'for_sale', 'commission_percentages', 'agents', 'type'));
     }
 
     public function save_commission(Request $request) {
@@ -3859,7 +3859,7 @@ class TransactionsDetailsController extends Controller
             -> orderBy('created_at', 'DESC')
             -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_commission_notes_html', compact('notes'));
+        return view('agents/doc_management/transactions/details/data/get_commission_notes_html', compact('notes'));
     }
 
     public function add_commission_notes(Request $request) {
@@ -4012,7 +4012,7 @@ class TransactionsDetailsController extends Controller
 
         $checks_out = $breakdown -> checks_out -> where('check_recipient_agent_id', $Agent_ID) -> where('active', 'yes') -> whereNotNull('check_delivery_method') -> whereNotNull('check_date_ready');
 
-        return view('/agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states', 'breakdown_status', 'checks_out'));
+        return view('agents/doc_management/transactions/details/data/get_agent_commission', compact('breakdown', 'deductions', 'agent', 'property', 'holding_earnest', 'earnest_amount', 'for_sale', 'is_rental', 'admin_fee', 'is_referral', 'is_referral_company', 'from_rental_listing', 'referral_company_deduction', 'agent_commission_deduction_percent', 'states', 'breakdown_status', 'checks_out'));
     }
 
     public function save_commission_agent(Request $request) {
@@ -4187,7 +4187,7 @@ class TransactionsDetailsController extends Controller
 
 		$checks_in = CommissionChecksIn::where('Commission_ID', $request -> Commission_ID) -> orderBy('active', 'DESC') -> orderBy('created_at', 'DESC') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_checks_in_html', compact('checks_in'));
+        return view('agents/doc_management/transactions/details/data/get_checks_in_html', compact('checks_in'));
     }
 
     public function save_add_check_in(Request $request) {
@@ -4321,7 +4321,7 @@ class TransactionsDetailsController extends Controller
 
 		$checks_out = CommissionChecksOut::where('Commission_ID', $request -> Commission_ID) -> orderBy('active', 'DESC') -> orderBy('created_at', 'DESC') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_checks_out_html', compact('checks_out'));
+        return view('agents/doc_management/transactions/details/data/get_checks_out_html', compact('checks_out'));
     }
 
     public function save_add_check_out(Request $request) {
@@ -4600,7 +4600,7 @@ class TransactionsDetailsController extends Controller
             $able_to_transfer = 'yes';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting', 'transferred_from', 'transferred_to', 'able_to_transfer'));
+        return view('agents/doc_management/transactions/details/data/get_earnest', compact('earnest', 'earnest_held_by', 'earnest_accounts', 'suggested_earnest_account', 'earnest_mail_to_address', 'hide_set_status_to_waiting', 'transferred_from', 'transferred_to', 'able_to_transfer'));
     }
 
     public function get_earnest_checks(Request $request) {
@@ -4616,7 +4616,7 @@ class TransactionsDetailsController extends Controller
             $transferred = 'yes';
         }
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type', 'transferred'));
+        return view('agents/doc_management/transactions/details/data/get_earnest_checks_html', compact('checks', 'check_type', 'transferred'));
     }
 
     public function save_earnest(Request $request) {
@@ -4880,7 +4880,7 @@ class TransactionsDetailsController extends Controller
 
 		$notes = EarnestNotes::where('Earnest_ID', $request -> Earnest_ID) -> orderBy('created_at', 'desc') -> get();
 
-        return view('/agents/doc_management/transactions/details/data/get_earnest_notes_html', compact('notes'));
+        return view('agents/doc_management/transactions/details/data/get_earnest_notes_html', compact('notes'));
     }
 
     public function save_add_earnest_notes(Request $request) {
@@ -5103,7 +5103,7 @@ class TransactionsDetailsController extends Controller
 
         $members = $property -> members;
 
-        return view('/agents/doc_management/transactions/details/data/get_tasks', compact('tasks', 'task_actions', 'members'));
+        return view('agents/doc_management/transactions/details/data/get_tasks', compact('tasks', 'task_actions', 'members'));
 
     }
 

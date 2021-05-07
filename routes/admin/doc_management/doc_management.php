@@ -177,7 +177,7 @@ Route::middleware('admin') -> group(function () {
 
     /************ Form Elements ************/
     /* Route::get('/form_elements', function() {
-        return view('/tests/form_elements');
+        return view('tests/form_elements');
     }); */
 
     // Test Controller

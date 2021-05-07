@@ -86,15 +86,19 @@ class UpdateListingsJob implements ShouldQueue
 
                     $listing_key = $listing['ListingKey'];
 
-                    $add_listing = CompanyListings::firstOrCreate([
-                        'ListingKey' => $listing_key
-                    ]);
+                    if($listing['ListingId'] != '') {
 
-                    foreach($listing as $col => $val) {
-                        $add_listing -> $col = $val;
+                        $add_listing = CompanyListings::firstOrCreate([
+                            'ListingKey' => $listing_key
+                        ]);
+
+                        foreach($listing as $col => $val) {
+                            $add_listing -> $col = $val;
+                        }
+
+                        $add_listing -> save();
+
                     }
-
-                    $add_listing -> save();
 
                 }
 

@@ -22,7 +22,7 @@ class UserController extends Controller
 
         $users = User::where('active', 'yes') -> get();
 
-        return view('/users/users', compact('users'));
+        return view('users/users', compact('users'));
 
     }
 
@@ -30,7 +30,7 @@ class UserController extends Controller
 
         $user = User::select('first_name', 'last_name', 'email', 'signature', 'photo_location') -> find(auth() -> user() -> id);
 
-        return view('/users/user_profile', compact('user'));
+        return view('users/user_profile', compact('user'));
 
     }
 

@@ -26,7 +26,7 @@ class ResourcesController extends Controller
         $db_fields_contract = DB::getSchemaBuilder() -> getColumnListing('docs_transactions_contracts');
         $db_fields = array_unique(array_merge($db_fields_listing, $db_fields_contract));
 
-        return view('/doc_management/resources/common_fields', compact('common_fields_groups', 'common_fields_sub_groups', 'db_fields'));
+        return view('doc_management/resources/common_fields', compact('common_fields_groups', 'common_fields_sub_groups', 'db_fields'));
     }
 
     public function get_common_fields(Request $request) {
@@ -43,7 +43,7 @@ class ResourcesController extends Controller
         $db_fields_contract = DB::getSchemaBuilder() -> getColumnListing('docs_transactions_contracts');
         $db_fields = array_unique(array_merge($db_fields_listing, $db_fields_contract));
 
-        return view('/doc_management/resources/common_fields_html', compact('common_fields_groups', 'common_fields_sub_groups', 'db_fields'));
+        return view('doc_management/resources/common_fields_html', compact('common_fields_groups', 'common_fields_sub_groups', 'db_fields'));
     }
 
     public function save_add_common_field(Request $request) {
@@ -100,7 +100,7 @@ class ResourcesController extends Controller
         $resources = $resources_items_model -> groupBy('resource_type') -> get();
         $resources_items = $resources_items_model -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/resources/resources', compact('resources', 'resources_items', 'states', 'resources_items_model'));
+        return view('doc_management/resources/resources', compact('resources', 'resources_items', 'states', 'resources_items_model'));
     }
 
     public function resources_reorder(Request $request) {

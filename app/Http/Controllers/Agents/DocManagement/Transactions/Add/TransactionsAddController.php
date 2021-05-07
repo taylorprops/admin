@@ -59,7 +59,7 @@ class TransactionsAddController extends Controller {
 
         $states = LocationData::ActiveStates();
 
-        return view('/agents/doc_management/transactions/add/transaction_add', compact('transaction_type', 'transaction_type_header', 'states', 'agents'));
+        return view('agents/doc_management/transactions/add/transaction_add', compact('transaction_type', 'transaction_type_header', 'states', 'agents'));
     }
 
     public function transaction_add_details_existing(Request $request) {
@@ -240,7 +240,7 @@ class TransactionsAddController extends Controller {
 
         $request -> session() -> put('property_details', $property_details);
 
-        return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
+        return view('agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
 
@@ -303,7 +303,7 @@ class TransactionsAddController extends Controller {
         $referral = Referrals::find($Referral_ID);
         $states = LocationData::AllStates();
 
-        return view('/agents/doc_management/transactions/add/transaction_required_details_referral', compact('referral', 'states'));
+        return view('agents/doc_management/transactions/add/transaction_required_details_referral', compact('referral', 'states'));
     }
 
     public function transaction_save_details_referral(Request $request) {
@@ -403,7 +403,7 @@ class TransactionsAddController extends Controller {
 
         $request -> session() -> put('property_details', $property_details);
 
-        return view('/agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
+        return view('agents/doc_management/transactions/add/transaction_add_details', compact('Agent_ID', 'property_details', 'property_types', 'property_sub_types'));
     }
 
 
@@ -596,7 +596,7 @@ class TransactionsAddController extends Controller {
             $transaction_type_header = 'Referral Agreement';
         } */
 
-        return view('/agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
+        return view('agents/doc_management/transactions/add/transaction_required_details_'.$transaction_type, compact('property', 'office', 'for_sale', 'states', 'states_json', 'statuses', 'contacts', 'resource_items', 'transaction_type'));
     }
 
     public function save_transaction_required_details(Request $request) {

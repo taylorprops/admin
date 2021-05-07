@@ -15,7 +15,7 @@ class ContactsController extends Controller {
 
 		$states = LocationData::AllStates();
 
-        return view('/CRM/contacts', compact('states'));
+        return view('CRM/contacts', compact('states'));
 
     }
 
@@ -23,7 +23,7 @@ class ContactsController extends Controller {
 
 		$contacts = CRMContacts::where('contact_active', 'yes') -> with('members') -> get();
 
-        return view('/CRM/get_contacts_html', compact('contacts'));
+        return view('CRM/get_contacts_html', compact('contacts'));
 
     }
 

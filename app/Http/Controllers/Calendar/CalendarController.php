@@ -14,7 +14,7 @@ class CalendarController extends Controller
 
     public function calendar(Request $request) {
 
-        return view('/calendar/calendar');
+        return view('calendar/calendar');
     }
 
     public function calendar_events(Request $request) {

@@ -82,7 +82,7 @@ class FieldsController extends Controller
         $file = Upload::whereFileId($file_id) -> first();
         $published = $file -> published;
 
-        return view('/doc_management/create/fields/edit_properties_html', compact('field_id', 'field_category', 'group_id', 'common_name', 'custom_name', 'common_field_type', 'common_field_sub_group_id', 'common_field_id', 'number_type', 'label', 'common_fields_groups', 'published'));
+        return view('doc_management/create/fields/edit_properties_html', compact('field_id', 'field_category', 'group_id', 'common_name', 'custom_name', 'common_field_type', 'common_field_sub_group_id', 'common_field_id', 'number_type', 'label', 'common_fields_groups', 'published'));
 
         /* $field_id = $request -> field_id;
         $field_type = $request -> field_type;
@@ -101,7 +101,7 @@ class FieldsController extends Controller
         $field_inputs = FieldInputs::where('file_id', $request -> file_id) -> orderBy('id') -> get();
 
 
-        return view('/doc_management/create/fields/edit_properties_html', compact('field_id', 'field_type', 'group_id', 'field_number_type', 'field_textline_type', 'field_address_type', 'field_name_type', 'common_name', 'custom_name', 'label', 'common_fields', 'field_inputs', 'published')); */
+        return view('doc_management/create/fields/edit_properties_html', compact('field_id', 'field_type', 'group_id', 'field_number_type', 'field_textline_type', 'field_address_type', 'field_name_type', 'common_name', 'custom_name', 'label', 'common_fields', 'field_inputs', 'published')); */
     }
 
     public function get_custom_names(Request $request) {
@@ -130,7 +130,7 @@ class FieldsController extends Controller
         //$field_types = FieldTypes::select('field_type') -> get();
         $field_inputs = FieldInputs::where('file_id', $request -> file_id) -> orderBy('id') -> get();
 
-        return view('/doc_management/create/fields/add_fields', compact('file', 'file_name', 'published', 'images', 'fields', /* 'common_fields', *//*  'field_types', */ 'field_inputs'));
+        return view('doc_management/create/fields/add_fields', compact('file', 'file_name', 'published', 'images', 'fields', /* 'common_fields', *//*  'field_types', */ 'field_inputs'));
     }
 
     public function save_add_fields(Request $request) {

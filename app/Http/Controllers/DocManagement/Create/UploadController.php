@@ -43,7 +43,7 @@ class UploadController extends Controller
         }
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/create/upload/get_checklist_items_html', compact('file_id', 'uploaded_file', 'checklist_id', 'checklist_items', 'items', 'upload', 'checklist_type', 'checklist_groups'));
+        return view('doc_management/create/upload/get_checklist_items_html', compact('file_id', 'uploaded_file', 'checklist_id', 'checklist_items', 'items', 'upload', 'checklist_type', 'checklist_groups'));
     }
 
     public function activate_upload(Request $request) {
@@ -146,7 +146,7 @@ class UploadController extends Controller
 
         $states = LocationData::ActiveStates();
 
-        return view('/doc_management/create/upload/get_add_to_checklists_details_html', compact('file_id', 'uploaded_file', 'resource_items', 'checklists', 'checklists_items', 'form_groups', 'checklist_groups', 'checklist_locations', 'property_types', 'property_sub_types', 'upload', 'checklist_item_required', 'checklist_item_group_id', 'states'));
+        return view('doc_management/create/upload/get_add_to_checklists_details_html', compact('file_id', 'uploaded_file', 'resource_items', 'checklists', 'checklists_items', 'form_groups', 'checklist_groups', 'checklist_locations', 'property_types', 'property_sub_types', 'upload', 'checklist_item_required', 'checklist_item_group_id', 'states'));
     }
 
     public function get_form_group_files(Request $request) {
@@ -169,7 +169,7 @@ class UploadController extends Controller
 
         $checklists = new ChecklistsItems();
 
-        return view('/doc_management/create/upload/get_form_group_files_html', compact('files', 'files_count', 'form_group_id', 'state', 'resource_items', 'checklists'));
+        return view('doc_management/create/upload/get_form_group_files_html', compact('files', 'files_count', 'form_group_id', 'state', 'resource_items', 'checklists'));
     }
 
     public function get_manage_upload_details(Request $request) {
@@ -202,7 +202,7 @@ class UploadController extends Controller
         // to run functions from ResourceItems
         $resource_items = new ResourceItems();
 
-        return view('/doc_management/create/upload/get_manage_upload_details_html', compact('file_id', 'uploaded_file', 'uploads', 'checklists', 'resource_items'));
+        return view('doc_management/create/upload/get_manage_upload_details_html', compact('file_id', 'uploaded_file', 'uploads', 'checklists', 'resource_items'));
     }
 
     public function get_upload_details(Request $request) {
@@ -229,7 +229,7 @@ class UploadController extends Controller
 
         $checklist_groups = ResourceItems::where('resource_type', 'checklist_groups') -> orderBy('resource_order') -> get();
 
-        return view('/doc_management/create/upload/files', compact('upload', 'files', 'states', 'resources', 'form_group_id', 'resource_items', 'form_groups', 'checklist_groups'));
+        return view('doc_management/create/upload/files', compact('upload', 'files', 'states', 'resources', 'form_group_id', 'resource_items', 'form_groups', 'checklist_groups'));
     }
 
     public function publish_upload(Request $request) {

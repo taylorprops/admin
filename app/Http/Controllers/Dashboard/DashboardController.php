@@ -174,7 +174,7 @@ class DashboardController extends Controller
 
         $notifications = auth() -> user() -> unreadNotifications;
 
-        return view('/dashboard/dashboard', compact('alert_types', 'alerts', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts', 'notifications'));
+        return view('dashboard/dashboard', compact('alert_types', 'alerts', 'contracts_past_settle_date', 'missing_docs_listings', 'missing_docs_contracts', 'missing_docs_referrals', 'expired_listings', 'missing_earnest', 'show_alerts', 'notifications'));
 
     }
 
@@ -194,7 +194,7 @@ class DashboardController extends Controller
         $active_referrals_count = Referrals:: whereIn('Status', ResourceItems::GetActiveReferralStatuses())
             -> count();
 
-        return view('/dashboard/mods/get_transactions_html', compact('active_listings_count',  'active_contracts_count', 'active_referrals_count',));
+        return view('dashboard/mods/get_transactions_html', compact('active_listings_count',  'active_contracts_count', 'active_referrals_count',));
 
     }
 
@@ -225,7 +225,7 @@ class DashboardController extends Controller
             -> orderBy('CloseDate', 'asc')
             -> get();
 
-        return view('/dashboard/mods/get_upcoming_closings_html', compact('contracts'));
+        return view('dashboard/mods/get_upcoming_closings_html', compact('contracts'));
 
     }
 
@@ -253,7 +253,7 @@ class DashboardController extends Controller
             -> orderBy('CloseDate', 'DESC')
             -> get();
 
-        return view('/dashboard/mods/get_commissions_html', compact('contracts'));
+        return view('dashboard/mods/get_commissions_html', compact('contracts'));
 
     }
 
@@ -325,7 +325,7 @@ class DashboardController extends Controller
 
         $docs_to_review_count = $listing_docs_to_review_count + $contract_docs_to_review_count + $referral_docs_to_review_count;
 
-        return view('/dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'deposits_to_release_count', 'docs_to_review_count', 'releases_to_review_count'));
+        return view('dashboard/mods/get_admin_todo_html', compact('pending_commissions_count', 'pending_earnest_count', 'deposits_to_release_count', 'docs_to_review_count', 'releases_to_review_count'));
 
     }
 
@@ -382,7 +382,7 @@ class DashboardController extends Controller
 
         $upcoming_events = $tasks -> merge($events) -> sortBy('start_date');
 
-        return view('/dashboard/mods/get_upcoming_events_html', compact('upcoming_events'));
+        return view('dashboard/mods/get_upcoming_events_html', compact('upcoming_events'));
 
     }
 

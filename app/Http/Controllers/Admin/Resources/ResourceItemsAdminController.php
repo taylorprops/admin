@@ -16,7 +16,7 @@ class ResourceItemsAdminController extends Controller
         $resources = ResourceItemsAdmin::groupBy('resource_type') -> get();
         $resources_items = ResourceItemsAdmin::orderBy('resource_order') -> get();
 
-        return view('/admin/resources/resources', compact('resources', 'resources_items', 'states', 'resources_items_model'));
+        return view('admin/resources/resources', compact('resources', 'resources_items', 'states', 'resources_items_model'));
     }
 
     public function resources_reorder(Request $request) {

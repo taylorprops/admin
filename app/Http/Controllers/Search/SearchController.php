@@ -105,7 +105,7 @@ class SearchController extends Controller
         -> orderBy('CloseDate', 'DESC')
         -> get();
 
-        return view('/search/search_results_html', compact('listings', 'contracts', 'referrals'));
+        return view('search/search_results_html', compact('listings', 'contracts', 'referrals'));
 
     }
 }

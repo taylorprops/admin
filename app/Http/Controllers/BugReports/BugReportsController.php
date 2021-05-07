@@ -18,7 +18,7 @@ class BugReportsController extends Controller
 
         $bug_reports = BugReports::with(['user']) -> orderBy('active', 'desc') -> get();
 
-        return view('/bug_reports/bug_reports', compact('bug_reports'));
+        return view('bug_reports/bug_reports', compact('bug_reports'));
 
     }
 
@@ -29,7 +29,7 @@ class BugReportsController extends Controller
 
         $browser_info = (object)  json_decode($bug_report -> browser_info, true);
 
-        return view('/bug_reports/view_bug_report', compact('bug_report', 'browser_info'));
+        return view('bug_reports/view_bug_report', compact('bug_report', 'browser_info'));
 
     }
 

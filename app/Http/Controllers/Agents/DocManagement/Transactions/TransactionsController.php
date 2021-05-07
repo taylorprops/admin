@@ -20,7 +20,7 @@ class TransactionsController extends Controller
             $agent_referral = 'yes';
         }
 
-        return view('/agents/doc_management/transactions/transactions_all', compact('agent_referral'));
+        return view('agents/doc_management/transactions/transactions_all', compact('agent_referral'));
     }
 
     public function get_transactions(Request $request) {
@@ -114,6 +114,6 @@ class TransactionsController extends Controller
 
         $contract_closed_status = ResourceItems::GetResourceId('Closed', 'contract_status');
 
-        return view('/agents/doc_management/transactions/get_'.$type.'_html', compact('transactions', 'contract_closed_status'));
+        return view('agents/doc_management/transactions/get_'.$type.'_html', compact('transactions', 'contract_closed_status'));
     }
 }
