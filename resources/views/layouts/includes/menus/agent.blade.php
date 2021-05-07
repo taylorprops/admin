@@ -12,12 +12,12 @@
         <span>Doc Managment</span>
     </li>
 
-    <li class="sidebar-dropdown">
+    <li class="sidebar-dropdown active">
         <a href="javascript:void(0)">
             <i class="fa fa-sign"></i>
             <span>Transactions</span>
         </a>
-        <div class="sidebar-submenu">
+        <div class="sidebar-submenu" style="display: block">
             <ul>
                 <li>
                     <a href="/agents/doc_management/transactions">View All Transactions</a>

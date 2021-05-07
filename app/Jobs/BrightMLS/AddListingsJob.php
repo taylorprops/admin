@@ -3,6 +3,7 @@
 namespace App\Jobs\BrightMLS;
 
 use Illuminate\Bus\Queueable;
+use App\Models\Employees\Agents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +33,18 @@ class AddListingsJob implements ShouldQueue
      *
      * @return void
      */
+
+    public function agent_id($agent_mls_id) {
+
+            $agent_id = Agents::where('bright_mls_id_md_dc_tp', $agent_mls_id)
+            -> orWhere('bright_mls_id_va_tp', $agent_mls_id)
+            -> orWhere('bright_mls_id_md_aap', $agent_mls_id)
+            -> pluck('id');
+
+            return $agent_id[0];
+
+    }
+
     public function handle() {
 
         $rets_config = new \PHRETS\Configuration;
@@ -86,6 +99,12 @@ class AddListingsJob implements ShouldQueue
                         foreach($listing as $col => $val) {
                             $add_listing -> $col = $val;
                         }
+                        if(in_array($listing['BuyerOfficeMlsId'], config('bright_office_codes'))) {
+                            $mls_id = $listing['BuyerAgentMlsId'];
+                        } else {
+                            $mls_id = $listing['ListAgentMlsId'];
+                        }
+                        $add_listing -> Agent_ID = $this -> agent_id($mls_id);
                         $add_listing -> save();
                     }
 

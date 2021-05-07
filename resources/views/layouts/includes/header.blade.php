@@ -1,26 +1,5 @@
 <div class="page-wrapper theme chiller-theme toggled">
 
-    {{-- <div class="d-flex justify-content-between align-items-center show-sidebar w-100">
-
-        <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
-            <i class="fal fa-bars fa-lg"></i>
-        </a>
-        <div class="top-search mr-1 mr-sm-3">
-            <div class="d-flex justify-content-start align-items-center">
-                <div class="input-group">
-                    <input type="text" class="form-control search-menu main-search-input top" placeholder="Search...">
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                </div>
-                <a href="#" class="hide-search hidden"><i class="fal fa-times text-danger ml-3 fa-2x"></i></a>
-            </div>
-        </div>
-
-    </div> --}}
-
     <div class="show-sidebar">
         <a id="show_sidebar" class="btn btn-primary" href="javascript:void(0)">
             <i class="fal fa-bars fa-lg"></i>
@@ -93,12 +72,14 @@
 
             <hr>
 
+            <div class="">
+                <button class="btn btn-secondary btn-sm bug-report-button ml-2">Report Bug <i class="fal fa-bug"></i></button>
+            </div>
+
             <!-- sidebar-menu  -->
         </div>
         <!-- sidebar-content  -->
         <div class="sidebar-footer">
-
-            <button class="btn btn-secondary btn-sm bug-report-button mx-0">Report Bug <i class="fal fa-bug"></i></button>
 
             <a href="/logout">
                 <i class="fal fa-sign-out fa-lg text-orange"></i>

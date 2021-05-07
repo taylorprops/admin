@@ -9,6 +9,8 @@ class Agents extends Model {
 
     use HasFactory;
 
+    use \Awobaz\Compoships\Compoships;
+
     protected $connection = 'mysql';
     protected $table = 'emp_agents';
     protected $primaryKey = 'id';

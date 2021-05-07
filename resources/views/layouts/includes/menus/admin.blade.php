@@ -109,6 +109,23 @@
         </div>
     </li>
 
+    <li class="sidebar-dropdown">
+        <a href="javascript:void(0)">
+            <i class="fal fa-exclamation-circle"></i>
+            <span>Compliance</span>
+        </a>
+        <div class="sidebar-submenu">
+            <ul>
+                <li>
+                    <a href="/doc_management/compliance/missing_listings">Missing Listings</a>
+                </li>
+                <li>
+                    <a href="/doc_management/compliance/missing_contracts">Missing Contracts</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
     @if(session('super_user') == true)
         <li>
             <a href="/bug_reports">

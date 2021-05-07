@@ -111,6 +111,7 @@ require('./users/users.js');
 require('./users/user_profile.js');
 
 
-
+// compliance
+require('./doc_management/compliance/missing_transactions.js');
 
 

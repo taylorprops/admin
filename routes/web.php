@@ -26,6 +26,7 @@ use App\Http\Controllers\Notifications\GlobalNotificationsController;
 use App\Http\Controllers\Admin\Resources\ResourceItemsAdminController;
 use App\Http\Controllers\DocManagement\Checklists\ChecklistsController;
 use App\Http\Controllers\DocManagement\Commission\CommissionController;
+use App\Http\Controllers\DocManagement\Compliance\ComplianceController;
 use App\Http\Controllers\DocManagement\Review\DocumentReviewController;
 use App\Http\Controllers\Agents\DocManagement\Documents\DocumentsController;
 use App\Http\Controllers\DocManagement\Notifications\NotificationsController;
@@ -327,6 +328,10 @@ Route::middleware(['admin']) -> group(function () {
     Route::post('/employees/delete_doc', [EmployeesController::class, 'delete_doc']);
 
 
+    /************** Compliance **************/
+    // missing contracts and listings
+    Route::get('/doc_management/compliance/missing_listings', [ComplianceController::class, 'missing_listings']);
+    Route::get('/doc_management/compliance/missing_contracts', [ComplianceController::class, 'missing_contracts']);
 
 
     /************ Form Elements ************/

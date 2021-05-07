@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class EsignDocumentsImages extends Model
 {
 
-    use \Awobaz\Compoships\Compoships;
 
     protected $table = 'esign_documents_images';
     protected $connection = 'mysql';
