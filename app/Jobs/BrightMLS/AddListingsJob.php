@@ -42,7 +42,7 @@ class AddListingsJob implements ShouldQueue
             -> pluck('id');
 
             $id = null;
-            if($agent_id[0]) {
+            if($agent_id) {
                 $id = $agent_id[0];
             }
 
