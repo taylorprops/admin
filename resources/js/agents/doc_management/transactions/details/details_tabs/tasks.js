@@ -72,7 +72,11 @@ if (document.URL.match(/transaction_details/)) {
 
         $('.delete-div').removeClass('hidden');
         if(ele.data('action') == 'add') {
-            $('#task_members').closest('.form-ele').find('.form-select-label').trigger('click');
+            if($('#task_members option:selected').length == 0) {
+                $('#task_members').closest('.form-ele').find('.form-select-label').trigger('click');
+            } else {
+                select_refresh($('#task_members'));
+            }
             $('.delete-div').addClass('hidden');
         }
 

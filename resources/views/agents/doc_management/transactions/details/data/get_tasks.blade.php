@@ -47,12 +47,11 @@
                         <div class="row mt-3">
 
                             <div class="col-12">
-
                                 <select class="custom-form-element form-select form-select-no-search" multiple id="task_members" name="task_members[]" data-label="Members">
                                     <option value=""></option>
                                     @foreach($members as $member)
                                         @if($member -> Agent_ID > 0 || $member -> TransactionCoordinator_ID > 0)
-                                            <option value="{{ $member -> id }}">{{ ucwords(strtolower($member -> first_name.' '.$member -> last_name)) }}</option>
+                                            <option value="{{ $member -> id }}" @if(count($members) == 1) selected @endif>{{ ucwords(strtolower($member -> first_name.' '.$member -> last_name)) }}</option>
                                         @endif
                                     @endforeach
                                 </select>

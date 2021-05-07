@@ -220,7 +220,7 @@
                     </div>
                     <div class="h5 mt-2">
                         <a class="folder-collapse text-orange" data-toggle="collapse" href="#documents_folder_{{ $loop -> index }}" aria-expanded="false" aria-controls="documents_folder_{{ $loop -> index }}">
-                            <i class="fal fa-angle-right fa-lg mr-3"></i>
+                            <i class="fal @if($folder_name != 'Trash' && $docs_count > 0) fa-angle-down @else fa-angle-right @endif fa-lg mr-3"></i>
                             <i class="fad fa-folder mr-1 mr-sm-3 fa-lg"></i>
                             {{ $folder_name }}
                         </a>

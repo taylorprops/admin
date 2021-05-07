@@ -5067,13 +5067,17 @@ class TransactionsDetailsController extends Controller
 
         if($transaction_type == 'listing') {
 
-            $property = Listings::with(['members'])
+            $property = Listings::with(['members' => function($query) {
+                $query -> where('Agent_ID', '>', '0') -> orWhere('TransactionCoordinator_ID', '>', '0');
+            }])
             -> find($Listing_ID, $select);
 
         } else if($transaction_type == 'contract') {
 
-            $property = Contracts::with(['members'])
-                -> find($Contract_ID, $select);
+            $property = Contracts::with(['members' => function($query) {
+                $query -> where('Agent_ID', '>', '0') -> orWhere('TransactionCoordinator_ID', '>', '0');
+            }])
+            -> find($Contract_ID, $select);
 
         }
 
