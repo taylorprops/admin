@@ -41,7 +41,12 @@ class AddListingsJob implements ShouldQueue
             -> orWhere('bright_mls_id_md_aap', $agent_mls_id)
             -> pluck('id');
 
-            return $agent_id[0];
+            $id = null;
+            if($agent_id[0]) {
+                $id = $agent_id[0];
+            }
+
+            return $id;
 
     }
 
