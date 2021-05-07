@@ -78,10 +78,10 @@ if (document.URL.match(/transaction_details/)) {
         $(document).on('change', '.check-document', show_bulk_options);
 
         $('.sortable-documents').on('hidden.bs.collapse', function () {
-            $('.folder-collapse[href="'+$(this).prop('id')+'"]').find('i').removeClass('fa-angle-down').addClass('fa-angle-right');
+            $('.folder-collapse[href="#'+$(this).prop('id')+'"]').find('i.fa-angle-down').removeClass('fa-angle-down').addClass('fa-angle-right');
         });
         $('.sortable-documents').on('shown.bs.collapse', function () {
-            $('.folder-collapse[href="'+$(this).prop('id')+'"]').find('i').addClass('fa-angle-down').removeClass('fa-angle-right');
+            $('.folder-collapse[href="#'+$(this).prop('id')+'"]').find('i.fa-angle-right').addClass('fa-angle-down').removeClass('fa-angle-right');
         });
 
     });
