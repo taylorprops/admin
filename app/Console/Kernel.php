@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
         $schedule -> command('doc_management:check_emailed_documents') -> everyMinute() -> withoutOverlapping(1);
 
         // add, update, withdraw listings
-        if(config('app.env') == 'production') {
+        if(config('app.env') == 'local') {
             $schedule -> command('bright_mls:add_listings') -> cron('15 * * * *');
             $schedule -> command('bright_mls:update_listings') -> cron('5,35 * * * * ');
             $schedule -> command('bright_mls:find_withdraw_listings') -> cron('55 * * * *');
