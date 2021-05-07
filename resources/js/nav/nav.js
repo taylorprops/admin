@@ -30,6 +30,7 @@ $(function () {
         }
     });
 
+
     $('#close-sidebar').on('click', function () {
         $('.page-wrapper').removeClass('toggled');
         //$('.top-search').show();

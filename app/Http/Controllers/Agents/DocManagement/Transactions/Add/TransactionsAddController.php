@@ -658,6 +658,7 @@ class TransactionsAddController extends Controller {
 
             $listing_agent -> save();
 
+
             $buyers_agent = new Members();
             $buyers_agent -> first_name = $agent -> first_name;
             $buyers_agent -> last_name = $agent -> last_name;
@@ -853,6 +854,21 @@ class TransactionsAddController extends Controller {
             $sellers -> Contract_ID = $Contract_ID;
             $sellers -> save();
 
+            $exists = CRMContacts::where('contact_email', $seller_email[$i]) -> first();
+            if(!$exists && !$seller_crm_contact_id[$i] > 0) {
+                $contact = new CRMContacts();
+                $contact -> contact_first = $seller_first[$i];
+                $contact -> contact_last = $seller_last[$i];
+                $contact -> contact_phone_cell = $seller_phone[$i];
+                $contact -> contact_email = $seller_email[$i];
+                $contact -> contact_street = $seller_address_street[$i];
+                $contact -> contact_city = $seller_address_city[$i];
+                $contact -> contact_state = $seller_address_state[$i];
+                $contact -> contact_zip = $seller_address_zip[$i];
+                $contact -> Agent_ID = $Agent_ID;
+                $contact -> save();
+            }
+
             if ($i == 0) {
                 $seller_one_first = $seller_entity_name;
                 $seller_one_last = '';
@@ -908,6 +924,21 @@ class TransactionsAddController extends Controller {
                 $buyers -> Listing_ID = $Listing_ID;
                 $buyers -> Contract_ID = $Contract_ID;
                 $buyers -> save();
+
+                $exists = CRMContacts::where('contact_email', $buyer_email[$i]) -> first();
+                if(!$exists && !$buyer_crm_contact_id[$i] > 0) {
+                    $contact = new CRMContacts();
+                    $contact -> contact_first = $buyer_first[$i];
+                    $contact -> contact_last = $buyer_last[$i];
+                    $contact -> contact_phone_cell = $buyer_phone[$i];
+                    $contact -> contact_email = $buyer_email[$i];
+                    $contact -> contact_street = $buyer_address_street[$i];
+                    $contact -> contact_city = $buyer_address_city[$i];
+                    $contact -> contact_state = $buyer_address_state[$i];
+                    $contact -> contact_zip = $buyer_address_zip[$i];
+                    $contact -> Agent_ID = $Agent_ID;
+                    $contact -> save();
+                }
 
                 if ($i == 0) {
                     $buyer_one_first = $buyer_first[$i];

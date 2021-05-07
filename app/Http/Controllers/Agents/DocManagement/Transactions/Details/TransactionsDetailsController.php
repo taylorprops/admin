@@ -1035,6 +1035,21 @@ class TransactionsDetailsController extends Controller
 
         $member -> save();
 
+        $exists = CRMContacts::where('contact_email', $request -> email) -> first();
+        if(!$exists) {
+            $contact = new CRMContacts();
+            $contact -> contact_first = $request -> first_name;
+            $contact -> contact_last = $request -> last_name;
+            $contact -> contact_phone_cell = $request -> cell_phone;
+            $contact -> contact_email = $request -> email;
+            $contact -> contact_street = $request -> address_home_street;
+            $contact -> contact_city = $request -> address_home_city;
+            $contact -> contact_state = $request -> address_home_state;
+            $contact -> contact_zip = $request -> address_home_zip;
+            $contact -> Agent_ID = $request -> Agent_ID;
+            $contact -> save();
+        }
+
         if ($request -> transaction_type == 'listing') {
             $this -> update_transaction_members($request -> Listing_ID, 'listing');
         } else {

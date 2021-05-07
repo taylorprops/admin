@@ -596,6 +596,7 @@ class EsignController extends Controller
                     $add_esign_doc -> width = $doc_width;
                     $add_esign_doc -> height = $doc_height;
                     $add_esign_doc -> save();
+                    $add_esign_doc_id = $add_esign_doc -> id;
 
                     // get images for doc
                     $images = $doc -> images_converted;
@@ -617,7 +618,7 @@ class EsignController extends Controller
                         $add_esign_image = new EsignDocumentsImages();
                         $add_esign_image -> image_location = $add_esign_image_file_location;
                         $add_esign_image -> envelope_id = $envelope_id;
-                        $add_esign_image -> document_id = $transaction_document_id;
+                        $add_esign_image -> document_id = $add_esign_doc_id;
                         $add_esign_image -> page_number = $image -> page_number;
                         $add_esign_image -> width = $doc_width;
                         $add_esign_image -> height = $doc_height;

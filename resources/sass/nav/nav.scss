@@ -128,7 +128,7 @@ body {
 							-ms-transition: all 0.3s ease;
 							-o-transition: all 0.3s ease;
 							transition: all 0.3s ease;
-							content: "\f111";
+							content: "\f054";
 							font-family: "Font Awesome 5 Pro";
 							font-weight: 400;
 							font-style: normal;
@@ -151,6 +151,33 @@ body {
 					}
 					padding-left: 20px;
 					font-size: 14px;
+
+                    ul {
+                        li {
+                            a {
+                                &:before {
+                                    -webkit-transition: all 0.3s ease;
+                                    -moz-transition: all 0.3s ease;
+                                    -ms-transition: all 0.3s ease;
+                                    -o-transition: all 0.3s ease;
+                                    transition: all 0.3s ease;
+                                    content: "\f105";
+                                    font-family: "Font Awesome 5 Pro";
+                                    font-weight: 400;
+                                    font-style: normal;
+                                    display: inline-block;
+                                    text-align: center;
+                                    text-decoration: none;
+                                    -webkit-font-smoothing: antialiased;
+                                    -moz-osx-font-smoothing: grayscale;
+                                    margin-right: 10px;
+                                    font-size: 8px;
+                                }
+                            }
+
+                        }
+
+                    }
 				}
 				ul {
 					padding: 5px 0;

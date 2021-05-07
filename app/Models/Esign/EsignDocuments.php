@@ -20,7 +20,7 @@ class EsignDocuments extends Model
 
     public function images() {
         //return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'transaction_document_id');
-        //return $this -> hasMany(\App\Models\Esign\EsignDocumentsImages::class, ['document_id', 'envelope_id'], ['transaction_document_id', 'envelope_id']);
+        //return $this -> hasMany(\App\Models\Esign\EsignDocumentsImages::class, ['document_id', 'id'], ['document_id', 'transaction_document_id']);
         return $this -> hasMany('App\Models\Esign\EsignDocumentsImages', 'document_id', 'id');
     }
 

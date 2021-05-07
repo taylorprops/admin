@@ -15901,7 +15901,7 @@ body {
 }
 .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before {
   transition: all 0.3s ease;
-  content: "";
+  content: "";
   font-family: "Font Awesome 5 Pro";
   font-weight: 400;
   font-style: normal;
@@ -15920,6 +15920,20 @@ body {
 .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a .label {
   float: right;
   margin-top: 0px;
+}
+.sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li ul li a:before {
+  transition: all 0.3s ease;
+  content: "";
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 10px;
+  font-size: 8px;
 }
 .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu ul {
   padding: 5px 0;
