@@ -120,7 +120,7 @@ if (document.URL.match(/transaction_details/)) {
                 });
                 in_process(document_ids);
                 in_process_esign();
-            }, 1000);
+            }, 2000);
 
 
             let upload_documents_file = document.getElementById('upload_documents_file');

@@ -211,11 +211,11 @@
             $deletable_folder = false;
         }
         @endphp
-        <div class="folder-div mb-4 border-top border-bottom border-primary" data-folder="{{ $folder -> id }}">
+        <div class="folder-div mb-4 border-top border-bottom" data-folder="{{ $folder -> id }}">
 
             <div class="folder-header d-flex justify-content-between">
                 <div class="d-flex justify-content-start align-items-center">
-                    <div class="mt-1 mr-2 mr-sm-4">
+                    <div class="mt-1 ml-sm-5">
                         <input type="checkbox" class="custom-form-element form-checkbox check-all">
                     </div>
                     <div class="h5 mt-2">

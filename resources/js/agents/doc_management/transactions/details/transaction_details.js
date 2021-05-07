@@ -161,7 +161,7 @@ if (document.URL.match(/transaction_details/)) {
                         document_ids.push($(this).data('document-id'));
                     });
                     in_process(document_ids);
-                }, 1000);
+                }, 2000);
 
             } else if($(this).data('tab') == 'esign') {
 
