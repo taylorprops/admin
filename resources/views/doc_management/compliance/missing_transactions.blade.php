@@ -60,7 +60,7 @@
                         We have not received your %%DocumentsType%% for %%PropertyAddress%%.
                         <br><br>
                         %%Message%%
-                        <br><br>
+                        <br>
                         {!! auth() -> user() -> signature !!}
                     </div>
 

@@ -80,7 +80,7 @@
                         <span style="color: #900">Earnest Deposits must be received at the main office within 48 hours of contract acceptance date. Failure to comply will result in a fine of $25 per day.</span>
                         <br><br>
                         Please contact the office immediately to help us resolve this isssue.
-                        <br><br>
+                        <br>
                         {!! auth() -> user() -> signature !!}
                     </div>
 

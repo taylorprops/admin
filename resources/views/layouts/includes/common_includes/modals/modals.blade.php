@@ -186,7 +186,7 @@
                         </div>
                         <div class="col-12 col-sm-10 pl-sm-0">
                             <div id="email_general_message" class="text-editor font-9">
-                                <br><br>{!! auth() -> user() ? auth() -> user() -> signature : '' !!}
+                                <br>{!! auth() -> user() ? auth() -> user() -> signature : '' !!}
                             </div>
                         </div>
                     </div>

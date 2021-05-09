@@ -270,7 +270,7 @@
 
                             <div class="font-10 text-orange mb-2">Notify Agent of Bounced Earnest Deposit</div>
 
-                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br><br>{!! auth() -> user() -> signature !!}</textarea>
+                            <textarea id="bounced_check_message" name="bounced_check_message" class="text-editor"><br>{!! auth() -> user() -> signature !!}</textarea>
 
                         </div>
 
@@ -530,7 +530,7 @@
                                         </div>
                                     </div>
                                     <div class="col-10">
-                                        <textarea class="text-editor" id="email_message"><br><br>{!! auth() -> user() -> signature !!}</textarea>
+                                        <textarea class="text-editor" id="email_message"><br>{!! auth() -> user() -> signature !!}</textarea>
                                     </div>
                                 </div>
 
