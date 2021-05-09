@@ -46,6 +46,12 @@
                 @endif
             </div>
 
+            <hr class="mt-0 mb-1">
+
+            <div class="mb-2">
+                <button class="btn btn-secondary btn-sm bug-report-button ml-2">Report Bug <i class="fal fa-bug"></i></button>
+            </div>
+
             <div class="sidebar-header">
                 <div class="user-pic">
                     @if(auth() -> user() -> photo_location)
@@ -70,11 +76,7 @@
                 </div>
             </div>
 
-            <hr>
 
-            <div class="">
-                <button class="btn btn-secondary btn-sm bug-report-button ml-2">Report Bug <i class="fal fa-bug"></i></button>
-            </div>
 
             <!-- sidebar-menu  -->
         </div>
