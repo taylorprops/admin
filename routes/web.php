@@ -330,8 +330,14 @@ Route::middleware(['admin']) -> group(function () {
 
     /************** Compliance **************/
     // missing contracts and listings
-    Route::get('/doc_management/compliance/missing_listings', [ComplianceController::class, 'missing_listings']);
-    Route::get('/doc_management/compliance/missing_contracts', [ComplianceController::class, 'missing_contracts']);
+    Route::get('/doc_management/compliance/missing_transactions', [ComplianceController::class, 'missing_transactions']);
+    Route::get('/doc_management/compliance/get_missing_listings', [ComplianceController::class, 'get_missing_listings']);
+    Route::get('/doc_management/compliance/get_missing_contracts', [ComplianceController::class, 'get_missing_contracts']);
+    Route::get('/doc_management/compliance/get_missing_contracts_our_listing', [ComplianceController::class, 'get_missing_contracts_our_listing']);
+    Route::get('/doc_management/compliance/get_transaction_notes', [ComplianceController::class, 'get_transaction_notes']);
+    Route::post('/doc_management/compliance/save_add_transaction_notes', [ComplianceController::class, 'save_add_transaction_notes']);
+    Route::post('/doc_management/compliance/delete_transaction_note', [ComplianceController::class, 'delete_transaction_note']);
+    Route::post('/doc_management/compliance/email_agents_missing_transactions', [ComplianceController::class, 'email_agents_missing_transactions']);
 
 
     /************ Form Elements ************/

@@ -36,6 +36,7 @@
                 $status = $contract -> status -> resource_name;
                 $earnest = $contract -> earnest;
                 $earnest_account = $earnest -> earnest_account;
+
                 $notes = $earnest -> notes;
                 $Earnest_ID = $earnest -> id;
                 @endphp

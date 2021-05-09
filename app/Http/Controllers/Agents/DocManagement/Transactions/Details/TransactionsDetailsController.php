@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Resources\LocationData;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use App\Models\BrightMLS\CompanyListings;
 use App\Notifications\GlobalNotification;
 use App\Models\Commission\CommissionNotes;
 use App\Models\Esign\EsignDocumentsImages;
@@ -598,6 +599,13 @@ class TransactionsDetailsController extends Controller
 
         $property -> MLS_Verified = 'yes';
         $property -> save();
+
+        // update company_listings
+        // $update_company_listings = CompanyListings::where('ListingId', $property -> ListingId)
+        // -> first()
+        // -> update([
+        //     'added_to_transactions' => 'yes'
+        // ]);
 
         return response() -> json([
             'status' => 'ok',
@@ -5410,10 +5418,16 @@ class TransactionsDetailsController extends Controller
         $commission_breakdown -> Agent_ID = $Agent_ID;
         $commission_breakdown -> save();
 
+        $earnest_account_id = ResourceItems::where('resource_type', 'earnest_accounts')
+        -> where('resource_state', $listing -> StateOrProvince)
+        -> where('resource_name', $agent -> company)
+        -> value('resource_id');
+
         // add to earnest
         $add_earnest = new Earnest();
         $add_earnest -> Contract_ID = $Contract_ID;
         $add_earnest -> Agent_ID = $Agent_ID;
+        $add_earnest -> earnest_account_id = $earnest_account_id;
         $add_earnest -> save();
         $Earnest_ID = $add_earnest -> id;
 

@@ -491,7 +491,7 @@ if (document.URL.match(/transaction_details/)) {
             }
         });
         let subject = $('#email_subject').val();
-        let message = $('#email_message').val();
+        let message = tinyMCE.activeEditor.getContent();
         let attachments = [];
         $('#email_attachments').find('.attachment-row').each(function() {
             attachments.push({

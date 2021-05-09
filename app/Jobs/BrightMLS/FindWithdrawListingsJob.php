@@ -63,13 +63,13 @@ class FindWithdrawListingsJob implements ShouldQueue
 
                 // get company listings count
                 // not closed or withdrawn
-                $company_listings_keys = CompanyListings::whereNotIn('MlsStatus', ['Withdrawn', 'CLOSED']) -> where('MlsListDate', '>=', '2018-01-01') -> get() -> pluck('ListingKey') -> toArray();
+                $company_listings_keys = CompanyListings::whereNotIn('MlsStatus', ['Withdrawn', 'CLOSED']) -> where('MlsListDate', '>=', '2016-01-01') -> get() -> pluck('ListingKey') -> toArray();
                 $company_listings_count = count($company_listings_keys);
 
                 // get bright listings count
                 $bright_office_codes = implode(',', config('bright_office_codes'));
                 // not closed
-                $query = '(MlsStatus=~MlsStatus200004325492),(MLSListDate=2018-01-01+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+                $query = '(MlsStatus=~MlsStatus200004325492),(MLSListDate=2016-01-01+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
 
                 $results = $rets -> Search(
                     $resource,
@@ -116,15 +116,19 @@ class FindWithdrawListingsJob implements ShouldQueue
 
                             $listing_key = $listing['ListingKey'];
 
-                            $add_listing = CompanyListings::firstOrCreate([
-                                'ListingKey' => $listing_key
-                            ]);
+                            if($listing['ListingId'] != '') {
 
-                            foreach($listing as $col => $val) {
-                                $add_listing -> $col = $val;
+                                $add_listing = CompanyListings::firstOrCreate([
+                                    'ListingKey' => $listing_key
+                                ]);
+
+                                foreach($listing as $col => $val) {
+                                    $add_listing -> $col = $val;
+                                }
+
+                                $add_listing -> save();
+
                             }
-
-                            $add_listing -> save();
 
                         }
 

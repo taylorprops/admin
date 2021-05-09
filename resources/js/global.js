@@ -27,7 +27,7 @@ $(function() {
 
 
     window.toastr.options = {
-        "timeOut": 4000,
+        "timeOut": 3000,
         "preventDuplicates": false,
     }
 

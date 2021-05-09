@@ -13,14 +13,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Commission\Commission;
 use App\Models\Resources\LocationData;
 use App\Traits\InHouseNotificationEmail;
+use App\Models\BrightMLS\CompanyListings;
 use App\Notifications\GlobalNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Models\DocManagement\Earnest\Earnest;
 use App\Models\Commission\CommissionBreakdowns;
 use App\Models\Employees\TransactionCoordinators;
-use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\Checklists;
 // use App\Models\DocManagement\Checklists\ChecklistsItems;
+use App\Models\DocManagement\Checklists\Checklists;
 use App\Models\DocManagement\Resources\ResourceItems;
 use App\Models\DocManagement\Transactions\Members\Members;
 use App\Models\DocManagement\Transactions\Data\ListingsData;
@@ -615,6 +616,11 @@ class TransactionsAddController extends Controller {
             $id = $Listing_ID;
             $property = Listings::find($Listing_ID);
         }
+
+        // $ListingId = $property -> ListingId;
+        // $remove_from_missing = CompanyListings::where('ListingId', $ListingId) -> first() -> update([
+        //     'added_to_transactions' => 'yes'
+        // ]);
 
         $agent = Agents::where('id', $Agent_ID) -> first();
         // get state to see which bright_mls_id is required

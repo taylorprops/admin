@@ -243,6 +243,16 @@ div[class*='container-']:not(.p-0) {
 .hidden {
     display: none !important;
 }
+.hide-me {
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transition: height 0ms 800ms, opacity 800ms 0ms;
+}
+.show-me {
+    height: auto; opacity: 1;
+    transition: height 500ms 0ms, opacity 1200ms 0ms;
+}
 
 .font-14 {
     font-size: 1.4rem;

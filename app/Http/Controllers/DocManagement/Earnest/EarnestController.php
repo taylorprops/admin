@@ -179,7 +179,7 @@ class EarnestController extends Controller
         $from_name = auth() -> user() -> name;
         $from_address = auth() -> user() -> email;
 
-        $email['from'] = ['address' => $from_address, 'name' => $from_name];
+        $email['from'] = ['email' => $from_address, 'name' => $from_name];
 
         $select = [
             'Agent_ID',

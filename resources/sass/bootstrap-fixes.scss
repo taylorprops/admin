@@ -113,8 +113,8 @@ body.modal-open {
     //text-transform: uppercase;
 }
 
-.btn-group:not(.field-options-group) {
-    .btn:not(.active) {
+.btn-group:not(.field-options-group):not(.dt-buttons) {
+    .btn:not(.active):not(.buttons-collection) {
         background: #8cc7f8;
     }
 }
@@ -284,82 +284,54 @@ a.text-gray:hover {
         font-size: .8rem;
     }
 
-    .dataTable {
+    .table {
 
-        border-radius: 5px;
-
-        &.table {
-            border-radius: 5px;
-            // border-left: none !important;
-            // border-right: none !important;
-
-            &.table-hover tbody tr:hover {
-                background-color: $blue-light;
-            }
-
-            th {
-                //background: $blue-light;
-                padding: .6rem 0rem .6rem 0.4rem;
-                color: $blue;
-                vertical-align: middle;
-                font-size: .9rem;
-                border-bottom: 1px solid $border-color;
-                font-weight: normal;
-
-                &:first-child {
-                    border-top-left-radius: 5px;
-                }
-                &:last-child {
-                    border-top-right-radius: 5px;
-                }
-
-                // &:not(:first-child) {
-                //     border-left: none !important;
-                // }
-
-                // &:not(:last-child) {
-                //     border-right: none !important;
-                // }
-
-            }
-            td {
-                padding: 0.4rem;
-                vertical-align: middle;
-                font-size: .9rem;
-                color: $text-gray;
-
-                &:not(:first-child) {
-                    border-left: none !important;
-                }
-
-                &:not(:last-child) {
-                    border-right: none !important;
-                }
-
-                &.small {
-                    font-size: .8rem !important;
-                }
-
-
-            }
-            tr:last-child td {
-                &:first-child {
-                    border-bottom-left-radius: 5px;
-                }
-                &:last-child {
-                    border-bottom-right-radius: 5px;
-                }
-            }
-
+        &.table-hover tbody tr:hover {
+            background-color: $blue-light;
         }
 
-        /* .sorting:before, .sorting_asc:before, .sorting_desc:before, .sorting_asc_disabled:before, .sorting_desc_disabled:before,
-        .sorting:after, .sorting_asc:after, .sorting_desc:after, .sorting_asc_disabled:after, .sorting_desc_disabled:after {
+        th {
+            //background: $blue-light;
+            padding: .6rem 0rem .6rem 0.4rem;
             color: $blue;
-            font-size: 1rem;
-            line-height: 1rem;
-        } */
+            vertical-align: middle !important;
+            font-size: .9rem;
+            border-bottom: 1px solid $border-color;
+            font-weight: normal;
+
+        }
+        td {
+            padding: 0.4rem;
+            vertical-align: middle;
+            font-size: .9rem;
+            color: $text-gray;
+
+            &:not(:first-child) {
+                border-left: none !important;
+            }
+
+            &:not(:last-child) {
+                border-right: none !important;
+            }
+
+            &.small {
+                font-size: .8rem !important;
+            }
+
+
+        }
+        tr:last-child td {
+            border-bottom: 1px solid $border-color;
+        }
+
     }
+
+    .sorting::before, .sorting_asc::before, .sorting_desc::before,
+    .sorting::after, .sorting_asc::after, .sorting_desc::after {
+        top: 10px !important;
+        right: 1.5em;
+    }
+
 
     .dataTables_length {
         font-size: .9rem;
@@ -375,6 +347,20 @@ a.text-gray:hover {
         line-height: 1 !important;
     }
 
+
+}
+
+.fixedHeader-floating {
+
+    th {
+        vertical-align: middle !important;
+        color: $primary;
+
+        .form-ele {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    }
 
 }
 

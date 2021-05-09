@@ -3,9 +3,10 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DefaultEmail extends Mailable
 {
@@ -40,7 +41,9 @@ class DefaultEmail extends Mailable
 
         if ($this -> email_attachments) {
             foreach ($this -> email_attachments as $attachment) {
-                $mailer -> attachFromStorageDisk('public', $attachment['location'], $attachment['name']);
+                $mailer -> attach(Storage::path($attachment['location']), [
+                    'as' => $attachment['name']
+                ]);
             }
         }
 

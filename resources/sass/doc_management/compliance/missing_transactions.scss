@@ -1,0 +1,24 @@
+.page-missing-transactions {
+
+    .missing-transactions-table {
+
+        .form-ele {
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+    }
+
+    .transaction-notes-section {
+        position: absolute;
+        right: 100%;
+        top: -130px;
+        width: 600px;
+
+        .transaction-notes-div {
+            max-height: 400px;
+            overflow: auto;
+            margin-top: 15px;
+        }
+    }
+
+}

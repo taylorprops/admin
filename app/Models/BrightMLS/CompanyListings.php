@@ -9,8 +9,6 @@ class CompanyListings extends Model
 {
     use HasFactory;
 
-    use \Awobaz\Compoships\Compoships;
-
     protected $connection = 'mysql';
     protected $table = 'company_listings';
     protected $primaryKey = 'ListingKey';
@@ -18,6 +16,10 @@ class CompanyListings extends Model
 
     public function agent() {
         return $this -> hasOne(\App\Models\Employees\Agents::class, 'id', 'Agent_ID');
+    }
+
+    public function notes() {
+        return $this -> hasMany(\App\Models\BrightMLS\CompanyListingsNotes::class, 'ListingKey', 'ListingKey');
     }
 
 }
