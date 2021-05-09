@@ -60,6 +60,15 @@ Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/register_employee/{email}', [EmployeesController::class, 'register_employee']);
 
+Route::middleware(['all']) -> group(function () {
+    /************ Users************/
+    Route::get('/users', [UserController::class, 'get_users']);
+    Route::get('/users/user_profile', [UserController::class, 'user_profile']);
+    Route::post('/users/save_profile', [UserController::class, 'save_profile']);
+    Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
+    Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+});
+
 Route::middleware(['agent']) -> group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard']);
@@ -100,12 +109,7 @@ Route::middleware(['admin']) -> group(function () {
 
 
 
-    /************ Users************/
-    Route::get('/users', [UserController::class, 'get_users']);
-    Route::get('/users/user_profile', [UserController::class, 'user_profile']);
-    Route::post('/users/save_profile', [UserController::class, 'save_profile']);
-    Route::post('/users/save_cropped_upload', [UserController::class, 'save_cropped_upload']);
-    Route::post('/users/delete_photo', [UserController::class, 'delete_photo']);
+
 
     /************ Bug reports ************/
     Route::get('/bug_reports', [BugReportsController::class, 'bug_reports']);

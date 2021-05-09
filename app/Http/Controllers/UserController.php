@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function user_profile(Request $request) {
 
-        $user = User::select('first_name', 'last_name', 'email', 'signature', 'photo_location') -> find(auth() -> user() -> id);
+        $user = User::find(auth() -> user() -> id, ['first_name', 'last_name', 'email', 'signature', 'photo_location']);
 
         return view('users/user_profile', compact('user'));
 
