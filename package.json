@@ -35,6 +35,7 @@
     "yargs-parser": ">=5.0.0-security.0"
   },
   "dependencies": {
+    "@airbrake/browser": "^2.1.4",
     "@popperjs/core": "^2.9.1",
     "@shopify/draggable": "^1.0.0-beta.8",
     "acorn": "^7.4.1",

@@ -821,7 +821,7 @@ class TransactionsAddController extends Controller {
         $seller_first = $request -> seller_first_name;
         $seller_last = $request -> seller_last_name;
         $seller_phone = $request -> seller_phone;
-        $seller_email = $request -> seller_email;
+        $seller_email = $request -> seller_email ?? null;
         $seller_entity_name = $request -> seller_entity_name;
         $seller_address_street = $request -> seller_street;
         $seller_address_city = $request -> seller_city;
@@ -860,19 +860,21 @@ class TransactionsAddController extends Controller {
             $sellers -> Contract_ID = $Contract_ID;
             $sellers -> save();
 
-            $exists = CRMContacts::where('contact_email', $seller_email[$i]) -> first();
-            if(!$exists && !$seller_crm_contact_id[$i] > 0) {
-                $contact = new CRMContacts();
-                $contact -> contact_first = $seller_first[$i];
-                $contact -> contact_last = $seller_last[$i];
-                $contact -> contact_phone_cell = $seller_phone[$i];
-                $contact -> contact_email = $seller_email[$i];
-                $contact -> contact_street = $seller_address_street[$i];
-                $contact -> contact_city = $seller_address_city[$i];
-                $contact -> contact_state = $seller_address_state[$i];
-                $contact -> contact_zip = $seller_address_zip[$i];
-                $contact -> Agent_ID = $Agent_ID;
-                $contact -> save();
+            if ($seller_email) {
+                $exists = CRMContacts::where('contact_email', $seller_email[$i]) -> first();
+                if(!$exists && !$seller_crm_contact_id[$i] > 0) {
+                    $contact = new CRMContacts();
+                    $contact -> contact_first = $seller_first[$i];
+                    $contact -> contact_last = $seller_last[$i];
+                    $contact -> contact_phone_cell = $seller_phone[$i];
+                    $contact -> contact_email = $seller_email[$i];
+                    $contact -> contact_street = $seller_address_street[$i];
+                    $contact -> contact_city = $seller_address_city[$i];
+                    $contact -> contact_state = $seller_address_state[$i];
+                    $contact -> contact_zip = $seller_address_zip[$i];
+                    $contact -> Agent_ID = $Agent_ID;
+                    $contact -> save();
+                }
             }
 
             if ($i == 0) {

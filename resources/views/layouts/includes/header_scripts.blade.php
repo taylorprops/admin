@@ -53,9 +53,4 @@
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.5.0/main.global.min.js"></script>
 
 
-{{-- set user details as javascript variale --}}
-@if(auth() -> user())
-<script>
-    let global_user = {!! collect(['name' => auth() -> user() -> name, 'group' => auth() -> user() -> group]) -> toJson() !!};
-</script>
-@endif
+

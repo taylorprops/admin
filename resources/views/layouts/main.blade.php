@@ -8,6 +8,14 @@
 
         <title>@yield('title', 'Document Management')</title>
 
+        {{-- set user details as javascript variale --}}
+        @if(auth() -> user())
+        <script>
+            let global_user = {!! collect(['name' => auth() -> user() -> name, 'group' => auth() -> user() -> group, 'email' => auth() -> user() -> email, 'id' => auth() -> user() -> id]) -> toJson() !!};
+            let app_env = '{{ config('app.env') }}';
+        </script>
+        @endif
+
         @include('/layouts/includes/header_scripts')
 
         @yield('js_scripts')
