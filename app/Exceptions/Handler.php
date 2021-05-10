@@ -43,11 +43,13 @@ class Handler extends ExceptionHandler
 
     protected function context()
     {
-        return array_merge(parent::context(), [
-            'user_id' => auth() -> user() -> id,
-            'user_name' => auth() -> user() -> name,
-            'user_email' => auth() -> user() -> email
-        ]);
+        if(auth()) {
+            return array_merge(parent::context(), [
+                'user_id' => auth() -> user() -> id,
+                'user_name' => auth() -> user() -> name,
+                'user_email' => auth() -> user() -> email
+            ]);
+        }
     }
 
     public function report(Throwable $exception)
