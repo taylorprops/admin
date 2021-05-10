@@ -10,7 +10,7 @@
                         <a class="list-group-item list-group-item-action hide font-weight-bold" id="add_member_group" data-toggle="list" href="#add_member_div" role="tab">New Contact</a>
                         @foreach($members as $member)
                             @php
-                            $member_type = $resource_items -> GetResourceName($member -> member_type_id);
+                            $member_type = $member -> member_type -> resource_name;
                             if($for_sale == false) {
                                 if($member_type == 'Seller') {
                                     $member_type = 'Owner';
@@ -24,7 +24,7 @@
                                 $member_type = 'Other';
                             }
                             @endphp
-                            <a class="list-group-item list-group-item-action list-group-item-member @if($loop -> first) active @endif" id="member_{{ $member -> id }}_item" data-toggle="list" href="#member_{{ $member -> id }}_div" role="tab" data-member-type="{{ $member -> member_type }}">
+                            <a class="list-group-item list-group-item-action list-group-item-member @if($loop -> first) active @endif" id="member_{{ $member -> id }}_item" data-toggle="list" href="#member_{{ $member -> id }}_div" role="tab" data-member-type="{{ $member_type }}">
                                 <div class="row">
                                     <div class="col-5">
                                         <span class="font-weight-bold">{{ $member_type }}</span>

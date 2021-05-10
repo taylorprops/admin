@@ -121,7 +121,7 @@
 
 
                     <input type="hidden" id="contact_id" name="contact_id">
-                    <input type="hidden" name="Agent_ID" value="{{ auth() -> user() -> user_id }}">
+                    <input type="hidden" name="user_id" value="{{ auth() -> user() -> id }}">
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-around">

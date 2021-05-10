@@ -351,7 +351,7 @@ if($property -> Owner2 != '') {
 
 
     <div class="modal fade draggable" id="import_contact_modal" tabindex="-1" role="dialog" aria-labelledby="import_contact_modal_title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header draggable-handle">
                     <h4 class="modal-title" id="import_contact_modal_title">Select Contacts</h4>

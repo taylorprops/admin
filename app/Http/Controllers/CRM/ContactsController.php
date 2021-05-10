@@ -21,7 +21,10 @@ class ContactsController extends Controller {
 
     public function get_contacts(Request $request) {
 
-		$contacts = CRMContacts::where('contact_active', 'yes') -> with('members') -> get();
+		$contacts = CRMContacts::where('contact_active', 'yes')
+        -> where('user_id', auth() -> user() -> id)
+        -> with('members')
+        -> get();
 
         return view('CRM/get_contacts_html', compact('contacts'));
 
@@ -30,7 +33,9 @@ class ContactsController extends Controller {
     public function delete(Request $request) {
 
 		$contact_ids = explode(',', $request -> contact_ids);
-        $delete_contacts = CRMContacts::whereIn('id', $contact_ids) -> update(['contact_active' => 'no']);
+        $delete_contacts = CRMContacts::whereIn('id', $contact_ids)
+        -> where('user_id', auth() -> user() -> id)
+        -> update(['contact_active' => 'no']);
 
         return response() -> json(['status' => 'success']);
 
@@ -53,8 +58,8 @@ class ContactsController extends Controller {
 
     public function import_from_excel(Request $request) {
 
-		$Agent_ID = auth() -> user() -> user_id;
-        $import = Excel::import(new ContactsImport($Agent_ID), request() -> file('contacts_file'));
+		$user_id = auth() -> user() -> id;
+        $import = Excel::import(new ContactsImport($user_id), request() -> file('contacts_file'));
         dump($import);
 
     }

@@ -202,6 +202,7 @@ if(document.URL.match(/missing_transactions/)) {
 
             let email_message_orig = tinyMCE.activeEditor.getContent();
             let email_message = email_message_orig.replace('%%Message%%', message_details);
+            email_message = '<div style="width: 100%">'+email_message+'</div>';
             tinyMCE.activeEditor.setContent(email_message);
 
             $('#send_email_agents_missing_transactions_button').off('click').on('click', function() {

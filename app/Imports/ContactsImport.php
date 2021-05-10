@@ -8,10 +8,10 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class ContactsImport implements ToModel, WithStartRow {
 
-    protected $Agent_ID;
+    protected $user_id;
 
-    public function  __construct($Agent_ID) {
-        $this -> Agent_ID = $Agent_ID;
+    public function  __construct($user_id) {
+        $this -> user_id = $user_id;
     }
 
     public function startRow(): int {
@@ -27,7 +27,7 @@ class ContactsImport implements ToModel, WithStartRow {
     {
         return new CRMContacts([
 
-            'Agent_ID' => $this -> Agent_ID,
+            'user_id' => $this -> user_id,
             'contact_first' => $row[0],
             'contact_last' => $row[1],
             'contact_company' => $row[2],

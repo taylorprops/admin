@@ -581,12 +581,13 @@ class TransactionsAddController extends Controller {
         $states_json = $states -> toJson();
         $statuses = ResourceItems::where('resource_type', 'listing_status') -> orderBy('resource_order') -> get();
 
-        $contacts = [];
-        if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
-            $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
-        } elseif (auth() -> user() -> group == 'admin') {
-            $contacts = CRMContacts::get();
-        }
+        // $contacts = [];
+        // if (stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator') {
+        //     $contacts = CRMContacts::where('Agent_ID', $Agent_ID) -> get();
+        // } elseif (auth() -> user() -> group == 'admin') {
+        //     $contacts = CRMContacts::get();
+        // }
+        $contacts = CRMContacts::where('user_id', auth() -> user() -> id) -> get();
 
         $resource_items = new ResourceItems();
 
@@ -872,7 +873,7 @@ class TransactionsAddController extends Controller {
                     $contact -> contact_city = $seller_address_city[$i];
                     $contact -> contact_state = $seller_address_state[$i];
                     $contact -> contact_zip = $seller_address_zip[$i];
-                    $contact -> Agent_ID = $Agent_ID;
+                    $contact -> user_id = auth() -> user() -> id;
                     $contact -> save();
                 }
             }
@@ -933,19 +934,21 @@ class TransactionsAddController extends Controller {
                 $buyers -> Contract_ID = $Contract_ID;
                 $buyers -> save();
 
-                $exists = CRMContacts::where('contact_email', $buyer_email[$i]) -> first();
-                if(!$exists && !$buyer_crm_contact_id[$i] > 0) {
-                    $contact = new CRMContacts();
-                    $contact -> contact_first = $buyer_first[$i];
-                    $contact -> contact_last = $buyer_last[$i];
-                    $contact -> contact_phone_cell = $buyer_phone[$i];
-                    $contact -> contact_email = $buyer_email[$i];
-                    $contact -> contact_street = $buyer_address_street[$i];
-                    $contact -> contact_city = $buyer_address_city[$i];
-                    $contact -> contact_state = $buyer_address_state[$i];
-                    $contact -> contact_zip = $buyer_address_zip[$i];
-                    $contact -> Agent_ID = $Agent_ID;
-                    $contact -> save();
+                if ($seller_email) {
+                    $exists = CRMContacts::where('contact_email', $buyer_email[$i]) -> first();
+                    if(!$exists && !$buyer_crm_contact_id[$i] > 0) {
+                        $contact = new CRMContacts();
+                        $contact -> contact_first = $buyer_first[$i];
+                        $contact -> contact_last = $buyer_last[$i];
+                        $contact -> contact_phone_cell = $buyer_phone[$i];
+                        $contact -> contact_email = $buyer_email[$i];
+                        $contact -> contact_street = $buyer_address_street[$i];
+                        $contact -> contact_city = $buyer_address_city[$i];
+                        $contact -> contact_state = $buyer_address_state[$i];
+                        $contact -> contact_zip = $buyer_address_zip[$i];
+                        $contact -> user_id = auth() -> user() -> id;
+                        $contact -> save();
+                    }
                 }
 
                 if ($i == 0) {

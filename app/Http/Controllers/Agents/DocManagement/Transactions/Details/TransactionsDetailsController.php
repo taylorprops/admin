@@ -215,7 +215,7 @@ class TransactionsDetailsController extends Controller
             $members = Members::where($field, $id) -> where('member_type_id', $member_type_id) -> get();
         }
 
-        $contacts = CRMContacts::get();
+        $contacts = CRMContacts::where('user_id', auth() -> user() -> id) -> get();
 
         $rejected_reasons = ResourceItemsAdmin::where('resource_type', 'rejected_reason') -> orderBy('resource_order') -> get();
 
@@ -947,15 +947,18 @@ class TransactionsDetailsController extends Controller
         $Referral_ID = $request -> Referral_ID ?? 0;
         $Agent_ID = $request -> Agent_ID;
 
-        $members = Members::where('Listing_ID', $Listing_ID) -> get();
+        $members = Members::where('Listing_ID', $Listing_ID)
+        -> with(['member_type'])
+        -> get();
+
         $transaction_type = 'listing';
 
         if ($Contract_ID > 0) {
-            $members = Members::where('Contract_ID', $Contract_ID) -> get();
+            $members = Members::where('Contract_ID', $Contract_ID)
+            -> with(['member_type'])
+            -> get();
             $transaction_type = 'contract';
         }
-
-        $resource_items = new ResourceItems();
 
         $checklist_types = ['listing', 'both'];
 
@@ -969,11 +972,11 @@ class TransactionsDetailsController extends Controller
 
         $for_sale = $property -> SaleRent == 'sale' || $property -> SaleRent == 'both' ? true : false;
 
-        $contact_types = $resource_items -> where('resource_type', 'contact_type') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
+        $contact_types = ResourceItems::where('resource_type', 'contact_type') -> whereIn('resource_form_group_type', $checklist_types) -> orderBy('resource_order') -> get();
 
         $states = LocationData::AllStates();
 
-        return view('agents/doc_management/transactions/details/data/get_members', compact('members', 'contact_types', 'resource_items', 'states', 'for_sale'));
+        return view('agents/doc_management/transactions/details/data/get_members', compact('members', 'contact_types', 'states', 'for_sale'));
     }
 
     public function add_member_html(Request $request) {
@@ -1054,7 +1057,7 @@ class TransactionsDetailsController extends Controller
             $contact -> contact_city = $request -> address_home_city;
             $contact -> contact_state = $request -> address_home_state;
             $contact -> contact_zip = $request -> address_home_zip;
-            $contact -> Agent_ID = $request -> Agent_ID;
+            $contact -> user_id = auth() -> user() -> id;
             $contact -> save();
         }
 
