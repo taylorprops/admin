@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Throwable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -43,7 +44,7 @@ class Handler extends ExceptionHandler
 
     protected function context()
     {
-        if(auth()) {
+        if (Auth::check()) {
             return array_merge(parent::context(), [
                 'user_id' => auth() -> user() -> id,
                 'user_name' => auth() -> user() -> name,
