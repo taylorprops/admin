@@ -2,7 +2,7 @@ import datepicker from 'js-datepicker';
 import html2canvas from 'html2canvas';
 import { Notifier } from '@airbrake/browser';
 
-if(!document.URL.match(/admin\/$/)) {
+if(!document.URL.match(/admin\/$/) && !document.URL.match(/agentdocuments.com\/$/)) {
     const airbrake = new Notifier({
         projectId: 332797,
         projectKey: '15f129cfa6bcf9d6f60251e4f547a607',
