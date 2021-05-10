@@ -1,15 +1,16 @@
 import datepicker from 'js-datepicker';
 import html2canvas from 'html2canvas';
 import { Notifier } from '@airbrake/browser';
+import { isSet } from 'lodash';
 
-if(!document.URL.match(/admin\/$/) && !document.URL.match(/agentdocuments.com\/$/)) {
+
+if (typeof app_env !== 'undefined') {
     const airbrake = new Notifier({
         projectId: 332797,
         projectKey: '15f129cfa6bcf9d6f60251e4f547a607',
         environment: app_env
     });
 }
-
 
 
 // check for duplicate ids
