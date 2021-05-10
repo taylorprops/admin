@@ -16,9 +16,7 @@ class CRMContacts extends Model
     public static function boot() {
         parent::boot();
         static::addGlobalScope(function ($query) {
-            if(config('app.env') != 'local') {
-                $query -> where('user', auth() -> user() -> id);
-            }
+            $query -> where('user_id', auth() -> user() -> id);
         });
     }
 
