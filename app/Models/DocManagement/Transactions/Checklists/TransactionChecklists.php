@@ -58,11 +58,6 @@ class TransactionChecklists extends Model
         // get checklist
         $checklist = Checklists::where('active', 'yes') -> where($where) -> with('checklist_items') -> first();
 
-        /* $checklist = Checklists::where($where);
-        dd(vsprintf(str_replace('?', '%s', $checklist -> toSql()), collect($checklist -> getBindings()) -> map(function($binding){
-            return is_numeric($binding) ? $binding : "'{$binding}'";
-        }) -> toArray())); */
-
         // get checklist items
         $items = $checklist -> checklist_items;
 

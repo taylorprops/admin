@@ -1,4 +1,14 @@
-<div class="h3 text-secondary mb-4 property-type-div-header">{{ ucwords($checklist_type) }} Checklists</div>
+
+
+<div class="d-flex justify-content-between align-items-center">
+    <div class="h3 text-secondary mb-4 property-type-div-header">{{ ucwords($checklist_type) }} Checklists</div>
+    <div>
+        <select class="custom-form-element form-select form-select-no-search form-select-no-cancel checklist-type-option" data-label="Checklist Type">
+            <option value="listing">Listing</option>
+            <option value="contract">Contract/Lease</option>
+        </select>
+    </div>
+</div>
 
 @php
 $checklist = $checklists_model -> where('checklist_type', 'referral') -> first();

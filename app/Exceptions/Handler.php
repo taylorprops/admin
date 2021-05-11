@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
             $airbrakeNotifier -> notify($exception);
         }
 
-        parent::report($exception);
+        //parent::report($exception);
     }
 
     /* public function render($request, Throwable $exception) {

@@ -52,12 +52,7 @@
                                 <div class="h3 text-primary">{{ $location -> resource_name }} @if($location -> resource_name != $location -> resource_state) | {{ $location -> resource_state }} @endif</div>
                                 @if($referral_location_id != $location -> resource_id)
                                     <div class="d-flex justify-content-end">
-                                        <div>
-                                            <select class="custom-form-element form-select form-select-no-search form-select-no-cancel checklist-type-option" data-label="Checklist Type">
-                                                <option value="listing">Listing</option>
-                                                <option value="contract">Contract/Lease</option>
-                                            </select>
-                                        </div>
+
                                         <div>
                                             <a href="javascript: void(0)" class="btn btn-primary ml-5 mt-3 copy-checklist-button" data-location-id="{{ $location -> resource_id }}" data-toggle="tooltip" title="Copy all checklists from this form group to another"><i class="fad fa-clone mr-2"></i> Copy Checklists</a>
                                         </div>

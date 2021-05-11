@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 class ChecklistsController extends Controller
 {
+
     public function duplicate_checklist(Request $request) {
 
 		$checklist_id = $request -> checklist_id;
