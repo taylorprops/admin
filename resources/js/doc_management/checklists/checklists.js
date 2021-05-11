@@ -705,7 +705,7 @@ if (document.URL.match(/checklists/)) {
                     $('.referral-tab-data').find('.referral-checklist-div').hide();
                 }
                 // make sure correct checklist type is shown
-                //$('.checklist-type-option').val(checklist_type);
+                $('.checklist-type-option').val(checklist_type);
 
                 //select_refresh();
                 init();
@@ -725,9 +725,11 @@ if (document.URL.match(/checklists/)) {
     }
 
     function delete_checklist(ele) {
+
         let checklist_id = ele.data('checklist-id');
         let checklist_location_id = ele.data('checklist-location-id');
         let checklist_type = ele.data('checklist-type');
+
         let formData = new FormData();
         formData.append('checklist_id', checklist_id);
         axios.post('/doc_management/delete_checklist', formData, axios_options)

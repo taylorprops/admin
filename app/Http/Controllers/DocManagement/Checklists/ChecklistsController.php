@@ -132,7 +132,7 @@ class ChecklistsController extends Controller
         $checklist_type = $request -> checklist_type;
 
         $checklists_model = new Checklists();
-        $checklists = Checklists::where('checklist_location_id', $checklist_location_id) -> orderBy('checklist_order', 'ASC') -> get();
+        $checklists = Checklists::where('checklist_location_id', $checklist_location_id) -> where('active', 'yes') -> orderBy('checklist_order', 'ASC') -> get();
         $checklists_count = count($checklists);
 
         $checklist_property_type_id = '';

@@ -22,7 +22,9 @@ class Checklists extends Model
     }
 
     public function scopeGetChecklistsByPropertyType($query, $checklist_property_type_id, $checklist_location_id, $checklist_type) {
-        $checklists = $query -> where('checklist_location_id', $checklist_location_id) -> where('checklist_property_type_id', $checklist_property_type_id);
+        $checklists = $query -> where('checklist_location_id', $checklist_location_id)
+        -> where('checklist_property_type_id', $checklist_property_type_id)
+        -> where('active', 'yes');
         if ($checklist_type != '') {
             $checklists = $query -> where('checklist_type', $checklist_type);
         }
