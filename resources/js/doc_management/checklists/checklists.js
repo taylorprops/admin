@@ -51,7 +51,9 @@ if (document.URL.match(/checklists/)) {
         // add referral checklist
         $('.add-referral-checklist-button').off('click').on('click', add_referral_checklist);
         // delete checklist
-        $('.delete-checklist-button').off('click').on('click', confirm_delete_checklist);
+        $('.delete-checklist-button').off('click').on('click', function() {
+            confirm_delete_checklist($this);
+        });
         // add items to checklist
         $('.add-items-button').off('click').on('click', function () {
             add_checklist_items($(this).data('checklist-id'));
@@ -713,8 +715,8 @@ if (document.URL.match(/checklists/)) {
             });
     }
 
-    function confirm_delete_checklist() {
-        let ele = $(this);
+    function confirm_delete_checklist(ele) {
+
         $('#confirm_delete_checklist_modal').modal();
         $('#confirm_delete_checklist').off('click').on('click', function () {
             delete_checklist(ele);
