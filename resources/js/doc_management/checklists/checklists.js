@@ -52,7 +52,7 @@ if (document.URL.match(/checklists/)) {
         $('.add-referral-checklist-button').off('click').on('click', add_referral_checklist);
         // delete checklist
         $('.delete-checklist-button').off('click').on('click', function() {
-            confirm_delete_checklist($this);
+            confirm_delete_checklist($(this));
         });
         // add items to checklist
         $('.add-items-button').off('click').on('click', function () {
