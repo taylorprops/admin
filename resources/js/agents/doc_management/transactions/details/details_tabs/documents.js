@@ -1449,9 +1449,9 @@ if (document.URL.match(/transaction_details/)) {
         files.forEach(function(file, index) {
 
             // bigger the interval longer it takes
-            let multiplier = 400;
+            let multiplier = 500;
             if(file['pages_total']) {
-                multiplier = 300;
+                multiplier = 400;
             }
 
             let interval = file['file_size'] * multiplier;
