@@ -175,6 +175,7 @@
                                                 <div class="col-12 col-sm-6 @if(auth() -> user() -> group == 'admin') col-md-4 @endif">
 
                                                     <div class="checklist-item-options d-flex justify-content-between align-items-center p-1 my-1 bg-light">
+
                                                         <div class="font-weight-bold text-primary checklist-attachment">Docs</div>
                                                         <div>
                                                             <button type="button" class="btn btn-sm btn-primary add-document-button" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}" data-target="documents_div_{{ $checklist_item_id }}"><i class="fal fa-plus"></i></button>
@@ -182,6 +183,54 @@
 
                                                         <div>
                                                             <button type="button" class="btn btn-sm btn-primary view-docs-button" data-toggle="collapse" data-target="#documents_div_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="documents_div_{{ $checklist_item_id }}" @if($transaction_documents_count == 0) disabled @endif>View <span class="badge badge-pill bg-white text-danger font-weight-bold py-1 px-2 ml-2 doc-count">{{ $transaction_documents_count }}</span></button>
+                                                        </div>
+
+                                                        <div class="collapse documents-collapse mx-4 bg-white shadow" id="documents_div_{{ $checklist_item_id }}">
+
+                                                            <div class="p-2">
+
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                            <div class="h5 text-primary float-left">Submitted Documents</div>
+                                                                            <a class="text-danger" data-toggle="collapse" href="#documents_div_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="documents_div_{{ $checklist_item_id }}">
+                                                                                <i class="fad fa-times-circle fa-2x"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <hr class="mt-1">
+
+                                                                @foreach($transaction_documents as $transaction_document)
+                                                                    @php
+                                                                    $document_id = $transaction_document -> document_id;
+                                                                    $doc_info = $documents_model -> GetDocInfo($document_id);
+                                                                    @endphp
+
+                                                                    <div class="d-flex justify-content-between align-items-center border-bottom document-row mb-2">
+                                                                        <div class="d-flex justify-content-start align-items-center">
+
+                                                                            <div class="mx-2"><a href="{{ $doc_info['file_location_converted'] }}" target="_blank" class="btn btn-sm btn-primary">View</a></div>
+
+                                                                            <div>
+                                                                                {{ $doc_info['file_name'] }}
+                                                                                <br>
+                                                                                <span class="small text-gray">Added: {{ date('n/j/Y g:i:sA', strtotime($transaction_document -> created_at)) }} </span>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-sm btn-danger float-right delete-doc-button" data-document-id="{{ $document_id }}" data-target="#documents_div_{{ $checklist_item_id }}" @if($item_review_status == 'accepted' && $transaction_document -> doc_status == 'viewed') disabled @endif>
+                                                                                <i class="fal fa-times text-white"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                @endforeach
+
+                                                            </div>
+
                                                         </div>
 
                                                     </div>
@@ -202,7 +251,144 @@
                                                             <button type="button" class="btn btn-sm @if($notes_count_unread > 0) btn-secondary @else btn-primary @endif view-notes-button" data-toggle="collapse" data-target="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}" @if($notes_count == 0) disabled @endif>@if($notes_count_unread > 0) New! @else View @endif<span class="badge badge-pill bg-white text-danger font-weight-bold py-1 px-2 ml-2">{{ $notes_count }}</span></button>
                                                         </div>
 
+                                                        <div class="collapse notes-collapse bg-white shadow" id="notes_{{ $checklist_item_id }}">
+
+                                                            <div class=" px-0 px-sm-2 mb-2">
+
+                                                                <div class="p-2">
+
+                                                                    <div class="row">
+
+                                                                        <div class="col-12">
+                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                <div class="h5 text-primary float-left">Comments</div>
+                                                                                <div>
+                                                                                    <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fad fa-times-circle fa-2x"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <hr class="mt-1">
+
+                                                                    <div class="row">
+
+                                                                        <div class="col-12">
+
+                                                                            <div class="notes-div" data-checklist-item-id="{{ $checklist_item_id }}">
+
+                                                                                @if(count($notes) > 0)
+
+                                                                                    <div class="notes-container bg-white px-1">
+
+                                                                                        @foreach($notes as $note)
+                                                                                            @php
+                                                                                            $user = $note -> user;
+                                                                                            $username = $user -> name;
+
+                                                                                            if($user -> group == 'admin') {
+                                                                                                $emp_photo_location = auth() -> user() -> photo_location ?? null;
+                                                                                                $avatar_bg = 'bg-orange';
+                                                                                            } else if($user -> group == 'agent') {
+                                                                                                $emp_photo_location = auth() -> user() -> photo_location ?? null;
+                                                                                                $avatar_bg = 'bg-primary';
+                                                                                            }
+                                                                                            if(!$emp_photo_location) {
+                                                                                                $initials = substr($user -> name, 0, 1);
+                                                                                                $initials .= substr($user -> name, strpos($user -> name, ' ') + 1, 1);
+                                                                                            }
+
+                                                                                            $unread = null;
+                                                                                            if($note -> note_status == 'unread' && $note -> note_user_id != auth() -> user() -> id) {
+                                                                                                $unread = 'unread';
+                                                                                            }
+
+                                                                                            $created_at = $note -> created_at;
+                                                                                            $date_added = $created_at -> format('n/j/Y g:iA');
+                                                                                            if($created_at -> format('Y-m-d') == date('Y-m-d')) {
+                                                                                                $date_added = 'Today at '.$created_at -> format('g:iA');
+                                                                                            } else if($created_at -> format('Y-m-d') == date('Y-m-d', strtotime('-1 day'))) {
+                                                                                                $date_added = 'Yesterday at '.$created_at -> format('g:iA');
+                                                                                            }
+                                                                                            @endphp
+
+                                                                                            <div class="p-2 mb-3 note-div rounded @if($unread) bg-orange-light animate__animated animate__shakeX @else bg-blue-light @endif">
+
+                                                                                                <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
+                                                                                                    <div class="d-flex justify-content-start align-items-center">
+                                                                                                        <div class="emp_photo mr-2">
+                                                                                                            <div class="rounded-pill avatar-initials {{ $avatar_bg }}">
+                                                                                                                @if($emp_photo_location)
+                                                                                                                    <img src="{{ $emp_photo_location }}" class="avatar rounded-circle d-flex align-self-center mr-2 shadow">
+                                                                                                                @else
+                                                                                                                    <span class="text-white p-2">{{ $initials }}</span>
+                                                                                                                @endif
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="text-primary font-italic">{{ $username }}</div>
+                                                                                                    </div>
+                                                                                                    <div>
+                                                                                                        @if($note -> note_status == 'unread')
+                                                                                                            @if($note -> note_user_id != auth() -> user() -> id)
+                                                                                                                <button class="btn btn-success btn-sm mark-read-button mb-0" data-note-id="{{ $note -> id }}" data-notes-collapse="notes_div_{{ $checklist_item_id }}"><i class="fal fa-check mr-2"></i> Mark Read</button>
+                                                                                                            @else
+                                                                                                                <div class="d-flex justify-content-end align-items-center">
+                                                                                                                    <span class="text-gray small">Not Read</span>
+                                                                                                                    @if($note -> note_user_id == auth() -> user() -> id)
+                                                                                                                        <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $note -> id }}"><i class="fad fa-times-circle text-danger"></i></a>
+                                                                                                                    @endif
+                                                                                                                </div>
+                                                                                                            @endif
+                                                                                                        @else
+                                                                                                            <span class="text-success small"><i class="fal fa-check"></i> Read</span>
+                                                                                                        @endif
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                <div class="text-gray bg-white p-2 rounded">
+                                                                                                    {!! $note -> notes !!}
+                                                                                                </div>
+
+                                                                                                <div class="text-gray font-7 mt-1">{{ $date_added }}</div>
+
+                                                                                            </div>
+
+
+
+                                                                                        @endforeach
+
+                                                                                    </div>
+
+                                                                                @else
+
+                                                                                    <div class="text-gray">No Comments</div>
+
+                                                                                @endif
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="w-90">
+                                                                        <div>
+                                                                            <textarea class="custom-form-element form-textarea notes-input-{{ $checklist_item_id }}" data-label="Add Comment"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="w-10">
+                                                                        <a href="javascript: void(0)" class="btn btn-primary save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
                                                     </div>
+
+
 
                                                 </div>
 
@@ -259,198 +445,6 @@
 
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-12">
-
-                                            <div class="row">
-                                                <div class="col-12 col-lg-8 px-0 px-sm-2 mx-auto">
-                                                    <div class="collapse documents-collapse mx-4 bg-white" id="documents_div_{{ $checklist_item_id }}">
-
-                                                        <div class="p-3 mt-2 mb-4">
-
-                                                            <div class="row">
-                                                                <div class="col-12 mb-3">
-                                                                    <div class="h5 text-primary float-left">Submitted Documents</div>
-                                                                    <a class="text-danger float-right" data-toggle="collapse" href="#documents_div_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="documents_div_{{ $checklist_item_id }}">
-                                                                        <i class="fad fa-times-circle fa-2x"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            @foreach($transaction_documents as $transaction_document)
-                                                                @php
-                                                                $document_id = $transaction_document -> document_id;
-                                                                $doc_info = $documents_model -> GetDocInfo($document_id);
-                                                                @endphp
-
-                                                                <div class="d-flex justify-content-between align-items-center border-bottom document-row mb-2">
-                                                                    <div class="d-flex justify-content-start align-items-center">
-
-                                                                        <div class="mx-2"><a href="{{ $doc_info['file_location_converted'] }}" target="_blank" class="btn btn-sm btn-primary">View</a></div>
-
-                                                                        <div>
-                                                                            {{ $doc_info['file_name'] }}
-                                                                            <br>
-                                                                            <span class="small text-gray">Added: {{ date('n/j/Y g:i:sA', strtotime($transaction_document -> created_at)) }} </span>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div>
-                                                                        <button type="button" class="btn btn-sm btn-danger float-right delete-doc-button" data-document-id="{{ $document_id }}" data-target="#documents_div_{{ $checklist_item_id }}" @if($item_review_status == 'accepted' && $transaction_document -> doc_status == 'viewed') disabled @endif>
-                                                                            <i class="fal fa-times text-white"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-
-                                                            @endforeach
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 col-lg-5  mx-auto">
-
-                                                    <div class="collapse notes-collapse mx-4 mx-auto bg-white" id="notes_{{ $checklist_item_id }}">
-
-                                                        <div class=" px-0 px-sm-2 mb-4">
-
-                                                            <div class="p-3 mt-3">
-
-                                                                <div class="row">
-
-                                                                    <div class="col-12">
-                                                                        <div class="d-flex justify-content-between">
-                                                                            <div class="h5 text-primary float-left">Comments</div>
-                                                                            <div class="mb-2">
-                                                                                <a class="text-danger" data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}"><i class="fad fa-times-circle fa-2x"></i></a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <hr>
-
-                                                                <div class="row">
-
-                                                                    <div class="col-12">
-
-                                                                        <div class="notes-div" data-checklist-item-id="{{ $checklist_item_id }}">
-
-                                                                            @if(count($notes) > 0)
-
-                                                                                <div class="notes-container bg-white px-1">
-
-                                                                                    @foreach($notes as $note)
-                                                                                        @php
-                                                                                        $user = $note -> user;
-                                                                                        $username = $user -> name;
-
-                                                                                        if($user -> group == 'admin') {
-                                                                                            $emp_photo_location = auth() -> user() -> photo_location ?? null;
-                                                                                            $avatar_bg = 'bg-orange';
-                                                                                        } else if($user -> group == 'agent') {
-                                                                                            $emp_photo_location = auth() -> user() -> photo_location ?? null;
-                                                                                            $avatar_bg = 'bg-primary';
-                                                                                        }
-                                                                                        if(!$emp_photo_location) {
-                                                                                            $initials = substr($user -> name, 0, 1);
-                                                                                            $initials .= substr($user -> name, strpos($user -> name, ' ') + 1, 1);
-                                                                                        }
-
-                                                                                        $unread = null;
-                                                                                        if($note -> note_status == 'unread' && $note -> note_user_id != auth() -> user() -> id) {
-                                                                                            $unread = 'unread';
-                                                                                        }
-
-                                                                                        $created_at = $note -> created_at;
-                                                                                        $date_added = $created_at -> format('n/j/Y g:iA');
-                                                                                        if($created_at -> format('Y-m-d') == date('Y-m-d')) {
-                                                                                            $date_added = 'Today at '.$created_at -> format('g:iA');
-                                                                                        } else if($created_at -> format('Y-m-d') == date('Y-m-d', strtotime('-1 day'))) {
-                                                                                            $date_added = 'Yesterday at '.$created_at -> format('g:iA');
-                                                                                        }
-                                                                                        @endphp
-
-                                                                                        <div class="p-2 mb-3 note-div rounded @if($unread) bg-orange-light animate__animated animate__shakeX @else bg-blue-light @endif">
-
-                                                                                            <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
-                                                                                                <div class="d-flex justify-content-start align-items-center">
-                                                                                                    <div class="emp_photo mr-2">
-                                                                                                        <div class="rounded-pill avatar-initials {{ $avatar_bg }}">
-                                                                                                            @if($emp_photo_location)
-                                                                                                                <img src="{{ $emp_photo_location }}" class="avatar rounded-circle d-flex align-self-center mr-2 shadow">
-                                                                                                            @else
-                                                                                                                <span class="text-white p-2">{{ $initials }}</span>
-                                                                                                            @endif
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                    <div class="text-primary font-italic">{{ $username }}</div>
-                                                                                                </div>
-                                                                                                <div>
-                                                                                                    @if($note -> note_status == 'unread')
-                                                                                                        @if($note -> note_user_id != auth() -> user() -> id)
-                                                                                                            <button class="btn btn-success btn-sm mark-read-button mb-0" data-note-id="{{ $note -> id }}" data-notes-collapse="notes_div_{{ $checklist_item_id }}"><i class="fal fa-check mr-2"></i> Mark Read</button>
-                                                                                                        @else
-                                                                                                            <div class="d-flex justify-content-end align-items-center">
-                                                                                                                <span class="text-gray small">Not Read</span>
-                                                                                                                @if($note -> note_user_id == auth() -> user() -> id)
-                                                                                                                    <a href="javascript: void(0)" class="delete-note-button ml-2" data-note-id={{ $note -> id }}"><i class="fad fa-times-circle text-danger"></i></a>
-                                                                                                                @endif
-                                                                                                            </div>
-                                                                                                        @endif
-                                                                                                    @else
-                                                                                                        <span class="text-success small"><i class="fal fa-check"></i> Read</span>
-                                                                                                    @endif
-                                                                                                </div>
-                                                                                            </div>
-
-                                                                                            <div class="text-gray bg-white p-2 rounded">
-                                                                                                {!! $note -> notes !!}
-                                                                                            </div>
-
-                                                                                            <div class="text-gray font-7 mt-1">{{ $date_added }}</div>
-
-                                                                                        </div>
-
-
-
-                                                                                    @endforeach
-
-                                                                                </div>
-
-                                                                            @else
-
-                                                                                <div class="text-gray">No Comments</div>
-
-                                                                            @endif
-
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="w-90">
-                                                                    <div>
-                                                                        <textarea class="custom-form-element form-textarea notes-input-{{ $checklist_item_id }}" data-label="Add Comment"></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="w-10">
-                                                                    <a href="javascript: void(0)" class="btn btn-primary save-notes-button ml-2" data-checklist-id="{{ $transaction_checklist_id }}" data-checklist-item-id="{{ $checklist_item_id }}"><i class="fad fa-save"></i></a>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
 
                                 </div>
 

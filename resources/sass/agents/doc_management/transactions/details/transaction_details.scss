@@ -311,6 +311,8 @@
         display: none;
     }
 
+
+
     .form-name {
         cursor: pointer;
     }
@@ -392,6 +394,15 @@
 
     .checklist-item-options {
         width: 210px;
+
+        .notes-collapse, .documents-collapse {
+            position: absolute;
+            top: 40px;
+            right: 0px;
+            width: 500px;
+            z-index: 5;
+        }
+
     }
     /* .checklist-attachment {
         width: 70px;
@@ -966,7 +977,7 @@
         position: absolute;
         top: 40%;
         right: 3px;
-        font-size: .7rem;
+        font-size: .8rem;
     }
 }
 

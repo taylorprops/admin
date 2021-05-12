@@ -40,7 +40,7 @@
                                             <i class="fal fa-arrow-right fa-2x text-white ml-3"></i>
                                         </div>
                                     </div>
-                                    <div class="assigned-div text-success">Assigned <i class="fal fa-check-circle"></i></div>
+                                    <div class="assigned-div text-success">Assigned <i class="fad fa-check-circle"></i></div>
                                 </div>
 
                             @endforeach
@@ -123,16 +123,16 @@
                                     </div>
 
 
-                                    <div class="submitted-docs-div bg-blue-light p-1 rounded m-1 @if(count($docs) == 0) hide @endif">
+                                    <div class="submitted-docs-div border-top p-2 @if(count($docs) == 0) hide @endif">
                                         <div class="d-flex justify-content-start align-items-center">
-                                            <div class="mx-3"><i class="fad fa-file-alt fa-lg text-primary"></i></div>
+                                            <div class="font-weight-bold text-gray mr-3 no-wrap">Docs Added</div>
                                             <div class="submitted-docs w-100">
                                                 @foreach ($docs as $doc)
                                                     @php
                                                     $document_details = $transaction_documents_model -> GetDocInfo($doc -> document_id);
                                                     $file_name = $document_details['file_name'];
                                                     @endphp
-                                                    <div class="d-flex justify-content-start align-items-center docs small"><div><i class="fal fa-check-circle text-success mr-2"></i></div><div>{{ Str::limit($file_name, 85) }}</div></div>
+                                                    <div class="d-flex justify-content-start align-items-center docs small"><div><i class="fad fa-check-circle text-success mr-2"></i></div><div>{{ Str::limit($file_name, 85) }}</div></div>
                                                 @endforeach
                                             </div>
                                         </div>

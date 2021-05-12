@@ -70,8 +70,8 @@ class TransactionChecklistItemsDocs extends Model
             }
             $page_number = count($matches) > 1 ? $match + 1 : 1;
 
-            $file_location = str_replace(Storage::path(''), '', $file);
-            $file_location = str_replace('/storage/app/public', '/storage', $file_location);
+            $file_location = str_replace(Storage::path(''), '/storage/', $file);
+            //$file_location = str_replace('/storage/app/public', '/storage', $file_location);
             $add_image = new TransactionDocumentsImages();
             $add_image -> file_name = basename($file);
             $add_image -> document_id = $document_id;

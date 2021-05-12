@@ -60,6 +60,13 @@ if (document.URL.match(/transaction_details/)) {
 
         }, 1);
 
+        $(document).on('mousedown', function (e) {
+            let container = $('.notes-collapse, .documents-collapse');
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $('.notes-collapse, .documents-collapse').collapse('hide');
+            }
+        });
+
         $('.notes-collapse').on('show.bs.collapse', function () {
             $('.documents-collapse.show').collapse('hide');
             //$('.checklist-item-div').removeClass('bg-blue-light');

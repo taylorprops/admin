@@ -18339,6 +18339,13 @@ input.search-menu {
 .page-transaction-details .checklist-item-options {
   width: 210px;
 }
+.page-transaction-details .checklist-item-options .notes-collapse, .page-transaction-details .checklist-item-options .documents-collapse {
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  width: 500px;
+  z-index: 5;
+}
 .page-transaction-details .template-docs-div .list-group-item {
   padding: 0.3rem 1.25rem !important;
 }
@@ -18784,7 +18791,7 @@ input.search-menu {
   position: absolute;
   top: 40%;
   right: 3px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 .image-container {

@@ -66,15 +66,20 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
             $('#docs_complete_message').remove();
         }
 
-        window.show_email_agent = function() {
+        window.show_email_agent = function(type = null, id = null) {
 
             $('#email_agent_modal').modal();
+
+            let url = location.hostname+'/agents/doc_management/transactions/transaction_details/'+id+'/'+type;
+            if(page_type == 'checklist') {
+                url = document.URL;
+            }
 
             axios.get('/agents/doc_management/transactions/get_email_checklist_html', {
                 params: {
                     checklist_id: $('#transaction_checklist_id').val(),
                     transaction_type: $('#transaction_type').val(),
-                    url: document.URL
+                    url: url
                 },
                 headers: {
                     'Accept-Version': 1,
@@ -645,7 +650,7 @@ if (document.URL.match(/transaction_details/) || document.URL.match(/document_re
                                             $('#email_agent_message').html(agent_success_message+signature);
 
                                             setTimeout(function() {
-                                                show_email_agent();
+                                                show_email_agent($(this).data('transaction-type'), $(this).data('id'));
                                             }, 100);
                                         });
                                     }, 500);

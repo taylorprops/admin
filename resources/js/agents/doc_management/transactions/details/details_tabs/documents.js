@@ -1008,11 +1008,13 @@ if (document.URL.match(/transaction_details/)) {
     }
 
     window.confirm_matches = function() {
+
         let release_submitted = false;
         $('.add-to-checklist-document-div').each(function() {
-            let doc = $(this);
 
+            let doc = $(this);
             let doc_name = doc.data('file-name');
+
             if($('.assign-button[data-file-name="' + doc_name + '"]').length == 1) {
                 doc.trigger('click');
                 let id = 'rand_'+Math.floor(Math.random() * 10000000);
@@ -1026,6 +1028,7 @@ if (document.URL.match(/transaction_details/)) {
                     release_submitted = true;
                 }
             }
+
         });
         $('#confirm_matches_modal').modal('hide');
         setTimeout(function() {
@@ -1095,7 +1098,7 @@ if (document.URL.match(/transaction_details/)) {
         docs_div.prepend(' \
         <div class="added-document d-flex justify-content-between align-items-center docs" data-document-id="'+document_id+'" data-checklist-id="'+checklist_id+'" data-checklist-item-id="'+checklist_item_id+'"> \
             <div class="d-flex justify-content-start align-items-center text-success"> \
-                <div><i class="fal fa-check-circle mr-2"></i></div> \
+                <div><i class="fad fa-check-circle mr-2"></i></div> \
                 <div>'+file_name.substring(0, 70)+'</div> \
             </div> \
             <div><a href="javascript: void(0)" class="delete-doc text-danger" data-document-id="'+document_id+'"><i class="fad fa-times-circle mr-1"></i> <span class="small">Remove</span></a></div> \

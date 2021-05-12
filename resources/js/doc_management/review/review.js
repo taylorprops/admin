@@ -15,6 +15,10 @@ if(document.URL.match(/document_review/)) {
             get_details(id, type);
             set_property_item_active($(this));
             show_hide_next();
+
+            setTimeout(function() {
+                $('.email-agent-button, .email-agent-docs-complete').data('transaction-type', type).data('id', id);
+            }, 2000);
         });
 
         $('#close_checklist_button').off('click').on('click', close_checklist);
@@ -250,7 +254,7 @@ if(document.URL.match(/document_review/)) {
                         let id = $(this).data('document-id');
                         $('.review-image-container').scrollTop(0);
                         $('.review-image-container').animate({
-                            scrollTop: $('#document_' + id).offset().top - 70
+                            scrollTop: $('#document_' + id).offset().top - 10
                         },'fast');
                     });
             }
@@ -274,7 +278,7 @@ if(document.URL.match(/document_review/)) {
 
             $('.email-agent-button').off('click').on('click', function() {
                 reset_email();
-                show_email_agent();
+                show_email_agent($(this).data('transaction-type'), $(this).data('id'));
             });
 
             let options = {

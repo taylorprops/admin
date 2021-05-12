@@ -6,7 +6,7 @@
 
             @foreach($checklist_groups as $checklist_group)
 
-                <div class="list-group-item py-1 bg-blue-light border border-primary border-left-0 border-right-0 d-flex justify-content-between align-items-center @if($loop -> first) mt-3 @else mt-2 @endif">
+                <div class="list-group-item py-1 mb-2 bg-blue-light border border-primary border-left-0 border-right-0 d-flex justify-content-between align-items-center @if($loop -> first) mt-3 @else mt-2 @endif">
                     <div>
                         <div class="font-12 text-primary">{{ $checklist_group -> resource_name }}</div>
                     </div>
@@ -62,9 +62,9 @@
 
                     @endphp
 
-                    <div class="list-group-item p-1 mt-2 mx-2 border-top rounded checklist-item-div {{ $notes_unread }} @if($status == 'Pending') pending @elseif($status == 'Required') required @endif" id="checklist_item_{{ $checklist_item_id }}">
+                    <div class="list-group-item p-1 mt-3 mb-2 mr-2 border-top checklist-item-div {{ $notes_unread }} @if($status == 'Pending') pending @elseif($status == 'Required') required @endif" id="checklist_item_{{ $checklist_item_id }}">
 
-                        <div class="bg-white d-flex justify-content-between rounded">
+                        <div class="bg-white d-flex justify-content-between p-1">
 
                             <div class="w-75 d-flex justify-content-start align-items-center">
 
@@ -85,7 +85,7 @@
                                 </div>
 
                                 <div class="w-100 h-100 d-block">
-                                    <a href="javascript:void(0)" class="checklist-item-name text-primary p-2 w-100 h-100 d-block {{ $unused_status_class }}" data-checklist-item-id="{{ $checklist_item_id }}" data-checklist-item-name="{{ $checklist_item_name }}" title="{{ $checklist_item_name }}">{{ shorten_text($checklist_item_name, 45) }}</a>
+                                    <a href="javascript:void(0)" class="checklist-item-name text-primary p-2 w-100 h-100 d-block {{ $unused_status_class }}" data-checklist-item-id="{{ $checklist_item_id }}" data-checklist-item-name="{{ $checklist_item_name }}" title="{{ $checklist_item_name }}">{{ shorten_text($checklist_item_name, 40) }}</a>
                                 </div>
 
                             </div>
@@ -107,7 +107,7 @@
                                     </a>
                                 </div>
 
-                                <div class="d-flex justify-content-center align-items-center status-badge badge h-100 mx-0 {{ $admin_classes }} {{ $unused_status_class }} p-1">
+                                <div class="d-flex justify-content-center align-items-center status-badge badge {{ $admin_classes }} {{ $unused_status_class }} px-2 py-3">
                                     {!! $status !!}
                                 </div>
 
@@ -115,10 +115,10 @@
 
                         </div>
 
-                        <div class="documents-list bg-white p-2 mt-2 rounded"></div>
+                        <div class="documents-list bg-white p-2 mt-1 "></div>
 
                         <div id="notes_{{ $checklist_item_id }}" class="collapse checklist-item-notes-div bg-white mt-2 rounded" data-parent="#checklist_list_group">
-                            <div class="mt-1 p-2 bg-white text-gray rounded-top">
+                            <div class="mt-1 p-2 bg-white text-gray">
                                 <div class="d-flex justify-content-between align-items-center border-bottom mb-2 pb-1">
                                     <div class="font-weight-bold text-primary">Comments</div>
                                     <a data-toggle="collapse" href="#notes_{{ $checklist_item_id }}" role="button" aria-expanded="false" aria-controls="notes_{{ $checklist_item_id }}">
@@ -132,7 +132,7 @@
 
                             </div>
                             <div class="container">
-                                <div class="row d-flex align-items-center bg-blue-light rounded-bottom">
+                                <div class="row d-flex align-items-center bg-blue-light">
                                     <div class="col-10">
                                         <input type="text" class="custom-form-element form-input notes-input-{{ $checklist_item_id }}" data-label="Add Comment">
                                     </div>
