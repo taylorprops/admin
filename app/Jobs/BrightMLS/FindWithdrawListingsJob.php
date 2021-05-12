@@ -76,6 +76,7 @@ class FindWithdrawListingsJob implements ShouldQueue
                     $class,
                     $query,
                     [
+                        'Count' => '0',
                         'Select' => 'ListingKey'
                     ]
                 );

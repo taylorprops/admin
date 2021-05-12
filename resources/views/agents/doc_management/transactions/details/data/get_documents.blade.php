@@ -39,7 +39,7 @@
 
 
             <div class="row">
-                @if($transaction_type != 'referral')
+                {{-- @if($transaction_type != 'referral') --}}
                     <div class="col-12 col-md-12 col-lg-6 px-1">
                         <div class="add-docs-div bg-blue-light p-3 mb-1 mb-sm-3 border border-primary rounded-lg text-center">
                             <i class="fad fa-clone fa-3x text-primary mb-2"></i>
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                {{-- @endif --}}
                 <div class="col-12 col-sm-6 col-lg-3 px-1">
                     <div class="add-docs-div bg-blue-light p-3 mb-1 border border-primary rounded-lg text-center">
                         <i class="fad fa-file-upload fa-3x text-primary mb-2"></i>

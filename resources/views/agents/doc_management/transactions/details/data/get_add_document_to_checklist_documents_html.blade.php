@@ -17,7 +17,7 @@
         <div class="col-12 col-sm-8 mx-auto">
             <div class="d-flex justify-content-start align-items-center">
                 <i class="fad fa-exclamation-triangle text-danger fa-2x mr-2"></i>
-                <div class="text-danger font-10 text-center">You do not have any available documents yet. Add documents in the "Documents" tab.</div>
+                <div class="text-gray text-center">You do not have any available documents. Add documents in the "Documents" tab.</div>
             </div>
         </div>
     </div>
