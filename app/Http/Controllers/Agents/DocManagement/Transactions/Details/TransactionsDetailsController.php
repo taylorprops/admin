@@ -4869,7 +4869,7 @@ class TransactionsDetailsController extends Controller
 
         $user = User::where('email', $agent_email) -> first();
 
-        $subject = 'Bounced Earnest Deposit Alert '.$address_email;
+        $subject = 'Bounced Earnest Deposit Alert '.$address;
         $message = 'Bounced Earnest Deposit<br>'.$address;
         $message_email = $request -> bounced_check_message;
 

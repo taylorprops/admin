@@ -415,7 +415,7 @@ $(function() {
                             .then(function (response) {
                                 $('#bug_report_modal').modal('hide');
                                 $('.modal-backdrop').removeClass('hidden');
-                                $('#modal_success').modal().find('.modal-body').html('Your bug report was successfully sent. You will be notified once the issue has been resolved.');
+                                $('#modal_success').modal().find('.modal-body').html('Thank you, your bug report was successfully sent. You will be notified once the issue has been resolved.');
                                 $('#send_bug_report').html('Send Report <i class="fad fa-share ml-2"></i>');
                             })
                             .catch(function (error) {

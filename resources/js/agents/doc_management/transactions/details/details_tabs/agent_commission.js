@@ -273,8 +273,10 @@ if (document.URL.match(/transaction_details/)) {
         });
 
         $('.numbers-only').on('change', function() {
-            if($(this).val() == '') {
-                $(this).val('$0.00');
+            if($(this).hasClass('money') || $(this).hasClass('money-decimal')) {
+                if($(this).val() == '') {
+                    $(this).val('$0.00');
+                }
             }
         });
     }
