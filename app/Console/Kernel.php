@@ -59,6 +59,8 @@ class Kernel extends ConsoleKernel
             //$schedule -> command('old_db:update_agents_other_tables') -> everyMinute() -> withoutOverlapping(1);
         }
 
+        // agent notifications
+
         // clear temp files
         $schedule -> exec('sudo find '.Storage::path('').'/doc_management/transactions/contracts/*/emailed_docs/* -mtime +2 -exec rm -rf {} \\') -> daily();
         $schedule -> exec('sudo find '.Storage::path('').'/tmp* -maxdepth 1 -type f -mtime +1 -exec rm -rf {} \\') -> daily();

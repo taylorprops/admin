@@ -39,6 +39,7 @@ class NotificationsController extends Controller {
         $title = $request -> title;
         $description = $request -> description;
         $emails = $request -> emails ?? null;
+        $notify_by_database = $request -> notify_by_database ?? null;
         $notify_by_email = $request -> notify_by_email ?? null;
         $notify_by_text = $request -> notify_by_text ?? null;
         $number = $request -> number ?? null;
@@ -56,6 +57,7 @@ class NotificationsController extends Controller {
             'title' => $title,
             'description' => $description,
             'config_value' => $config_value,
+            'notify_by_database' => $notify_by_database,
             'notify_by_email' => $notify_by_email,
             'notify_by_text' => $notify_by_text
         ]);

@@ -47,6 +47,7 @@
                                 @if($notification -> config_role == 'notification')
 
                                     <div class="w-20 notify-by-options text-gray">
+                                        <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-database" data-label="Site Alert" value="yes" @if($notification -> notify_by_database == 'yes') checked @endif>
                                         <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-email" data-label="Email" value="yes" @if($notification -> notify_by_email == 'yes') checked @endif>
                                         <input type="checkbox" class="custom-form-element form-checkbox notify-checkbox-text" data-label="Text SMS" value="yes" @if($notification -> notify_by_text == 'yes') checked @endif>
                                     </div>

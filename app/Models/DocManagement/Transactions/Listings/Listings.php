@@ -16,6 +16,7 @@ class Listings extends Model
     protected $primaryKey = 'Listing_ID';
     //public $timestamps = false;
     protected $guarded = [];
+    protected $appends = ['transaction_type'];
 
     public static function boot() {
         parent::boot();
@@ -33,6 +34,10 @@ class Listings extends Model
             }
 
         });
+    }
+
+    public function getTransactionTypeAttribute() {
+        return 'listing';
     }
 
     public function agent() {

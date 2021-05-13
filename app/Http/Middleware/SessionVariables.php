@@ -31,7 +31,7 @@ class SessionVariables
             $user_id = auth() -> user() -> user_id;
 
             session(['header_logo_src' => '/images/logo/logos.png']);
-            session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
+            //session(['email_logo_src' => '/images/emails/TP-flat-white.png']);
 
             if (auth() -> user() -> group == 'admin') {
 
@@ -52,7 +52,7 @@ class SessionVariables
 
             }
 
-        session(['user_details' => $user_details]);
+            session(['user_details' => $user_details]);
 
         }/*  else {
 

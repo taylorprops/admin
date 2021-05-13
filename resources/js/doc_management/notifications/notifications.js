@@ -54,11 +54,13 @@ if(document.URL.match(/notifications/)) {
             let emails = '';
             let number = '';
             let on_off = '';
+            let notify_by_database = '';
             let notify_by_email = '';
             let notify_by_text = '';
 
             if(type == 'notification') {
                 emails = container.find('.emails').val();
+                notify_by_database = container.find('.notify-checkbox-database:checked').val() || '';
                 notify_by_email = container.find('.notify-checkbox-email:checked').val() || '';
                 notify_by_text = container.find('.notify-checkbox-text:checked').val() || '';
             } else if(type == 'number') {
@@ -74,6 +76,7 @@ if(document.URL.match(/notifications/)) {
             formData.append('title', title);
             formData.append('description', description);
             formData.append('emails', emails);
+            formData.append('notify_by_database', notify_by_database);
             formData.append('notify_by_email', notify_by_email);
             formData.append('notify_by_text', notify_by_text);
             formData.append('number', number);

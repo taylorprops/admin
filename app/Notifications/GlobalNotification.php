@@ -16,7 +16,7 @@ class GlobalNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public $notification;
-    public $tries = 1;
+    //public $tries = 1;
 
     /**
      * Create a new notification instance.
@@ -27,7 +27,6 @@ class GlobalNotification extends Notification implements ShouldQueue
 
 
         $this -> notification = $notification;
-        $this -> notify_by = ['database'];
 
         $this -> notification['link_url'] = '';
         $this -> notification['link_text'] = '';
@@ -39,6 +38,9 @@ class GlobalNotification extends Notification implements ShouldQueue
 
 
 
+        if($notification['notify_by_database'] == 'yes') {
+            $this -> notify_by[] = 'database';
+        }
         if($notification['notify_by_email'] == 'yes') {
             $this -> notify_by[] = 'mail';
         }

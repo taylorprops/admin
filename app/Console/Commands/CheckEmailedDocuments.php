@@ -58,7 +58,8 @@ class CheckEmailedDocuments extends Command
         $password = config('mail_server.mail_server.password');
         $server = config('mail_server.mail_server.address');
 
-        $mailbox = imap_open('{'.$server.':143/novalidate-cert}INBOX', $username, $password);
+        //$mailbox = imap_open('{'.$server.':143/novalidate-cert}INBOX', $username, $password);
+        $mailbox = imap_open('{'.$server.':7993/ssl}INBOX', $username, $password);
 
         $num = imap_num_msg($mailbox);
 
