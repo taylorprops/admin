@@ -3,6 +3,7 @@
 namespace App\Jobs\BrightMLS;
 
 use Illuminate\Bus\Queueable;
+use App\Models\Employees\Agents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +33,23 @@ class UpdateListingsJob implements ShouldQueue
      *
      * @return void
      */
+
+    public function agent_id($agent_mls_id) {
+
+        $agent_id = Agents::where('bright_mls_id_md_dc_tp', $agent_mls_id)
+        -> orWhere('bright_mls_id_va_tp', $agent_mls_id)
+        -> orWhere('bright_mls_id_md_aap', $agent_mls_id)
+        -> pluck('id');
+
+        $id = null;
+        if(count($agent_id) > 0) {
+            $id = $agent_id[0];
+        }
+
+        return $id;
+
+    }
+
     public function handle()
     {
 
@@ -68,9 +86,13 @@ class UpdateListingsJob implements ShouldQueue
                 }
                 $start = str_replace(' ', 'T', date('Y-m-d H:i:s', strtotime('-'.$hours.' hour')));
 
-                $bright_office_codes = implode(',', config('bright_office_codes'));
+                $office_codes = [];
+                foreach(config('bright_office_codes') as $code) {
+                    $office_codes[] = '(ListOfficeMlsId='.$code.')|(BuyerOfficeMlsId='.$code.')';
+                }
+                $office_codes = implode('|', $office_codes);
 
-                $query = '(ModificationTimestamp='.$start.'+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+                $query = '(ModificationTimestamp='.$start.'+),('.$office_codes.')';
 
                 $results = $rets -> Search(
                     $resource,
@@ -91,11 +113,22 @@ class UpdateListingsJob implements ShouldQueue
                         $add_listing = CompanyListings::firstOrCreate([
                             'ListingKey' => $listing_key
                         ]);
+                        $Agent_ID = $add_listing -> Agent_ID > 0 ? $add_listing -> Agent_ID : null;
 
                         foreach($listing as $col => $val) {
                             $add_listing -> $col = $val;
                         }
 
+                        if(!$Agent_ID) {
+                            if(in_array($listing['BuyerOfficeMlsId'], config('bright_office_codes'))) {
+                                $mls_id = $listing['BuyerAgentMlsId'];
+                            } else {
+                                $mls_id = $listing['ListAgentMlsId'];
+                            }
+                            $Agent_ID = $this -> agent_id($mls_id);
+                        }
+
+                        $add_listing -> Agent_ID = $Agent_ID;
                         $add_listing -> save();
 
                     }

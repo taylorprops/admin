@@ -153,7 +153,7 @@ if (document.URL.match(/transaction_details/)) {
 
                 window.get_emailed_docs_interval = setInterval(get_emailed_documents, 5000);
 
-                window.in_process_esign_interval = setInterval(in_process_esign, 1000);
+                window.in_process_esign_interval = setInterval(in_process_esign, 5000);
 
                 window.in_process_interval = setInterval(function(){
                     let document_ids = [];
@@ -161,7 +161,7 @@ if (document.URL.match(/transaction_details/)) {
                         document_ids.push($(this).data('document-id'));
                     });
                     in_process(document_ids);
-                }, 2000);
+                }, 5000);
 
             } else if($(this).data('tab') == 'esign') {
 

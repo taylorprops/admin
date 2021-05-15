@@ -69,13 +69,12 @@ if (document.URL.match(/transaction_details/)) {
                 } else {
                     $('#modal_danger').modal().find('.modal-body').html('You must select at least one form to add');
                 }
-            } else if(id == 'send_email_button') {
-                email_documents();
             }
         });
 
 
         $(document).on('change', '.check-document', show_bulk_options);
+        $(document).on('click', '#send_email_button', email_documents);
 
 
 
@@ -120,7 +119,7 @@ if (document.URL.match(/transaction_details/)) {
                 });
                 in_process(document_ids);
                 in_process_esign();
-            }, 2000);
+            }, 5000);
 
 
             let upload_documents_file = document.getElementById('upload_documents_file');
@@ -147,7 +146,12 @@ if (document.URL.match(/transaction_details/)) {
                     }
                 },
                 labelIdle: 'Drag & Drop here or <span class="filepond--label-action"> Browse </span>',
+                'labelFileProcessing': 'Wait...',
+                onprocessfile: (error, file) => {
+                    //upload_documents_file_pond.removeFile(file.id);
+                },
                 onprocessfiles: () => {
+                    toastr['success']('All files uploaded');
                     upload_documents_file_pond.removeFiles();
                     load_tabs('documents');
                 }
@@ -727,6 +731,8 @@ if (document.URL.match(/transaction_details/)) {
 
     window.save_document_name = function(ele) {
 
+        $('.add-to-selected-button, .remove-from-selected-button').prop('disabled', true);
+
         let Listing_ID = $('#Listing_ID').val();
         let Contract_ID = $('#Contract_ID').val();
         let Referral_ID = $('#Referral_ID').val();
@@ -775,6 +781,7 @@ if (document.URL.match(/transaction_details/)) {
                     toastr['success']('New Document Successfully Created');
                     $('.add-docs-to-checklist-item-button').html('<i class="fal fa-plus mr-1 mr-sm-2"></i> Add').prop('disabled', true);
                     $('#save_document_name_button').html('<i class="fad fa-save mr-2"></i> Save Document').prop('disabled', true);
+                    $('.add-to-selected-button, .remove-from-selected-button').prop('disabled', false);
                     $('.selected-images-slider').html('');
                     $('#split_document_modal').on('hide.bs.modal', function () {
                         load_tabs('documents');

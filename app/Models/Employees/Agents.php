@@ -22,6 +22,10 @@ class Agents extends Model {
         return $query -> find($id);
     }
 
+    public function company_listings() {
+        return $this -> hasMany('App\Models\BrightMLS\CompanyListings', 'Agent_ID', 'id');
+    }
+
     public function contracts() {
         return $this -> hasMany('App\Models\DocManagement\Transactions\Contracts\Contracts', 'Agent_ID', 'id');
     }

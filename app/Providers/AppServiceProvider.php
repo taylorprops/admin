@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
         // add custom config vars from config table
         config([
             'notifications' => Config::all([
-                'config_key','config_value','config_type', 'notify_by_email', 'notify_by_text'
+                'config_key','config_value','config_type', 'notify_by_database', 'notify_by_email', 'notify_by_text'
             ])
             -> keyBy('config_key')
             -> transform(function ($setting) {
@@ -54,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
                         $notification['emails'] = explode(',', $setting -> config_value);
                     }
                     $notification['emails'] = [$setting -> config_value];
+                    $notification['notify_by_database'] = $setting -> notify_by_database;
                     $notification['notify_by_email'] = $setting -> notify_by_email;
                     $notification['notify_by_text'] = $setting -> notify_by_text;
 
@@ -62,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
                 } else if($setting -> config_type == 'on_off') {
 
                     $notification['on_off'] = $setting -> config_value;
+                    $notification['notify_by_database'] = $setting -> notify_by_database;
                     $notification['notify_by_email'] = $setting -> notify_by_email;
                     $notification['notify_by_text'] = $setting -> notify_by_text;
 

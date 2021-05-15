@@ -49,6 +49,11 @@ use App\Http\Controllers\Agents\DocManagement\Transactions\EditFiles\Transaction
 
 // Test Controller
 Route::get('/tests/test', [TestController::class, 'test']);
+Route::get('/tests/skyslope', [TestController::class, 'skyslope']);
+Route::get('/tests/add_missing_listings', [TestController::class, 'add_missing_listings']);
+Route::get('/tests/test_listings', [TestController::class, 'test_listings']);
+Route::get('/tests/test_find_missing', [TestController::class, 'test_find_missing']);
+Route::get('/tests/add_missing_agent_ids', [TestController::class, 'add_missing_agent_ids']);
 
 
 Route::view('/', '/auth/login');

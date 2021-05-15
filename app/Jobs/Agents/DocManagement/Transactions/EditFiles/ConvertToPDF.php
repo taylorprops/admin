@@ -76,10 +76,10 @@ class ConvertToPDF implements ShouldQueue
 
         $upload_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type;
 
-        Storage::makeDirectory($upload_dir.'/combined/');
-        Storage::makeDirectory($upload_dir.'/layers/');
+        Storage::makeDirectory($upload_dir.'/combined');
+        Storage::makeDirectory($upload_dir.'/layers');
         $full_path_dir = Storage::path($upload_dir);
-        $pdf_output_dir = Storage::path($upload_dir.'/combined/');
+        $pdf_output_dir = Storage::path($upload_dir.'/combined');
 
         // get file name to use for the final converted file
         $file = glob($full_path_dir.'/converted/*pdf');
@@ -128,17 +128,25 @@ class ConvertToPDF implements ShouldQueue
             $page_width = get_width_height($layer_pdf)['width'];
             $page_height = get_width_height($layer_pdf)['height'];
 
-            // if not standard 612 by 792 get width and height and convert to mm
-            if ($page_width == 612 && $page_height == 792) {
-                $options['page-size'] = 'Letter';
-            } elseif ($page_width == 595 && $page_height == 842) {
-                $options['page-size'] = 'a4';
-            } else {
-                $page_width = $page_width * 0.2745833333;
-                $page_height = $page_height * 0.2745833333;
+            if($page_width > 0 && $page_height > 0) {
 
-                $options['page-width'] = $page_width.'mm';
-                $options['page-height'] = $page_height.'mm';
+                // if not standard 612 by 792 get width and height and convert to mm
+                if ($page_width == 612 && $page_height == 792) {
+                    $options['page-size'] = 'Letter';
+                } elseif ($page_width == 595 && $page_height == 842) {
+                    $options['page-size'] = 'a4';
+                } else {
+                    $page_width = $page_width * 0.2745833333;
+                    $page_height = $page_height * 0.2745833333;
+
+                    $options['page-width'] = $page_width.'mm';
+                    $options['page-height'] = $page_height.'mm';
+                }
+
+            } else {
+
+                $options['page-size'] = 'Letter';
+
             }
 
             $html = "

@@ -32,6 +32,23 @@ class FindWithdrawListingsJob implements ShouldQueue
      *
      * @return void
      */
+
+    public function agent_id($agent_mls_id) {
+
+        $agent_id = Agents::where('bright_mls_id_md_dc_tp', $agent_mls_id)
+        -> orWhere('bright_mls_id_va_tp', $agent_mls_id)
+        -> orWhere('bright_mls_id_md_aap', $agent_mls_id)
+        -> pluck('id');
+
+        $id = null;
+        if(count($agent_id) > 0) {
+            $id = $agent_id[0];
+        }
+
+        return $id;
+
+    }
+
     public function handle()
     {
 
@@ -67,9 +84,13 @@ class FindWithdrawListingsJob implements ShouldQueue
                 $company_listings_count = count($company_listings_keys);
 
                 // get bright listings count
-                $bright_office_codes = implode(',', config('bright_office_codes'));
+                $office_codes = [];
+                foreach(config('bright_office_codes') as $code) {
+                    $office_codes[] = '(ListOfficeMlsId='.$code.')|(BuyerOfficeMlsId='.$code.')';
+                }
+                $office_codes = implode('|', $office_codes);
                 // not closed
-                $query = '(MlsStatus=~MlsStatus200004325492),(MLSListDate=2016-01-01+),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+                $query = '(MlsStatus=~200004325492),(MLSListDate=2016-01-01+),('.$office_codes.')';
 
                 $results = $rets -> Search(
                     $resource,
@@ -122,10 +143,22 @@ class FindWithdrawListingsJob implements ShouldQueue
                                     'ListingKey' => $listing_key
                                 ]);
 
+                                $Agent_ID = $add_listing -> Agent_ID > 0 ? $add_listing -> Agent_ID : null;
+
                                 foreach($listing as $col => $val) {
                                     $add_listing -> $col = $val;
                                 }
 
+                                if(!$Agent_ID) {
+                                    if(in_array($listing['BuyerOfficeMlsId'], config('bright_office_codes'))) {
+                                        $mls_id = $listing['BuyerAgentMlsId'];
+                                    } else {
+                                        $mls_id = $listing['ListAgentMlsId'];
+                                    }
+                                    $Agent_ID = $this -> agent_id($mls_id);
+                                }
+
+                                $add_listing -> Agent_ID = $Agent_ID;
                                 $add_listing -> save();
 
                             }

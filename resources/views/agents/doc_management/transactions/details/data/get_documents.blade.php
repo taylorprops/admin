@@ -235,7 +235,7 @@
             </div>
 
 
-            <div class="collapse sortable-documents @if($folder_name != 'Trash') {{ $show_folder }} @endif" id="documents_folder_{{ $loop -> index }}" data-folder-id="{{ $folder -> id }}">
+            <div class="collapse sortable-documents @if($folder_name != 'Trash' && $docs_count > 0) show @endif" id="documents_folder_{{ $loop -> index }}" data-folder-id="{{ $folder -> id }}">
 
                 @if(count($documents) > 0)
 

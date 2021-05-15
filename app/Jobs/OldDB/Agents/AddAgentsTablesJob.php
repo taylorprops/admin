@@ -87,7 +87,7 @@ class AddAgentsTablesJob implements ShouldQueue
             $add_agent -> photo_location = $agent -> picURL;
             $add_agent -> bright_mls_id_md_dc_tp = $agent -> mris_id_tp_md;
             $add_agent -> bright_mls_id_va_tp = $agent -> mris_id_tp_va;
-            $add_agent -> bright_mls_id_md_aap = $agent -> mris_id_tp_va;
+            $add_agent -> bright_mls_id_md_aap = $agent -> mris_id_aap;
             $add_agent -> llc_name = $agent -> llc_name;
             $add_agent -> owe_other = $agent -> owe_other;
             $add_agent -> owe_other_notes = $agent -> owe_other_notes;

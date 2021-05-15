@@ -112,7 +112,7 @@ class UpdateAgentsTablesJob implements ShouldQueue
             $update_agent -> photo_location = $agent -> picURL;
             $update_agent -> bright_mls_id_md_dc_tp = $agent -> mris_id_tp_md;
             $update_agent -> bright_mls_id_va_tp = $agent -> mris_id_tp_va;
-            $update_agent -> bright_mls_id_md_aap = $agent -> mris_id_tp_va;
+            $update_agent -> bright_mls_id_md_aap = $agent -> mris_id_aap;
             $update_agent -> llc_name = $agent -> llc_name;
             $update_agent -> owe_other = $agent -> owe_other;
             $update_agent -> owe_other_notes = $agent -> owe_other_notes;

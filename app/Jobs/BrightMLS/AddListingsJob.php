@@ -78,10 +78,15 @@ class AddListingsJob implements ShouldQueue
                 $resource = 'Property';
                 $class = 'ALL';
 
-                $bright_office_codes = implode(',', config('bright_office_codes'));
+                $office_codes = [];
+                foreach(config('bright_office_codes') as $code) {
+                    $office_codes[] = '(ListOfficeMlsId='.$code.')|(BuyerOfficeMlsId='.$code.')';
+                }
+                $office_codes = implode('|', $office_codes);
                 $start = date("Y-m-d", strtotime("-5 days"));
                 $end = date('Y-m-d');
-                $query = '(MLSListDate='.$start.'-'.$end.'),((ListOfficeMlsId=|'.$bright_office_codes.')|(BuyerOfficeMlsId=|'.$bright_office_codes.'))';
+
+                $query = '(MLSListDate='.$start.'-'.$end.'),('.$office_codes.')';
 
                 $results = $rets -> Search(
                     $resource,

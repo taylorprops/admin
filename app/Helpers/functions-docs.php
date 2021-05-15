@@ -3,6 +3,7 @@
 function get_width_height($doc_location)
 {
     exec('identify '.$doc_location, $output, $return);
+
     $width = '';
     $height = '';
     if ($output) {

@@ -31,9 +31,9 @@ class TransactionsEditFilesController extends Controller
         $file_type = $request -> file_type;
         $page_count = $request['page_count'];
 
-        ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
+        //ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
 
-        /* // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         // add to in_process table
         $in_process = new InProcess();
@@ -49,10 +49,10 @@ class TransactionsEditFilesController extends Controller
 
         $upload_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_'.$file_type;
 
-        Storage::makeDirectory($upload_dir.'/combined/');
-        Storage::makeDirectory($upload_dir.'/layers/');
+        Storage::makeDirectory($upload_dir.'/combined');
+        Storage::makeDirectory($upload_dir.'/layers');
         $full_path_dir = Storage::path($upload_dir);
-        $pdf_output_dir = Storage::path($upload_dir.'/combined/');
+        $pdf_output_dir = Storage::path($upload_dir.'/combined');
 
         // get file name to use for the final converted file
         $file = glob($full_path_dir.'/converted/*pdf');
@@ -91,6 +91,13 @@ class TransactionsEditFilesController extends Controller
 
             // set layer and combined directories
             $layer_pdf = $full_path_dir.'/pages/page_'.$page_number.'.pdf';
+
+            $file_in = $layer_pdf;
+            $file_out = $full_path_dir.'/pages/temp_page_'.$page_number.'.pdf';
+            exec('pdftk '.$file_in.' output '.$file_out.' flatten compress');
+            exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
+
+
             $layer_top = $full_path_dir.'/layers/layer_top_'.$page_number.'.pdf';
             $layer_top_temp = $full_path_dir.'/layers/temp_layer_top_'.$page_number.'.pdf';
             $layer_bottom = $full_path_dir.'/layers/layer_bottom_'.$page_number.'.pdf';
@@ -101,17 +108,25 @@ class TransactionsEditFilesController extends Controller
             $page_width = get_width_height($layer_pdf)['width'];
             $page_height = get_width_height($layer_pdf)['height'];
 
-            // if not standard 612 by 792 get width and height and convert to mm
-            if ($page_width == 612 && $page_height == 792) {
-                $options['page-size'] = 'Letter';
-            } elseif ($page_width == 595 && $page_height == 842) {
-                $options['page-size'] = 'a4';
-            } else {
-                $page_width = $page_width * 0.2745833333;
-                $page_height = $page_height * 0.2745833333;
+            if($page_width > 0 && $page_height > 0) {
 
-                $options['page-width'] = $page_width.'mm';
-                $options['page-height'] = $page_height.'mm';
+                // if not standard 612 by 792 get width and height and convert to mm
+                if ($page_width == 612 && $page_height == 792) {
+                    $options['page-size'] = 'Letter';
+                } elseif ($page_width == 595 && $page_height == 842) {
+                    $options['page-size'] = 'a4';
+                } else {
+                    $page_width = $page_width * 0.2745833333;
+                    $page_height = $page_height * 0.2745833333;
+
+                    $options['page-width'] = $page_width.'mm';
+                    $options['page-height'] = $page_height.'mm';
+                }
+
+            } else {
+
+                $options['page-size'] = 'Letter';
+
             }
 
             $html = "
@@ -152,9 +167,10 @@ class TransactionsEditFilesController extends Controller
 
             if ($html_top != '') {
                 // remove background and resize top layer
-                exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -transparent white -compress Zip '.$layer_top);
+                exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -strip -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
-                exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
+                exec('pdftk '.$layer_top.' background '.$layer_pdf.' cat output '.$combined_top.' compress');
+
                 // if not bottom move combined_top to combined
                 if ($html_bottom == '') {
                     exec('mv '.$combined_top.' '.$combined);
@@ -198,7 +214,7 @@ class TransactionsEditFilesController extends Controller
         // remove from in_process
         $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
 
-        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx */
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         return response() -> json(['status' => 'success']);
     }
