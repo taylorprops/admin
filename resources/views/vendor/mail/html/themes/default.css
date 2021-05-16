@@ -174,7 +174,7 @@ img {
     -premailer-width: 570px;
 }
 
-.footer p {
+.footer * {
     color: #fff;
     font-size: 12px;
     text-align: center;

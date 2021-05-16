@@ -6,6 +6,7 @@ function get_width_height($doc_location)
 
     $width = '';
     $height = '';
+    $pages = count($output);
     if ($output) {
         preg_match('/[0-9]+x[0-9]+/', $output[0], $match);
         $size = $match[0];
@@ -13,7 +14,7 @@ function get_width_height($doc_location)
         $height = substr($size, strpos($size, 'x') + 1);
     }
 
-    return ['width' => $width, 'height' => $height];
+    return ['width' => $width, 'height' => $height, 'pages' => $pages];
 }
 
 function get_value($values, $id)

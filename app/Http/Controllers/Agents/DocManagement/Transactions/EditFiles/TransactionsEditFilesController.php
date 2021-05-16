@@ -31,12 +31,12 @@ class TransactionsEditFilesController extends Controller
         $file_type = $request -> file_type;
         $page_count = $request['page_count'];
 
-        //ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
+        ConvertToPDF::dispatch($request -> all(), $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $file_id, $document_id, $file_type);
 
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         // add to in_process table
-        $in_process = new InProcess();
+        /* $in_process = new InProcess();
         $in_process -> document_id = $document_id;
         //$in_process -> uuid = $uuid;
         $in_process -> save();
@@ -83,6 +83,7 @@ class TransactionsEditFilesController extends Controller
 
         // loop through all pages
         for ($c = 1; $c <= $request['page_count']; $c++) {
+
             $page_number = $c;
 
             if (strlen($c) == 1) {
@@ -91,13 +92,6 @@ class TransactionsEditFilesController extends Controller
 
             // set layer and combined directories
             $layer_pdf = $full_path_dir.'/pages/page_'.$page_number.'.pdf';
-
-            $file_in = $layer_pdf;
-            $file_out = $full_path_dir.'/pages/temp_page_'.$page_number.'.pdf';
-            exec('pdftk '.$file_in.' output '.$file_out.' flatten compress');
-            exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
-
-
             $layer_top = $full_path_dir.'/layers/layer_top_'.$page_number.'.pdf';
             $layer_top_temp = $full_path_dir.'/layers/temp_layer_top_'.$page_number.'.pdf';
             $layer_bottom = $full_path_dir.'/layers/layer_bottom_'.$page_number.'.pdf';
@@ -169,7 +163,7 @@ class TransactionsEditFilesController extends Controller
                 // remove background and resize top layer
                 exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -strip -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
-                exec('pdftk '.$layer_top.' background '.$layer_pdf.' cat output '.$combined_top.' compress');
+                exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
 
                 // if not bottom move combined_top to combined
                 if ($html_bottom == '') {
@@ -182,11 +176,11 @@ class TransactionsEditFilesController extends Controller
             if ($html_bottom != '') {
                 // if html_top add it to pdf-top layer
                 if ($html_top != '') {
-                    exec('pdftk '.$combined_top.' background '.$layer_bottom.' output '.$combined.' compress');
+                    exec('pdftk '.$layer_bottom.' background '.$combined_top.' output '.$combined.' compress');
                     exec('rm '.$combined_top);
                     exec('rm '.$layer_bottom);
                 } else {
-                    exec('pdftk '.$layer_pdf.' background '.$layer_bottom.' output '.$combined.' compress');
+                    exec('pdftk '.$layer_bottom.' background '.$layer_pdf.' output '.$combined.' compress');
                     exec('rm '.$layer_pdf);
                     exec('rm '.$layer_bottom);
                 }
@@ -212,7 +206,7 @@ class TransactionsEditFilesController extends Controller
         $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_filename, $file_id);
 
         // remove from in_process
-        $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
+        $remove_in_process = InProcess::where('document_id', $document_id) -> delete(); */
 
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

@@ -110,6 +110,7 @@ class ConvertToPDF implements ShouldQueue
 
         // loop through all pages
         for ($c = 1; $c <= $request['page_count']; $c++) {
+
             $page_number = $c;
 
             if (strlen($c) == 1) {
@@ -190,6 +191,7 @@ class ConvertToPDF implements ShouldQueue
                 exec('convert -quality 100 -density 300 '.$layer_top_temp.' -size '.$page_width.'x'.$page_height.' -strip -transparent white -compress Zip '.$layer_top);
                 // merge top pdf layer with top layer
                 exec('pdftk '.$layer_top.' background '.$layer_pdf.' output '.$combined_top.' compress');
+
                 // if not bottom move combined_top to combined
                 if ($html_bottom == '') {
                     exec('mv '.$combined_top.' '.$combined);
@@ -201,11 +203,11 @@ class ConvertToPDF implements ShouldQueue
             if ($html_bottom != '') {
                 // if html_top add it to pdf-top layer
                 if ($html_top != '') {
-                    exec('pdftk '.$combined_top.' background '.$layer_bottom.' output '.$combined.' compress');
+                    exec('pdftk '.$layer_bottom.' background '.$combined_top.' output '.$combined.' compress');
                     exec('rm '.$combined_top);
                     exec('rm '.$layer_bottom);
                 } else {
-                    exec('pdftk '.$layer_pdf.' background '.$layer_bottom.' output '.$combined.' compress');
+                    exec('pdftk '.$layer_bottom.' background '.$layer_pdf.' output '.$combined.' compress');
                     exec('rm '.$layer_pdf);
                     exec('rm '.$layer_bottom);
                 }
@@ -232,5 +234,6 @@ class ConvertToPDF implements ShouldQueue
 
         // remove from in_process
         $remove_in_process = InProcess::where('document_id', $document_id) -> delete();
+
     }
 }

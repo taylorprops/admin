@@ -3,6 +3,7 @@
 namespace App\Jobs\BrightMLS;
 
 use Illuminate\Bus\Queueable;
+use App\Models\Employees\Agents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

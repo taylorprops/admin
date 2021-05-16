@@ -56,38 +56,38 @@
             </ul>
 
             <div id="details_tabs" class="tab-content details-main-tabs">
-                <div id="details_tab" class="tab-pane fade active show">
+                <div id="details_tab" class="tab-pane fade active show animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                <div id="members_tab" class="tab-pane fade">
+                <div id="members_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                <div id="documents_tab" class="tab-pane fade">
+                <div id="documents_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                <div id="esign_tab" class="tab-pane fade">
+                <div id="esign_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                <div id="checklist_tab" class="tab-pane fade">
+                <div id="checklist_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
-                <div id="contracts_tab" class="tab-pane fade">
+                <div id="contracts_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
                 @if(auth() -> user() -> group == 'admin')
-                <div id="commission_tab" class="tab-pane fade">
+                <div id="commission_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
@@ -98,13 +98,13 @@
                     </div>
                 </div>
                 @elseif(stristr(auth() -> user() -> group, 'agent') || auth() -> user() -> group == 'transaction_coordinator')
-                <div id="agent_commission_tab" class="tab-pane fade">
+                <div id="agent_commission_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>
                 </div>
                 @endif
-                <div id="tasks_tab" class="tab-pane fade">
+                <div id="tasks_tab" class="tab-pane fade animate__animated animate__fast animate__fadeIn">
                     <div class="w-100 my-5 text-center">
                         {!! config('global.loader') !!}
                     </div>

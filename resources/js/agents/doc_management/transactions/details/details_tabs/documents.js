@@ -130,6 +130,7 @@ if (document.URL.match(/transaction_details/)) {
                 multiple: true,
                 acceptedFileTypes: ['application/pdf', 'image/*'],
                 fileValidateTypeLabelExpectedTypes: 'PDF or Image Only',
+                //chunkUploads: true,
                 server: {
                     process: {
                         url: '/agents/doc_management/transactions/upload_documents',
@@ -153,7 +154,9 @@ if (document.URL.match(/transaction_details/)) {
                 onprocessfiles: () => {
                     toastr['success']('All files uploaded');
                     upload_documents_file_pond.removeFiles();
-                    load_tabs('documents');
+                    setTimeout(function() {
+                        load_tabs('documents');
+                    }, 500);
                 }
             });
 
@@ -496,6 +499,7 @@ if (document.URL.match(/transaction_details/)) {
         });
         let subject = $('#email_subject').val();
         let message = tinyMCE.activeEditor.getContent();
+        message = '<div style="width: 100%">'+message+'</div>';
         let attachments = [];
         $('#email_attachments').find('.attachment-row').each(function() {
             attachments.push({

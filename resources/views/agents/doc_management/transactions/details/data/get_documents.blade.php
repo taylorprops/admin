@@ -64,7 +64,7 @@
 
                         <div class="relative">
                             <div class="document-upload-div w-100">
-                                <input type="file" id="upload_documents_file" name="file" multiple>
+                                <input type="file" id="upload_documents_file" name="filepond" multiple>
                             </div>
                         </div>
 

@@ -42,7 +42,7 @@ class TransactionChecklistItemsDocs extends Model
         return $docs;
     }
 
-    public function convert_doc_to_images($source, $destination, $filename, $document_id) {
+    public  function convert_doc_to_images($source, $destination, $filename, $document_id) {
 
         // clear directory
         if (! is_dir_empty($destination)) {

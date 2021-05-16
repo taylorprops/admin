@@ -205,6 +205,7 @@
                                                                 @foreach($transaction_documents as $transaction_document)
                                                                     @php
                                                                     $document_id = $transaction_document -> document_id;
+                                                                    dd($document_id);
                                                                     $doc_info = $documents_model -> GetDocInfo($document_id);
                                                                     @endphp
 

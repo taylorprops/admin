@@ -67,6 +67,7 @@ use App\Models\DocManagement\Transactions\Documents\InProcess;
 use App\Models\DocManagement\Transactions\Referrals\Referrals;
 use App\Models\DocManagement\Transactions\EditFiles\UserFields;
 use App\Models\DocManagement\Create\Fields\CommonFieldsSubGroups;
+use App\Jobs\Agents\DocManagement\Transactions\Details\UploadFiles;
 use App\Models\DocManagement\Transactions\Upload\TransactionUpload;
 use App\Models\DocManagement\Transactions\EditFiles\UserFieldsInputs;
 use App\Models\DocManagement\Transactions\Upload\TransactionUploadPages;
@@ -2443,10 +2444,14 @@ class TransactionsDetailsController extends Controller
         $page_number = 1;
 
         foreach ($document_image_files as $image_file) {
+
+            $page_counter = strlen($page_number) == 1 ? '0'.$page_number : $page_number;
+
             $image_file_name = basename($image_file['file_location']);
             $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images/'.$image_file_name);
-            $new_file_loc = Storage::path($files_path.'/images/'.$image_file_name);
-            exec('cp '.$old_file_loc.' '.$new_file_loc);
+            $new_file_loc = Storage::path($files_path.'/images/page_'.$page_counter.'.jpg');
+            exec('cp '.$old_file_loc.' '.Storage::path('tmp/'));
+            exec('mv '.Storage::path('tmp/'.$image_file_name.' '.$new_file_loc));
 
             $upload_images = new TransactionUploadImages();
             $upload_images -> file_id = $new_file_id;
@@ -2455,22 +2460,27 @@ class TransactionsDetailsController extends Controller
             $upload_images -> Contract_ID = $Contract_ID;
             $upload_images -> Referral_ID = $Referral_ID;
             $upload_images -> file_name = $file_name;
-            $upload_images -> file_location = '/storage/'.$files_path.'/images/'.$image_file_name;
+            $upload_images -> file_location = '/storage/'.$files_path.'/images/page_'.$page_counter.'.jpg';
             $upload_images -> pages_total = count($document_image_files);
             $upload_images -> page_number = $page_number;
             $upload_images -> save();
 
             $page_number += 1;
+
         }
 
         // copy pages
         $page_number = 1;
 
         foreach ($document_page_files as $page_file) {
+
+            $page_counter = strlen($page_number) == 1 ? '0'.$page_number : $page_number;
+
             $page_file_name = basename($page_file['file_location']);
             $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
-            $new_file_loc = Storage::path($files_path.'/pages/'.$page_file_name);
-            exec('cp '.$old_file_loc.' '.$new_file_loc);
+            $new_file_loc = Storage::path($files_path.'/pages/page_'.$page_counter.'.pdf');
+            exec('cp '.$old_file_loc.' '.Storage::path('tmp/'));
+            exec('mv '.Storage::path('tmp/'.$page_file_name.' '.$new_file_loc));
 
             $upload_pages = new TransactionUploadPages();
             $upload_pages -> file_id = $new_file_id;
@@ -2479,7 +2489,7 @@ class TransactionsDetailsController extends Controller
             $upload_pages -> Contract_ID = $Contract_ID;
             $upload_pages -> Referral_ID = $Referral_ID;
             $upload_pages -> file_name = $file_name;
-            $upload_pages -> file_location = '/storage/'.$files_path.'/pages/'.$page_file_name;
+            $upload_pages -> file_location = '/storage/'.$files_path.'/pages/page_'.$page_counter.'.pdf';
             $upload_pages -> pages_total = count($document_page_files);
             $upload_pages -> page_number = $page_number;
             $upload_pages -> save();
@@ -2546,7 +2556,7 @@ class TransactionsDetailsController extends Controller
 
     public function upload_documents(Request $request) {
 
-		$file = $request -> file('file');
+		$file = $request -> file('filepond');
         $Agent_ID = $request -> Agent_ID;
         $Listing_ID = $request -> Listing_ID ?? 0;
         $Contract_ID = $request -> Contract_ID ?? 0;
@@ -2554,210 +2564,238 @@ class TransactionsDetailsController extends Controller
         $transaction_type = $request -> transaction_type;
         $folder = $request -> folder;
 
-        if ($file) {
+        $ext = $file -> getClientOriginalExtension();
+        $file_name = $file -> getClientOriginalName();
 
-            $ext = $file -> getClientOriginalExtension();
-            $file_name = $file -> getClientOriginalName();
+        $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $file_name);
+        $file_name_remove_numbers = preg_replace('/^[0-9-_\s\.]+/', '', $file_name_remove_numbers);
+        $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
+        $file_name_display = preg_replace('/-/', ' ', $file_name_no_ext).'.pdf';
+        $clean_file_name = sanitize($file_name_no_ext);
+        $new_file_name = $clean_file_name.'_'.date('YmdHis').'.pdf';
 
-            $file_name_remove_numbers = preg_replace('/[0-9-_\s\.]+\.'.$ext.'/', '.'.$ext, $file_name);
-            $file_name_remove_numbers = preg_replace('/^[0-9-_\s\.]+/', '', $file_name_remove_numbers);
-            $file_name_display = preg_replace('/-/', ' ', $file_name_remove_numbers);
-            $file_name_no_ext = str_replace('.'.$ext, '', $file_name_remove_numbers);
-            $clean_file_name = sanitize($file_name_no_ext);
-            $new_file_name = $clean_file_name.'_'.date('YmdHis').'.'.$ext;
+        // convert to pdf if image
+        if ($ext != 'pdf') {
+            $create_images = exec('convert -quality 80 -density 200 -page letter '.$file.' '.Storage::path('tmp/'.$new_file_name));
+        } else {
+            $file -> storeAs('tmp', $new_file_name);
+        }
 
-            // convert to pdf if image
-            if ($ext != 'pdf') {
-                $new_file_name = date('YmdHis').'_'.$clean_file_name.'.pdf';
-                $file_name_display = $file_name_no_ext.'.pdf';
-                $create_images = exec('convert -quality 80 -density 200 -page letter '.$file.' /tmp/'.$new_file_name, $output, $return);
-                $file = '/tmp/'.$new_file_name;
+        $file = Storage::path('tmp/'.$new_file_name);
+
+        $file_temp = Storage::path('tmp/temp_'.$new_file_name);
+
+        exec('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile='.$file_temp.' '.$file.' 2>&1', $output, $return);
+        exec('mv '.$file_temp.' '.$file);
+
+        $page_width = get_width_height($file)['width'];
+        $page_height = get_width_height($file)['height'];
+        $pages_total = get_width_height($file)['pages'];
+
+        $page_size = '';
+        if ($page_width == 612 && $page_height == 792) {
+            $page_size = 'letter';
+        } elseif ($page_width == 595 && $page_height == 842) {
+            $page_size = 'a4';
+        }
+
+
+
+        // add to Documents
+        $add_documents = new TransactionDocuments();
+        $add_documents -> file_type = 'user';
+        $add_documents -> Agent_ID = $Agent_ID;
+        $add_documents -> Listing_ID = $Listing_ID;
+        $add_documents -> Contract_ID = $Contract_ID;
+        $add_documents -> Referral_ID = $Referral_ID;
+        $add_documents -> transaction_type = $transaction_type;
+        $add_documents -> folder = $folder;
+        $add_documents -> file_name = $new_file_name;
+        $add_documents -> file_name_display = $file_name_display;
+        $add_documents -> pages_total = $pages_total;
+        $add_documents -> page_width = $page_width;
+        $add_documents -> page_height = $page_height;
+        $add_documents -> page_size = $page_size;
+        $add_documents -> doc_order = 0;
+        $add_documents -> save();
+        $Transaction_Docs_ID = $add_documents -> id;
+
+
+
+        // add original file to uploads
+        $upload = new TransactionUpload();
+        $upload -> Transaction_Docs_ID = $Transaction_Docs_ID;
+        $upload -> Contract_ID = $Contract_ID;
+        $upload -> Referral_ID = $Referral_ID;
+        $upload -> file_name = $new_file_name;
+        $upload -> file_name_display = $file_name_display;
+        $upload -> file_type = 'user';
+        $upload -> pages_total = $pages_total;
+        $upload -> page_width = $page_width;
+        $upload -> page_height = $page_height;
+        $upload -> page_size = $page_size;
+        $upload -> save();
+        $file_id = $upload -> file_id;
+
+        $add_documents -> file_id = $file_id;
+        $add_documents -> save();
+
+        $path = 'contracts/'.$Contract_ID;
+
+        if ($transaction_type == 'listing') {
+            $path = 'listings/'.$Listing_ID;
+        } elseif ($transaction_type == 'referral') {
+            $path = 'referrals/'.$Referral_ID;
+        }
+
+        $storage_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_user';
+        $storage_link = '/storage/'.$storage_dir;
+        $storage_full_path = Storage::path($storage_dir);
+        $file_location = $storage_link.'/'.$new_file_name;
+
+        Storage::makeDirectory($storage_dir);
+        Storage::makeDirectory($storage_dir.'/converted');
+        Storage::makeDirectory($storage_dir.'/pages');
+        Storage::makeDirectory($storage_dir.'/images');
+        Storage::makeDirectory($storage_dir.'/converted_images');
+
+        $add_documents -> file_location = $file_location;
+        $add_documents -> file_location_converted = $storage_link.'/converted/'.$new_file_name;
+        $add_documents -> save();
+
+        // update directory path in database
+        $upload -> file_location = $file_location;
+        $upload -> save();
+
+        // add file to docs
+        exec('cp '.$file.' '.$storage_full_path.'/'.$new_file_name);
+        // add to converted folder
+        exec('cp '.$file.' '.$storage_full_path.'/converted/'.$new_file_name);
+
+        // if size is not exactly letter but is close convert to letter or a4
+        if ($page_size == '') {
+            $this -> convert_pdf_to_standard_size($page_width, $page_height, $storage_full_path, $new_file_name, $upload);
+        }
+
+        UploadFiles::dispatch($file, $file_id, $file_name, $file_name_display, $new_file_name, $ext, $Agent_ID, $Listing_ID, $Contract_ID, $Referral_ID, $transaction_type, $folder, $storage_dir, $Transaction_Docs_ID);
+
+        /************************************/
+
+
+
+
+        /* $storage_link = '/storage/'.$storage_dir;
+        $storage_full_path = Storage::path($storage_dir);
+
+        // create directories
+        $storage_dir_pages = $storage_dir.'/pages';
+        Storage::makeDirectory($storage_dir_pages);
+        $storage_dir_images = $storage_dir.'/images';
+        Storage::makeDirectory($storage_dir_images);
+
+        // split pdf into pages and images
+        $input_file = $storage_full_path.'/'.$new_file_name;
+        $output_files = Storage::path($storage_dir_pages.'/page_%02d.pdf');
+        $new_image_name = str_replace($ext, 'jpg', $new_file_name);
+        $output_images = Storage::path($storage_dir_images.'/page_%02d.jpg');
+
+        // add individual pages to pages directory
+        $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten', $output, $return);
+        // remove data file
+        exec('rm '.Storage::path($storage_dir_pages.'/doc_data.txt'));
+
+        // add individual images to images directory
+        $create_images = exec('convert -density 200 -quality 80 '.$input_file.' -background white -alpha remove -strip '.$output_images, $output, $return);
+
+        // get all image files images_storage_path to use as file location
+        $saved_images_directory = Storage::files($storage_dir.'/images');
+        $images_public_path = $storage_link.'/images';
+
+        foreach ($saved_images_directory as $saved_image) {
+            // get just file_name
+            $images_file_name = basename($saved_image);
+
+            $page_number = preg_match('/page_([0-9]+)\.jpg/', $images_file_name, $matches);
+            $match = $matches[1];
+            if (substr($match, 0, 1 == 0)) {
+                $match = substr($match, 1);
             }
+            $page_number = count($matches) > 1 ? $match + 1 : 1;
 
-            $pages_total = exec('pdftk '.$file.' dump_data | sed -n \'s/^NumberOfPages:\s//p\'');
-
-            $page_width = get_width_height($file)['width'];
-            $page_height = get_width_height($file)['height'];
-
-            $page_size = '';
-            if ($page_width == 612 && $page_height == 792) {
-                $page_size = 'letter';
-            } elseif ($page_width == 595 && $page_height == 842) {
-                $page_size = 'a4';
-            }
-
-            // add to Documents
-            $add_documents = new TransactionDocuments();
-            $add_documents -> file_type = 'user';
-            $add_documents -> Agent_ID = $Agent_ID;
-            $add_documents -> Listing_ID = $Listing_ID;
-            $add_documents -> Contract_ID = $Contract_ID;
-            $add_documents -> Referral_ID = $Referral_ID;
-            $add_documents -> transaction_type = $transaction_type;
-            $add_documents -> folder = $folder;
-            $add_documents -> file_name = $new_file_name;
-            $add_documents -> file_name_display = $file_name_display;
-            $add_documents -> pages_total = $pages_total;
-            $add_documents -> page_width = $page_width;
-            $add_documents -> page_height = $page_height;
-            $add_documents -> page_size = $page_size;
-            $add_documents -> doc_order = 0;
-            $add_documents -> save();
-            $Transaction_Docs_ID = $add_documents -> id;
-
-            // add original file to uploads
-            $upload = new TransactionUpload();
-            $upload -> Transaction_Docs_ID = $Transaction_Docs_ID;
-            $upload -> Agent_ID = $Agent_ID;
-            $upload -> Listing_ID = $Listing_ID;
-            $upload -> Contract_ID = $Contract_ID;
-            $upload -> Referral_ID = $Referral_ID;
-            $upload -> file_name = $new_file_name;
-            $upload -> file_name_display = $file_name_display;
-            $upload -> file_type = 'user';
-            $upload -> pages_total = $pages_total;
-            $upload -> page_width = $page_width;
-            $upload -> page_height = $page_height;
-            $upload -> page_size = $page_size;
-            $upload -> save();
-            $file_id = $upload -> file_id;
-
-            $add_documents -> file_id = $file_id;
-            $add_documents -> save();
-
-            $path = 'contracts/'.$Contract_ID;
-
-            if ($transaction_type == 'listing') {
-                $path = 'listings/'.$Listing_ID;
-            } elseif ($transaction_type == 'referral') {
-                $path = 'referrals/'.$Referral_ID;
-            }
-
-            $storage_dir = 'doc_management/transactions/'.$path.'/'.$file_id.'_user';
-            $storage_public_path = '/storage/'.$storage_dir;
-            $file_location = $storage_public_path.'/'.$new_file_name;
-
-            $file -> storeAs($storage_dir, $new_file_name);
-
-            $storage_full_path = Storage::path('doc_management/transactions/'.$path.'/'.$file_id.'_user');
-
-
-            // if size is not exactly letter but is close convert to letter or a4
-            if ($page_size == '') {
-                $this -> convert_pdf_to_standard_size($page_width, $page_height, $storage_full_path, $new_file_name, $upload);
-            }
-
-            //exec('chmod 0777 '.Storage::path('doc_management/transactions/'.$path));
-
-            Storage::makeDirectory($storage_dir.'/converted');
-
-            $file_in = Storage::path($storage_dir.'/'.$new_file_name);
-            $file_out = Storage::path($storage_dir.'/temp_'.$new_file_name);
-
-            // flatten
-            // exec('pdftk '.$file_in.' output '.$file_out.' flatten');
-
-            // exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
-            // compress
-            exec('convert -compress Zip -density 150x150 '.$file_in.' '.$file_out);
-            exec('rm '.$file_in.' && mv '.$file_out.' '.$file_in);
-
-            // add to converted folder
-            exec('cp '.Storage::path($storage_dir.'/'.$new_file_name).' '.Storage::path($storage_dir.'/converted/'.$new_file_name));
+            $upload_images = new TransactionUploadImages();
+            $upload_images -> file_id = $file_id;
+            $upload_images -> Agent_ID = $Agent_ID;
+            $upload_images -> Listing_ID = $Listing_ID;
+            $upload_images -> Contract_ID = $Contract_ID;
+            $upload_images -> Referral_ID = $Referral_ID;
+            $upload_images -> file_name = $images_file_name;
+            $upload_images -> file_location = $images_public_path.'/'.$images_file_name;
+            $upload_images -> pages_total = $pages_total;
+            $upload_images -> page_number = $page_number;
+            $upload_images -> save();
 
             if (! Storage::exists($storage_dir.'/converted_images')) {
                 Storage::makeDirectory($storage_dir.'/converted_images');
             }
-            $checklist_item_docs_model = new TransactionChecklistItemsDocs();
-            $source = Storage::path($storage_dir.'/converted/'.$new_file_name);
-            $image_file_name = str_replace('.pdf', '.jpg', $new_file_name);
-            $destination = Storage::path($storage_dir.'/converted_images');
 
-            $checklist_item_docs_model -> convert_doc_to_images($source, $destination, $image_file_name, $Transaction_Docs_ID);
+            $from = Storage::path($saved_image);
+            $to = Storage::path($storage_dir.'/converted_images');
 
-            // update directory path in database
-            $upload -> file_location = $file_location;
-            $upload -> save();
+            exec('cp '.$from.' '.$to);
 
-            // create directories
-            $storage_dir_pages = $storage_dir.'/pages';
-            Storage::makeDirectory($storage_dir_pages);
-            $storage_dir_images = $storage_dir.'/images';
-            Storage::makeDirectory($storage_dir_images);
+            $file_location = str_replace(Storage::path(''), '/storage/', Storage::path($storage_dir.'/converted_images/'.$images_file_name));
 
-            // split pdf into pages and images
-            $input_file = $storage_full_path.'/'.$new_file_name;
-            $output_files = Storage::path($storage_dir_pages.'/page_%02d.pdf');
-            $new_image_name = str_replace($ext, 'jpg', $new_file_name);
-            $output_images = Storage::path($storage_dir_images.'/page_%02d.jpg');
+            $add_image = new TransactionDocumentsImages();
+            $add_image -> file_name = $images_file_name;
+            $add_image -> document_id = $Transaction_Docs_ID;
+            $add_image -> file_location = $file_location;
+            $add_image -> page_number = $page_number;
+            $add_image -> order = $page_number;
+            $add_image -> save();
 
-            // add individual pages to pages directory
-            $create_pages = exec('pdftk '.$input_file.' burst output '.$output_files.' flatten', $output, $return);
-            // remove data file
-            exec('rm '.Storage::path($storage_dir_pages.'/doc_data.txt'));
-
-            // add individual images to images directory
-            $create_images = exec('convert -density 200 -quality 80 '.$input_file.' -background white -alpha remove -strip '.$output_images, $output, $return);
-
-            // get all image files images_storage_path to use as file location
-            $saved_images_directory = Storage::files($storage_dir.'/images');
-            $images_public_path = $storage_public_path.'/images';
-
-            foreach ($saved_images_directory as $saved_image) {
-                // get just file_name
-                $images_file_name = basename($saved_image);
-                /* $page_number = preg_match('/([0-9]+)\.jpg/', $images_file_name, $matches);
-                $page_number = count($matches) > 1 ? $matches[1] + 1 : 1; */
-                $page_number = preg_match('/page_([0-9]+)\.jpg/', $images_file_name, $matches);
-                $match = $matches[1];
-                if (substr($match, 0, 1 == 0)) {
-                    $match = substr($match, 1);
-                }
-                $page_number = count($matches) > 1 ? $match + 1 : 1;
-
-                // add images to database
-                $upload_images = new TransactionUploadImages();
-                $upload_images -> file_id = $file_id;
-                $upload_images -> Agent_ID = $Agent_ID;
-                $upload_images -> Listing_ID = $Listing_ID;
-                $upload_images -> Contract_ID = $Contract_ID;
-                $upload_images -> Referral_ID = $Referral_ID;
-                $upload_images -> file_name = $images_file_name;
-                $upload_images -> file_location = $images_public_path.'/'.$images_file_name;
-                $upload_images -> pages_total = $pages_total;
-                $upload_images -> page_number = $page_number;
-                $upload_images -> save();
-            }
-
-            $saved_pages_directory = Storage::files($storage_dir.'/pages');
-            $pages_public_path = $storage_public_path.'/pages';
-
-            $page_number = 1;
-
-            foreach ($saved_pages_directory as $saved_page) {
-                $pages_file_name = basename($saved_page);
-                $upload_pages = new TransactionUploadPages();
-                $upload_pages -> Agent_ID = $Agent_ID;
-                $upload_pages -> Listing_ID = $Listing_ID;
-                $upload_pages -> Contract_ID = $Contract_ID;
-                $upload_pages -> Referral_ID = $Referral_ID;
-                $upload_pages -> file_id = $file_id;
-                $upload_pages -> file_name = $pages_file_name;
-                $upload_pages -> file_location = $pages_public_path.'/'.$pages_file_name;
-                $upload_pages -> pages_total = $pages_total;
-                $upload_pages -> page_number = $page_number;
-                $upload_pages -> save();
-
-                $page_number += 1;
-            }
-
-            $add_documents -> file_location = $file_location;
-            $add_documents -> file_location_converted = $storage_public_path.'/converted/'.$new_file_name;
-            $add_documents -> save();
         }
+
+        $saved_pages_directory = Storage::files($storage_dir.'/pages');
+        $pages_public_path = $storage_link.'/pages';
+
+        $page_number = 1;
+
+        foreach ($saved_pages_directory as $saved_page) {
+            $pages_file_name = basename($saved_page);
+            $upload_pages = new TransactionUploadPages();
+            $upload_pages -> Agent_ID = $Agent_ID;
+            $upload_pages -> Listing_ID = $Listing_ID;
+            $upload_pages -> Contract_ID = $Contract_ID;
+            $upload_pages -> Referral_ID = $Referral_ID;
+            $upload_pages -> file_id = $file_id;
+            $upload_pages -> file_name = $pages_file_name;
+            $upload_pages -> file_location = $pages_public_path.'/'.$pages_file_name;
+            $upload_pages -> pages_total = $pages_total;
+            $upload_pages -> page_number = $page_number;
+            $upload_pages -> save();
+
+            $page_number += 1;
+        } */
+
+
+
+        /************************************/
 
         return response() -> json(['status' => 'success']);
 
+    }
+
+    public function upload_documents_revert(Request $request) {
+        dd($request -> all());
+    }
+    public function upload_documents_restore(Request $request) {
+        dd($request -> all());
+    }
+    public function upload_documents_load(Request $request) {
+        dd($request -> all());
+    }
+    public function upload_documents_fetch(Request $request) {
+        dd($request -> all());
     }
 
     public function convert_pdf_to_standard_size($page_width, $page_height, $folder, $file_name, $upload) {
@@ -2814,6 +2852,8 @@ class TransactionsDetailsController extends Controller
             $upload -> save();
         }
     }
+
+
 
     // End Documents Tab
 
