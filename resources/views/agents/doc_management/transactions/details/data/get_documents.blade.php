@@ -268,7 +268,7 @@
                                             <a href="{{ $document -> file_location_converted }}?t={{ time() }}" target="_blank">{{ $document -> file_name_display }}</a>
                                             <div class="d-flex justify-content-start flex-wrap">
                                                 <div>
-                                                    <span class="small">Added: {{ date('n/j/Y g:i:sA', strtotime($document -> created_at)) }} </span>
+                                                    <span class="small">Added: {{ date('n/j/Y g:iA', strtotime($document -> created_at)) }} </span>
                                                 </div>
                                                 <div>
                                                     @if($document -> file_type == 'user')

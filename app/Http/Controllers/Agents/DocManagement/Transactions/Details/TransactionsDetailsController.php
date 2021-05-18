@@ -1678,12 +1678,12 @@ class TransactionsDetailsController extends Controller
 		$transaction_type = $request -> transaction_type;
         $checklist_id = $request -> checklist_id;
         $document_id = $request -> document_id;
-        $document = TransactionDocuments::where('id', $document_id) -> first();
+        $document = TransactionDocuments::where('id', $document_id) -> with(['images_converted']) -> first();
         $file_id = $document -> file_id;
         $file_type = $request -> file_type;
         $file_name = $request -> file_name;
 
-        $document_images = TransactionUploadImages::where('file_id', $file_id) -> orderBy('page_number') -> get();
+        $document_images = $document -> images_converted;
 
         $checklist_items_model = new ChecklistsItems();
         $transaction_checklist_items_modal = new TransactionChecklistItems();
@@ -2351,12 +2351,12 @@ class TransactionsDetailsController extends Controller
         $checklist_item_id = $request -> checklist_item_id;
         $checklist_id = $request -> checklist_id;
 
-        $document_images = TransactionUploadImages::whereIn('id', $image_ids)
+        $document_images = TransactionDocumentsImages::whereIn('id', $image_ids)
         -> orderBy('page_number')
         -> get();
 
         $document_image_files = [];
-        $document_page_files = [];
+        //$document_page_files = [];
         $page_numbers = [];
         $page = 1;
 
@@ -2370,11 +2370,11 @@ class TransactionsDetailsController extends Controller
             $pages = [];
             $images = [];
 
-            $document_page = TransactionUploadPages::where('file_id', $doc_file_id) -> where('page_number', $doc_page_number) -> first();
-            $pages = ['file_id' => $document_page -> file_id, 'file_location' => $document_page -> file_location];
+            //$document_page = TransactionUploadPages::where('file_id', $doc_file_id) -> where('page_number', $doc_page_number) -> first();
+            //$pages = ['file_id' => $document_page -> file_id, 'file_location' => $document_page -> file_location];
             $images = ['file_id' => $document_image -> file_id, 'file_location' => $document_image -> file_location, 'page_number' => $page];
 
-            array_push($document_page_files, $pages);
+            //array_push($document_page_files, $pages);
             array_push($document_image_files, $images);
 
             $page += 1;
@@ -2448,7 +2448,7 @@ class TransactionsDetailsController extends Controller
             $page_counter = strlen($page_number) == 1 ? '0'.$page_number : $page_number;
 
             $image_file_name = basename($image_file['file_location']);
-            $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images/'.$image_file_name);
+            $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_image_files[0]['file_id'].'_'.$file_type.'/images_converted/'.$image_file_name);
             $new_file_loc = Storage::path($files_path.'/images/page_'.$page_counter.'.jpg');
             exec('cp '.$old_file_loc.' '.Storage::path('tmp/'));
             exec('mv '.Storage::path('tmp/'.$image_file_name.' '.$new_file_loc));
@@ -2465,23 +2465,6 @@ class TransactionsDetailsController extends Controller
             $upload_images -> page_number = $page_number;
             $upload_images -> save();
 
-            $page_number += 1;
-
-        }
-
-        // copy pages
-        $page_number = 1;
-
-        foreach ($document_page_files as $page_file) {
-
-            $page_counter = strlen($page_number) == 1 ? '0'.$page_number : $page_number;
-
-            $page_file_name = basename($page_file['file_location']);
-            $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
-            $new_file_loc = Storage::path($files_path.'/pages/page_'.$page_counter.'.pdf');
-            exec('cp '.$old_file_loc.' '.Storage::path('tmp/'));
-            exec('mv '.Storage::path('tmp/'.$page_file_name.' '.$new_file_loc));
-
             $upload_pages = new TransactionUploadPages();
             $upload_pages -> file_id = $new_file_id;
             $upload_pages -> Agent_ID = $Agent_ID;
@@ -2490,11 +2473,40 @@ class TransactionsDetailsController extends Controller
             $upload_pages -> Referral_ID = $Referral_ID;
             $upload_pages -> file_name = $file_name;
             $upload_pages -> file_location = '/storage/'.$files_path.'/pages/page_'.$page_counter.'.pdf';
-            $upload_pages -> pages_total = count($document_page_files);
+            $upload_pages -> pages_total = count($document_image_files);
             $upload_pages -> page_number = $page_number;
             $upload_pages -> save();
+
             $page_number += 1;
+
         }
+
+        // copy pages
+        $page_number = 1;
+
+        // foreach ($document_page_files as $page_file) {
+
+        //     $page_counter = strlen($page_number) == 1 ? '0'.$page_number : $page_number;
+
+        //     $page_file_name = basename($page_file['file_location']);
+        //     $old_file_loc = Storage::path('doc_management/transactions/'.$path.'/'.$document_page_files[0]['file_id'].'_'.$file_type.'/pages/'.$page_file_name);
+        //     $new_file_loc = Storage::path($files_path.'/pages/page_'.$page_counter.'.pdf');
+        //     exec('cp '.$old_file_loc.' '.Storage::path('tmp/'));
+        //     exec('mv '.Storage::path('tmp/'.$page_file_name.' '.$new_file_loc));
+
+        //     $upload_pages = new TransactionUploadPages();
+        //     $upload_pages -> file_id = $new_file_id;
+        //     $upload_pages -> Agent_ID = $Agent_ID;
+        //     $upload_pages -> Listing_ID = $Listing_ID;
+        //     $upload_pages -> Contract_ID = $Contract_ID;
+        //     $upload_pages -> Referral_ID = $Referral_ID;
+        //     $upload_pages -> file_name = $file_name;
+        //     $upload_pages -> file_location = '/storage/'.$files_path.'/pages/page_'.$page_counter.'.pdf';
+        //     $upload_pages -> pages_total = count($document_page_files);
+        //     $upload_pages -> page_number = $page_number;
+        //     $upload_pages -> save();
+        //     $page_number += 1;
+        // }
 
         //merge pages into main file and move to converted
         $main_file_location = $files_path.'/'.$file_name;
@@ -2515,6 +2527,9 @@ class TransactionsDetailsController extends Controller
         $new_converted_images_location = Storage::path($files_path.'/converted_images');
 
         exec('pdftk '.$old_converted_location.'/*.pdf cat '.implode(' ', $page_numbers).' output '.$new_converted_location.'/'.$file_name);
+        // split new converted doc and replace pages
+        $output_files = Storage::path($files_path.'/pages/page_%02d.pdf');
+        $create_pages = exec('pdftk '.$new_converted_location.'/'.$file_name.' burst output '.$output_files.' flatten', $output, $return);
 
         $checklist_item_docs_model = new TransactionChecklistItemsDocs();
         $image_filename = str_replace('.pdf', '.jpg', $file_name);
@@ -2785,18 +2800,7 @@ class TransactionsDetailsController extends Controller
 
     }
 
-    public function upload_documents_revert(Request $request) {
-        dd($request -> all());
-    }
-    public function upload_documents_restore(Request $request) {
-        dd($request -> all());
-    }
-    public function upload_documents_load(Request $request) {
-        dd($request -> all());
-    }
-    public function upload_documents_fetch(Request $request) {
-        dd($request -> all());
-    }
+
 
     public function convert_pdf_to_standard_size($page_width, $page_height, $folder, $file_name, $upload) {
 
