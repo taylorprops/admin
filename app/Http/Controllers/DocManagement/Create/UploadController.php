@@ -520,7 +520,7 @@ class UploadController extends Controller
             // split pdf into pages and images
             $input_file = $storage_full_path.'/'.$new_filename;
             $output_files = $storage_path.'/'.$storage_dir_pages.'/page_%02d.pdf';
-            $new_image_name = str_replace($ext, 'jpg', $new_filename);
+            //$new_image_name = str_replace($ext, 'jpg', $new_filename);
             //$output_images = $storage_path.'/'.$storage_dir_images.'/'.$new_image_name;
             $output_images = $storage_path.'/'.$storage_dir_images.'/page_%02d.jpg';
 

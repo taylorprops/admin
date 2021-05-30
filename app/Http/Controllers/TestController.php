@@ -20,7 +20,7 @@ use App\Models\DocManagement\Transactions\Contracts\Contracts;
 class TestController extends Controller
 {
 
-    public function skyslope(Request $request) {
+    public function skyslope(Request $request, $session = null) {
 
         $auth = $this -> skyslope_auth();
         $session = $auth['Session'];
@@ -30,9 +30,11 @@ class TestController extends Controller
         ];
 
         $query = [
-            //'earliestDate' => strtotime(date('2021-05-01'))
+            //'earliestDate' => strtotime(date('2021-05-01')),
             //'type' => 'listing',
-            'agentGuid' => '6bff1a51-032d-409a-a05e-6fb3bc380e3b'
+            //'agentGuid' => '6bff1a51-032d-409a-a05e-6fb3bc380e3b'
+            //'pageNumber' => 3,
+            'createdAfter' => strtotime(date('2021-05-01')),
         ];
 
         $client = new \GuzzleHttp\Client([
@@ -40,11 +42,11 @@ class TestController extends Controller
             'query' => $query
         ]);
 
-        //$r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings');
+        $r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings');
         //$r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings/2be27e67-5924-44e8-b032-57de5d5877a9');
         //$r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings/2be27e67-5924-44e8-b032-57de5d5877a9/documents');
         //$r = $client -> request('GET', 'https://api.skyslope.com/api/offices');
-        $r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings');
+        //$r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings');
         //$r = $client -> request('GET', 'https://api.skyslope.com/api/users');
         //$r = $client -> request('GET', 'https://api.skyslope.com/api/users/6bff1a51-032d-409a-a05e-6fb3bc380e3b');
 
@@ -52,13 +54,24 @@ class TestController extends Controller
         $response = json_decode($response, true);
         dump($response);
 
-        // $next = $response['links'][0]['href'];
-        // if($next) {
-        //     $r = $client -> request('GET', $next);
-        //     $response = $r -> getBody() -> getContents();
-        //     $response = json_decode($response, true);
-        //     dump($response);
-        // }
+        $next = $response['links'][0]['href'] ?? null;
+        $page = 1;
+        while($next && $page < 10) {
+            $page += 1;
+            $query = [
+                'createdAfter' => strtotime(date('2021-05-01')),
+                'pageNumber' => $page
+            ];
+
+            $client = new \GuzzleHttp\Client([
+                'headers' => $headers,
+                'query' => $query
+            ]);
+            $r = $client -> request('GET', 'https://api.skyslope.com/api/files/listings');
+            $response = $r -> getBody() -> getContents();
+            $response = json_decode($response, true);
+            dump($response);
+        }
 
 
     }
