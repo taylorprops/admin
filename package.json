@@ -59,7 +59,7 @@
     "js-datepicker": "^5.18.0",
     "kind-of": ">=6.0.3",
     "laravel-mix": "^6.0.19",
-    "minimist": ">=1.2.3",
+    "minimist": ">=1.2.6",
     "moment": "^2.29.1",
     "node-forge": "^0.10.0",
     "num-words": "^1.2.0",
