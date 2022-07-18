@@ -19,7 +19,7 @@
     "is-svg": ">=4.2.2",
     "jquery": "^3.6.0",
     "jquery-sortablejs": "^1.0.1",
-    "jquery-ui": "^1.12.1",
+    "jquery-ui": "^1.13.2",
     "lodash": "^4.17.21",
     "popper.js": "^1.16.1",
     "postcss": "^8.1.14",
